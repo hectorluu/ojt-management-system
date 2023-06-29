@@ -9,7 +9,7 @@ const DashboardTopbar = () => {
     <div className="flex items-center justify-between mb-8">
       <div className="flex items-center flex-1 gap-x-10">
         <Link to="/" className="inline-block">
-          <img srcSet="/logo.png 2x" alt="crowfunding-app" />
+          <img srcSet="/logo.png 2x" alt="ojt-management-system" />
         </Link>
         <div className=" max-w-[458px] w-full">
           <DashboardSearch></DashboardSearch>
@@ -27,7 +27,7 @@ const DashboardTopbar = () => {
         </Button>
         <img
           srcSet="/logo.png 2x"
-          alt="crowfunding-app"
+          alt="ojt-management-system"
           className="object-cover rounded-full"
         />
       </div>
