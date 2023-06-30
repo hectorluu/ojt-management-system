@@ -7,4 +7,7 @@
 - `npm start`
 - Open new tab of Terminal and run command `cd server`
 - Run command `npm install` -> `npm start` to start Server
+
+- Open new tab of Terminal and run command `cd server`
+- Run command `node authServer.js`
 <!-- - Fake server -->

@@ -12,6 +12,7 @@ import LayoutDashboard from "layout/LayoutDashboard";
 import RequiredAuthPage from "pages/RequiredAuthPage";
 import CampaignView from "modules/campaign/CampaignView";
 const SignInPage = lazy(() => import("./pages/SignInPage"));
+const SignUpPage = lazy(() => import("./pages/SignUpPage"));
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 const CampaignPage = lazy(() => import("./pages/CampaignPage"));
 const StartCampaignPage = lazy(() => import("./pages/StartCampaignPage"));
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
         element: <>This page is not exist</>,
       },
     ],
+  },
+  {
+    path: "/register",
+    element: <SignUpPage></SignUpPage>,
   },
   {
     path: "/login",

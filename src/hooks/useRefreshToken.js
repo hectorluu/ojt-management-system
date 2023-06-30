@@ -1,5 +1,4 @@
 import axios from "api/axios";
-import { authUpdateUser } from "store/auth/auth-slice";
 import { getToken, saveToken } from "utils/auth";
 
 export default function useRefreshToken() {
