@@ -57,10 +57,6 @@ const SignUpPage = () => {
           Login
         </Link>
       </p>
-      <button className="flex items-center justify-center w-full py-4 mb-5 text-base font-semibold border gap-x-3 border-strock rounded-xl text-text2 dark:text-white dark:border-darkStroke">
-        <img srcSet="/icon-google.png 2x" alt="icon-google" />
-        <span>Sign up with google</span>
-      </button>
       <p className="mb-4 text-xs font-normal text-center lg:text-sm lg:mb-8 text-text2 dark:text-white">
         Or sign up with email
       </p>

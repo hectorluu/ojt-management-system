@@ -1,5 +1,5 @@
 {
-  "name": "crowfunding-boilerplate",
+  "name": "ojt-management-system",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -40,7 +40,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "PORT=4000 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -64,6 +64,7 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^20.3.2",
     "autoprefixer": "^10.4.7",
     "postcss": "^8.4.14",
     "tailwindcss": "^3.0.24"

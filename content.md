@@ -1,5 +1,0 @@
-- JWT
-- auth/register POST
-- auth/login POST
-- permissions
-- authentication(chứng thực)/authorization(ủy quyền)

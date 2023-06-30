@@ -3,7 +3,7 @@ import React from "react";
 import { useState } from "react";
 
 const DashboardSearch = () => {
-  const [showSearch, setShowSearch] = useState(false);
+  const [showSearch] = useState(false);
   return (
     <div className="relative z-50">
       <div className="bg-white rounded-full shadow-[10px_10px_20px_rgba(218,_213,_213,_0.15)] p-2 w-full flex items-center ">
