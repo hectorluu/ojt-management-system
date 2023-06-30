@@ -11,7 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 import LayoutDashboard from "layout/LayoutDashboard";
 import RequiredAuthPage from "pages/RequiredAuthPage";
 import CampaignView from "modules/campaign/CampaignView";
-const SignUpPage = lazy(() => import("./pages/SignUpPage"));
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 const CampaignPage = lazy(() => import("./pages/CampaignPage"));
@@ -62,10 +61,6 @@ const router = createBrowserRouter([
         element: <>This page is not exist</>,
       },
     ],
-  },
-  {
-    path: "/register",
-    element: <SignUpPage></SignUpPage>,
   },
   {
     path: "/login",

@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { Label } from "components/label";
 import { Input } from "components/input";
 import { IconEyeToggle } from "components/icons";
-import { Button, ButtonGoogle } from "components/button";
+import { Button } from "components/button";
 import { useDispatch } from "react-redux";
 import { authLogin } from "store/auth/auth-slice";
 
@@ -43,7 +43,6 @@ const SignInPage = () => {
           Sign up
         </Link>
       </p>
-      <ButtonGoogle text="Sign in with google"></ButtonGoogle>
       <form onSubmit={handleSubmit(handleSignIn)}>
         <FormGroup>
           <Label htmlFor="email">Email *</Label>
