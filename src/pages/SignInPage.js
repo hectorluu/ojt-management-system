@@ -36,11 +36,11 @@ const SignInPage = () => {
     dispatch(authLogin(values));
   };
   return (
-    <LayoutAuthentication heading="Welcome Back!">
+    <LayoutAuthentication heading="KNS OJT Management">
       <p className="mb-6 text-xs font-normal text-center lg:text-sm text-text3 lg:mb-8">
         Dont have an account?{" "}
         <Link to="/register" className="font-medium underline text-primary">
-          Sign up
+          Sign up here
         </Link>
       </p>
       <form onSubmit={handleSubmit(handleSignIn)}>
@@ -70,12 +70,16 @@ const SignInPage = () => {
         </FormGroup>
         <FormGroup>
           <div className="text-right">
-            <span className="inline-block text-sm font-medium text-primary">
+            <span className="inline-block text-sm font-medium text-primary underline hover:underline-offset-2">
               Forgot password
             </span>
           </div>
         </FormGroup>
-        <Button className="w-full" kind="primary" type="submit">
+        <Button
+          className="w-full hover:bg-green-600"
+          kind="primary"
+          type="submit"
+        >
           Sign in
         </Button>
       </form>
