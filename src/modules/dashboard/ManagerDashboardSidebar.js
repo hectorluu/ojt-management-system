@@ -39,8 +39,8 @@ const sidebarLinks = [
   },
   {
     icon: <IconFolder></IconFolder>,
-    title: "Admin Dashboard",
-    url: "/admin-dashboard",
+    title: "Manager Dashboard",
+    url: "/manager-dashboard",
   },
   {
     icon: <IconLogout></IconLogout>,

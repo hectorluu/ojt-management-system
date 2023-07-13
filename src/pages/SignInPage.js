@@ -12,6 +12,9 @@ import { IconEyeToggle } from "components/icons";
 import { Button } from "components/button";
 import { useDispatch } from "react-redux";
 import { authLogin } from "store/auth/auth-slice";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const schema = yup.object({
   email: yup.string().email("").required("This field is required"),
@@ -35,6 +38,25 @@ const SignInPage = () => {
   const handleSignIn = (values) => {
     dispatch(authLogin(values));
   };
+
+  const { user } = useSelector((state) => state.auth);
+  const userRole = user?.permissions || [];
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user && user.id && userRole.includes("admin")) {
+      navigate("/admin-dashboard");
+      return;
+    }
+
+    if (user && user.id && userRole.includes("manager")) {
+      navigate("/manager-dashboard");
+      return;
+    }
+
+    navigate("/login");
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
   return (
     <LayoutAuthentication heading="KNS OJT Management">
       <p className="mb-6 text-xs font-normal text-center lg:text-sm text-text3 lg:mb-8">
