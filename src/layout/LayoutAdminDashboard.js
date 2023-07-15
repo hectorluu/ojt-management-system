@@ -1,5 +1,5 @@
 import Overlay from "components/common/Overlay";
-import AdminDashboardSidebar from "modules/dashboard/DashboardSidebar";
+import AdminDashboardSidebar from "modules/dashboard/AdminDashboardSidebar";
 import DashboardTopbar from "modules/dashboard/DashboardTopbar";
 import React from "react";
 import { Outlet } from "react-router-dom";

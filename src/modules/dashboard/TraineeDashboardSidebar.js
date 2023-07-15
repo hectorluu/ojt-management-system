@@ -1,12 +1,4 @@
-import {
-  IconCampaign,
-  IconDashboard,
-  IconFolder,
-  IconLogout,
-  IconPayment,
-  IconProfile,
-  IconWithdraw,
-} from "components/icons";
+import { IconDashboard, IconFolder, IconLogout } from "components/icons";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
@@ -14,33 +6,28 @@ import { authLogOut } from "store/auth/auth-slice";
 const sidebarLinks = [
   {
     icon: <IconDashboard></IconDashboard>,
-    title: "Dashboard",
-    url: "/",
-  },
-  {
-    icon: <IconCampaign></IconCampaign>,
-    title: "Campaign",
-    url: "/campaign",
-  },
-  {
-    icon: <IconPayment></IconPayment>,
-    title: "Payment",
-    url: "/payment",
-  },
-  {
-    icon: <IconWithdraw></IconWithdraw>,
-    title: "Withdraw",
-    url: "/withdraw",
-  },
-  {
-    icon: <IconProfile></IconProfile>,
-    title: "Profile",
-    url: "/profile",
+    title: "Trainee Dashboard",
+    url: "/trainee-dashboard",
   },
   {
     icon: <IconFolder></IconFolder>,
-    title: "Trainee Dashboard",
-    url: "/trainee-dashboard",
+    title: "Trainee Course List",
+    url: "/trainee-course-list",
+  },
+  {
+    icon: <IconFolder></IconFolder>,
+    title: "Trainee Personal Statistics",
+    url: "/trainee-personal-statistics",
+  },
+  {
+    icon: <IconFolder></IconFolder>,
+    title: "Trainee Task List",
+    url: "/trainee-task-list",
+  },
+  {
+    icon: <IconFolder></IconFolder>,
+    title: "Trainee Training Plan",
+    url: "/trainee-training-plan",
   },
   {
     icon: <IconLogout></IconLogout>,
