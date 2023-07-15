@@ -1,12 +1,4 @@
-import {
-  IconCampaign,
-  IconDashboard,
-  IconFolder,
-  IconLogout,
-  IconPayment,
-  IconProfile,
-  IconWithdraw,
-} from "components/icons";
+import { IconDashboard, IconFolder, IconLogout } from "components/icons";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
@@ -14,33 +6,43 @@ import { authLogOut } from "store/auth/auth-slice";
 const sidebarLinks = [
   {
     icon: <IconDashboard></IconDashboard>,
-    title: "Dashboard",
-    url: "/",
-  },
-  {
-    icon: <IconCampaign></IconCampaign>,
-    title: "Campaign",
-    url: "/campaign",
-  },
-  {
-    icon: <IconPayment></IconPayment>,
-    title: "Payment",
-    url: "/payment",
-  },
-  {
-    icon: <IconWithdraw></IconWithdraw>,
-    title: "Withdraw",
-    url: "/withdraw",
-  },
-  {
-    icon: <IconProfile></IconProfile>,
-    title: "Profile",
-    url: "/profile",
+    title: "Trainer Dashboard",
+    url: "/trainer-dashboard",
   },
   {
     icon: <IconFolder></IconFolder>,
-    title: "Admin Dashboard",
-    url: "/admin-dashboard",
+    title: "Assigned Trainee List",
+    url: "/assigned-trainee-list",
+  },
+  {
+    icon: <IconFolder></IconFolder>,
+    title: "Certificate Certify",
+    url: "/certificate-certify",
+  },
+  {
+    icon: <IconFolder></IconFolder>,
+    title: "Manage Training Plan",
+    url: "/manage-training-plan",
+  },
+  {
+    icon: <IconFolder></IconFolder>,
+    title: "OJT Evaluation",
+    url: "/ojt-evaluation",
+  },
+  {
+    icon: <IconFolder></IconFolder>,
+    title: "OJT Statistics",
+    url: "/ojt-statistics",
+  },
+  {
+    icon: <IconFolder></IconFolder>,
+    title: "Trainer Report List",
+    url: "/trainer-report-list",
+  },
+  {
+    icon: <IconFolder></IconFolder>,
+    title: "Trainer Training Plan",
+    url: "/trainer-training-plan",
   },
   {
     icon: <IconLogout></IconLogout>,

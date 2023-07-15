@@ -1,12 +1,4 @@
-import {
-  IconCampaign,
-  IconDashboard,
-  IconFolder,
-  IconLogout,
-  IconPayment,
-  IconProfile,
-  IconWithdraw,
-} from "components/icons";
+import { IconDashboard, IconFolder, IconLogout } from "components/icons";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
@@ -14,33 +6,33 @@ import { authLogOut } from "store/auth/auth-slice";
 const sidebarLinks = [
   {
     icon: <IconDashboard></IconDashboard>,
-    title: "Dashboard",
-    url: "/",
-  },
-  {
-    icon: <IconCampaign></IconCampaign>,
-    title: "Campaign",
-    url: "/campaign",
-  },
-  {
-    icon: <IconPayment></IconPayment>,
-    title: "Payment",
-    url: "/payment",
-  },
-  {
-    icon: <IconWithdraw></IconWithdraw>,
-    title: "Withdraw",
-    url: "/withdraw",
-  },
-  {
-    icon: <IconProfile></IconProfile>,
-    title: "Profile",
-    url: "/profile",
+    title: "Admin Dashboard",
+    url: "/admin-dashboard",
   },
   {
     icon: <IconFolder></IconFolder>,
-    title: "Admin Dashboard",
-    url: "/admin-dashboard",
+    title: "Account List",
+    url: "/account-list",
+  },
+  {
+    icon: <IconFolder></IconFolder>,
+    title: "Course List",
+    url: "/course-list",
+  },
+  {
+    icon: <IconFolder></IconFolder>,
+    title: "Criteria List",
+    url: "/criteria-list",
+  },
+  {
+    icon: <IconFolder></IconFolder>,
+    title: "Skill List",
+    url: "/skill-list",
+  },
+  {
+    icon: <IconFolder></IconFolder>,
+    title: "University List",
+    url: "/university-list",
   },
   {
     icon: <IconLogout></IconLogout>,

@@ -35,12 +35,31 @@ const SignInPage = () => {
   const handleSignIn = (values) => {
     dispatch(authLogin(values));
   };
+
+  // const { user } = useSelector((state) => state.auth);
+  // const userRole = user?.permissions || [];
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   if (user && user.id && userRole.includes("admin")) {
+  //     navigate("/admin-dashboard");
+  //     return;
+  //   }
+
+  //   if (user && user.id && userRole.includes("manager")) {
+  //     navigate("/manager-dashboard");
+  //     return;
+  //   }
+
+  //   navigate("/login");
+  //   //eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [user]);
+
   return (
-    <LayoutAuthentication heading="Welcome Back!">
+    <LayoutAuthentication heading="KNS OJT Management">
       <p className="mb-6 text-xs font-normal text-center lg:text-sm text-text3 lg:mb-8">
         Dont have an account?{" "}
         <Link to="/register" className="font-medium underline text-primary">
-          Sign up
+          Sign up here
         </Link>
       </p>
       <form onSubmit={handleSubmit(handleSignIn)}>
@@ -70,12 +89,16 @@ const SignInPage = () => {
         </FormGroup>
         <FormGroup>
           <div className="text-right">
-            <span className="inline-block text-sm font-medium text-primary">
+            <span className="inline-block text-sm font-medium text-primary underline hover:underline-offset-2">
               Forgot password
             </span>
           </div>
         </FormGroup>
-        <Button className="w-full" kind="primary" type="submit">
+        <Button
+          className="w-full hover:bg-green-600"
+          kind="primary"
+          type="submit"
+        >
           Sign in
         </Button>
       </form>

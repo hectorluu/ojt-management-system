@@ -15,4 +15,8 @@ app.get("/api/campaigns", verifyToken, (req, res) => {
   res.json(database.campaigns);
 });
 
+app.get("/api/users", verifyToken, (req, res) => {
+  res.json(database.users);
+});
+
 app.listen(PORT, () => console.log("Server started on port" + PORT));

@@ -7,15 +7,41 @@ import { useSelector } from "react-redux";
 
 const LayoutAuthentication = (props) => {
   const { children, heading = "" } = props;
+
+  // const { user } = useSelector((state) => state.auth);
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   if (user && user.email) {
+  //     navigate("/");
+  //   }
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [user]);
+  // if (user && user.email) return null;
+
   const { user } = useSelector((state) => state.auth);
+  const userRole = user?.permissions || [];
   const navigate = useNavigate();
   useEffect(() => {
-    if (user && user.email) {
-      navigate("/");
+    if (user && user.id && userRole.includes("admin")) {
+      navigate("/admin-dashboard");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    if (user && user.id && userRole.includes("manager")) {
+      navigate("/manager-dashboard");
+    }
+
+    if (user && user.id && userRole.includes("trainer")) {
+      navigate("/trainer-dashboard");
+    }
+
+    if (user && user.id && userRole.includes("trainee")) {
+      navigate("/trainee-dashboard");
+    }
+
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
-  if (user && user.email) return null;
+
   return (
     <div className="relative w-full min-h-screen p-10 bg-lite dark:bg-darkbg isolate">
       <img
