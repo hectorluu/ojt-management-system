@@ -31,9 +31,14 @@ const LayoutAuthentication = (props) => {
       navigate("/manager-dashboard");
     }
 
-    if (!user) {
-      navigate("/login");
+    if (user && user.id && userRole.includes("trainer")) {
+      navigate("/trainer-dashboard");
     }
+
+    if (user && user.id && userRole.includes("trainee")) {
+      navigate("/trainee-dashboard");
+    }
+
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 

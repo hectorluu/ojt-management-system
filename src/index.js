@@ -9,74 +9,128 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import LayoutDashboard from "layout/LayoutDashboard";
+
 import RequiredAuthPage from "pages/RequiredAuthPage";
-import CampaignView from "modules/campaign/CampaignView";
 
 import LayoutAdminDashboard from "layout/LayoutAdminDashboard";
 import LayoutManagerDashboard from "layout/LayoutManagerDashboard";
-import AdminDashBoardPage from "./pages/Admin/AdminDashBoardPage";
-import ManagerDashboardPage from "./pages/Manager/ManagerDashboardPage";
+import LayoutTrainerDashboard from "layout/LayoutTrainerDashboard";
+import LayoutTraineeDashboard from "layout/LayoutTraineeDashboard";
 
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
-// const DashboardPage = lazy(() => import("./pages/DashboardPage"));
-const CampaignPage = lazy(() => import("./pages/CampaignPage"));
-const StartCampaignPage = lazy(() => import("./pages/StartCampaignPage"));
-const PaymentPage = lazy(() => import("./pages/PaymentPage"));
-const WithdrawPage = lazy(() => import("./pages/WithdrawPage"));
 const UnauthorizePage = lazy(() => import("./pages/UnauthorizePage"));
 
 // prevent adding new lines when importing pages
-// prettier-ignore
-{
+
 // Admin Page
-const AdminDashboardPage = lazy(() => import("./pages/Admin/AdminDashBoardPage"));
+const AdminDashBoardPage = lazy(() =>
+  import("./pages/Admin/AdminDashBoardPage")
+);
 const AccountListPage = lazy(() => import("./pages/Admin/AccountListPage"));
 const CourseDetailPage = lazy(() => import("./pages/Admin/CourseDetailPage"));
 const CourseListPage = lazy(() => import("./pages/Admin/CourseListPage"));
-const CreateNewAccountPage = lazy(() => import("./pages/Admin/CreateNewAccountPage"));
-const CreateNewCoursePage = lazy(() => import("./pages/Admin/CreateNewCoursePage"));
-const CreateNewUniversityPage = lazy(() => import("./pages/Admin/CreateNewUniversityPage"));
+const CreateNewAccountPage = lazy(() =>
+  import("./pages/Admin/CreateNewAccountPage")
+);
+const CreateNewCoursePage = lazy(() =>
+  import("./pages/Admin/CreateNewCoursePage")
+);
+const CreateNewUniversityPage = lazy(() =>
+  import("./pages/Admin/CreateNewUniversityPage")
+);
 const CriteriaListPage = lazy(() => import("./pages/Admin/CriteriaListPage"));
 const SkillListPage = lazy(() => import("./pages/Admin/SkillListPage"));
-const UniversityDetailPage = lazy(() => import("./pages/Admin/UniversityDetailPage"));
-const UniversityListPage = lazy(() => import("./pages/Admin/UniversityListPage"));
+const UniversityDetailPage = lazy(() =>
+  import("./pages/Admin/UniversityDetailPage")
+);
+const UniversityListPage = lazy(() =>
+  import("./pages/Admin/UniversityListPage")
+);
 
 // Manager Page
 const AttendancePage = lazy(() => import("./pages/Manager/AttendancePage"));
-const ManagerDashboardPage = lazy(() => import("./pages/Manager/ManagerDashboardPage"));
-const ManagerReportListPage = lazy(() => import("./pages/Manager/ManagerReportListPage"));
-const TraineeDetailPage = lazy(() => import("./pages/Manager/TraineeDetailPage"));
+const ManagerDashboardPage = lazy(() =>
+  import("./pages/Manager/ManagerDashboardPage")
+);
+const ManagerReportListPage = lazy(() =>
+  import("./pages/Manager/ManagerReportListPage")
+);
+const TraineeDetailPage = lazy(() =>
+  import("./pages/Manager/TraineeDetailPage")
+);
 const TraineeListPage = lazy(() => import("./pages/Manager/TraineeListPage"));
-const TrainerAssignmentPage = lazy(() => import("./pages/Manager/TrainerAssignmentPage"));
-const TrainerDetailPage = lazy(() => import("./pages/Manager/TrainerDetailPage"));
+const TrainerAssignmentPage = lazy(() =>
+  import("./pages/Manager/TrainerAssignmentPage")
+);
+const TrainerDetailPage = lazy(() =>
+  import("./pages/Manager/TrainerDetailPage")
+);
 const TrainerListPage = lazy(() => import("./pages/Manager/TrainerListPage"));
-const TrainingPlanCertifyPage = lazy(() => import("./pages/Manager/TrainingPlanCertifyPage"));
-const TrainingPlanListPage = lazy(() => import("./pages/Manager/TrainingPlanListPage"));
+const TrainingPlanCertifyPage = lazy(() =>
+  import("./pages/Manager/TrainingPlanCertifyPage")
+);
+const TrainingPlanListPage = lazy(() =>
+  import("./pages/Manager/TrainingPlanListPage")
+);
 
 // Trainer Page
-const AssignedTraineeListPage = lazy(() => import("./pages/Trainer/AssignedTraineeListPage"));
-const AssignedTraineeTaskListPage = lazy(() => import("./pages/Trainer/AssignedTraineeTaskListPage"));
-const CertificateCertifyPage = lazy(() => import("./pages/Trainer/CertificateCertifyPage"));
-const CreateNewTrainingPlanPage = lazy(() => import("./pages/Trainer/CreateNewTrainingPlanPage"));
-const ManageTrainingPlanPage = lazy(() => import("./pages/Trainer/ManageTrainingPlanPage"));
-const OJTEvaluationPage = lazy(() => import("./pages/Trainer/OJTEvaluationPage"));
-const OJTStatisticsPage = lazy(() => import("./pages/Trainer/OJTStatisticsPage"));
-const TrainerReportListPage = lazy(() => import("./pages/Trainer/TrainerReportListPage"));
-const TrainerDashboardPage = lazy(() => import("./pages/Trainer/TrainerDashboardPage"));
-const TrainerProfilePage = lazy(() => import("./pages/Trainer/TrainerProfilePage"));
-const TrainerTrainingPlanPage = lazy(() => import("./pages/Trainer/TrainerTrainingPlanPage"));
+const AssignedTraineeListPage = lazy(() =>
+  import("./pages/Trainer/AssignedTraineeListPage")
+);
+const AssignedTraineeTaskListPage = lazy(() =>
+  import("./pages/Trainer/AssignedTraineeTaskListPage")
+);
+const CertificateCertifyPage = lazy(() =>
+  import("./pages/Trainer/CertificateCertifyPage")
+);
+const CreateNewTrainingPlanPage = lazy(() =>
+  import("./pages/Trainer/CreateNewTrainingPlanPage")
+);
+const ManageTrainingPlanPage = lazy(() =>
+  import("./pages/Trainer/ManageTrainingPlanPage")
+);
+const OJTEvaluationPage = lazy(() =>
+  import("./pages/Trainer/OJTEvaluationPage")
+);
+const OJTStatisticsPage = lazy(() =>
+  import("./pages/Trainer/OJTStatisticsPage")
+);
+const TrainerReportListPage = lazy(() =>
+  import("./pages/Trainer/TrainerReportListPage")
+);
+const TrainerDashboardPage = lazy(() =>
+  import("./pages/Trainer/TrainerDashboardPage")
+);
+const TrainerProfilePage = lazy(() =>
+  import("./pages/Trainer/TrainerProfilePage")
+);
+const TrainerTrainingPlanPage = lazy(() =>
+  import("./pages/Trainer/TrainerTrainingPlanPage")
+);
 
 // Trainee Page
-const TraineeCourseDetailPage = lazy(() => import("./pages/Trainee/TraineeCourseDetailPage"));
-const TraineeCourseListPage = lazy(() => import("./pages/Trainee/TraineeCourseListPage"));
-const TraineeDashboardPage = lazy(() => import("./pages/Trainee/TraineeDashboardPage"));
-const TraineePersonalStatisticsPage = lazy(() => import("./pages/Trainee/TraineePersonalStatisticsPage"));
-const TraineeProfilePage = lazy(() => import("./pages/Trainee/TraineeProfilePage"));
-const TraineeTaskListPage = lazy(() => import("./pages/Trainee/TraineeTaskListPage"));
-const TraineeTrainingPlanPage = lazy(() => import("./pages/Trainee/TraineeTrainingPlanPage"));
-}
+const TraineeCourseDetailPage = lazy(() =>
+  import("./pages/Trainee/TraineeCourseDetailPage")
+);
+const TraineeCourseListPage = lazy(() =>
+  import("./pages/Trainee/TraineeCourseListPage")
+);
+const TraineeDashboardPage = lazy(() =>
+  import("./pages/Trainee/TraineeDashboardPage")
+);
+const TraineePersonalStatisticsPage = lazy(() =>
+  import("./pages/Trainee/TraineePersonalStatisticsPage")
+);
+const TraineeProfilePage = lazy(() =>
+  import("./pages/Trainee/TraineeProfilePage")
+);
+const TraineeTaskListPage = lazy(() =>
+  import("./pages/Trainee/TraineeTaskListPage")
+);
+const TraineeTrainingPlanPage = lazy(() =>
+  import("./pages/Trainee/TraineeTrainingPlanPage")
+);
 
 const container = document.getElementById("root");
 
@@ -94,32 +148,52 @@ const router = createBrowserRouter([
     element: <RequiredAuthPage allowRole={["admin"]}></RequiredAuthPage>,
     children: [
       {
-        path: "/admin-dashboard",
+        path: "/",
         element: <LayoutAdminDashboard></LayoutAdminDashboard>,
         children: [
           {
-            path: "/admin-dashboard/admin-dashboard",
+            path: "/admin-dashboard",
             element: <AdminDashBoardPage></AdminDashBoardPage>,
           },
           {
-            path: "/admin-dashboard/campaign",
-            element: <CampaignPage></CampaignPage>,
+            path: "/account-list",
+            element: <AccountListPage></AccountListPage>,
           },
           {
-            path: "/admin-dashboard/payment",
-            element: <PaymentPage></PaymentPage>,
+            path: "/course-detail",
+            element: <CourseDetailPage></CourseDetailPage>,
           },
           {
-            path: "/admin-dashboard/withdraw",
-            element: <WithdrawPage></WithdrawPage>,
+            path: "/course-list",
+            element: <CourseListPage></CourseListPage>,
           },
           {
-            path: "/admin-dashboard/start-campaign",
-            element: <StartCampaignPage></StartCampaignPage>,
+            path: "/create-new-account",
+            element: <CreateNewAccountPage></CreateNewAccountPage>,
           },
           {
-            path: "/admin-dashboard/campaign/:slug",
-            element: <CampaignView></CampaignView>,
+            path: "/create-new-course",
+            element: <CreateNewCoursePage></CreateNewCoursePage>,
+          },
+          {
+            path: "/create-new-university",
+            element: <CreateNewUniversityPage></CreateNewUniversityPage>,
+          },
+          {
+            path: "/criteria-list",
+            element: <CriteriaListPage></CriteriaListPage>,
+          },
+          {
+            path: "/skill-list",
+            element: <SkillListPage></SkillListPage>,
+          },
+          {
+            path: "/university-detail",
+            element: <UniversityDetailPage></UniversityDetailPage>,
+          },
+          {
+            path: "/university-list",
+            element: <UniversityListPage></UniversityListPage>,
           },
         ],
       },
@@ -130,32 +204,148 @@ const router = createBrowserRouter([
     element: <RequiredAuthPage allowRole={["manager"]}></RequiredAuthPage>,
     children: [
       {
-        path: "/manager-dashboard",
+        path: "/",
         element: <LayoutManagerDashboard></LayoutManagerDashboard>,
         children: [
           {
-            path: "/manager-dashboard/manager-dashboard",
+            path: "/manager-dashboard",
             element: <ManagerDashboardPage></ManagerDashboardPage>,
           },
           {
-            path: "/manager-dashboard/campaign",
-            element: <CampaignPage></CampaignPage>,
+            path: "/attendance",
+            element: <AttendancePage></AttendancePage>,
           },
           {
-            path: "/manager-dashboard/payment",
-            element: <PaymentPage></PaymentPage>,
+            path: "/manager-report-list",
+            element: <ManagerReportListPage></ManagerReportListPage>,
           },
           {
-            path: "/manager-dashboard/withdraw",
-            element: <WithdrawPage></WithdrawPage>,
+            path: "/trainee-detail",
+            element: <TraineeDetailPage></TraineeDetailPage>,
           },
           {
-            path: "/manager-dashboard/start-campaign",
-            element: <StartCampaignPage></StartCampaignPage>,
+            path: "/trainee-list",
+            element: <TraineeListPage></TraineeListPage>,
           },
           {
-            path: "/manager-dashboard/campaign/:slug",
-            element: <CampaignView></CampaignView>,
+            path: "/trainer-assignment",
+            element: <TrainerAssignmentPage></TrainerAssignmentPage>,
+          },
+          {
+            path: "/trainer-detail",
+            element: <TrainerDetailPage></TrainerDetailPage>,
+          },
+          {
+            path: "/trainer-list",
+            element: <TrainerListPage></TrainerListPage>,
+          },
+          {
+            path: "/training-plan-certify",
+            element: <TrainingPlanCertifyPage></TrainingPlanCertifyPage>,
+          },
+          {
+            path: "/training-plan-list",
+            element: <TrainingPlanListPage></TrainingPlanListPage>,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <RequiredAuthPage allowRole={["trainer"]}></RequiredAuthPage>,
+    children: [
+      {
+        path: "/",
+        element: <LayoutTrainerDashboard></LayoutTrainerDashboard>,
+        children: [
+          {
+            path: "/trainer-dashboard",
+            element: <TrainerDashboardPage></TrainerDashboardPage>,
+          },
+          {
+            path: "/assigned-trainee-list",
+            element: <AssignedTraineeListPage></AssignedTraineeListPage>,
+          },
+          {
+            path: "/assigned-trainee-task-list",
+            element: (
+              <AssignedTraineeTaskListPage></AssignedTraineeTaskListPage>
+            ),
+          },
+          {
+            path: "/certificate-certify",
+            element: <CertificateCertifyPage></CertificateCertifyPage>,
+          },
+          {
+            path: "/create-new-training-plan",
+            element: <CreateNewTrainingPlanPage></CreateNewTrainingPlanPage>,
+          },
+          {
+            path: "/manage-training-plan",
+            element: <ManageTrainingPlanPage></ManageTrainingPlanPage>,
+          },
+          {
+            path: "/ojt-evaluation",
+            element: <OJTEvaluationPage></OJTEvaluationPage>,
+          },
+          {
+            path: "/ojt-statistics",
+            element: <OJTStatisticsPage></OJTStatisticsPage>,
+          },
+          {
+            path: "/trainer-profile",
+            element: <TrainerProfilePage></TrainerProfilePage>,
+          },
+          {
+            path: "/trainer-report-list",
+            element: <TrainerReportListPage></TrainerReportListPage>,
+          },
+          {
+            path: "/trainer-training-plan",
+            element: <TrainerTrainingPlanPage></TrainerTrainingPlanPage>,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <RequiredAuthPage allowRole={["trainee"]}></RequiredAuthPage>,
+    children: [
+      {
+        path: "/",
+        element: <LayoutTraineeDashboard></LayoutTraineeDashboard>,
+        children: [
+          {
+            path: "/trainee-dashboard",
+            element: <TraineeDashboardPage></TraineeDashboardPage>,
+          },
+          {
+            path: "/trainee-course-detail",
+            element: <TraineeCourseDetailPage></TraineeCourseDetailPage>,
+          },
+          {
+            path: "/trainee-course-list",
+            element: <TraineeCourseListPage></TraineeCourseListPage>,
+          },
+          {
+            path: "/trainee-personal-statistics",
+            element: (
+              <TraineePersonalStatisticsPage></TraineePersonalStatisticsPage>
+            ),
+          },
+          {
+            path: "/trainee-profile",
+            element: <TraineeProfilePage></TraineeProfilePage>,
+          },
+          {
+            path: "/trainee-task-list",
+            element: <TraineeTaskListPage></TraineeTaskListPage>,
+          },
+          {
+            path: "/trainee-training-plan",
+            element: <TraineeTrainingPlanPage></TraineeTrainingPlanPage>,
           },
         ],
       },

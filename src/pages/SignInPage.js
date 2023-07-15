@@ -12,9 +12,6 @@ import { IconEyeToggle } from "components/icons";
 import { Button } from "components/button";
 import { useDispatch } from "react-redux";
 import { authLogin } from "store/auth/auth-slice";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const schema = yup.object({
   email: yup.string().email("").required("This field is required"),
