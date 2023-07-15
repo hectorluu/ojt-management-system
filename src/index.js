@@ -90,6 +90,7 @@ const router = createBrowserRouter([
     element: <SignUpPage></SignUpPage>,
   },
   {
+    path: "/",
     element: <RequiredAuthPage allowRole={["admin"]}></RequiredAuthPage>,
     children: [
       {
@@ -125,6 +126,7 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "/",
     element: <RequiredAuthPage allowRole={["manager"]}></RequiredAuthPage>,
     children: [
       {

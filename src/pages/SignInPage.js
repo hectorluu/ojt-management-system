@@ -39,23 +39,23 @@ const SignInPage = () => {
     dispatch(authLogin(values));
   };
 
-  const { user } = useSelector((state) => state.auth);
-  const userRole = user?.permissions || [];
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (user && user.id && userRole.includes("admin")) {
-      navigate("/admin-dashboard");
-      return;
-    }
+  // const { user } = useSelector((state) => state.auth);
+  // const userRole = user?.permissions || [];
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   if (user && user.id && userRole.includes("admin")) {
+  //     navigate("/admin-dashboard");
+  //     return;
+  //   }
 
-    if (user && user.id && userRole.includes("manager")) {
-      navigate("/manager-dashboard");
-      return;
-    }
+  //   if (user && user.id && userRole.includes("manager")) {
+  //     navigate("/manager-dashboard");
+  //     return;
+  //   }
 
-    navigate("/login");
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  //   navigate("/login");
+  //   //eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [user]);
 
   return (
     <LayoutAuthentication heading="KNS OJT Management">
