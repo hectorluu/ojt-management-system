@@ -1,10 +1,22 @@
 import Overlay from "components/common/Overlay";
 import AdminDashboardSidebar from "modules/dashboard/AdminDashboardSidebar";
 import DashboardTopbar from "modules/dashboard/DashboardTopbar";
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { Outlet, useNavigate } from "react-router-dom";
 
-const LayoutDashboard = () => {
+const LayoutAdmin = () => {
+  const { user } = useSelector((state) => state.auth);
+  const userRole = user?.permissions || [];
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user && !user.email && !userRole.includes("admin")) {
+      navigate("/login");
+    }
+
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
   return (
     <div className="min-h-screen p-10 bg-lite">
       <Overlay></Overlay>
@@ -19,4 +31,4 @@ const LayoutDashboard = () => {
   );
 };
 
-export default LayoutDashboard;
+export default LayoutAdmin;

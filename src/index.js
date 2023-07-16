@@ -12,10 +12,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 import RequiredAuthPage from "pages/RequiredAuthPage";
 
-import LayoutAdminDashboard from "layout/LayoutAdminDashboard";
-import LayoutManagerDashboard from "layout/LayoutManagerDashboard";
-import LayoutTrainerDashboard from "layout/LayoutTrainerDashboard";
-import LayoutTraineeDashboard from "layout/LayoutTraineeDashboard";
+import LayoutAdmin from "layout/LayoutAdmin";
+import LayoutManager from "layout/LayoutManager";
+import LayoutTrainee from "layout/LayoutTrainee";
+import LayoutTrainer from "layout/LayoutTrainer";
 
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
@@ -149,7 +149,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <LayoutAdminDashboard></LayoutAdminDashboard>,
+        element: <LayoutAdmin></LayoutAdmin>,
         children: [
           {
             path: "/admin-dashboard",
@@ -205,7 +205,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <LayoutManagerDashboard></LayoutManagerDashboard>,
+        element: <LayoutManager></LayoutManager>,
         children: [
           {
             path: "/manager-dashboard",
@@ -257,7 +257,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <LayoutTrainerDashboard></LayoutTrainerDashboard>,
+        element: <LayoutTrainer></LayoutTrainer>,
         children: [
           {
             path: "/trainer-dashboard",
@@ -315,7 +315,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <LayoutTraineeDashboard></LayoutTraineeDashboard>,
+        element: <LayoutTrainee></LayoutTrainee>,
         children: [
           {
             path: "/trainee-dashboard",
@@ -362,16 +362,14 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(container).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <Suspense fallback={<p></p>}>
-        <App>
-          <RouterProvider router={router}></RouterProvider>
-        </App>
-      </Suspense>
-      <ToastContainer bodyClassName="font-primary text-sm"></ToastContainer>
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <Suspense fallback={<p></p>}>
+      <App>
+        <RouterProvider router={router}></RouterProvider>
+      </App>
+    </Suspense>
+    <ToastContainer bodyClassName="font-primary text-sm"></ToastContainer>
+  </Provider>
 );
 
 reportWebVitals();

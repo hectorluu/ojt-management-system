@@ -12,11 +12,9 @@ const RequiredAuthPage = ({ allowRole = [] }) => {
   }
 
   return userRole?.find((p) => allowRole?.includes(p)) ? (
-    <Outlet>{console.log("allowRole", allowRole)}</Outlet>
+    <Outlet></Outlet>
   ) : user && user.id ? (
-    (console.log("userRole", userRole),
-    console.log("allowRole", allowRole),
-    (<Navigate to="/unauthorize" state={{ from: location }} replace />))
+    <Navigate to="/unauthorize" state={{ from: location }} replace />
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />
   );

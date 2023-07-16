@@ -23,7 +23,7 @@ const LayoutAuthentication = (props) => {
   const userRole = user?.permissions || [];
   const navigate = useNavigate();
   useEffect(() => {
-    if (user && user.id && userRole.includes("admin")) {
+    if (userRole.includes("admin")) {
       navigate("/admin-dashboard");
     }
 
