@@ -6,13 +6,11 @@ export const requestAuthRegister = (data) => {
   });
 };
 export const requestAuthLogin = (data) => {
-  return axios.post("/auth/login", {
-    ...data,
-  });
+  return axios.post("/api/authen/login", data);
 };
 export const requestAuthFetchMe = (token) => {
   if (!token) return;
-  return axios.get("/me", {
+  return axios.get("/api/Common/GetCurrentUser", {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

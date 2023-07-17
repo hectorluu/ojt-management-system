@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { withErrorBoundary } from "react-error-boundary";
 import ErrorComponent from "../components/common/ErrorComponent";
 import { useSelector } from "react-redux";
+import { permissions } from "constants/permissions";
 
 const LayoutAuthentication = (props) => {
   const { children, heading = "" } = props;
@@ -20,22 +21,22 @@ const LayoutAuthentication = (props) => {
   // if (user && user.email) return null;
 
   const { user } = useSelector((state) => state.auth);
-  const userRole = user?.permissions || [];
+  const userRole = user?.role || "";
   const navigate = useNavigate();
   useEffect(() => {
-    if (userRole.includes("admin")) {
+    if (user && user.id && userRole === permissions.ADMIN) {
       navigate("/admin-dashboard");
     }
 
-    if (user && user.id && userRole.includes("manager")) {
+    if (user && user.id && userRole === permissions.MANAGER) {
       navigate("/manager-dashboard");
     }
 
-    if (user && user.id && userRole.includes("trainer")) {
+    if (user && user.id && userRole === permissions.TRAINER) {
       navigate("/trainer-dashboard");
     }
 
-    if (user && user.id && userRole.includes("trainee")) {
+    if (user && user.id && userRole === permissions.TRAINEE) {
       navigate("/trainee-dashboard");
     }
 
