@@ -16,6 +16,7 @@ import LayoutAdmin from "layout/LayoutAdmin";
 import LayoutManager from "layout/LayoutManager";
 import LayoutTrainee from "layout/LayoutTrainee";
 import LayoutTrainer from "layout/LayoutTrainer";
+import { permissions } from "constants/permissions";
 
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
@@ -145,7 +146,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <RequiredAuthPage allowRole={["admin"]}></RequiredAuthPage>,
+    element: <RequiredAuthPage allowRole={permissions.ADMIN}></RequiredAuthPage>,
     children: [
       {
         path: "/",
@@ -201,7 +202,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <RequiredAuthPage allowRole={["manager"]}></RequiredAuthPage>,
+    element: <RequiredAuthPage allowRole={permissions.MANAGER}></RequiredAuthPage>,
     children: [
       {
         path: "/",
@@ -253,7 +254,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <RequiredAuthPage allowRole={["trainer"]}></RequiredAuthPage>,
+    element: <RequiredAuthPage allowRole={permissions.TRAINER}></RequiredAuthPage>,
     children: [
       {
         path: "/",
@@ -311,7 +312,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <RequiredAuthPage allowRole={["trainee"]}></RequiredAuthPage>,
+    element: <RequiredAuthPage allowRole={permissions.TRAINEE}></RequiredAuthPage>,
     children: [
       {
         path: "/",

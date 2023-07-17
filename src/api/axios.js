@@ -8,7 +8,7 @@ export default axios.create({
   },
 });
 export const axiosPrivate = axios.create({
-  baseURL: "http://localhost:3009",
+  baseURL: "https://localhost:44378",
   headers: {
     "Content-Type": "application/json",
     "Cache-Control": "no-cache",

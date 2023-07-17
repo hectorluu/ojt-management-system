@@ -23,9 +23,11 @@ export default function* handleAuthRegister(action) {
 function* handleAuthLogin({ payload }) {
   try {
     const response = yield call(requestAuthLogin, payload);
-    if (response.data.accessToken && response.data.refreshToken) {
-      saveToken(response.data.accessToken, response.data.refreshToken);
-      yield call(handleAuthFetchMe, { payload: response.data.accessToken });
+    console.log(response);
+    //if (response.data.accessToken || response.data.refreshToken) {
+    if (response.data) {
+      saveToken(response.data, "refreshtoken");
+      yield call(handleAuthFetchMe, { payload: response.data });
     }
   } catch (error) {
     const response = error.response.data;
@@ -40,6 +42,7 @@ function* handleAuthFetchMe({ payload }) {
   try {
     const response = yield call(requestAuthFetchMe, payload);
     if (response.status === 200) {
+      console.log(response);
       yield put(
         authUpdateUser({
           user: response.data,

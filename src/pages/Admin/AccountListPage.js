@@ -17,8 +17,8 @@ const AccountListPage = () => {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await axiosPrivate.get("/api/users");
-        setUsers(response.data);
+        const response = await axiosPrivate.get("/api/user?PageIndex=1&PageSize=10");
+        setUsers(response.data.data);
         console.log("fetchUsers ~ response", response);
       } catch (error) {
         console.log("fetchUsers ~ error", error);
@@ -38,15 +38,15 @@ const AccountListPage = () => {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Permission</TableCell>
+              <TableCell>Role</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users.map((item) => (
               <TableRow key={item.id}>
-                <TableCell>{item.name}</TableCell>
+                <TableCell>{item.fullName}</TableCell>
                 <TableCell>{item.email}</TableCell>
-                <TableCell>{item.permissions}</TableCell>
+                <TableCell>{item.role}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -10,7 +10,7 @@ const CourseListPage = () => {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await axiosPrivate.get("/api/users");
+        const response = await axiosPrivate.get("/api/userPageIndex=1&PageSize=10");
         setCourses(response.data);
         console.log("fetchUsers ~ response", response);
       } catch (error) {

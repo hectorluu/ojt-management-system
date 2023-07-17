@@ -21,14 +21,17 @@ function App({ children }) {
           accessToken: access_token,
         })
       );
-    } else {
+    } 
+    else {
       const { refresh_token } = getToken();
-      if (refresh_token) {
-        dispatch(authRefreshToken(refresh_token));
-      } else {
-        dispatch(authUpdateUser({}));
-        logOut();
-      }
+      // if (refresh_token) {
+      //   dispatch(authRefreshToken(refresh_token));
+      // } else {
+      //   dispatch(authUpdateUser({}));
+      //   logOut();
+      // }
+      dispatch(authUpdateUser({}));
+      logOut();
     }
   }, [dispatch, user]);
   return <>{children}</>;
