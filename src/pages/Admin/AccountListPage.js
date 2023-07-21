@@ -10,6 +10,8 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { userPath } from "api/apiUrl";
+import { defaultPageSize, defaultPageIndex } from "constants/global";
 
 const AccountListPage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -17,7 +19,7 @@ const AccountListPage = () => {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await axiosPrivate.get("/api/user?PageIndex=1&PageSize=10");
+        const response = await axiosPrivate.get(userPath.GET_USER_LIST + "?" + defaultPageIndex + "&" + defaultPageSize);
         setUsers(response.data.data);
         console.log("fetchUsers ~ response", response);
       } catch (error) {

@@ -1,8 +1,17 @@
 import Gap from "components/common/Gap";
 import Heading from "components/common/Heading";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
-import AdminAccountGrid from "modules/account/AdminAccountGrid";
 import React, { Fragment, useEffect, useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+import { coursePath } from "api/apiUrl";
+import { defaultPageSize, defaultPageIndex } from "constants/global";
 
 const CourseListPage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -10,8 +19,8 @@ const CourseListPage = () => {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await axiosPrivate.get("/api/userPageIndex=1&PageSize=10");
-        setCourses(response.data);
+        const response = await axiosPrivate.get(coursePath.GET_COURSE_LIST + "?" + defaultPageIndex + "&" + defaultPageSize);
+        setCourses(response.data.data);
         console.log("fetchUsers ~ response", response);
       } catch (error) {
         console.log("fetchUsers ~ error", error);
@@ -23,34 +32,28 @@ const CourseListPage = () => {
 
   return (
     <Fragment>
-      <Heading className="text-3xl">Account List</Heading>
+      <Heading className="text-3xl">Course List</Heading>
       <Gap></Gap>
-      <AdminAccountGrid>
-        <table className="w-[80rem]">
-          <thead className="bg-gray-50 border-b-2 border-gray-200">
-            <tr>
-              <th className="p-3 text-sm font-semibold tracking-wide text-left">
-                Name
-              </th>
-              <th className="p-3 text-sm font-semibold tracking-wide text-left">
-                Email
-              </th>
-              <th className="p-3 text-sm font-semibold tracking-wide text-left">
-                Permission
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Role</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {courses.map((item) => (
-              <tr key={item.id}>
-                <td className="bg-white text text-black">{item.name}</td>
-                <td className="bg-gray-50 text-black">{item.email}</td>
-                <td className="bg-white text-black">{item.permissions}</td>
-              </tr>
+              <TableRow key={item.id}>
+                <TableCell>{item.fullName}</TableCell>
+                <TableCell>{item.email}</TableCell>
+                <TableCell>{item.role}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </AdminAccountGrid>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Fragment>
   );
 };
