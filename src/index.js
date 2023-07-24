@@ -16,6 +16,8 @@ import LayoutAdmin from "layout/LayoutAdmin";
 import LayoutManager from "layout/LayoutManager";
 import LayoutTrainee from "layout/LayoutTrainee";
 import LayoutTrainer from "layout/LayoutTrainer";
+import CampaignPage from "pages/CampaignPage";
+import StartCampaignPage from "pages/StartCampaignPage";
 
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
@@ -358,6 +360,14 @@ const router = createBrowserRouter([
   {
     path: "/unauthorize",
     element: <UnauthorizePage></UnauthorizePage>,
+  },
+  {
+    path: "/campaign-page",
+    element: <CampaignPage></CampaignPage>,
+  },
+  {
+    path: "/start-campaign",
+    element: <StartCampaignPage></StartCampaignPage>,
   },
 ]);
 

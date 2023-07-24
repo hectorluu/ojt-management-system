@@ -10,6 +10,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { Button } from "components/button";
 
 const AccountListPage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -30,7 +31,20 @@ const AccountListPage = () => {
 
   return (
     <Fragment>
-      <Heading className="text-3xl">Account List</Heading>
+      <div className="flex flex-wrap items-center justify-between	">
+        <div className="flex items-center justify-center">
+          <Heading className="text-4xl font-bold pt-6">Tài khoản</Heading>
+        </div>
+
+        <Button
+          className="px-7"
+          type="button"
+          href="/create-new-account"
+          kind="secondary"
+        >
+          Thêm tài khoản mới
+        </Button>
+      </div>
       <Gap></Gap>
       <TableContainer>
         <Table>
