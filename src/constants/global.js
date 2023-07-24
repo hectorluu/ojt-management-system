@@ -21,3 +21,10 @@ export const roleOptions = [
   { value: "Trainer", label: "Đào tạo viên" },
   { value: "Trainee", label: "Thực tập sinh" },
 ];
+
+export const positionOptions = [
+  { value: "Front-end dev", label: "Front-end dev" },
+  { value: "Back-end dev", label: "Back-end dev" },
+  { value: "DevOps", label: "Đào tạo viênDevOps" },
+  { value: "Project Manager", label: "Project Manager" },
+];
