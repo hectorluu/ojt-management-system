@@ -32,7 +32,7 @@ const SkillListPage = () => {
 
   return (
     <Fragment>
-      <Heading className="text-3xl">Course List</Heading>
+      <Heading className="text-3xl">Skill List</Heading>
       <Gap></Gap>
       <TableContainer>
         <Table>

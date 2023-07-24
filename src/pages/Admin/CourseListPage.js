@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { coursePath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
+import CourseCardDisplay from "modules/course/CourseCardDisplay";
 
 const CourseListPage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -33,6 +34,7 @@ const CourseListPage = () => {
   return (
     <Fragment>
       <Heading className="text-3xl">Course List</Heading>
+      <CourseCardDisplay/>
       <Gap></Gap>
       <TableContainer>
         <Table>

@@ -3,6 +3,8 @@ import Heading from "components/common/Heading";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import React, { Fragment, useEffect, useState } from "react";
 import {
+  Button,
+  Grid,
   Table,
   TableBody,
   TableCell,
@@ -10,6 +12,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 import { userPath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
 
@@ -32,7 +35,16 @@ const AccountListPage = () => {
 
   return (
     <Fragment>
-      <Heading className="text-3xl">Account List</Heading>
+      <Grid container spacing={2}>
+        <Grid item xs={10}>
+          <Heading className="text-3xl">Account List</Heading>
+        </Grid>
+        <Grid item xs={2}>
+          <Button variant="outlined" startIcon={<AddIcon />}>
+            Account
+          </Button>
+        </Grid>
+      </Grid>
       <Gap></Gap>
       <TableContainer>
         <Table>

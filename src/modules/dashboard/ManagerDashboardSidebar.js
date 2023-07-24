@@ -1,51 +1,60 @@
-import { IconDashboard, IconFolder, IconLogout } from "components/icons";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { authLogOut } from "store/auth/auth-slice";
+import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import EditCalendarOutlinedIcon from '@mui/icons-material/EditCalendarOutlined';
+import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
+import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
+import SupervisedUserCircleOutlinedIcon from '@mui/icons-material/SupervisedUserCircleOutlined';
+import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
+import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumberedOutlined';
+import AddTaskOutlinedIcon from '@mui/icons-material/AddTaskOutlined';
+
 const sidebarLinks = [
   {
-    icon: <IconDashboard></IconDashboard>,
+    icon: <SpaceDashboardOutlinedIcon/>,
     title: "Manager Dashboard",
     url: "/manager-dashboard",
   },
   {
-    icon: <IconFolder></IconFolder>,
+    icon: <EditCalendarOutlinedIcon/>,
     title: "Attendance",
     url: "/attendance",
   },
   {
-    icon: <IconFolder></IconFolder>,
+    icon: <SummarizeOutlinedIcon/>,
     title: "Manager Report List",
     url: "/manager-report-list",
   },
   {
-    icon: <IconFolder></IconFolder>,
+    icon: <SupervisedUserCircleOutlinedIcon/>,
     title: "Trainee List",
     url: "/trainee-list",
   },
   {
-    icon: <IconFolder></IconFolder>,
+    icon: <SupervisorAccountOutlinedIcon/>,
     title: "Trainer List",
     url: "/trainer-list",
   },
   {
-    icon: <IconFolder></IconFolder>,
+    icon: <AssignmentIndOutlinedIcon/>,
     title: "Trainer Assignment",
     url: "/trainer-assignment",
   },
   {
-    icon: <IconFolder></IconFolder>,
+    icon: <FormatListNumberedOutlinedIcon/>,
     title: "Training Plan List",
     url: "/training-plan-list",
   },
   {
-    icon: <IconFolder></IconFolder>,
+    icon: <AddTaskOutlinedIcon/>,
     title: "Training Certify",
     url: "/training-plan-certify",
   },
   {
-    icon: <IconLogout></IconLogout>,
+    icon: <LogoutOutlinedIcon/>,
     title: "Logout",
     url: "/logout",
   },
