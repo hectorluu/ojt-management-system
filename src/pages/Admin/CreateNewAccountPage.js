@@ -1,4 +1,5 @@
-import React, { Fragment, useState } from "react";
+//eslint-disable-next-line
+import React, { Fragment, useEffect, useState } from "react";
 import FormRow from "components/common/FormRow";
 import FormGroup from "components/common/FormGroup";
 import DatePicker from "react-date-picker";
@@ -10,7 +11,8 @@ import { Input } from "components/input";
 import { Dropdown } from "components/dropdown";
 import { Button } from "components/button";
 import { apiURL } from "config/config";
-import { genderOptions } from "constants/global";
+import ImageUpload from "components/image/ImageUpload";
+import { genderOptions, roleOptions, positionOptions } from "constants/global";
 
 const CreateNewAccountPage = () => {
   const [dateOfBirth, setDateOfBith] = useState(new Date());
@@ -40,7 +42,18 @@ const CreateNewAccountPage = () => {
     // values, dateOfBirth
   };
 
-  const handleSelectDropdownOption = (name, value) => {
+  const handleSelectGenderDropdownOption = (name, value) => {
+    setValue(name, value);
+  };
+
+  const handleSelectPositionDropdownOption = (name, value) => {
+    setValue(name, value);
+  };
+
+  const [userRoleWhenChosen, setUserRoleWhenChosen] = useState("");
+
+  const handleSelectRoleDropdownOption = (name, value) => {
+    setUserRoleWhenChosen(() => value);
     setValue(name, value);
   };
 
@@ -120,7 +133,7 @@ const CreateNewAccountPage = () => {
                       <Dropdown.Option
                         key={personGender.value}
                         onClick={() =>
-                          handleSelectDropdownOption(
+                          handleSelectGenderDropdownOption(
                             "Giới tính",
                             personGender.value
                           )
@@ -142,12 +155,94 @@ const CreateNewAccountPage = () => {
                 </FormGroup>
               </FormGroup>
             </FormRow>
+            {/* This is the line to separate between section */}
+            <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
+            <FormRow>
+              <FormGroup>
+                <Label>Chức vụ (*)</Label>
+                <Dropdown>
+                  <Dropdown.Select
+                    placeholder={getDropdownLabel("Chức vụ", "Chọn chức vụ")}
+                  ></Dropdown.Select>
+                  <Dropdown.List>
+                    {roleOptions.map((personRole) => (
+                      <Dropdown.Option
+                        key={personRole.value}
+                        onClick={() =>
+                          handleSelectRoleDropdownOption(
+                            "Chức vụ",
+                            personRole.label
+                          )
+                        }
+                      >
+                        <span className="capitalize">{personRole.label}</span>
+                      </Dropdown.Option>
+                    ))}
+                  </Dropdown.List>
+                </Dropdown>
+              </FormGroup>
+            </FormRow>
+            {userRoleWhenChosen &&
+              (userRoleWhenChosen === "Đào tạo viên" ||
+                userRoleWhenChosen === "Thực tập sinh") && (
+                <>
+                  <FormRow>
+                    <FormGroup>
+                      <Label>Mã số nhân viên (*)</Label>
+                      <Input
+                        control={control}
+                        name="MSSV"
+                        placeholder="Ex: SE150056"
+                        autoComplete="off"
+                      ></Input>
+                    </FormGroup>
+                    <FormGroup>
+                      <Label>Vị trí (*)</Label>
+                      <Dropdown>
+                        <Dropdown.Select
+                          placeholder={getDropdownLabel(
+                            "Vị trí",
+                            "Chọn vị trí"
+                          )}
+                        ></Dropdown.Select>
+                        <Dropdown.List>
+                          {positionOptions.map((personPosition) => (
+                            <Dropdown.Option
+                              key={personPosition.value}
+                              onClick={() =>
+                                handleSelectPositionDropdownOption(
+                                  "Vị trí",
+                                  personPosition.value
+                                )
+                              }
+                            >
+                              <span className="capitalize">
+                                {personPosition.label}
+                              </span>
+                            </Dropdown.Option>
+                          ))}
+                        </Dropdown.List>
+                      </Dropdown>
+                    </FormGroup>
+                  </FormRow>
+                  <FormRow>
+                    <FormGroup>
+                      <Label>Tải ảnh lên</Label>
+                      <ImageUpload
+                        onChange={setValue}
+                        name="featured_image"
+                      ></ImageUpload>
+                    </FormGroup>
+                    <FormGroup></FormGroup>
+                  </FormRow>
+                </>
+              )}
             <div className="mt-5 text-center">
               <Button
                 type="submit"
                 className="px-10 mx-auto text-white bg-primary"
               >
-                Bước tiếp theo{" "}
+                Tạo tài khoản{" "}
               </Button>
             </div>
           </form>
