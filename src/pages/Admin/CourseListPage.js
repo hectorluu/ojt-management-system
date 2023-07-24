@@ -13,6 +13,7 @@ import {
 import { coursePath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
 import CourseCardDisplay from "modules/course/CourseCardDisplay";
+import { Button } from "components/button";
 
 const CourseListPage = () => {
   const axiosPrivate = useAxiosPrivate();

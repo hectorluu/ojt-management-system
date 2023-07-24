@@ -360,14 +360,6 @@ const router = createBrowserRouter([
     path: "/unauthorize",
     element: <UnauthorizePage></UnauthorizePage>,
   },
-  {
-    path: "/campaign-page",
-    element: <CampaignPage></CampaignPage>,
-  },
-  {
-    path: "/start-campaign",
-    element: <StartCampaignPage></StartCampaignPage>,
-  },
 ]);
 
 createRoot(container).render(
