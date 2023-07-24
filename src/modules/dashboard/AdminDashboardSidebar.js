@@ -1,41 +1,41 @@
-import { IconDashboard, IconFolder, IconLogout } from "components/icons";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { authLogOut } from "store/auth/auth-slice";
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined';
+import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
+import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import ApartmentOutlinedIcon from '@mui/icons-material/ApartmentOutlined';
 const sidebarLinks = [
   {
-    icon: <IconDashboard></IconDashboard>,
+    icon: <SpaceDashboardOutlinedIcon/>,
     title: "Admin Dashboard",
     url: "/admin-dashboard",
   },
   {
-    icon: <IconFolder></IconFolder>,
+    icon: <AccountCircleOutlinedIcon/>,
     title: "Account List",
     url: "/account-list",
   },
   {
-    icon: <IconFolder></IconFolder>,
+    icon: <SchoolOutlinedIcon/>,
     title: "Course List",
     url: "/course-list",
   },
   {
-    icon: <IconFolder></IconFolder>,
-    title: "Criteria List",
-    url: "/criteria-list",
-  },
-  {
-    icon: <IconFolder></IconFolder>,
+    icon: <CodeOutlinedIcon/>,
     title: "Skill List",
     url: "/skill-list",
   },
   {
-    icon: <IconFolder></IconFolder>,
+    icon: <ApartmentOutlinedIcon/>,
     title: "University List",
     url: "/university-list",
   },
   {
-    icon: <IconLogout></IconLogout>,
+    icon: <LogoutOutlinedIcon/>,
     title: "Logout",
     url: "/logout",
   },

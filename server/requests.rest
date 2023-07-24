@@ -4,6 +4,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hb
 GET http://localhost:4001/api/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJldm9uZGV2IiwiaWF0IjoxNjYyNDQyOTc3LCJleHAiOjE2NjI0NDMwMDd9.btgYMgl22L8F1M7wLfxfg4qw5JgOvFkkag4LYAGkroY
 
+GET http://localhost:4001/api/
+
 ###
 POST http://localhost:5001/login
 Content-Type: application/json

@@ -1,3 +1,4 @@
+import { authPath, commonPath } from "api/apiUrl";
 const { default: axios } = require("api/axios");
 
 export const requestAuthRegister = (data) => {
@@ -6,13 +7,11 @@ export const requestAuthRegister = (data) => {
   });
 };
 export const requestAuthLogin = (data) => {
-  return axios.post("/auth/login", {
-    ...data,
-  });
+  return axios.post(authPath.LOGIN, data);
 };
 export const requestAuthFetchMe = (token) => {
   if (!token) return;
-  return axios.get("/me", {
+  return axios.get(commonPath.GET_ME, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
