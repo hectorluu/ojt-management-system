@@ -50,17 +50,8 @@ const TraineeListPage = () => {
     <Fragment>
       <div className="flex flex-wrap items-center justify-between	">
         <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6"></Heading>
+          <Heading className="text-4xl font-bold pt-6">Thực tập sinh</Heading>
         </div>
-
-        <Button
-          className="px-7"
-          type="button"
-          href="/create-new-account"
-          kind="secondary"
-        >
-          Thêm tài khoản mới
-        </Button>
       </div>
       <Gap></Gap>
       <TableContainer>
