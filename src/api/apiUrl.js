@@ -42,6 +42,8 @@ export const userPath = {
   GET_USER: "",
   CREATE_USER: "",
   UPADTE_USER: "",
+  GET_TRAINEE_LIST: "/api/user/trainee",
+  GET_TRAINER_LIST: "/api/user/trainer",
 };
 
 export const skillPath = {

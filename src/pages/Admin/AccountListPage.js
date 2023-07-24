@@ -13,15 +13,21 @@ import {
 import { userPath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
 import { Button } from "components/button";
+import TablePagination from '@mui/material/TablePagination';
 
 const AccountListPage = () => {
+  const [page, setPage] = React.useState(1);
+  const [totalItem, setTotalItem] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState([]);
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await axiosPrivate.get(userPath.GET_USER_LIST + "?" + defaultPageIndex + "&" + defaultPageSize);
+        const response = await axiosPrivate.get(userPath.GET_USER_LIST + "?PageIndex=" + page + "&PageSize=" + rowsPerPage);
         setUsers(response.data.data);
+        setTotalItem(response.data.totalItem);
+        // setPage(response.data.pageIndex);
         console.log("fetchUsers ~ response", response);
       } catch (error) {
         console.log("fetchUsers ~ error", error);
@@ -30,6 +36,15 @@ const AccountListPage = () => {
     fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage + 1);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   return (
     <Fragment>
@@ -67,6 +82,14 @@ const AccountListPage = () => {
             ))}
           </TableBody>
         </Table>
+        <TablePagination
+          component="div"
+          count={totalItem}
+          page={page - 1}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
     </Fragment>
   );
