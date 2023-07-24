@@ -18,7 +18,7 @@ const LayoutAdmin = () => {
   }, [user]);
 
   return (
-    <div className="min-h-screen p-10 bg-lite">
+    <div className="min-h-screen p-10 bg-slate-100">
       <Overlay></Overlay>
       <DashboardTopbar></DashboardTopbar>
       <div className="flex items-start gap-x-10">
