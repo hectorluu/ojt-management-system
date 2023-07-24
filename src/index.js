@@ -161,7 +161,7 @@ const router = createBrowserRouter([
             element: <AccountListPage></AccountListPage>,
           },
           {
-            path: "/course-detail",
+            path: "/course-list/:slug",
             element: <CourseDetailPage></CourseDetailPage>,
           },
           {
@@ -189,7 +189,7 @@ const router = createBrowserRouter([
             element: <SkillListPage></SkillListPage>,
           },
           {
-            path: "/university-detail",
+            path: "/university-list/:slug",
             element: <UniversityDetailPage></UniversityDetailPage>,
           },
           {
@@ -221,7 +221,7 @@ const router = createBrowserRouter([
             element: <ManagerReportListPage></ManagerReportListPage>,
           },
           {
-            path: "/trainee-detail",
+            path: "/trainee-list/:slug",
             element: <TraineeDetailPage></TraineeDetailPage>,
           },
           {
@@ -233,7 +233,7 @@ const router = createBrowserRouter([
             element: <TrainerAssignmentPage></TrainerAssignmentPage>,
           },
           {
-            path: "/trainer-detail",
+            path: "/trainer-list/:slug",
             element: <TrainerDetailPage></TrainerDetailPage>,
           },
           {
@@ -359,6 +359,14 @@ const router = createBrowserRouter([
   {
     path: "/unauthorize",
     element: <UnauthorizePage></UnauthorizePage>,
+  },
+  {
+    path: "/campaign-page",
+    element: <CampaignPage></CampaignPage>,
+  },
+  {
+    path: "/start-campaign",
+    element: <StartCampaignPage></StartCampaignPage>,
   },
 ]);
 

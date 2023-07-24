@@ -3,8 +3,6 @@ import Heading from "components/common/Heading";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import React, { Fragment, useEffect, useState } from "react";
 import {
-  Button,
-  Grid,
   Table,
   TableBody,
   TableCell,
@@ -12,9 +10,9 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
 import { userPath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
+import { Button } from "components/button";
 
 const AccountListPage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -35,16 +33,20 @@ const AccountListPage = () => {
 
   return (
     <Fragment>
-      <Grid container spacing={2}>
-        <Grid item xs={10}>
-          <Heading className="text-3xl">Account List</Heading>
-        </Grid>
-        <Grid item xs={2}>
-          <Button variant="outlined" startIcon={<AddIcon />}>
-            Account
-          </Button>
-        </Grid>
-      </Grid>
+      <div className="flex flex-wrap items-center justify-between	">
+        <div className="flex items-center justify-center">
+          <Heading className="text-4xl font-bold pt-6">Tài khoản</Heading>
+        </div>
+
+        <Button
+          className="px-7"
+          type="button"
+          href="/create-new-account"
+          kind="secondary"
+        >
+          Thêm tài khoản mới
+        </Button>
+      </div>
       <Gap></Gap>
       <TableContainer>
         <Table>

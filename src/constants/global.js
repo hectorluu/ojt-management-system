@@ -4,3 +4,13 @@ export const defaultImage =
 export const defaultPageSize = "PageSize=10";
 
 export const defaultPageIndex = "PageIndex=1";
+
+export const genderOptions = [
+  { value: "Nam", label: "Nam" },
+  { value: "Nữ", label: "Nữ" },
+];
+
+export const courseOptions = [
+  { value: "Bắt buộc", label: "Bắt buộc" },
+  { value: "Không bắt buộc", label: "Không bắt buộc" },
+];
