@@ -13,7 +13,7 @@ import ImageUpload from "components/image/ImageUpload";
 import { genderOptions, roleOptions, positionOptions } from "constants/global";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { userPath } from "api/apiUrl";
-import { roleExchange, roleExchangeRev } from "constants/global";
+import { roleExchange } from "constants/global";
 import moment from "moment";
 
 const CreateNewAccountPage = () => {
@@ -48,11 +48,7 @@ const CreateNewAccountPage = () => {
     // values, dateOfBirth
   };
 
-  const handleSelectGenderDropdownOption = (name, value) => {
-    setValue(name, value);
-  };
-
-  const handleSelectPositionDropdownOption = (name, value) => {
+  const handleSelectDropdownOption = (name, value) => {
     setValue(name, value);
   };
 
@@ -140,7 +136,7 @@ const CreateNewAccountPage = () => {
                       <Dropdown.Option
                         key={personGender.value}
                         onClick={() =>
-                          handleSelectGenderDropdownOption(
+                          handleSelectDropdownOption(
                             "gender",
                             personGender.value
                           )
@@ -219,7 +215,7 @@ const CreateNewAccountPage = () => {
                             <Dropdown.Option
                               key={personPosition.value}
                               onClick={() =>
-                                handleSelectPositionDropdownOption(
+                                handleSelectDropdownOption(
                                   "position",
                                   personPosition.value
                                 )

@@ -12,8 +12,8 @@ export const genderOptions = [
 ];
 
 export const courseOptions = [
-  { value: "Bắt buộc", label: "Bắt buộc" },
-  { value: "Không bắt buộc", label: "Không bắt buộc" },
+  { value: 1, label: "Bắt buộc" },
+  { value: 0, label: "Không bắt buộc" },
 ];
 
 export const roleOptions = [

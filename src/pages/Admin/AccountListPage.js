@@ -14,6 +14,8 @@ import { userPath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
 import { Button } from "components/button";
 import TablePagination from '@mui/material/TablePagination';
+import { roleOptions } from "constants/global";
+// import Button from "@mui/material";
 
 const AccountListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -64,20 +66,31 @@ const AccountListPage = () => {
       </div>
       <Gap></Gap>
       <TableContainer>
-        <Table>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>Họ và tên</TableCell>
-              <TableCell>Địa chỉ</TableCell>
-              <TableCell>Phân quyền</TableCell>
+              <TableCell align="left" width={"25%"}>Họ và tên</TableCell>
+              <TableCell align="left" width={"45%"}>Địa chỉ</TableCell>
+              <TableCell align="center" width={"20%"}>Phân quyền</TableCell>
+              <TableCell align="right" width={"10%"}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users.map((item) => (
               <TableRow key={item.id}>
-                <TableCell>{item.fullName}</TableCell>
-                <TableCell>{item.location}</TableCell>
-                <TableCell>{item.role}</TableCell>
+                <TableCell align="left" width={"25%"}>{item.fullName}</TableCell>
+                <TableCell align="left" width={"45%"}>{item.location}</TableCell>
+                <TableCell align="center" width={"20%"}>{roleOptions.find((label) => label.value === item.role).label}</TableCell>
+                <TableCell align="right" width={"10%"}>
+                    <Button
+                      className=""
+                      type="button"
+                      href="/"
+                      kind="ghost"
+                    >
+                      Edit
+                    </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

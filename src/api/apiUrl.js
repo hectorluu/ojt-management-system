@@ -12,7 +12,7 @@ export const commonPath = {
 export const coursePath = {
   GET_COURSE_LIST: "/api/Course",
   GET_COURSE: "",
-  CREATE_COURSE: "",
+  CREATE_COURSE: "/api/Course",
   UPDATE_COURSE: "",
 };
 
