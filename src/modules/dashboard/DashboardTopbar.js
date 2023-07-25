@@ -11,12 +11,12 @@ const DashboardTopbar = () => {
         <Link to="/admin-dashboard" className="inline-block">
           <img srcSet="/logo.png 2x" alt="ojt-management-system" />
         </Link>
-        <div className=" max-w-[600px] w-full">
+        {/* <div className=" max-w-[600px] w-full">
           <DashboardSearch></DashboardSearch>
-        </div>
+        </div> */}
       </div>
       <div className="flex items-center justify-end flex-1 gap-x-10">
-        <DashboardFund></DashboardFund>
+        {/* <DashboardFund></DashboardFund>
         <Button
           className="px-7"
           type="button"
@@ -24,7 +24,7 @@ const DashboardTopbar = () => {
           kind="secondary"
         >
           Start a campaign
-        </Button>
+        </Button> */}
         <img
           srcSet="/logo.png 2x"
           alt="ojt-management-system"

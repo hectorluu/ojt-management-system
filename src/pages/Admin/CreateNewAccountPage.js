@@ -3,40 +3,46 @@ import React, { Fragment, useEffect, useState } from "react";
 import FormRow from "components/common/FormRow";
 import FormGroup from "components/common/FormGroup";
 import DatePicker from "react-date-picker";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Label } from "components/label";
 import { Input } from "components/input";
 import { Dropdown } from "components/dropdown";
 import { Button } from "components/button";
-import { apiURL } from "config/config";
 import ImageUpload from "components/image/ImageUpload";
 import { genderOptions, roleOptions, positionOptions } from "constants/global";
+import useAxiosPrivate from "hooks/useAxiosPrivate";
+import { userPath } from "api/apiUrl";
+import { roleExchange, roleExchangeRev } from "constants/global";
+import moment from "moment";
 
 const CreateNewAccountPage = () => {
-  const [dateOfBirth, setDateOfBith] = useState(new Date());
+  const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const axiosPrivate = useAxiosPrivate();
 
   const { handleSubmit, control, setValue, reset, watch } = useForm();
-  const getDropdownLabel = (name, defaultValue = "") => {
+  const getDropdownLabel = (name, options = [{ value: "", label: "" }], defaultValue = "") => {
     const value = watch(name) || defaultValue;
-    return value;
+    const label = options.find((label) => label.value === value);
+    return label ? label.label : defaultValue;
   };
 
   const resetValues = () => {
-    setDateOfBith("");
+    setDateOfBirth("");
     reset({});
   };
 
   const handleAddNewAccount = async (values) => {
     try {
-      await axios.post(`${apiURL}/`, {
+      const birthday = moment(dateOfBirth).format("DD/MM/YYYY");
+      const response = await axiosPrivate.post(userPath.CREATE_USER, {
         ...values,
-        dateOfBirth,
+        birthday,
       });
-      toast.success("Create account successfully");
+      toast.success("Create account successfully with password " + response.data.password);
       resetValues();
     } catch (error) {
+      console.log("error", error);
       toast.error("Can not create new account");
     }
     // values, dateOfBirth
@@ -70,7 +76,7 @@ const CreateNewAccountPage = () => {
                 <Label>Họ và tên (*)</Label>
                 <Input
                   control={control}
-                  name="name"
+                  name="fullName"
                   placeholder="Họ và tên đầy đủ"
                   autoComplete="off"
                 ></Input>
@@ -79,7 +85,7 @@ const CreateNewAccountPage = () => {
                 <Label>Số điện thoại (*)</Label>
                 <Input
                   control={control}
-                  name="phone num"
+                  name="phoneNumber"
                   placeholder="123-456-7890"
                   autoComplete="off"
                 ></Input>
@@ -97,7 +103,7 @@ const CreateNewAccountPage = () => {
                   autoComplete="off"
                 ></Input>
               </FormGroup>
-              <FormGroup>
+              {/* <FormGroup>
                 <Label>Mật khẩu (*)</Label>
                 <Input
                   type="password"
@@ -106,14 +112,14 @@ const CreateNewAccountPage = () => {
                   placeholder=""
                   autoComplete="off"
                 ></Input>
-              </FormGroup>
+              </FormGroup> */}
             </FormRow>
             <FormRow>
               <FormGroup>
                 <Label>Địa chỉ (*)</Label>
                 <Input
                   control={control}
-                  name="goal"
+                  name="address"
                   placeholder="Ex: số 54 Liễu Giai, Phường Cống Vị, Quận Ba Đình, Hà Nội..."
                 ></Input>
               </FormGroup>
@@ -124,7 +130,8 @@ const CreateNewAccountPage = () => {
                 <Dropdown>
                   <Dropdown.Select
                     placeholder={getDropdownLabel(
-                      "Giới tính",
+                      "gender",
+                      genderOptions,
                       "Chọn giới tính"
                     )}
                   ></Dropdown.Select>
@@ -134,7 +141,7 @@ const CreateNewAccountPage = () => {
                         key={personGender.value}
                         onClick={() =>
                           handleSelectGenderDropdownOption(
-                            "Giới tính",
+                            "gender",
                             personGender.value
                           )
                         }
@@ -147,7 +154,8 @@ const CreateNewAccountPage = () => {
                 <FormGroup>
                   <Label>Ngày sinh (*)</Label>
                   <DatePicker
-                    onChange={setDateOfBith}
+                    name=""
+                    onChange={setDateOfBirth}
                     value={dateOfBirth}
                     format="dd-MM-yyyy"
                     autoComplete="off"
@@ -162,7 +170,7 @@ const CreateNewAccountPage = () => {
                 <Label>Chức vụ (*)</Label>
                 <Dropdown>
                   <Dropdown.Select
-                    placeholder={getDropdownLabel("Chức vụ", "Chọn chức vụ")}
+                    placeholder={getDropdownLabel("role", roleOptions, "Chọn chức vụ")}
                   ></Dropdown.Select>
                   <Dropdown.List>
                     {roleOptions.map((personRole) => (
@@ -170,8 +178,8 @@ const CreateNewAccountPage = () => {
                         key={personRole.value}
                         onClick={() =>
                           handleSelectRoleDropdownOption(
-                            "Chức vụ",
-                            personRole.label
+                            "role",
+                            personRole.value
                           )
                         }
                       >
@@ -183,15 +191,15 @@ const CreateNewAccountPage = () => {
               </FormGroup>
             </FormRow>
             {userRoleWhenChosen &&
-              (userRoleWhenChosen === "Đào tạo viên" ||
-                userRoleWhenChosen === "Thực tập sinh") && (
+              (userRoleWhenChosen === roleExchange.TRAINER ||
+                userRoleWhenChosen === roleExchange.TRAINEE) && (
                 <>
                   <FormRow>
                     <FormGroup>
                       <Label>Mã số nhân viên (*)</Label>
                       <Input
                         control={control}
-                        name="MSSV"
+                        name="rollNumber"
                         placeholder="Ex: SE150056"
                         autoComplete="off"
                       ></Input>
@@ -201,7 +209,8 @@ const CreateNewAccountPage = () => {
                       <Dropdown>
                         <Dropdown.Select
                           placeholder={getDropdownLabel(
-                            "Vị trí",
+                            "position",
+                            positionOptions,
                             "Chọn vị trí"
                           )}
                         ></Dropdown.Select>
@@ -211,7 +220,7 @@ const CreateNewAccountPage = () => {
                               key={personPosition.value}
                               onClick={() =>
                                 handleSelectPositionDropdownOption(
-                                  "Vị trí",
+                                  "position",
                                   personPosition.value
                                 )
                               }

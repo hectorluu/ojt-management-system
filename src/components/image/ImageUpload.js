@@ -27,7 +27,7 @@ const ImageUpload = ({ onChange = () => {}, name = "" }) => {
       thumb: imageData.thumb.url,
       url: imageData.url,
     };
-    onChange(name, imageObj);
+    onChange(name, "url");
   };
   return (
     <label className="w-full h-[200px] border border-gray-200 border-dashed rounded-xl cursor-pointer flex items-center justify-center">
