@@ -16,7 +16,7 @@ import { Button } from "components/button";
 import TablePagination from '@mui/material/TablePagination';
 
 const AccountListPage = () => {
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(defaultPageIndex);
   const [totalItem, setTotalItem] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
@@ -67,16 +67,16 @@ const AccountListPage = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
+              <TableCell>Họ và tên</TableCell>
+              <TableCell>Địa chỉ</TableCell>
+              <TableCell>Phân quyền</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.fullName}</TableCell>
-                <TableCell>{item.email}</TableCell>
+                <TableCell>{item.location}</TableCell>
                 <TableCell>{item.role}</TableCell>
               </TableRow>
             ))}

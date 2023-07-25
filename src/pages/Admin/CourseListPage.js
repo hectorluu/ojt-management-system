@@ -21,7 +21,7 @@ const CourseListPage = () => {
         const response = await axiosPrivate.get(coursePath.GET_COURSE_LIST + "?PageIndex=" + page + "&PageSize=" + rowsPerPage);
         setCourses(response.data.data);
         setTotalItem(response.data.totalItem);
-        console.log("fetchUsers ~ response", response);
+        console.log("fetchUsers ~ response", courses);
       } catch (error) {
         console.log("fetchUsers ~ error", error);
       }
@@ -59,15 +59,15 @@ const CourseListPage = () => {
       </div>
       <Gap></Gap>
       <CourseGrid type="secondary">
-        <CourseCardDisplay />
-        <CourseCardDisplay />
-        <CourseCardDisplay />
-        <CourseCardDisplay />
-        <CourseCardDisplay />
+        {courses.length !== 0 ? (
+          courses.map((item) => (
+            <CourseCardDisplay course={item} key={item.id}/>
+          ))
+        ) : (<></>)}
       </CourseGrid>
       <TablePagination
         component="div"
-        count={100}
+        count={totalItem}
         page={page - 1}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}

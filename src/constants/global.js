@@ -6,8 +6,9 @@ export const defaultPageSize = 10;
 export const defaultPageIndex = 1;
 
 export const genderOptions = [
-  { value: "Nam", label: "Nam" },
-  { value: "Nữ", label: "Nữ" },
+  { value: 1, label: "Nam" },
+  { value: 2, label: "Nữ" },
+  { value: 3, label: "Khác" },
 ];
 
 export const courseOptions = [
@@ -16,15 +17,24 @@ export const courseOptions = [
 ];
 
 export const roleOptions = [
-  { value: "Admin", label: "Admin" },
-  { value: "Manager", label: "Quản lý" },
-  { value: "Trainer", label: "Đào tạo viên" },
-  { value: "Trainee", label: "Thực tập sinh" },
+  { value: 1, label: "Admin" },
+  { value: 2, label: "Quản lý" },
+  { value: 3, label: "Đào tạo viên" },
+  { value: 4, label: "Thực tập sinh" },
 ];
 
+export const roleExchange = {
+  ADMIN: 1,
+  MANAGER: 2,
+  TRAINER: 3,
+  TRAINEE: 4,
+};
+
 export const positionOptions = [
-  { value: "Front-end dev", label: "Front-end dev" },
-  { value: "Back-end dev", label: "Back-end dev" },
-  { value: "DevOps", label: "Đào tạo viênDevOps" },
-  { value: "Project Manager", label: "Project Manager" },
+  { value: 1, label: "Back-end dev" },
+  { value: 2, label: "Front-end dev" },
+  { value: 3, label: "Business Analyst" },
+  { value: 4, label: "Project Manager" },
+  { value: 5, label: "Dev-ops" },
+  { value: 6, label: "Tester" },
 ];
