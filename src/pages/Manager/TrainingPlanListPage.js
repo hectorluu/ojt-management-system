@@ -1,7 +1,7 @@
-import React from "react";
+
 
 const TrainingPlanListPage = () => {
-  return <div>TrainingPlanListPage</div>;
+  return ;
 };
 
 export default TrainingPlanListPage;

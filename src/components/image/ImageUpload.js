@@ -22,6 +22,7 @@ const ImageUpload = ({ onChange = () => {}, name = "" }) => {
       toast.error("Can not upload image to imgbbAPI");
       return;
     }
+    //eslint-disable-next-line
     const imageObj = {
       medium: imageData.medium.url,
       thumb: imageData.thumb.url,

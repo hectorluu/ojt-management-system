@@ -1,14 +1,11 @@
-import { Button } from "components/button";
 import React from "react";
 import { Link } from "react-router-dom";
-import DashboardFund from "./DashboardFund";
-import DashboardSearch from "./DashboardSearch";
 
 const DashboardTopbar = () => {
   return (
     <div className="flex items-center justify-between mb-8">
       <div className="flex items-center flex-1 gap-x-10">
-        <Link to="/admin-dashboard" className="inline-block">
+        <Link to="/" className="inline-block">
           <img srcSet="/logo.png 2x" alt="ojt-management-system" />
         </Link>
         {/* <div className=" max-w-[600px] w-full">

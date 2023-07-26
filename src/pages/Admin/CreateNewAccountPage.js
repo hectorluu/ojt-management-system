@@ -13,7 +13,7 @@ import ImageUpload from "components/image/ImageUpload";
 import { genderOptions, roleOptions, positionOptions } from "constants/global";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { userPath } from "api/apiUrl";
-import { roleExchange, roleExchangeRev } from "constants/global";
+import { roleExchange } from "constants/global";
 import moment from "moment";
 
 const CreateNewAccountPage = () => {
@@ -21,7 +21,11 @@ const CreateNewAccountPage = () => {
   const axiosPrivate = useAxiosPrivate();
 
   const { handleSubmit, control, setValue, reset, watch } = useForm();
-  const getDropdownLabel = (name, options = [{ value: "", label: "" }], defaultValue = "") => {
+  const getDropdownLabel = (
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
     const value = watch(name) || defaultValue;
     const label = options.find((label) => label.value === value);
     return label ? label.label : defaultValue;
@@ -39,7 +43,9 @@ const CreateNewAccountPage = () => {
         ...values,
         birthday,
       });
-      toast.success("Create account successfully with password " + response.data.password);
+      toast.success(
+        "Create account successfully with password " + response.data.password
+      );
       resetValues();
     } catch (error) {
       console.log("error", error);
@@ -170,7 +176,11 @@ const CreateNewAccountPage = () => {
                 <Label>Chức vụ (*)</Label>
                 <Dropdown>
                   <Dropdown.Select
-                    placeholder={getDropdownLabel("role", roleOptions, "Chọn chức vụ")}
+                    placeholder={getDropdownLabel(
+                      "role",
+                      roleOptions,
+                      "Chọn chức vụ"
+                    )}
                   ></Dropdown.Select>
                   <Dropdown.List>
                     {roleOptions.map((personRole) => (

@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { userPath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
-import { Button } from "components/button";
 import TablePagination from '@mui/material/TablePagination';
 
 const TrainerListPage = () => {
