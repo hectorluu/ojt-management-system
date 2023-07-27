@@ -7,17 +7,19 @@ import FormGroup from "components/common/FormGroup";
 import { Label } from "components/label";
 import { Dropdown } from "components/dropdown";
 import { Button } from "components/button";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { apiURL } from "config/config";
+import useAxiosPrivate from "hooks/useAxiosPrivate";
+import { coursePath } from "api/apiUrl";
 
 const CreateNewCoursePage = () => {
+  const axiosPrivate = useAxiosPrivate();
   const { handleSubmit, control, setValue, reset, watch } = useForm();
-
-  const getDropdownLabel = (name, defaultValue = "") => {
+  
+  const getDropdownLabel = (name, options = [{ value: "", label: "" }], defaultValue = "") => {
     const value = watch(name) || defaultValue;
-    return value;
+    const label = options.find((label) => label.value === value);
+    return label ? label.label : defaultValue;
   };
 
   const handleSelectDropdownOption = (name, value) => {
@@ -30,13 +32,13 @@ const CreateNewCoursePage = () => {
 
   const handleAddNewCourse = async (values) => {
     try {
-      await axios.post(`${apiURL}/`, {
+      await axiosPrivate.post(coursePath.CREATE_COURSE, {
         ...values,
       });
-      toast.success("Create university successfully");
+      toast.success("Create course successfully");
       resetValues();
     } catch (error) {
-      toast.error("Can not create new account");
+      toast.error("Can not create new course");
     }
     // values, dateOfBirth
   };
@@ -63,7 +65,7 @@ const CreateNewCoursePage = () => {
                 <Label>Nền tảng (*)</Label>
                 <Input
                   control={control}
-                  name="platform name"
+                  name="platformName"
                   placeholder="Ex: Udemy"
                   autoComplete="off"
                 ></Input>
@@ -83,7 +85,7 @@ const CreateNewCoursePage = () => {
                 <Label>Bắt buộc / Không bắt buộc (*)</Label>
                 <Dropdown>
                   <Dropdown.Select
-                    placeholder={getDropdownLabel("Lựa chọn", "Lựa chọn")}
+                    placeholder={getDropdownLabel("Lựa chọn",courseOptions , "Lựa chọn")}
                   ></Dropdown.Select>
                   <Dropdown.List>
                     {courseOptions.map((option) => (
@@ -103,7 +105,7 @@ const CreateNewCoursePage = () => {
             <FormGroup>
               <Label>Mô tả khóa học *</Label>
               <Textarea
-                name="short_description"
+                name="description"
                 placeholder="Viết mô tả về khóa học...."
                 control={control}
               ></Textarea>
@@ -147,7 +149,7 @@ const CreateNewCoursePage = () => {
                 <Label>Tải ảnh khóa học (*)</Label>
                 <ImageUpload
                   onChange={setValue}
-                  name="featured_image"
+                  name="imageURL"
                 ></ImageUpload>
               </FormGroup>
               <FormGroup></FormGroup>
