@@ -15,17 +15,17 @@ import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { userPath } from "api/apiUrl";
 import { roleExchange } from "constants/global";
 import moment from "moment";
+import { storage } from "../../firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const CreateNewAccountPage = () => {
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const [avatar, setAvatar] = useState(null);
   const axiosPrivate = useAxiosPrivate();
 
+
   const { handleSubmit, control, setValue, reset, watch } = useForm();
-  const getDropdownLabel = (
-    name,
-    options = [{ value: "", label: "" }],
-    defaultValue = ""
-  ) => {
+  const getDropdownLabel = (name, options = [{ value: "", label: "" }], defaultValue = "") => {
     const value = watch(name) || defaultValue;
     const label = options.find((label) => label.value === value);
     return label ? label.label : defaultValue;
@@ -36,29 +36,32 @@ const CreateNewAccountPage = () => {
     reset({});
   };
 
+  async function uploadFile() {
+    const imageRef = ref(storage, "images/" + avatar.name);
+    uploadBytes(imageRef, avatar).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((downloadURL) => {
+        setValue("avatarUrl", downloadURL);
+      });
+    });
+  }
+
   const handleAddNewAccount = async (values) => {
     try {
+      uploadFile();
       const birthday = moment(dateOfBirth).format("DD/MM/YYYY");
-      const response = await axiosPrivate.post(userPath.CREATE_USER, {
+      await axiosPrivate.post(userPath.CREATE_USER, {
         ...values,
         birthday,
       });
-      toast.success(
-        "Create account successfully with password " + response.data.password
-      );
+      toast.success("Create account successfully with password ");
       resetValues();
     } catch (error) {
       console.log("error", error);
       toast.error("Can not create new account");
     }
-    // values, dateOfBirth
   };
 
-  const handleSelectGenderDropdownOption = (name, value) => {
-    setValue(name, value);
-  };
-
-  const handleSelectPositionDropdownOption = (name, value) => {
+  const handleSelectDropdownOption = (name, value) => {
     setValue(name, value);
   };
 
@@ -146,7 +149,7 @@ const CreateNewAccountPage = () => {
                       <Dropdown.Option
                         key={personGender.value}
                         onClick={() =>
-                          handleSelectGenderDropdownOption(
+                          handleSelectDropdownOption(
                             "gender",
                             personGender.value
                           )
@@ -176,11 +179,7 @@ const CreateNewAccountPage = () => {
                 <Label>Chức vụ (*)</Label>
                 <Dropdown>
                   <Dropdown.Select
-                    placeholder={getDropdownLabel(
-                      "role",
-                      roleOptions,
-                      "Chọn chức vụ"
-                    )}
+                    placeholder={getDropdownLabel("role", roleOptions, "Chọn chức vụ")}
                   ></Dropdown.Select>
                   <Dropdown.List>
                     {roleOptions.map((personRole) => (
@@ -229,7 +228,7 @@ const CreateNewAccountPage = () => {
                             <Dropdown.Option
                               key={personPosition.value}
                               onClick={() =>
-                                handleSelectPositionDropdownOption(
+                                handleSelectDropdownOption(
                                   "position",
                                   personPosition.value
                                 )
@@ -248,8 +247,7 @@ const CreateNewAccountPage = () => {
                     <FormGroup>
                       <Label>Tải ảnh lên</Label>
                       <ImageUpload
-                        onChange={setValue}
-                        name="featured_image"
+                        onChange={setAvatar}
                       ></ImageUpload>
                     </FormGroup>
                     <FormGroup></FormGroup>
