@@ -12,7 +12,7 @@ function App({ children }) {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (user) {
+    if (user && user.id) {
       const { access_token } = getToken();
       dispatch(
         authUpdateUser({

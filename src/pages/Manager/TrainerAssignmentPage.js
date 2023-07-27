@@ -11,6 +11,9 @@ import { apiURL } from "config/config";
 import useOnChange from "hooks/useOnChange";
 import { Card, Chip, Stack } from "@mui/material";
 import { IconProfile } from "components/icons";
+import { userPath } from "api/apiUrl";
+import { defaultPageIndex } from "constants/global";
+import useAxiosPrivate from "hooks/useAxiosPrivate";
 
 const TrainerAssignmentPage = () => {
   const { handleSubmit, setValue, reset, watch } = useForm();
@@ -40,22 +43,32 @@ const TrainerAssignmentPage = () => {
     setValue(name, value);
   };
 
-  const [countries, setCountries] = useState([]);
-  const [filterCountry, setFilterCountry] = useOnChange(500);
+  const [trainers, setTrainers] = useState([]);
+  const [page] = React.useState(defaultPageIndex);
+  const [rowsPerPage] = React.useState(100000);
+  const axiosPrivate = useAxiosPrivate();
+  const [filterTrainers, setFilterTrainers] = useOnChange(500);
+
   useEffect(() => {
-    async function fetchCountries() {
-      if (!filterCountry) return;
+    async function fetchTrainers() {
+      if (!filterTrainers) return;
       try {
-        const response = await axios.get(
-          `https://restcountries.com/v3.1/name/${filterCountry}`
+        const response = await axiosPrivate.get(
+          userPath.GET_TRAINER_LIST +
+            "?PageIndex=" +
+            page +
+            "&PageSize=" +
+            rowsPerPage
         );
-        setCountries(response.data);
+
+        setTrainers(response.data.data);
       } catch (error) {
         toast.error(error.message);
       }
     }
-    fetchCountries();
-  }, [filterCountry]);
+    fetchTrainers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterTrainers]);
 
   ////
   /// create chip
@@ -148,20 +161,20 @@ const TrainerAssignmentPage = () => {
                   <Dropdown.List>
                     <Dropdown.Search
                       placeholder="Tìm kiếm..."
-                      onChange={setFilterCountry}
+                      onChange={setFilterTrainers}
                     ></Dropdown.Search>
-                    {countries.length > 0 &&
-                      countries.map((country) => (
+                    {trainers.length > 0 &&
+                      trainers.map((trainer) => (
                         <Dropdown.Option
-                          key={country?.name?.common}
+                          key={trainer?.id}
                           onClick={() =>
                             handleSelectDropdownOption(
                               "trainer",
-                              country?.name?.common
+                              trainer?.fullName
                             )
                           }
                         >
-                          {country?.name?.common}
+                          {trainer?.fullName}
                         </Dropdown.Option>
                       ))}
                   </Dropdown.List>
