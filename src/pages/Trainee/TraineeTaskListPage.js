@@ -59,21 +59,13 @@ const TraineeTaskListPage = () => {
     <Fragment>
       <div className="flex flex-wrap items-center justify-between	">
         <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">Tài khoản</Heading>
+          <Heading className="text-4xl font-bold pt-6">Công việc</Heading>
         </div>
       </div>
       <div className="flex flex-wrap items-center justify-between	">
         <div className=" max-w-[600px] w-full">
           <SearchBar onClickSearch={setSearchTerm}></SearchBar>
         </div>
-        <Button
-          className="px-7"
-          type="button"
-          href="/create-new-account"
-          kind="secondary"
-        >
-          Thêm tài khoản mới
-        </Button>
       </div>
       <Gap></Gap>
       <TableContainer>
