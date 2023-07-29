@@ -15,17 +15,18 @@ import { coursePath } from "api/apiUrl";
 const CreateNewCoursePage = () => {
   const axiosPrivate = useAxiosPrivate();
   const { handleSubmit, control, setValue, reset, watch } = useForm();
-  const [coursePosition, setCoursePosition] = React.useState([]);
+  const [coursePosition, setCoursePosition] = React.useState([{ "position": "", "isCompulsory": "" }]);
+  const [skillGain, setSkillGain] = React.useState([{ "skillId": "", "recommendedLevel": "", "afterwardLevel": "" }]);
 
-  const getDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
-    const position = coursePosition.slice();
+  const getDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "", array=[]) => {
+    const position = array.slice();
     const value = position[index][name] || defaultValue;
     const label = options.find((label) => label.value === value);
     return label ? label.label : defaultValue;
   };
 
-  const handleSelectDropdownOption = (index, name, value) => {
-    const newArray = coursePosition.slice();
+  const handleSelectDropdownOption = (index, name, value, array=[]) => {
+    const newArray = array.slice();
     newArray[index][name] = value;
     setCoursePosition(newArray);
     console.log(coursePosition);
@@ -117,14 +118,14 @@ const CreateNewCoursePage = () => {
                   <Label>Vị trí (*)</Label>
                   <Dropdown>
                     <Dropdown.Select
-                      placeholder={getDropdownLabel(index, "position", positionOptions, "Lựa chọn")}
+                      placeholder={getDropdownLabel(index, "position", positionOptions, "Lựa chọn", coursePosition)}
                     ></Dropdown.Select>
                     <Dropdown.List>
                       {positionOptions.map((option) => (
                         <Dropdown.Option
                           key={option.value}
                           onClick={() =>
-                            handleSelectDropdownOption(index, "position", option.value)
+                            handleSelectDropdownOption(index, "position", option.value, coursePosition)
                           }
                         >
                           <span className="capitalize">{option.label}</span>
@@ -137,14 +138,14 @@ const CreateNewCoursePage = () => {
                   <Label>Bắt buộc / Không bắt buộc (*)</Label>
                   <Dropdown>
                     <Dropdown.Select
-                      placeholder={getDropdownLabel(index, "isCompulsory", courseOptions, "Lựa chọn")}
+                      placeholder={getDropdownLabel(index, "isCompulsory", courseOptions, "Lựa chọn", coursePosition)}
                     ></Dropdown.Select>
                     <Dropdown.List>
                       {courseOptions.map((option) => (
                         <Dropdown.Option
                           key={option.value}
                           onClick={() =>
-                            handleSelectDropdownOption(index, "isCompulsory", option.value)
+                            handleSelectDropdownOption(index, "isCompulsory", option.value, coursePosition)
                           }
                         >
                           <span className="capitalize">{option.label}</span>
@@ -159,16 +160,14 @@ const CreateNewCoursePage = () => {
               Remove
             </button>
             <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
-            <FormRow>
-              <FormGroup>
-                <Label>Kĩ năng khóa học (*)</Label>
-                <Input
-                  control={control}
-                  name="skill"
-                  placeholder="Ex: javascript, c#, ..."
-                ></Input>
-              </FormGroup>
-            </FormRow>
+            <FormGroup>
+              <Label>Kĩ năng khóa học (*)</Label>
+              <Input
+                control={control}
+                name="skill"
+                placeholder="Ex: javascript, c#, ..."
+              ></Input>
+            </FormGroup>
             <FormRow>
               <FormGroup>
                 <Label>Level kĩ năng thấp nhất để được học (*)</Label>
