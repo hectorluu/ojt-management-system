@@ -13,6 +13,7 @@ import {
 import { userPath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
 import TablePagination from "@mui/material/TablePagination";
+import { Button } from "components/button";
 
 const TrainerListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -64,6 +65,7 @@ const TrainerListPage = () => {
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Role</TableCell>
+              <TableCell align="right" width={"10%"}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -72,6 +74,11 @@ const TrainerListPage = () => {
                 <TableCell>{item.fullName}</TableCell>
                 <TableCell>{item.email}</TableCell>
                 <TableCell>{item.role}</TableCell>
+                <TableCell align="right" width={"10%"}>
+                  <Button className="" type="button" href="/" kind="ghost">
+                    Edit
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

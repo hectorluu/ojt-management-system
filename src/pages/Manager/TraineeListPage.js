@@ -12,7 +12,8 @@ import {
 } from "@mui/material";
 import { userPath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
-import TablePagination from '@mui/material/TablePagination';
+import TablePagination from "@mui/material/TablePagination";
+import { Button } from "components/button";
 
 const TraineeListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -23,7 +24,13 @@ const TraineeListPage = () => {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await axiosPrivate.get(userPath.GET_TRAINEE_LIST + "?PageIndex=" + page + "&PageSize=" + rowsPerPage);
+        const response = await axiosPrivate.get(
+          userPath.GET_TRAINEE_LIST +
+            "?PageIndex=" +
+            page +
+            "&PageSize=" +
+            rowsPerPage
+        );
         setUsers(response.data.data);
         setTotalItem(response.data.totalItem);
         // setPage(response.data.pageIndex);
@@ -60,6 +67,7 @@ const TraineeListPage = () => {
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Role</TableCell>
+              <TableCell align="right" width={"10%"}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -68,6 +76,11 @@ const TraineeListPage = () => {
                 <TableCell>{item.fullName}</TableCell>
                 <TableCell>{item.email}</TableCell>
                 <TableCell>{item.role}</TableCell>
+                <TableCell align="right" width={"10%"}>
+                  <Button className="" type="button" href="/" kind="ghost">
+                    Edit
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
