@@ -6,7 +6,7 @@ export const authPath = {
 };
 
 export const commonPath = {
-  GET_ME: "/Common/GetCurrentUser"
+  GET_ME: "/Common/GetCurrentUser",
 };
 
 export const coursePath = {
@@ -16,21 +16,13 @@ export const coursePath = {
   UPDATE_COURSE: "",
 };
 
-export const criteriaPath = {
+export const criteriaPath = {};
 
-};
+export const ojtBatchPath = {};
 
-export const ojtBatchPath = {
+export const reportPath = {};
 
-};
-
-export const reportPath = {
-
-};
-
-export const universityPath = {
-
-};
+export const universityPath = {};
 
 export const trainingPlanPath = {
   GET_TRAINING_PLAN_LIST: "",
@@ -51,4 +43,8 @@ export const skillPath = {
   GET_SKILL: "",
   CREATE_SKILL: "",
   UPDATE_SKILL: "",
+};
+
+export const taskPath = {
+  GET_TASK_LIST: "trainee-tasks",
 };

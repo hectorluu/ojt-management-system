@@ -18,6 +18,7 @@ import LayoutTrainee from "layout/LayoutTrainee";
 import LayoutTrainer from "layout/LayoutTrainer";
 import { permissions } from "constants/permissions";
 import StartCampaignPage from "pages/StartCampaignPage";
+import CampaignPage from "pages/CampaignPage";
 
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
@@ -372,6 +373,10 @@ const router = createBrowserRouter([
   {
     path: "/start-campaign",
     element: <StartCampaignPage></StartCampaignPage>,
+  },
+  {
+    path: "/campaign-page",
+    element: <CampaignPage></CampaignPage>,
   },
 ]);
 
