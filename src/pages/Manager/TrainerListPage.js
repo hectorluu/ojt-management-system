@@ -12,8 +12,7 @@ import {
 } from "@mui/material";
 import { userPath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
-import { Button } from "components/button";
-import TablePagination from '@mui/material/TablePagination';
+import TablePagination from "@mui/material/TablePagination";
 
 const TrainerListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -24,11 +23,15 @@ const TrainerListPage = () => {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await axiosPrivate.get(userPath.GET_TRAINEE_LIST + "?PageIndex=" + page + "&PageSize=" + rowsPerPage);
+        const response = await axiosPrivate.get(
+          userPath.GET_TRAINER_LIST +
+            "?PageIndex=" +
+            page +
+            "&PageSize=" +
+            rowsPerPage
+        );
         setUsers(response.data.data);
         setTotalItem(response.data.totalItem);
-        // setPage(response.data.pageIndex);
-        // console.log("fetchUsers ~ response", response);
       } catch (error) {
         console.log("fetchUsers ~ error", error);
       }

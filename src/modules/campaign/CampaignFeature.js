@@ -2,7 +2,6 @@ import React from "react";
 import CampCategory from "./parts/CampCategory";
 import CampDesc from "./parts/CampDesc";
 import CampImage from "./parts/CampImage";
-import CampMeta from "./parts/CampMeta";
 import CampTitle from "./parts/CampTitle";
 import CoursePlatform from "modules/course/part/CoursePlatform";
 
@@ -22,7 +21,10 @@ const CampaignFeature = () => {
         <div className="w-full rounded-full bg-[#EFEFEF] h-[5px] mb-6">
           <div className="w-4/4 h-full rounded-full bg-primary"></div>
         </div>
-        <CoursePlatform text="Architecture" className="text-sm"></CoursePlatform>
+        <CoursePlatform
+          text="Architecture"
+          className="text-sm"
+        ></CoursePlatform>
       </div>
     </div>
   );

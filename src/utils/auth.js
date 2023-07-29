@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
-const accessTokenKey = "crow_access_token";
-const refreshTokenKey = "crow_refresh_token";
+const accessTokenKey = "ojt_access_token";
+const refreshTokenKey = "ojt_refresh_token";
 const objCookies = {
   expires: 30,
   domain: process.env.COOKIE_DOMAIN,

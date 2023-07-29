@@ -23,10 +23,9 @@ export default function* handleAuthRegister(action) {
 function* handleAuthLogin({ payload }) {
   try {
     const response = yield call(requestAuthLogin, payload);
-    console.log(response);
     //if (response.data.accessToken || response.data.refreshToken) {
     if (response.data) {
-      saveToken(response.data, "refreshtoken");
+      saveToken(response.data, "accesstoken");
       yield call(handleAuthFetchMe, { payload: response.data });
     }
   } catch (error) {
@@ -68,6 +67,22 @@ function* handleAuthRefreshToken({ payload }) {
   } catch (error) {}
 }
 
+function* handleAuthRefreshPage({ payload }) {
+  try {
+    const response = yield call(requestAuthFetchMe, payload);
+    if (response.data) {
+      yield put(
+        authUpdateUser({
+          user: response.data,
+          accessToken: payload,
+        })
+      );
+    } else {
+      yield handleAuthLogOut();
+    }
+  } catch (error) {}
+}
+
 function* handleAuthLogOut() {
   yield put(
     authUpdateUser({
@@ -82,5 +97,6 @@ export {
   handleAuthLogin,
   handleAuthFetchMe,
   handleAuthRefreshToken,
+  handleAuthRefreshPage,
   handleAuthLogOut,
 };
