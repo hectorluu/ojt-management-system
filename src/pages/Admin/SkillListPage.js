@@ -20,7 +20,7 @@ const SkillListPage = () => {
   const [totalItem, setTotalItem] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
-  const [users, setUsers] = useState([]);
+  const [skills, setSkills] = useState([]);
   useEffect(() => {
     async function fetchUsers() {
       try {
@@ -31,7 +31,7 @@ const SkillListPage = () => {
             "&PageSize=" +
             rowsPerPage
         );
-        setUsers(response.data.data);
+        setSkills(response.data.data);
         setTotalItem(response.data.totalItem);
         // setPage(response.data.pageIndex);
       } catch (error) {
@@ -70,13 +70,13 @@ const SkillListPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((item) => (
+            {skills.map((item) => (
               <TableRow key={item.id}>
-                <TableCell>{item.fullName}</TableCell>
-                <TableCell>{item.location}</TableCell>
-                <TableCell>{item.role}</TableCell>
+                <TableCell>{item.name}</TableCell>
+                <TableCell>{item.type}</TableCell>
+                <TableCell>{item.status}</TableCell>
                 <TableCell align="right" width={"10%"}>
-                  <Button className="" type="button" href="/" kind="ghost">
+                  <Button className="" type="button" href="" kind="ghost">
                     Edit
                   </Button>
                 </TableCell>

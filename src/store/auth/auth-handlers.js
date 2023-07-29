@@ -25,8 +25,8 @@ function* handleAuthLogin({ payload }) {
     const response = yield call(requestAuthLogin, payload);
     //if (response.data.accessToken || response.data.refreshToken) {
     if (response.data) {
-      saveToken(response.data.token, "accesstoken");
-      yield call(handleAuthFetchMe, { payload: response.data });
+      saveToken(response.data.token, response.data.refreshToken);
+      yield call(handleAuthFetchMe, { payload: response.data.token });
     }
   } catch (error) {
     const response = error.response.data;
@@ -42,6 +42,7 @@ function* handleAuthFetchMe({ payload }) {
     const response = yield call(requestAuthFetchMe, payload);
     if (response.status === 200) {
       console.log(response);
+      console.log("hereeeeeeeee");
       yield put(
         authUpdateUser({
           user: response.data,
@@ -57,9 +58,9 @@ function* handleAuthRefreshToken({ payload }) {
   try {
     const response = yield call(requestAuthRefreshToken, payload);
     if (response.data) {
-      saveToken(response.data.accessToken, response.data.refreshToken);
+      saveToken(response.data.token, response.data.refreshToken);
       yield call(handleAuthFetchMe, {
-        payload: response.data.accessToken,
+        payload: response.data.token,
       });
     } else {
       yield handleAuthLogOut();

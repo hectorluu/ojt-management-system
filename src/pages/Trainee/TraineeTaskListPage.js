@@ -11,10 +11,13 @@ import {
   TableRow,
 } from "@mui/material";
 import { taskPath } from "api/apiUrl";
-import { defaultPageSize, defaultPageIndex, traineeTaskStatus } from "constants/global";
+import {
+  defaultPageSize,
+  defaultPageIndex,
+  traineeTaskStatus,
+} from "constants/global";
 import { Button } from "components/button";
 import TablePagination from "@mui/material/TablePagination";
-import { roleOptions } from "constants/global";
 import SearchBar from "modules/SearchBar";
 import moment from "moment";
 
@@ -30,10 +33,10 @@ const TraineeTaskListPage = () => {
     try {
       const response = await axiosPrivate.get(
         taskPath.GET_TASK_LIST +
-        "?PageSize=" +
-        rowsPerPage +
-        "&PageIndex=" +
-        page
+          "?PageSize=" +
+          rowsPerPage +
+          "&PageIndex=" +
+          page
       );
       setTasks(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -101,7 +104,11 @@ const TraineeTaskListPage = () => {
                   {moment(item.endTime).format("DD/MM/YYYY")}
                 </TableCell>
                 <TableCell align="center" width={"20%"}>
-                  {traineeTaskStatus.find((label) => label.value === item.status).label}
+                  {
+                    traineeTaskStatus.find(
+                      (label) => label.value === item.status
+                    ).label
+                  }
                 </TableCell>
                 <TableCell align="right" width={"10%"}>
                   <Button className="" type="button" kind="ghost">
