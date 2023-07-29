@@ -93,7 +93,7 @@ const TraineeTaskListPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((item) => (
+            {tasks.map((item) => (
               <TableRow key={item.id}>
                 <TableCell align="left" width={"25%"}>
                   {item.fullName}

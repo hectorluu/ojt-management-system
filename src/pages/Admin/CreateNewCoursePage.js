@@ -18,15 +18,15 @@ const CreateNewCoursePage = () => {
   const [coursePosition, setCoursePosition] = React.useState([{ "position": "", "isCompulsory": "" }]);
   const [skillGain, setSkillGain] = React.useState([{ "skillId": "", "recommendedLevel": "", "afterwardLevel": "" }]);
 
-  const getDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "", array=[]) => {
-    const position = array.slice();
+  const getDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
+    const position = coursePosition.slice();
     const value = position[index][name] || defaultValue;
     const label = options.find((label) => label.value === value);
     return label ? label.label : defaultValue;
   };
 
-  const handleSelectDropdownOption = (index, name, value, array=[]) => {
-    const newArray = array.slice();
+  const handleSelectDropdownOption = (index, name, value) => {
+    const newArray = coursePosition.slice();
     newArray[index][name] = value;
     setCoursePosition(newArray);
     console.log(coursePosition);
@@ -118,14 +118,14 @@ const CreateNewCoursePage = () => {
                   <Label>Vị trí (*)</Label>
                   <Dropdown>
                     <Dropdown.Select
-                      placeholder={getDropdownLabel(index, "position", positionOptions, "Lựa chọn", coursePosition)}
+                      placeholder={getDropdownLabel(index, "position", positionOptions, "Lựa chọn")}
                     ></Dropdown.Select>
                     <Dropdown.List>
                       {positionOptions.map((option) => (
                         <Dropdown.Option
                           key={option.value}
                           onClick={() =>
-                            handleSelectDropdownOption(index, "position", option.value, coursePosition)
+                            handleSelectDropdownOption(index, "position", option.value)
                           }
                         >
                           <span className="capitalize">{option.label}</span>
@@ -138,14 +138,14 @@ const CreateNewCoursePage = () => {
                   <Label>Bắt buộc / Không bắt buộc (*)</Label>
                   <Dropdown>
                     <Dropdown.Select
-                      placeholder={getDropdownLabel(index, "isCompulsory", courseOptions, "Lựa chọn", coursePosition)}
+                      placeholder={getDropdownLabel(index, "isCompulsory", courseOptions, "Lựa chọn")}
                     ></Dropdown.Select>
                     <Dropdown.List>
                       {courseOptions.map((option) => (
                         <Dropdown.Option
                           key={option.value}
                           onClick={() =>
-                            handleSelectDropdownOption(index, "isCompulsory", option.value, coursePosition)
+                            handleSelectDropdownOption(index, "isCompulsory", option.value)
                           }
                         >
                           <span className="capitalize">{option.label}</span>
