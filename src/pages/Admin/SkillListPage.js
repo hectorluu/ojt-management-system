@@ -13,7 +13,7 @@ import {
 import { skillPath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
 import { Button } from "components/button";
-import TablePagination from '@mui/material/TablePagination';
+import TablePagination from "@mui/material/TablePagination";
 
 const SkillListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -24,7 +24,13 @@ const SkillListPage = () => {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await axiosPrivate.get(skillPath.GET_SKILL_LIST + "?PageIndex=" + page + "&PageSize=" + rowsPerPage);
+        const response = await axiosPrivate.get(
+          skillPath.GET_SKILL_LIST +
+            "?PageIndex=" +
+            page +
+            "&PageSize=" +
+            rowsPerPage
+        );
         setUsers(response.data.data);
         setTotalItem(response.data.totalItem);
         // setPage(response.data.pageIndex);
@@ -51,15 +57,6 @@ const SkillListPage = () => {
         <div className="flex items-center justify-center">
           <Heading className="text-4xl font-bold pt-6">Kỹ Năng</Heading>
         </div>
-
-        <Button
-          className="px-7"
-          type="button"
-          href="/create-new-account"
-          kind="secondary"
-        >
-          Thêm kỹ năng
-        </Button>
       </div>
       <Gap></Gap>
       <TableContainer>
@@ -69,6 +66,7 @@ const SkillListPage = () => {
               <TableCell>Tên</TableCell>
               <TableCell>Vị trí</TableCell>
               <TableCell>Trạng thái</TableCell>
+              <TableCell align="right" width={"10%"}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -77,6 +75,11 @@ const SkillListPage = () => {
                 <TableCell>{item.fullName}</TableCell>
                 <TableCell>{item.location}</TableCell>
                 <TableCell>{item.role}</TableCell>
+                <TableCell align="right" width={"10%"}>
+                  <Button className="" type="button" href="/" kind="ghost">
+                    Edit
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

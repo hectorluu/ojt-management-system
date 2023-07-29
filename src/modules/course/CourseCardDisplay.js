@@ -6,6 +6,7 @@ import CourseCategory from "./part/CourseCategory";
 import CourseName from "./part/CourseName";
 import CourseDesc from "./part/CourseDesc";
 import CoursePlatform from "./part/CoursePlatform";
+import { useNavigate } from "react-router-dom";
 
 export default function CourseCardDisplay(course) {
   console.log("fetchUsers ~ error", course.course.coursePositions);
@@ -16,26 +17,41 @@ export default function CourseCardDisplay(course) {
     }
     return text;
   };
+
+  const navigate = useNavigate();
+
   return (
-      <Card sx={{ display: "flex" }}>
-        <CardActionArea sx={{ display: 'flex' }}>
-          <div className="flex items-center gap-x-[30px] w-full">
-            <CourseImage className="h-[266px] flex-1"></CourseImage>
-            <div className="flex-1 ">
-              <CourseCategory text={coursePosition(course)} className="text-sm"></CourseCategory>
-              <CourseName className="mb-4 text-xl font-bold">
-                {course.course.name}
-              </CourseName>
-              <CourseDesc className="mb-6 text-sm">
-                {course.course.description}
-              </CourseDesc>
-              <div className="w-full rounded-full bg-[#EFEFEF] h-[5px] mb-6">
-                <div className="w-4/4 h-full rounded-full bg-primary"></div>
-              </div>
-              <CoursePlatform text={course.course.platformName} className="text-sm"></CoursePlatform>
+    <Card sx={{ display: "flex" }}>
+      <CardActionArea
+        sx={{ display: "flex" }}
+        size="small"
+        onClick={() => {
+          navigate("/course-list/" + course.course.id);
+        }}
+      >
+        <div className="flex items-center gap-x-[30px] w-full">
+          <CourseImage className="h-[266px] flex-1"></CourseImage>
+          <div className="flex-1 ">
+            <CourseCategory
+              text={coursePosition(course)}
+              className="text-sm"
+            ></CourseCategory>
+            <CourseName className="mb-4 text-xl font-bold">
+              {course.course.name}
+            </CourseName>
+            <CourseDesc className="mb-6 text-sm">
+              {course.course.description}
+            </CourseDesc>
+            <div className="w-full rounded-full bg-[#EFEFEF] h-[5px] mb-6">
+              <div className="w-4/4 h-full rounded-full bg-primary"></div>
             </div>
+            <CoursePlatform
+              text={course.course.platformName}
+              className="text-sm"
+            ></CoursePlatform>
           </div>
-        </CardActionArea>
-      </Card >
+        </div>
+      </CardActionArea>
+    </Card>
   );
 }

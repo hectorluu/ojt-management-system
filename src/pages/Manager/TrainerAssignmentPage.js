@@ -9,7 +9,7 @@ import { Button } from "components/button";
 import axios from "api/axios";
 import { apiURL } from "config/config";
 import useOnChange from "hooks/useOnChange";
-import { Card, Chip, Stack } from "@mui/material";
+import { Card, Checkbox, Chip, FormControlLabel, Stack } from "@mui/material";
 import { IconProfile } from "components/icons";
 import { userPath } from "api/apiUrl";
 import { defaultPageIndex } from "constants/global";
@@ -198,15 +198,20 @@ const TrainerAssignmentPage = () => {
 
                   <Stack>
                     {items.map((item) => (
-                      <Chip key={item} label={item} icon={<IconProfile />}>
-                        <button
-                          type="button"
-                          className="button"
-                          onClick={() => handleDelete(item)}
-                        >
-                          &times;
-                        </button>
-                      </Chip>
+                      <FormControlLabel
+                        control={<Checkbox defaultChecked />}
+                        label={
+                          <Chip key={item} label={item} icon={<IconProfile />}>
+                            <button
+                              type="button"
+                              className="button"
+                              onClick={() => handleDelete(item)}
+                            >
+                              &times;
+                            </button>
+                          </Chip>
+                        }
+                      ></FormControlLabel>
                     ))}
                   </Stack>
                 </Card>
