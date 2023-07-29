@@ -9,7 +9,6 @@ import CoursePlatform from "./part/CoursePlatform";
 import { useNavigate } from "react-router-dom";
 
 export default function CourseCardDisplay(course) {
-  console.log("fetchUsers ~ error", course.course.coursePositions);
   const coursePosition = (course) => {
     let text = "";
     for (let i = 0; i < course.course.coursePositions.length; i++) {

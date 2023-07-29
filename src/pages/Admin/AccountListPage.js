@@ -15,6 +15,8 @@ import { defaultPageSize, defaultPageIndex } from "constants/global";
 import { Button } from "components/button";
 import TablePagination from "@mui/material/TablePagination";
 import { roleOptions } from "constants/global";
+import SearchBar from "modules/SearchBar";
+
 
 const AccountListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -22,35 +24,31 @@ const AccountListPage = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState([]);
-  useEffect(() => {
-    async function fetchUsers() {
-      try {
-        const response = await axiosPrivate.get(
-          userPath.GET_USER_LIST +
-            "?PageIndex=" +
-            page +
-            "&PageSize=" +
-            rowsPerPage
-        );
-        setUsers(response.data.data);
-        setTotalItem(response.data.totalItem);
-        // setPage(response.data.pageIndex);
-        console.log("fetchUsers ~ response", response);
-      } catch (error) {
-        console.log("fetchUsers ~ error", error);
-      }
+  const [searchTerm, setSearchTerm] = React.useState("");
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axiosPrivate.get(userPath.GET_USER_LIST + "?PageSize=" + rowsPerPage + "&PageIndex=" + page);
+      setUsers(response.data.data);
+      setTotalItem(response.data.totalItem);
+      console.log("fetchUsers ~ response", response);
+    } catch (error) {
+      console.log("fetchUsers ~ error", error);
     }
+  }
+
+  useEffect(() => {
     fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchTerm]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setRowsPerPage(parseInt(event.target.value,10));
+    setPage(1);
   };
 
   return (
@@ -59,7 +57,11 @@ const AccountListPage = () => {
         <div className="flex items-center justify-center">
           <Heading className="text-4xl font-bold pt-6">Tài khoản</Heading>
         </div>
-
+      </div>
+      <div className="flex flex-wrap items-center justify-between	">
+        <div className=" max-w-[600px] w-full">
+          <SearchBar onClickSearch={setSearchTerm}></SearchBar>
+        </div>
         <Button
           className="px-7"
           type="button"
@@ -99,7 +101,12 @@ const AccountListPage = () => {
                   {roleOptions.find((label) => label.value === item.role).label}
                 </TableCell>
                 <TableCell align="right" width={"10%"}>
-                  <Button className="" type="button" href="/" kind="ghost">
+                  <Button
+                    className=""
+                    type="button"
+                    href="/"
+                    kind="ghost"
+                  >
                     Edit
                   </Button>
                 </TableCell>
