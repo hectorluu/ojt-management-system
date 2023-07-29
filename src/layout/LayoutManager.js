@@ -4,13 +4,15 @@ import DashboardTopbar from "modules/dashboard/DashboardTopbar";
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { permissions } from "constants/permissions";
 
 const LayoutManager = () => {
   const { user } = useSelector((state) => state.auth);
   const userRole = user?.permissions || [];
   const navigate = useNavigate();
+
   useEffect(() => {
-    if (!user && !user.email && !userRole.includes("manager")) {
+    if (!user && !user.email && !userRole.includes(permissions.MANAGER)) {
       navigate("/login");
     }
 
