@@ -23,9 +23,12 @@ const CreateNewAccountPage = () => {
   const [avatar, setAvatar] = useState(null);
   const axiosPrivate = useAxiosPrivate();
 
-
   const { handleSubmit, control, setValue, reset, watch } = useForm();
-  const getDropdownLabel = (name, options = [{ value: "", label: "" }], defaultValue = "") => {
+  const getDropdownLabel = (
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
     const value = watch(name) || defaultValue;
     const label = options.find((label) => label.value === value);
     return label ? label.label : defaultValue;
@@ -179,7 +182,11 @@ const CreateNewAccountPage = () => {
                 <Label>Chức vụ (*)</Label>
                 <Dropdown>
                   <Dropdown.Select
-                    placeholder={getDropdownLabel("role", roleOptions, "Chọn chức vụ")}
+                    placeholder={getDropdownLabel(
+                      "role",
+                      roleOptions,
+                      "Chọn chức vụ"
+                    )}
                   ></Dropdown.Select>
                   <Dropdown.List>
                     {roleOptions.map((personRole) => (
@@ -246,11 +253,21 @@ const CreateNewAccountPage = () => {
                   <FormRow>
                     <FormGroup>
                       <Label>Tải ảnh lên</Label>
-                      <ImageUpload
-                        onChange={setAvatar}
-                      ></ImageUpload>
+                      <ImageUpload onChange={setAvatar}></ImageUpload>
                     </FormGroup>
-                    <FormGroup></FormGroup>
+
+                    {avatar && (
+                      <FormGroup>
+                        <Label>Preview</Label>
+                        <label className="w-full h-[200px] border border-gray-200 border-dashed rounded-xl cursor-pointer flex items-center justify-center">
+                          <img
+                            className="w-full h-full object-contain"
+                            src={URL.createObjectURL(avatar)}
+                            alt="img"
+                          ></img>
+                        </label>
+                      </FormGroup>
+                    )}
                   </FormRow>
                 </>
               )}

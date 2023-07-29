@@ -1,30 +1,13 @@
 import React from "react";
-import { defaultImage } from "constants/global";
 
 const ImageUpload = ({ onChange = () => {} }) => {
-  // const handleUploadImage = async (e) => {
-  //   const file = e.target.files;
-  //   if (!file) return;
-  //   const bodyFormData = new FormData();
-  //   bodyFormData.append("image", file[0]);
-  //   const response = await axios({
-  //     method: "post",
-  //     url: `${imgbbAPI}`,
-  //     data: bodyFormData,
-  //     headers: {
-  //       "Content-Type": "multipart/form-data",
-  //     },
-  //   });
-  //   const imageData = response.data.data;
-  //   if (!imageData) {
-  //     toast.error("Can not upload image to imgbbAPI");
-  //     return;
-  //   }
-  //   onChange(name, "url");
-  // };
   return (
     <label className="w-full h-[200px] border border-gray-200 border-dashed rounded-xl cursor-pointer flex items-center justify-center">
-      <input type="file" onChange={(e) => onChange(e.target.files[0])} className="hidden" />
+      <input
+        type="file"
+        onChange={(e) => onChange(e.target.files[0])}
+        className="hidden"
+      />
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="w-6 h-6"
