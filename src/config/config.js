@@ -3,3 +3,6 @@ export const imgbbAPI =
   "https://api.imgbb.com/1/upload?key=5a696fcbb8ed78b24298075df41fd1d8";
 
 export const createNewAccountImgAPI = "";
+
+//fetchter for SWR
+export const fetcher = (...args) => fetch(...args).then((res) => res.json());

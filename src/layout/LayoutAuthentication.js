@@ -9,20 +9,10 @@ import { permissions } from "constants/permissions";
 const LayoutAuthentication = (props) => {
   const { children, heading = "" } = props;
 
-  // const { user } = useSelector((state) => state.auth);
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   if (user && user.email) {
-  //     navigate("/");
-  //   }
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [user]);
-  // if (user && user.email) return null;
-
   const { user } = useSelector((state) => state.auth);
   const userRole = user?.role || "";
   const navigate = useNavigate();
+
   useEffect(() => {
     if (user && user.id && userRole === permissions.ADMIN) {
       navigate("/admin-dashboard");
