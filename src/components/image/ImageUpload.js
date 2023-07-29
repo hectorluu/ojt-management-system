@@ -1,4 +1,5 @@
 import React from "react";
+import { defaultImage } from "constants/global";
 
 const ImageUpload = ({ onChange = () => {} }) => {
   // const handleUploadImage = async (e) => {
