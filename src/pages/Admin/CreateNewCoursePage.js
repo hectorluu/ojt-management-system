@@ -1,5 +1,5 @@
 import { courseOptions, positionOptions } from "constants/global";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Input, Textarea } from "components/input";
 import ImageUpload from "components/image/ImageUpload";
 import FormRow from "components/common/FormRow";
@@ -10,12 +10,34 @@ import { Button } from "components/button";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
-import { coursePath } from "api/apiUrl";
+import { coursePath, skillPath } from "api/apiUrl";
 
 const CreateNewCoursePage = () => {
   const axiosPrivate = useAxiosPrivate();
   const { handleSubmit, control, setValue, reset, watch } = useForm();
-  const [coursePosition, setCoursePosition] = React.useState([]);
+  const [coursePosition, setCoursePosition] = React.useState([{ "position": "", "isCompulsory": "" }]);
+  const [skillGain, setSkillGain] = React.useState([{ "skillId": "", "recommendedLevel": "", "afterwardLevel": "" }]);
+  const [skillList, setSkillList] = React.useState([]);
+
+  useEffect(() => {
+    fetchSkills();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchSkills = async () => {
+    try {
+      const response = await axiosPrivate.get(
+        skillPath.GET_SKILL_LIST +
+        "?PageSize=" +
+        100000 +
+        "&PageIndex=" +
+        1
+      );
+      setSkillList(response.data.data);
+    } catch (error) {
+      console.log("fetchSkills ~ error", error);
+    }
+  };
 
   const getDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
     const position = coursePosition.slice();
@@ -159,16 +181,14 @@ const CreateNewCoursePage = () => {
               Remove
             </button>
             <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
-            <FormRow>
-              <FormGroup>
-                <Label>Kĩ năng khóa học (*)</Label>
-                <Input
-                  control={control}
-                  name="skill"
-                  placeholder="Ex: javascript, c#, ..."
-                ></Input>
-              </FormGroup>
-            </FormRow>
+            <FormGroup>
+              <Label>Kĩ năng khóa học (*)</Label>
+              <Input
+                control={control}
+                name="skill"
+                placeholder="Ex: javascript, c#, ..."
+              ></Input>
+            </FormGroup>
             <FormRow>
               <FormGroup>
                 <Label>Level kĩ năng thấp nhất để được học (*)</Label>

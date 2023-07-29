@@ -25,7 +25,7 @@ function* handleAuthLogin({ payload }) {
     const response = yield call(requestAuthLogin, payload);
     //if (response.data.accessToken || response.data.refreshToken) {
     if (response.data) {
-      saveToken(response.data, "accesstoken");
+      saveToken(response.data.token, "accesstoken");
       yield call(handleAuthFetchMe, { payload: response.data });
     }
   } catch (error) {

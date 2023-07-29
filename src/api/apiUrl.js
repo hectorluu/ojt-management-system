@@ -6,13 +6,13 @@ export const authPath = {
 };
 
 export const commonPath = {
-  GET_ME: "/Common/GetCurrentUser",
+  GET_ME: "/common/current-user"
 };
 
 export const coursePath = {
-  GET_COURSE_LIST: "/Course",
+  GET_COURSE_LIST: "/course",
   GET_COURSE: "",
-  CREATE_COURSE: "/Course",
+  CREATE_COURSE: "/course",
   UPDATE_COURSE: "",
 };
 
@@ -39,7 +39,7 @@ export const userPath = {
 };
 
 export const skillPath = {
-  GET_SKILL_LIST: "",
+  GET_SKILL_LIST: "/skill",
   GET_SKILL: "",
   CREATE_SKILL: "",
   UPDATE_SKILL: "",
