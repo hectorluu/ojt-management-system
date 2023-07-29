@@ -38,3 +38,9 @@ export const positionOptions = [
   { value: 5, label: "Dev-ops" },
   { value: 6, label: "Tester" },
 ];
+
+export const traineeTaskStatus = [
+  { value: 1, label: "Hoàn thành" },
+  { value: 2, label: "Quá Hạn" },
+  { value: 3, label: "Đang thực hiện" },
+];
