@@ -39,7 +39,7 @@ export const userPath = {
 };
 
 export const skillPath = {
-  GET_SKILL_LIST: "",
+  GET_SKILL_LIST: "/skill",
   GET_SKILL: "",
   CREATE_SKILL: "",
   UPDATE_SKILL: "",

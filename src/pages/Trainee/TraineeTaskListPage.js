@@ -11,11 +11,12 @@ import {
   TableRow,
 } from "@mui/material";
 import { taskPath } from "api/apiUrl";
-import { defaultPageSize, defaultPageIndex } from "constants/global";
+import { defaultPageSize, defaultPageIndex, traineeTaskStatus } from "constants/global";
 import { Button } from "components/button";
 import TablePagination from "@mui/material/TablePagination";
 import { roleOptions } from "constants/global";
 import SearchBar from "modules/SearchBar";
+import moment from "moment";
 
 const TraineeTaskListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -29,10 +30,10 @@ const TraineeTaskListPage = () => {
     try {
       const response = await axiosPrivate.get(
         taskPath.GET_TASK_LIST +
-          "?PageSize=" +
-          rowsPerPage +
-          "&PageIndex=" +
-          page
+        "?PageSize=" +
+        rowsPerPage +
+        "&PageIndex=" +
+        page
       );
       setTasks(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -72,14 +73,17 @@ const TraineeTaskListPage = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell align="left" width={"25%"}>
-                Họ và tên
+              <TableCell align="left" width={"30%"}>
+                Tên công việc
               </TableCell>
-              <TableCell align="left" width={"45%"}>
-                Địa chỉ
+              <TableCell align="left" width={"20%"}>
+                Ngày giao việc
               </TableCell>
               <TableCell align="center" width={"20%"}>
-                Phân quyền
+                Hạn hoàn thành
+              </TableCell>
+              <TableCell align="center" width={"20%"}>
+                Trạng thái
               </TableCell>
               <TableCell align="right" width={"10%"}></TableCell>
             </TableRow>
@@ -87,17 +91,20 @@ const TraineeTaskListPage = () => {
           <TableBody>
             {tasks.map((item) => (
               <TableRow key={item.id}>
-                <TableCell align="left" width={"25%"}>
-                  {item.fullName}
+                <TableCell align="left" width={"30%"}>
+                  {item.name}
                 </TableCell>
-                <TableCell align="left" width={"45%"}>
-                  {item.location}
+                <TableCell align="left" width={"20%"}>
+                  {moment(item.startTime).format("DD/MM/YYYY")}
                 </TableCell>
                 <TableCell align="center" width={"20%"}>
-                  {roleOptions.find((label) => label.value === item.role).label}
+                  {moment(item.endTime).format("DD/MM/YYYY")}
+                </TableCell>
+                <TableCell align="center" width={"20%"}>
+                  {traineeTaskStatus.find((label) => label.value === item.status).label}
                 </TableCell>
                 <TableCell align="right" width={"10%"}>
-                  <Button className="" type="button" href="/" kind="ghost">
+                  <Button className="" type="button" kind="ghost">
                     Edit
                   </Button>
                 </TableCell>
