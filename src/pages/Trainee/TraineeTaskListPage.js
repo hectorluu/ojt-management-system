@@ -1,7 +1,7 @@
 import Gap from "components/common/Gap";
 import Heading from "components/common/Heading";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -20,14 +20,15 @@ import { Button } from "components/button";
 import TablePagination from "@mui/material/TablePagination";
 import SearchBar from "modules/SearchBar";
 import moment from "moment";
+import useOnChange from "hooks/useOnChange";
 
 const TraineeTaskListPage = () => {
-  const [page, setPage] = React.useState(defaultPageIndex);
-  const [totalItem, setTotalItem] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
+  const [page, setPage] = useState(defaultPageIndex);
+  const [totalItem, setTotalItem] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [tasks, setTasks] = useState([]);
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [searchTerm, setSearchTerm] = useOnChange(500);
 
   const fetchTasks = async () => {
     try {
@@ -68,7 +69,7 @@ const TraineeTaskListPage = () => {
       </div>
       <div className="flex flex-wrap items-center justify-between	">
         <div className=" max-w-[600px] w-full">
-          <SearchBar onClickSearch={setSearchTerm}></SearchBar>
+          <SearchBar onChangeSearch={setSearchTerm}></SearchBar>
         </div>
       </div>
       <Gap></Gap>

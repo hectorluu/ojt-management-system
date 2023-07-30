@@ -1,7 +1,7 @@
 import Gap from "components/common/Gap";
 import Heading from "components/common/Heading";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -18,6 +18,7 @@ import SearchBar from "modules/SearchBar";
 import { Dropdown } from "components/dropdown";
 import { Button } from "components/button";
 import ModalUserDetailAdmin from "components/modal/ModalUserDetailAdmin";
+import useOnChange from "hooks/useOnChange";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -25,7 +26,7 @@ const AccountListPage = () => {
   const [rowsPerPage, setRowsPerPage] = useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useOnChange(500);
   const [role, setRole] = useState(0);
   const [roleFiltered, setRoleFilter] = useState([]);
 
@@ -48,7 +49,6 @@ const AccountListPage = () => {
 
   useEffect(() => {
     fetchUsers();
-    console.log(roleFiltered);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, role]);
 
@@ -105,7 +105,7 @@ const AccountListPage = () => {
       </div>
       <div className="flex flex-wrap items-center justify-between	">
         <div className=" max-w-[600px] w-full">
-          <SearchBar onClickSearch={setSearchTerm}></SearchBar>
+          <SearchBar onChangeSearch={setSearchTerm}></SearchBar>
         </div>
         <div className=" max-w-[200px] w-full">
           <Dropdown>

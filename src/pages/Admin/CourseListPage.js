@@ -1,7 +1,7 @@
 import Gap from "components/common/Gap";
 import Heading from "components/common/Heading";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { coursePath, skillPath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex, positionOptions } from "constants/global";
 import CourseCardDisplay from "modules/course/CourseCardDisplay";
@@ -10,6 +10,7 @@ import CourseGrid from "modules/course/CourseGrid";
 import TablePagination from "@mui/material/TablePagination";
 import SearchBar from "modules/SearchBar";
 import { Dropdown } from "components/dropdown";
+import useOnChange from "hooks/useOnChange";
 
 const CourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -17,7 +18,7 @@ const CourseListPage = () => {
   const [totalItem, setTotalItem] = useState(0);
   const axiosPrivate = useAxiosPrivate();
   const [courses, setCourses] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useOnChange(500);
   const [position, setPosition] = useState(0);
   const [skill, setSkill] = useState(0);
   const [skillList, setSkillList] = useState([]);
@@ -126,7 +127,7 @@ const CourseListPage = () => {
       </div>
       <div className="flex flex-wrap items-center justify-between	">
         <div className=" max-w-[600px] w-full">
-          <SearchBar onClickSearch={setSearchTerm}></SearchBar>
+          <SearchBar onChangeSearch={setSearchTerm}></SearchBar>
         </div>
         <div className=" max-w-[200px] w-full">
           <Dropdown>
