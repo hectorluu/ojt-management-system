@@ -2,23 +2,29 @@ import Gap from "components/common/Gap";
 import Heading from "components/common/Heading";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import React, { Fragment, useEffect, useState } from "react";
-import { coursePath } from "api/apiUrl";
-import { defaultPageSize, defaultPageIndex } from "constants/global";
+import { coursePath, skillPath } from "api/apiUrl";
+import { defaultPageSize, defaultPageIndex, positionOptions } from "constants/global";
 import CourseCardDisplay from "modules/course/CourseCardDisplay";
 import { Button } from "components/button";
 import CourseGrid from "modules/course/CourseGrid";
 import TablePagination from '@mui/material/TablePagination';
 import SearchBar from "modules/SearchBar";
+import { Dropdown } from "components/dropdown";
 
 const CourseListPage = () => {
-  const [page, setPage] = React.useState(defaultPageIndex);
-  const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
-  const [totalItem, setTotalItem] = React.useState(0);
+  const [page, setPage] = useState(defaultPageIndex);
+  const [rowsPerPage, setRowsPerPage] = useState(defaultPageSize);
+  const [totalItem, setTotalItem] = useState(0);
   const axiosPrivate = useAxiosPrivate();
   const [courses, setCourses] = useState([]);
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [position, setPosition] = useState(0);
+  const [skill, setSkill] = useState(0);
+  const [skillList, setSkillList] = useState([]);
+  const [positionFiltered, setPositionFiltered] = useState([]);
+  const [skillFiltered, setSkillFiltered] = useState([]);
 
-  async function fetchCourses() {
+  const fetchCourses = async () => {
     try {
       const response = await axiosPrivate.get(coursePath.GET_COURSE_LIST + "?PageIndex=" + page + "&PageSize=" + rowsPerPage);
       setCourses(response.data.data);
@@ -29,10 +35,34 @@ const CourseListPage = () => {
     }
   }
 
+  const fetchSkills = async () => {
+    try {
+      const response = await axiosPrivate.get(skillPath.GET_SKILL_LIST + "?PageIndex=" + 1 + "&PageSize=" + 100000);
+      setSkillList(response.data.data);
+      console.log("fetchSkills ~ response", courses);
+    } catch (error) {
+      console.log("fetchSkills ~ error", error);
+    }
+  }
+
   useEffect(() => {
     fetchCourses();
+    fetchSkills();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, [searchTerm, position, skill]);
+
+  useEffect(() => {
+    const allPosition = [{ value: positionOptions.length + 1, label: "Tất cả"}];
+    const positions = positionOptions.slice();
+    console.log(positionOptions);
+    positions.unshift(...allPosition);
+    setPositionFiltered(positions);
+    const allSkill = [{ id: skillList.length + 1, name: "Tất cả"}];
+    const skills = skillList.slice();
+    skills.unshift(...allSkill);
+    setSkillFiltered(skills);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [skillList]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -43,6 +73,34 @@ const CourseListPage = () => {
     setPage(1);
   };
 
+  const getPositionDropdownLabel = (
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
+    const value = name || defaultValue;
+    const label = options.find((label) => label.value === value);
+    return label ? label.label : defaultValue;
+  };
+
+  const getSkillDropdownLabel = (
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
+    const value = name || defaultValue;
+    const label = options.find((label) => label.id === value);
+    return label ? label.name : defaultValue;
+  };
+
+  const handleSelectPositionDropdownOption = (value) => {
+    setPosition(value);
+  };
+
+  const handleSelectSkillDropdownOption = (value) => {
+    setSkill(value);
+  };
+
   return (
     <Fragment>
       <div className="flex flex-wrap items-center justify-between	">
@@ -50,11 +108,6 @@ const CourseListPage = () => {
           <Heading className="text-4xl font-bold pt-6">
             Danh sách các khóa học
           </Heading>
-        </div>
-      </div>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className=" max-w-[600px] w-full">
-          <SearchBar onClickSearch={setSearchTerm}></SearchBar>
         </div>
         <Button
           className="px-7"
@@ -65,11 +118,66 @@ const CourseListPage = () => {
           Thêm khóa học mới
         </Button>
       </div>
+      <div className="flex flex-wrap items-center justify-between	">
+        <div className=" max-w-[600px] w-full">
+          <SearchBar onClickSearch={setSearchTerm}></SearchBar>
+        </div>
+        <div className=" max-w-[200px] w-full">
+          <Dropdown>
+            <Dropdown.Select
+              placeholder={getPositionDropdownLabel(
+                position,
+                positionFiltered,
+                "Vị trí"
+              )}
+            ></Dropdown.Select>
+            <Dropdown.List>
+              {positionFiltered.map((pos) => (
+                <Dropdown.Option
+                  key={pos.value}
+                  onClick={() =>
+                    handleSelectPositionDropdownOption(
+                      pos.value
+                    )
+                  }
+                >
+                  <span className="capitalize">{pos.label}</span>
+                </Dropdown.Option>
+              ))}
+            </Dropdown.List>
+          </Dropdown>
+        </div>
+        <div className=" max-w-[200px] w-full">
+          <Dropdown>
+            <Dropdown.Select
+              placeholder={getSkillDropdownLabel(
+                skill,
+                skillFiltered,
+                "Kỹ năng"
+              )}
+            ></Dropdown.Select>
+            <Dropdown.List>
+              {skillFiltered.map((ski) => (
+                <Dropdown.Option
+                  key={ski.id}
+                  onClick={() =>
+                    handleSelectSkillDropdownOption(
+                      ski.id
+                    )
+                  }
+                >
+                  <span className="capitalize">{ski.name}</span>
+                </Dropdown.Option>
+              ))}
+            </Dropdown.List>
+          </Dropdown>
+        </div>
+      </div>
       <Gap></Gap>
       <CourseGrid type="secondary">
         {courses.length !== 0 ? (
           courses.map((item) => (
-            <CourseCardDisplay course={item} key={item.id}/>
+            <CourseCardDisplay course={item} key={item.id} />
           ))
         ) : (<></>)}
       </CourseGrid>
