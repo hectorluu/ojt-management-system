@@ -4,7 +4,7 @@ import useAxiosPrivate from "hooks/useAxiosPrivate";
 import CampaignFeature from "modules/campaign/CampaignFeature";
 import CampaignGrid from "modules/campaign/CampaignGrid";
 import CampaignItem from "modules/campaign/CampaignItem";
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { useEffect } from "react";
 import { v4 } from "uuid";
 

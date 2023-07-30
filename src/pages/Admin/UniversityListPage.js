@@ -1,5 +1,5 @@
 import Heading from "components/common/Heading";
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { Button } from "components/button";
 
 const UniversityListPage = () => {

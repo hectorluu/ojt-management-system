@@ -3,7 +3,7 @@ import Gap from "components/common/Gap";
 import Heading from "components/common/Heading";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { useParams } from "react-router-dom";
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
 import Card from "@mui/material/Card";
 import { CardActionArea } from "@mui/material";
@@ -15,8 +15,8 @@ import CoursePlatform from "modules/course/part/CoursePlatform";
 const CourseDetailPage = () => {
   const courseId = useParams();
 
-  const [page] = React.useState(defaultPageIndex);
-  const [rowsPerPage] = React.useState(defaultPageSize);
+  const [page] = useState(defaultPageIndex);
+  const [rowsPerPage] = useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [course, setCourse] = useState([]);
 

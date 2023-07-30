@@ -1,5 +1,5 @@
 import { courseOptions, positionOptions } from "constants/global";
-import React, { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Input, Textarea } from "components/input";
 import ImageUpload from "components/image/ImageUpload";
 import FormRow from "components/common/FormRow";
@@ -15,9 +15,9 @@ import { coursePath, skillPath } from "api/apiUrl";
 const CreateNewCoursePage = () => {
   const axiosPrivate = useAxiosPrivate();
   const { handleSubmit, control, setValue, reset, watch } = useForm();
-  const [coursePosition, setCoursePosition] = React.useState([{ "position": "", "isCompulsory": "" }]);
-  const [skillGain, setSkillGain] = React.useState([{ "skillId": "", "recommendedLevel": "", "afterwardLevel": "" }]);
-  const [skillList, setSkillList] = React.useState([]);
+  const [coursePosition, setCoursePosition] = useState([{ "position": "", "isCompulsory": "" }]);
+  const [skillGain, setSkillGain] = useState([{ "skillId": "", "recommendedLevel": "", "afterwardLevel": "" }]);
+  const [skillList, setSkillList] = useState([]);
 
   useEffect(() => {
     fetchSkills();
@@ -67,7 +67,6 @@ const CreateNewCoursePage = () => {
     } catch (error) {
       toast.error("Can not create new course");
     }
-    // values, dateOfBirth
   };
 
   const handleAddField = () => {

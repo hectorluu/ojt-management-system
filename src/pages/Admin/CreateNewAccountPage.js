@@ -1,5 +1,5 @@
 //eslint-disable-next-line
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import FormRow from "components/common/FormRow";
 import FormGroup from "components/common/FormGroup";
 import DatePicker from "react-date-picker";
