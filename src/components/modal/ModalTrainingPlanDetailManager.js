@@ -3,7 +3,7 @@ import ReactModal from "react-modal";
 import { Button } from "components/button";
 import { defaultImage } from "constants/global";
 
-const ModalTraineeDetailManager = ({ isOpen, onRequestClose }) => {
+const ModalTrainingPlanDetailManager = ({ isOpen, onRequestClose }) => {
   return (
     <ReactModal
       isOpen={isOpen}
@@ -31,7 +31,7 @@ const ModalTraineeDetailManager = ({ isOpen, onRequestClose }) => {
         </svg>
       </button>
       <h2 className="font-bold text-[25px] mb-10 text-center">
-        Thông tin chi tiết Trainee
+        Thông tin chi tiết kế hoạch đào tạo
       </h2>
       <div>
         <div className="bg-white shadow-1 rounded-xl">
@@ -72,4 +72,4 @@ const ModalTraineeDetailManager = ({ isOpen, onRequestClose }) => {
   );
 };
 
-export default ModalTraineeDetailManager;
+export default ModalTrainingPlanDetailManager;

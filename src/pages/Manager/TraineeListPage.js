@@ -14,6 +14,7 @@ import { userPath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { Button } from "components/button";
+import ModalTraineeDetailManager from "components/modal/ModalTraineeDetailManager";
 
 const TraineeListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -52,8 +53,15 @@ const TraineeListPage = () => {
     setPage(0);
   };
 
+  const [isTraineeDetailModalOpen, setIsTraineeDetailModalOpen] =
+    useState(false);
+
   return (
     <Fragment>
+      <ModalTraineeDetailManager
+        isOpen={isTraineeDetailModalOpen}
+        onRequestClose={() => setIsTraineeDetailModalOpen(false)}
+      ></ModalTraineeDetailManager>
       <div className="flex flex-wrap items-center justify-between	">
         <div className="flex items-center justify-center">
           <Heading className="text-4xl font-bold pt-6">Thực tập sinh</Heading>
@@ -77,7 +85,12 @@ const TraineeListPage = () => {
                 <TableCell>{item.email}</TableCell>
                 <TableCell>{item.role}</TableCell>
                 <TableCell align="right" width={"10%"}>
-                  <Button className="" type="button" href="/" kind="ghost">
+                  <Button
+                    className=""
+                    type="button"
+                    kind="ghost"
+                    onClick={() => setIsTraineeDetailModalOpen(true)}
+                  >
                     Edit
                   </Button>
                 </TableCell>
