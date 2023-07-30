@@ -6,7 +6,7 @@ import ReactModal from "react-modal";
 const ModalBackProject = () => {
   return (
     <ReactModal
-      isOpen={false}
+      isOpen={true}
       overlayClassName="modal-overlay fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
       className="modal-content w-full max-w-[521px] bg-white rounded-2xl outline-none p-10 relative max-h-[90vh] overflow-y-auto scroll-hidden"
     >
