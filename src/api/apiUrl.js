@@ -6,7 +6,7 @@ export const authPath = {
 };
 
 export const commonPath = {
-  GET_ME: "/common/current-user"
+  GET_ME: "/common/current-user",
 };
 
 export const coursePath = {
@@ -25,7 +25,7 @@ export const reportPath = {};
 export const universityPath = {};
 
 export const trainingPlanPath = {
-  GET_TRAINING_PLAN_LIST: "",
+  GET_TRAINING_PLAN_LIST: "training-plan",
   GET_TRAINING_PLAN: "",
 };
 
