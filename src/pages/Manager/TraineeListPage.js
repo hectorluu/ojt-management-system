@@ -72,6 +72,7 @@ const TraineeListPage = () => {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Role</TableCell>
@@ -81,6 +82,13 @@ const TraineeListPage = () => {
           <TableBody>
             {users.map((item) => (
               <TableRow key={item.id}>
+                <TableCell className="w-20">
+                  <img
+                    class="inline-block h-10 w-10 rounded-full ring-2 ring-white"
+                    src="logo.png"
+                    alt=""
+                  />
+                </TableCell>
                 <TableCell>{item.fullName}</TableCell>
                 <TableCell>{item.email}</TableCell>
                 <TableCell>{item.role}</TableCell>
