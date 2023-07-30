@@ -15,6 +15,7 @@ import { defaultPageSize, defaultPageIndex } from "constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { roleOptions } from "constants/global";
 import SearchBar from "modules/SearchBar";
+import { Dropdown } from "components/dropdown";
 import { Button } from "components/button";
 import ModalUserDetailAdmin from "components/modal/ModalUserDetailAdmin";
 
@@ -24,7 +25,9 @@ const AccountListPage = () => {
   const [rowsPerPage, setRowsPerPage] = useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState([]);
-  const [, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [role, setRole] = useState(0);
+  const [roleFiltered, setRoleFilter] = useState([]);
 
   const fetchUsers = async () => {
     try {
@@ -45,7 +48,16 @@ const AccountListPage = () => {
 
   useEffect(() => {
     fetchUsers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    console.log(roleFiltered);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm, role]);
+
+  useEffect(() => {
+    const allRole = [{ value: roleOptions.length + 1, label: "Tất cả"}];
+    const roles = roleOptions.slice();
+    roles.unshift(...allRole)
+    setRoleFilter(roles);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChangePage = (event, newPage) => {
@@ -57,6 +69,19 @@ const AccountListPage = () => {
     setPage(1);
   };
 
+  const getDropdownLabel = (
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
+    const value = name || defaultValue;
+    const label = options.find((label) => label.value === value);
+    return label ? label.label : defaultValue;
+  };
+
+  const handleSelectRoleDropdownOption = (value) => {
+    setRole(value);
+  };
   const [isUserDetailModalOpen, setIsUserDetailModalOpen] = useState(false);
 
   return (
@@ -69,11 +94,6 @@ const AccountListPage = () => {
         <div className="flex items-center justify-center">
           <Heading className="text-4xl font-bold pt-6">Tài khoản</Heading>
         </div>
-      </div>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className=" max-w-[600px] w-full">
-          <SearchBar onClickSearch={setSearchTerm}></SearchBar>
-        </div>
         <Button
           className="px-7"
           type="button"
@@ -82,6 +102,36 @@ const AccountListPage = () => {
         >
           Thêm tài khoản mới
         </Button>
+      </div>
+      <div className="flex flex-wrap items-center justify-between	">
+        <div className=" max-w-[600px] w-full">
+          <SearchBar onClickSearch={setSearchTerm}></SearchBar>
+        </div>
+        <div className=" max-w-[200px] w-full">
+          <Dropdown>
+            <Dropdown.Select
+              placeholder={getDropdownLabel(
+              role,
+              roleFiltered,
+              "Phân quyền"
+            )}
+            ></Dropdown.Select>
+            <Dropdown.List>
+              {roleFiltered.map((personRole) => (
+              <Dropdown.Option
+                key={personRole.value}
+                onClick={() =>
+                  handleSelectRoleDropdownOption(
+                    personRole.value
+                  )
+                }
+              >
+                <span className="capitalize">{personRole.label}</span>
+              </Dropdown.Option>
+            ))}
+            </Dropdown.List>
+          </Dropdown>
+        </div>
       </div>
       <Gap></Gap>
       <TableContainer sx={{ width: 1 }}>

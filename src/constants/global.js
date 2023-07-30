@@ -23,6 +23,14 @@ export const roleOptions = [
   { value: 4, label: "Thực tập sinh" },
 ];
 
+export const roleFilter = [
+  { value: 0, label: "Tất cả"},
+  { value: 1, label: "Admin" },
+  { value: 2, label: "Quản lý" },
+  { value: 3, label: "Đào tạo viên" },
+  { value: 4, label: "Thực tập sinh" },
+];
+
 export const roleExchange = {
   ADMIN: 1,
   MANAGER: 2,
@@ -44,3 +52,11 @@ export const traineeTaskStatus = [
   { value: 2, label: "Quá Hạn" },
   { value: 3, label: "Đang thực hiện" },
 ];
+
+export const skillLevel = [
+  { value: 1, label: "1" },
+  { value: 2, label: "2" },
+  { value: 3, label: "3" },
+  { value: 4, label: "4" },
+  { value: 5, label: "5" },
+]
