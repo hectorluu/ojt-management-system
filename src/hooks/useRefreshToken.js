@@ -5,7 +5,7 @@ export default function useRefreshToken() {
   async function refresh() {
     const { refresh_token } = getToken();
     if (!refresh_token) return null;
-    const response = await axios.post("/token", {
+    const response = await axios.post("/authen/refresh", {
       "Content-Type": "Application/json",
       refreshToken: refresh_token,
     });

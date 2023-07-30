@@ -20,7 +20,7 @@ export const requestAuthFetchMe = (token) => {
 };
 export const requestAuthRefreshToken = (token) => {
   if (!token) return;
-  return axios.post("/token", {
+  return axios.post("/authen/refresh", {
     "Content-Type": "Application/json",
     refreshToken: token,
   });

@@ -20,7 +20,10 @@ export default function CourseCardDisplay(course) {
   const navigate = useNavigate();
 
   return (
-    <Card sx={{ display: "flex" }}>
+    <Card
+      sx={{ display: "flex" }}
+      class="rounded-2xl hover:shadow-xl transition duration-500 ease-in-out"
+    >
       <CardActionArea
         sx={{ display: "flex" }}
         size="small"
@@ -28,22 +31,19 @@ export default function CourseCardDisplay(course) {
           navigate("/course-list/" + course.course.id);
         }}
       >
-        <div className="flex items-center gap-x-[30px] w-full">
+        <div className="flex items-center gap-x-[5px] w-full">
           <CourseImage className="h-[266px] flex-1"></CourseImage>
-          <div className="flex-1 ">
-            <CourseCategory
-              text={coursePosition(course)}
-              className="text-sm"
-            ></CourseCategory>
+          <div className="flex-auto max-w-[600px]">
+            <CourseCategory text={coursePosition(course)} className="text-sm">
+              {console.log(course)}
+            </CourseCategory>
             <CourseName className="mb-4 text-xl font-bold">
               {course.course.name}
             </CourseName>
             <CourseDesc className="mb-6 text-sm">
               {course.course.description}
             </CourseDesc>
-            <div className="w-full rounded-full bg-[#EFEFEF] h-[5px] mb-6">
-              <div className="w-4/4 h-full rounded-full bg-primary"></div>
-            </div>
+            <div className="w-4/4 rounded-full bg-primary h-[5px] mb-6 pr-10 mr-10"></div>
             <CoursePlatform
               text={course.course.platformName}
               className="text-sm"

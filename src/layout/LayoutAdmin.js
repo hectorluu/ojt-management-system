@@ -14,8 +14,7 @@ const LayoutAdmin = () => {
     if (!user && !user.email && !userRole === permissions.ADMIN) {
       navigate("/login");
     }
-
-    //eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (

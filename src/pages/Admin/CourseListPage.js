@@ -7,7 +7,7 @@ import { defaultPageSize, defaultPageIndex, positionOptions } from "constants/gl
 import CourseCardDisplay from "modules/course/CourseCardDisplay";
 import { Button } from "components/button";
 import CourseGrid from "modules/course/CourseGrid";
-import TablePagination from '@mui/material/TablePagination';
+import TablePagination from "@mui/material/TablePagination";
 import SearchBar from "modules/SearchBar";
 import { Dropdown } from "components/dropdown";
 
@@ -26,7 +26,13 @@ const CourseListPage = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axiosPrivate.get(coursePath.GET_COURSE_LIST + "?PageIndex=" + page + "&PageSize=" + rowsPerPage);
+      const response = await axiosPrivate.get(
+        coursePath.GET_COURSE_LIST +
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage
+      );
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
       console.log("fetchCourses ~ response", courses);
@@ -103,7 +109,7 @@ const CourseListPage = () => {
 
   return (
     <Fragment>
-      <div className="flex flex-wrap items-center justify-between	">
+      <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center justify-center">
           <Heading className="text-4xl font-bold pt-6">
             Danh sách các khóa học
@@ -179,7 +185,9 @@ const CourseListPage = () => {
           courses.map((item) => (
             <CourseCardDisplay course={item} key={item.id} />
           ))
-        ) : (<></>)}
+        ) : (
+          <></>
+        )}
       </CourseGrid>
       <TablePagination
         component="div"
