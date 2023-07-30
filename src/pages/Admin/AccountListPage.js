@@ -12,47 +12,59 @@ import {
 } from "@mui/material";
 import { userPath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
-import { Button } from "components/button";
 import TablePagination from "@mui/material/TablePagination";
 import { roleOptions } from "constants/global";
 import SearchBar from "modules/SearchBar";
-
+import { Button } from "components/button";
+import ModalUserDetailAdmin from "components/modal/ModalUserDetailAdmin";
 
 const AccountListPage = () => {
-  const [page, setPage] = React.useState(defaultPageIndex);
-  const [totalItem, setTotalItem] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
+  const [page, setPage] = useState(defaultPageIndex);
+  const [totalItem, setTotalItem] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [, setSearchTerm] = useState("");
 
   const fetchUsers = async () => {
     try {
-      const response = await axiosPrivate.get(userPath.GET_USER_LIST + "?PageSize=" + rowsPerPage + "&PageIndex=" + page);
+      const response = await axiosPrivate.get(
+        userPath.GET_USER_LIST +
+          "?PageSize=" +
+          rowsPerPage +
+          "&PageIndex=" +
+          page
+      );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
-      console.log("fetchUsers ~ response", response);
+      // setSearchTerm("");
     } catch (error) {
       console.log("fetchUsers ~ error", error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value,10));
+    setRowsPerPage(parseInt(event.target.value, 10));
     setPage(1);
   };
 
+  const [isUserDetailModalOpen, setIsUserDetailModalOpen] = useState(false);
+
   return (
     <Fragment>
+      <ModalUserDetailAdmin
+        isOpen={isUserDetailModalOpen}
+        onRequestClose={() => setIsUserDetailModalOpen(false)}
+      ></ModalUserDetailAdmin>
       <div className="flex flex-wrap items-center justify-between	">
         <div className="flex items-center justify-center">
           <Heading className="text-4xl font-bold pt-6">Tài khoản</Heading>
@@ -72,7 +84,7 @@ const AccountListPage = () => {
         </Button>
       </div>
       <Gap></Gap>
-      <TableContainer>
+      <TableContainer sx={{ width: 1 }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
@@ -104,8 +116,8 @@ const AccountListPage = () => {
                   <Button
                     className=""
                     type="button"
-                    href="/"
                     kind="ghost"
+                    onClick={() => setIsUserDetailModalOpen(true)}
                   >
                     Edit
                   </Button>

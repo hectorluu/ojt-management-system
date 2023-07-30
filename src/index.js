@@ -19,6 +19,8 @@ import LayoutTrainer from "layout/LayoutTrainer";
 import { permissions } from "constants/permissions";
 import StartCampaignPage from "pages/StartCampaignPage";
 import CampaignPage from "pages/CampaignPage";
+import ModalBackProject from "components/modal/ModalBackProject";
+import ModalThank from "components/modal/ModalThank";
 
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
@@ -377,6 +379,14 @@ const router = createBrowserRouter([
   {
     path: "/campaign-page",
     element: <CampaignPage></CampaignPage>,
+  },
+  {
+    path: "modal-back-project",
+    element: <ModalBackProject></ModalBackProject>,
+  },
+  {
+    path: "modal-thank",
+    element: <ModalThank></ModalThank>,
   },
 ]);
 

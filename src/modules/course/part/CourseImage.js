@@ -7,7 +7,7 @@ const CourseImage = ({ className = "h-[158px]", image = defaultImage }) => {
       <img
         src={image}
         alt=""
-        className="object-cover w-full h-full rounded-2xl"
+        className="object-contain w-full h-full rounded-2xl"
       />
     </div>
   );

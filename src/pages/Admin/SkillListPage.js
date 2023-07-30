@@ -14,6 +14,7 @@ import { skillPath } from "api/apiUrl";
 import { defaultPageSize, defaultPageIndex } from "constants/global";
 import { Button } from "components/button";
 import TablePagination from "@mui/material/TablePagination";
+import ModalSkillDetailAdmin from "components/modal/ModalSkillDetailAdmin";
 
 const SkillListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -51,8 +52,14 @@ const SkillListPage = () => {
     setPage(0);
   };
 
+  const [isSkillDetailModalOpen, setIsSkillDetailModalOpen] = useState(false);
+
   return (
     <Fragment>
+      <ModalSkillDetailAdmin
+        isOpen={isSkillDetailModalOpen}
+        onRequestClose={() => setIsSkillDetailModalOpen(false)}
+      ></ModalSkillDetailAdmin>
       <div className="flex flex-wrap items-center justify-between	">
         <div className="flex items-center justify-center">
           <Heading className="text-4xl font-bold pt-6">Kỹ Năng</Heading>
@@ -76,7 +83,12 @@ const SkillListPage = () => {
                 <TableCell>{item.type}</TableCell>
                 <TableCell>{item.status}</TableCell>
                 <TableCell align="right" width={"10%"}>
-                  <Button className="" type="button" href="" kind="ghost">
+                  <Button
+                    className=""
+                    type="button"
+                    kind="ghost"
+                    onClick={() => setIsSkillDetailModalOpen(true)}
+                  >
                     Edit
                   </Button>
                 </TableCell>
