@@ -26,6 +26,7 @@ export const reportPath = {};
 
 export const universityPath = {
   GET_UNIVERSITY_LIST: "/university",
+  GET_UNIVERSITY: "/university/",
 };
 
 export const trainingPlanPath = {
