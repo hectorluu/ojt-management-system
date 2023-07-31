@@ -38,10 +38,10 @@ const AccountListPage = () => {
           rowsPerPage +
           "&PageIndex=" +
           page +
-          // "&searchTerm=" +
-          // searchTerm +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}` +
           "&role=" +
-          role
+        role
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -56,7 +56,7 @@ const AccountListPage = () => {
   }, [searchTerm, role]);
 
   useEffect(() => {
-    const allRole = [{ value: "", label: "Tất cả"}];
+    const allRole = [{ value: "", label: "Tất cả" }];
     const roles = roleOptions.slice();
     roles.unshift(...allRole);
     setRoleFilter(roles);
