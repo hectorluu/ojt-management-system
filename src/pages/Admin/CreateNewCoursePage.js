@@ -17,7 +17,7 @@ import { courseNoti } from "constants/notification";
 
 const CreateNewCoursePage = () => {
   const axiosPrivate = useAxiosPrivate();
-  const { handleSubmit, control, setValue, reset, watch } = useForm();
+  const { handleSubmit, control, setValue, reset } = useForm();
   const [coursePosition, setCoursePosition] = useState([{ "position": "", "isCompulsory": "" }]);
   const [courseSkills, setCourseSkills] = useState([{ "skillId": "", "recommendedLevel": "", "afterwardLevel": "" }]);
   const [skillList, setSkillList] = useState([]);
@@ -32,7 +32,6 @@ const CreateNewCoursePage = () => {
 
   useEffect(() => {
     removeSkillItems(courseSkills, skillList);
-    console.log(courseSkills)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseSkills]);
 
@@ -78,7 +77,6 @@ const CreateNewCoursePage = () => {
     const newArray = coursePosition.slice();
     newArray[index][name] = value;
     setCoursePosition(newArray);
-    console.log(coursePosition);
   };
 
   const resetValues = () => {
@@ -87,9 +85,12 @@ const CreateNewCoursePage = () => {
 
   const handleAddNewCourse = async (values) => {
     try {
+      uploadFile();
       await axiosPrivate.post(coursePath.CREATE_COURSE, {
         ...values,
-      });
+        coursePosition,
+        courseSkills
+      });  
       toast.success("Create course successfully");
       resetValues();
     } catch (error) {
@@ -142,7 +143,6 @@ const CreateNewCoursePage = () => {
     const newArray = courseSkills.slice();
     newArray[index][name] = value;
     setCourseSkills(newArray);
-    console.log(courseSkills);
   };
 
   const getLevelDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
@@ -159,7 +159,7 @@ const CreateNewCoursePage = () => {
           <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
             Tạo khóa học mới
           </h1>
-          <form /*onSubmit={handleSubmit(handleAddNewCourse)}*/>
+          <form onSubmit={handleSubmit(handleAddNewCourse)}>
             <FormRow>
               <FormGroup>
                 <Label>Tên khóa học (*)</Label>
