@@ -27,7 +27,7 @@ const AccountListPage = () => {
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
-  const [role, setRole] = useState(0);
+  const [role, setRole] = useState("");
   const [roleFiltered, setRoleFilter] = useState([]);
 
   const fetchUsers = async () => {
@@ -56,7 +56,7 @@ const AccountListPage = () => {
   }, [searchTerm, role]);
 
   useEffect(() => {
-    const allRole = [{ value: 0, label: "Tất cả"}];
+    const allRole = [{ value: "", label: "Tất cả"}];
     const roles = roleOptions.slice();
     roles.unshift(...allRole)
     setRoleFilter(roles);
