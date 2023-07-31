@@ -22,12 +22,11 @@ const CreateNewCoursePage = () => {
   const [courseSkills, setCourseSkills] = useState([{ "skillId": "", "recommendedLevel": "", "afterwardLevel": "" }]);
   const [skillList, setSkillList] = useState([]);
   const [coursePic, setCoursePic] = useState(null);
-  const [filteredSkillList, setFilteredSkillList] = useState(positionOptions);
+  const [filteredSkillList, setFilteredSkillList] = useState([]);
   const [filteredPositionList, setFilteredPositionList] = useState([]);
 
   useEffect(() => {
     fetchSkills();
-    console.log("filtered", filteredPositionList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -39,7 +38,6 @@ const CreateNewCoursePage = () => {
 
   useEffect(() => {
     removePositionItems(coursePosition, positionOptions);
-    console.log(coursePosition)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coursePosition]);
 
@@ -100,7 +98,7 @@ const CreateNewCoursePage = () => {
   };
 
   const handleAddPositionField = () => {
-    if (filteredPositionList.length > 0 && filteredPositionList.length < positionOptions.length) {
+    if (filteredPositionList.length > 0 && coursePosition.length < positionOptions.length) {
       const newField = {
         position: "",
         isCompulsory: "",
