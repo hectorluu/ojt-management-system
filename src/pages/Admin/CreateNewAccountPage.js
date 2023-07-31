@@ -12,36 +12,48 @@ import { Button } from "components/button";
 import ImageUpload from "components/image/ImageUpload";
 import { genderOptions, roleOptions, positionOptions, skillLevel } from "constants/global";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
-import { skillPath, userPath } from "api/apiUrl";
+import { ojtBatchPath, skillPath, universityPath, userPath } from "api/apiUrl";
 import { roleExchange } from "constants/global";
-import moment from "moment";
 import { storage } from "../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { accountNoti } from "constants/notification";
 
 const CreateNewAccountPage = () => {
-  const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const [birthday, setBirthDay] = useState(new Date());
   const [avatar, setAvatar] = useState(null);
   const axiosPrivate = useAxiosPrivate();
-  const [userSkill, setUserSkill] = useState([{"skillId": "", "level": ""}]);
+  const [userRoleWhenChosen, setUserRoleWhenChosen] = useState("");
+  const [createSkills, setCreateSkills] = useState([{ "skillId": "", "level": "" }]);
   const [skillList, setSkillList] = useState([]);
   const [filteredSkillList, setFilteredSkillList] = useState([]);
+  const [universityId, setUniversityId] = useState(0);
+  const [universityList, setUniversityList] = useState([]);
+  const [ojtBatchList, setOjtBatchList] = useState([]);
+  const [batchId, setBatchId] = useState(0);
 
   const { handleSubmit, control, setValue, reset, watch } = useForm();
 
   useEffect(() => {
-    fetchSkills();
+    if (userRoleWhenChosen && userRoleWhenChosen === roleExchange.TRAINEE) {
+      fetchSkills();
+      fetchUniversities();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [userRoleWhenChosen]);
 
   useEffect(() => {
-    removeItems(userSkill, skillList);
+    fetchOJTBatchs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userSkill]);
+  }, [universityId]);
+
+  useEffect(() => {
+    removeItems(createSkills, skillList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createSkills]);
 
   const removeItems = (rmItems, items) => {
     const filteredItems = items.filter((item) => !rmItems.some((rmItem) => item.id === rmItem.skillId));
-  
+
     // Update the state with the filtered items
     setFilteredSkillList(filteredItems);
   };
@@ -62,6 +74,33 @@ const CreateNewAccountPage = () => {
     }
   };
 
+  const fetchOJTBatchs = async () => {
+    try {
+      const response = await axiosPrivate.get(
+        ojtBatchPath.GET_OJT_BATCH_LIST_OF_UNIVERSITY +
+        "?id=" +
+        universityId
+      );
+      setOjtBatchList(response.data);
+    } catch (error) {
+      console.log("fetchBatchs ~ error", error);
+    }
+  };
+
+  const fetchUniversities = async () => {
+    try {
+      const response = await axiosPrivate.get(
+        universityPath.GET_UNIVERSITY_LIST +
+        "?id=" +
+        universityId
+      );
+      setUniversityList(response.data.data);
+      console.log("fetchUniversities ~ success", response);
+    } catch (error) {
+      console.log("fetchUniversities ~ error", error);
+    }
+  };
+
   const getDropdownLabel = (
     name,
     options = [{ value: "", label: "" }],
@@ -73,12 +112,12 @@ const CreateNewAccountPage = () => {
   };
 
   const resetValues = () => {
-    setDateOfBirth("");
+    setBirthDay("");
     reset({});
   };
 
   async function uploadFile() {
-    const imageRef = ref(storage, "images/" + avatar.name);
+    const imageRef = ref(storage, "images/users/" + avatar.name);
     uploadBytes(imageRef, avatar).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((downloadURL) => {
         setValue("avatarUrl", downloadURL);
@@ -89,10 +128,11 @@ const CreateNewAccountPage = () => {
   const handleAddNewAccount = async (values) => {
     try {
       uploadFile();
-      const birthday = moment(dateOfBirth).format("DD/MM/YYYY");
       await axiosPrivate.post(userPath.CREATE_USER, {
         ...values,
         birthday,
+        createSkills,
+        batchId
       });
       toast.success("Create account successfully with password ");
       resetValues();
@@ -106,48 +146,51 @@ const CreateNewAccountPage = () => {
     setValue(name, value);
   };
 
-  const [userRoleWhenChosen, setUserRoleWhenChosen] = useState("");
-
   const handleSelectRoleDropdownOption = (name, value) => {
     setUserRoleWhenChosen(() => value);
     setValue(name, value);
     setValue("rollNumber", "");
     setValue("position", "");
     setAvatar(null);
-    setUserSkill([{"skillId": "", "level": ""}]);
+    setCreateSkills([{ "skillId": "", "initLevel": "" }]);
   };
 
   const handleAddField = () => {
-    if(filteredSkillList.length > 0 && userSkill.length < skillList.length){
+    if (filteredSkillList.length > 0 && createSkills.length < skillList.length) {
       const newField = {
         skillId: "",
-        level: "",
+        initLevel: "",
       };
-      setUserSkill([...userSkill, newField]);
-    }else{
+      setCreateSkills([...createSkills, newField]);
+    } else {
       toast.error(accountNoti.ERROR.SKILL_OVERFLOW);
     }
   };
 
   const getSkillDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
-    const skills = userSkill.slice();
+    const skills = createSkills.slice();
     const value = skills[index][name] || defaultValue;
     const label = options.find((label) => label.id === value);
     return label ? label.name : defaultValue;
   };
 
   const getLevelDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
-    const levels = userSkill.slice();
+    const levels = createSkills.slice();
     const value = levels[index][name] || defaultValue;
     const label = options.find((label) => label.value === value);
     return label ? label.label : defaultValue;
   };
 
+  const getApiDropdownLabel = (value, options = [{ value: "", label: "" }], defaultValue = "") => {
+      const label = options.find((label) => label.id === value);
+      return label ? label.name : defaultValue;
+  };
+
   const onChangeUserSkill = (index, name, value) => {
-    const newArray = userSkill.slice();
+    const newArray = createSkills.slice();
     newArray[index][name] = value;
-    setUserSkill(newArray);
-    console.log(userSkill);
+    setCreateSkills(newArray);
+    console.log(createSkills);
   };
 
   return (
@@ -231,8 +274,8 @@ const CreateNewAccountPage = () => {
                 <Label>Ngày sinh (*)</Label>
                 <DatePicker
                   name=""
-                  onChange={setDateOfBirth}
-                  value={dateOfBirth}
+                  onChange={setBirthDay}
+                  value={birthday}
                   format="dd-MM-yyyy"
                   autoComplete="off"
                 />
@@ -279,7 +322,7 @@ const CreateNewAccountPage = () => {
                       <Input
                         control={control}
                         name="rollNumber"
-                        placeholder="Ex: SE150056"
+                        placeholder="Ex: KNS1234"
                         autoComplete="off"
                       ></Input>
                     </FormGroup>
@@ -339,7 +382,71 @@ const CreateNewAccountPage = () => {
               (userRoleWhenChosen === roleExchange.TRAINEE) && (
                 <>
                   <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
-                  {userSkill.map((userSkill, index) => (
+                  <FormGroup>
+                    <Label>Tên trường (*)</Label>
+                    <Dropdown>
+                      <Dropdown.Select
+                        placeholder={getApiDropdownLabel(
+                          universityId,
+                          universityList,
+                          "Chọn trường đại học"
+                        )}
+                      ></Dropdown.Select>
+                      <Dropdown.List>
+                        {universityList.map((university) => (
+                          <Dropdown.Option
+                            key={university.id}
+                            onClick={() =>
+                              setUniversityId(
+                                university.id
+                              )
+                            }
+                          >
+                            <span className="capitalize">{university.name}</span>
+                          </Dropdown.Option>
+                        ))}
+                      </Dropdown.List>
+                    </Dropdown>
+                  </FormGroup>
+                  <FormRow>
+                    <FormGroup>
+                      <Label>Mã số sinh viên (*)</Label>
+                      <Input
+                        control={control}
+                        name="studentCode"
+                        placeholder="Ex: SE150056"
+                        autoComplete="off"
+                      ></Input>
+                    </FormGroup>
+                    <FormGroup>
+                      <Label>Kì thực tập (*)</Label>
+                      <Dropdown>
+                        <Dropdown.Select
+                          placeholder={getApiDropdownLabel(
+                            batchId,
+                            ojtBatchList,
+                            "Chọn kì thực tập"
+                          )}
+                        ></Dropdown.Select>
+                        <Dropdown.List>
+                          {ojtBatchList?.map((ojtBatch) => (
+                            <Dropdown.Option
+                              key={ojtBatch.id}
+                              onClick={() =>
+                                setBatchId(ojtBatch.id)
+                              }
+                            >
+                              <span className="capitalize">
+                                {ojtBatch.name}
+                              </span>
+                            </Dropdown.Option>
+                          ))}
+                        </Dropdown.List>
+                      </Dropdown>
+                    </FormGroup>
+                  </FormRow>
+                  <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
+                  {createSkills.map((userSkill, index) => (
                     <FormRow key={index}>
                       <FormGroup>
                         <Label>Kỹ năng (*)</Label>
@@ -365,14 +472,14 @@ const CreateNewAccountPage = () => {
                         <Label>Trình độ (*)</Label>
                         <Dropdown>
                           <Dropdown.Select
-                            placeholder={getLevelDropdownLabel(index, "level", skillLevel, "Lựa chọn")}
+                            placeholder={getLevelDropdownLabel(index, "initLevel", skillLevel, "Lựa chọn")}
                           ></Dropdown.Select>
                           <Dropdown.List>
                             {skillLevel.map((option) => (
                               <Dropdown.Option
                                 key={option.value}
                                 onClick={() =>
-                                  onChangeUserSkill(index, "level", option.value)
+                                  onChangeUserSkill(index, "initLevel", option.value)
                                 }
                               >
                                 <span className="capitalize">{option.label}</span>
