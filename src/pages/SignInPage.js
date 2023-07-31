@@ -5,7 +5,6 @@ import FormGroup from "components/common/FormGroup";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
 import { Label } from "components/label";
 import { Input } from "components/input";
 import { IconEyeToggle } from "components/icons";
@@ -38,12 +37,6 @@ const SignInPage = () => {
 
   return (
     <LayoutAuthentication heading="KNS OJT Management">
-      <p className="mb-6 text-xs font-normal text-center lg:text-sm text-text3 lg:mb-8">
-        Dont have an account?{" "}
-        <Link to="/register" className="font-medium underline text-primary">
-          Sign up here
-        </Link>
-      </p>
       <form onSubmit={handleSubmit(handleSignIn)}>
         <FormGroup>
           <Label htmlFor="email">Email *</Label>

@@ -1,7 +1,6 @@
 import React from "react";
 
-const SearchBar = ({ onClickSearch = () => { } }) => {
-  const [search, setSearch] = React.useState("");
+const SearchBar = ({ onChangeSearch = () => { } }) => {
   return (
     <div className="relative z-50">
       <div className="bg-white rounded-full shadow-[10px_10px_20px_rgba(218,_213,_213,_0.15)] drop-shadow-2xl p-2 w-full flex items-center ">
@@ -10,12 +9,12 @@ const SearchBar = ({ onClickSearch = () => { } }) => {
             type="text"
             placeholder="Tìm kiếm..."
             className="w-full text-sm bg-transparent placeholder:text-text4 text-text1"
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={onChangeSearch}
           />
         </div>
         <button
-          className="w-[72px] rounded-full bg-primary text-white h-10 flex items-center justify-center flex-shrink-0"
-          onClick={() => onClickSearch(search)}
+          className="w-[72px] rounded-full bg-transparent text-primary h-10 flex items-center justify-center flex-shrink-0"
+          disabled
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

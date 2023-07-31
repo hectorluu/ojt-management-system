@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import FormRow from "components/common/FormRow";
 import FormGroup from "components/common/FormGroup";
 import ImageUpload from "components/image/ImageUpload";

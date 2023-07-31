@@ -34,9 +34,10 @@ export default function CourseCardDisplay(course) {
         <div className="flex items-center gap-x-[5px] w-full">
           <CourseImage className="h-[266px] flex-1"></CourseImage>
           <div className="flex-auto max-w-[600px]">
-            <CourseCategory text={coursePosition(course)} className="text-sm">
-              {console.log(course)}
-            </CourseCategory>
+            <CourseCategory
+              text={coursePosition(course)}
+              className="text-sm"
+            ></CourseCategory>
             <CourseName className="mb-4 text-xl font-bold">
               {course.course.name}
             </CourseName>
