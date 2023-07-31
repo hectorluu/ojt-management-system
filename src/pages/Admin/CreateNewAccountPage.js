@@ -14,7 +14,6 @@ import { genderOptions, roleOptions, positionOptions, skillLevel } from "constan
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { ojtBatchPath, skillPath, universityPath, userPath } from "api/apiUrl";
 import { roleExchange } from "constants/global";
-import moment from "moment";
 import { storage } from "../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { accountNoti } from "constants/notification";
@@ -118,7 +117,7 @@ const CreateNewAccountPage = () => {
   };
 
   async function uploadFile() {
-    const imageRef = ref(storage, "images/" + avatar.name);
+    const imageRef = ref(storage, "images/users/" + avatar.name);
     uploadBytes(imageRef, avatar).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((downloadURL) => {
         setValue("avatarUrl", downloadURL);
@@ -136,7 +135,7 @@ const CreateNewAccountPage = () => {
         batchId
       });
       toast.success("Create account successfully with password ");
-      // resetValues();
+      resetValues();
     } catch (error) {
       console.log("error", error);
       toast.error("Can not create new account");

@@ -1,4 +1,4 @@
-import { courseOptions, positionOptions } from "constants/global";
+import { courseOptions, positionOptions, skillLevel } from "constants/global";
 import { Fragment, useEffect, useState } from "react";
 import { Input, Textarea } from "components/input";
 import ImageUpload from "components/image/ImageUpload";
@@ -11,18 +11,47 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { coursePath, skillPath } from "api/apiUrl";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../../firebase";
+import { courseNoti } from "constants/notification";
 
 const CreateNewCoursePage = () => {
   const axiosPrivate = useAxiosPrivate();
   const { handleSubmit, control, setValue, reset, watch } = useForm();
   const [coursePosition, setCoursePosition] = useState([{ "position": "", "isCompulsory": "" }]);
-  const [skillGain, setSkillGain] = useState([{ "skillId": "", "recommendedLevel": "", "afterwardLevel": "" }]);
+  const [courseSkills, setCourseSkills] = useState([{ "skillId": "", "recommendedLevel": "", "afterwardLevel": "" }]);
   const [skillList, setSkillList] = useState([]);
+  const [coursePic, setCoursePic] = useState(null);
+  const [filteredSkillList, setFilteredSkillList] = useState(positionOptions);
+  const [filteredPositionList, setFilteredPositionList] = useState([]);
 
   useEffect(() => {
     fetchSkills();
+    console.log("filtered", filteredPositionList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    removeSkillItems(courseSkills, skillList);
+    console.log(courseSkills)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseSkills]);
+
+  useEffect(() => {
+    removePositionItems(coursePosition, positionOptions);
+    console.log(coursePosition)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coursePosition]);
+
+  const removeSkillItems = (rmItems, items) => {
+    const filteredItems = items.filter((item) => !rmItems.some((rmItem) => item.id === rmItem.skillId));
+    setFilteredSkillList(filteredItems);
+  };
+
+  const removePositionItems = (rmItems, items) => {
+    const filteredItems = items.filter((item) => !rmItems.some((rmItem) => item.value === rmItem.position));
+    setFilteredPositionList(filteredItems);
+  };
 
   const fetchSkills = async () => {
     try {
@@ -34,6 +63,7 @@ const CreateNewCoursePage = () => {
         1
       );
       setSkillList(response.data.data);
+      setFilteredSkillList(response.data.data);
     } catch (error) {
       console.log("fetchSkills ~ error", error);
     }
@@ -69,12 +99,59 @@ const CreateNewCoursePage = () => {
     }
   };
 
-  const handleAddField = () => {
-    const newField = {
-      position: "",
-      isCompulsory: "",
-    };
-    setCoursePosition([...coursePosition, newField]);
+  const handleAddPositionField = () => {
+    if (filteredPositionList.length > 0 && filteredPositionList.length < positionOptions.length) {
+      const newField = {
+        position: "",
+        isCompulsory: "",
+      };
+      setCoursePosition([...coursePosition, newField]);
+    } else {
+      toast.error(courseNoti.ERROR.POSITION_OVERFLOW);
+    }
+  };
+
+  async function uploadFile() {
+    const imageRef = ref(storage, "images/courses/" + coursePic.name);
+    uploadBytes(imageRef, coursePic).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((downloadURL) => {
+        setValue("imageURL", downloadURL);
+      });
+    });
+  }
+
+  const getSkillDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
+    const skills = courseSkills.slice();
+    const value = skills[index][name] || defaultValue;
+    const label = options.find((label) => label.id === value);
+    return label ? label.name : defaultValue;
+  };
+
+  const handleAddSkillField = () => {
+    if (filteredSkillList.length > 0 && courseSkills.length < skillList.length) {
+      const newField = {
+        skillId: "",
+        recommendedLevel: "",
+        afterwardLevel: "",
+      };
+      setCourseSkills([...courseSkills, newField]);
+    } else {
+      toast.error(courseNoti.ERROR.SKILL_OVERFLOW);
+    }
+  };
+
+  const onChangeCourseSkill = (index, name, value) => {
+    const newArray = courseSkills.slice();
+    newArray[index][name] = value;
+    setCourseSkills(newArray);
+    console.log(courseSkills);
+  };
+
+  const getLevelDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
+    const levels = courseSkills.slice();
+    const value = levels[index][name] || defaultValue;
+    const label = options.find((label) => label.value === value);
+    return label ? label.label : defaultValue;
   };
 
   return (
@@ -122,17 +199,30 @@ const CreateNewCoursePage = () => {
                 control={control}
               ></Textarea>
             </FormGroup>
-            <FormGroup>
-              <Label>Tải ảnh khóa học (*)</Label>
-              <ImageUpload
-                onChange={setValue}
-                name="imageURL"
-              ></ImageUpload>
-            </FormGroup>
-            <FormGroup></FormGroup>
+            <FormRow>
+              <FormGroup>
+                <Label>Tải ảnh khóa học (*)</Label>
+                <ImageUpload
+                  onChange={setCoursePic}
+                  name="imageURL"
+                ></ImageUpload>
+              </FormGroup>
+              {coursePic && (
+                <FormGroup>
+                  <Label>Preview</Label>
+                  <label className="w-full h-[200px] border border-gray-200 border-dashed rounded-xl cursor-pointer flex items-center justify-center">
+                    <img
+                      className="w-full h-full object-contain"
+                      src={URL.createObjectURL(coursePic)}
+                      alt="img"
+                    ></img>
+                  </label>
+                </FormGroup>
+              )}
+            </FormRow>
             {/* This is the line to separate between section */}
             <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
-            {coursePosition.map((coursePosition, index) => (
+            {coursePosition.map((coursePositions, index) => (
               <FormRow key={index}>
                 <FormGroup>
                   <Label>Vị trí (*)</Label>
@@ -141,7 +231,7 @@ const CreateNewCoursePage = () => {
                       placeholder={getDropdownLabel(index, "position", positionOptions, "Lựa chọn")}
                     ></Dropdown.Select>
                     <Dropdown.List>
-                      {positionOptions.map((option) => (
+                      {filteredPositionList.map((option) => (
                         <Dropdown.Option
                           key={option.value}
                           onClick={() =>
@@ -176,40 +266,79 @@ const CreateNewCoursePage = () => {
                 </FormGroup>
               </FormRow>
             ))}
-            <button type="button" onClick={() => handleAddField()}>
+            <button type="button" onClick={() => handleAddPositionField()}>
               Remove
             </button>
             <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
-            <FormGroup>
-              <Label>Kĩ năng khóa học (*)</Label>
-              <Input
-                control={control}
-                name="skill"
-                placeholder="Ex: javascript, c#, ..."
-              ></Input>
-            </FormGroup>
-            <FormRow>
-              <FormGroup>
-                <Label>Level kĩ năng thấp nhất để được học (*)</Label>
-                <Input
-                  control={control}
-                  name="recommened level"
-                  placeholder="Từ 1 - 5"
-                  autoComplete="off"
-                  type="number"
-                ></Input>
-              </FormGroup>
-              <FormGroup>
-                <Label>Level sẽ đạt được sau khóa học (*)</Label>
-                <Input
-                  control={control}
-                  name="afterward level"
-                  placeholder="Từ 1 - 5"
-                  autoComplete="off"
-                  type="number"
-                ></Input>
-              </FormGroup>
-            </FormRow>
+            {courseSkills.map((courseSkills, index) => (
+              <div key={index}>
+                <FormGroup>
+                  <Label>Kỹ năng (*)</Label>
+                  <Dropdown>
+                    <Dropdown.Select
+                      placeholder={getSkillDropdownLabel(index, "skillId", skillList, "Lựa chọn")}
+                    ></Dropdown.Select>
+                    <Dropdown.List>
+                      {filteredSkillList.map((option) => (
+                        <Dropdown.Option
+                          key={option.id}
+                          onClick={() =>
+                            onChangeCourseSkill(index, "skillId", option.id)
+                          }
+                        >
+                          <span className="capitalize">{option.name}</span>
+                        </Dropdown.Option>
+                      ))}
+                    </Dropdown.List>
+                  </Dropdown>
+                </FormGroup>
+                <FormRow>
+                  <FormGroup>
+                    <Label>Trình độ khuyến nghị (*)</Label>
+                    <Dropdown>
+                      <Dropdown.Select
+                        placeholder={getLevelDropdownLabel(index, "recommendedLevel", skillLevel, "Lựa chọn")}
+                      ></Dropdown.Select>
+                      <Dropdown.List>
+                        {skillLevel.map((option) => (
+                          <Dropdown.Option
+                            key={option.value}
+                            onClick={() =>
+                              onChangeCourseSkill(index, "recommendedLevel", option.value)
+                            }
+                          >
+                            <span className="capitalize">{option.label}</span>
+                          </Dropdown.Option>
+                        ))}
+                      </Dropdown.List>
+                    </Dropdown>
+                  </FormGroup>
+                  <FormGroup>
+                    <Label>Trình độ hoàn thành (*)</Label>
+                    <Dropdown>
+                      <Dropdown.Select
+                        placeholder={getLevelDropdownLabel(index, "afterwardLevel", skillLevel, "Lựa chọn")}
+                      ></Dropdown.Select>
+                      <Dropdown.List>
+                        {skillLevel.map((option) => (
+                          <Dropdown.Option
+                            key={option.value}
+                            onClick={() =>
+                              onChangeCourseSkill(index, "afterwardLevel", option.value)
+                            }
+                          >
+                            <span className="capitalize">{option.label}</span>
+                          </Dropdown.Option>
+                        ))}
+                      </Dropdown.List>
+                    </Dropdown>
+                  </FormGroup>
+                </FormRow>
+              </div>
+            ))}
+            <button type="button" onClick={() => handleAddSkillField()}>
+              Remove
+            </button>
             <div className="mt-5 text-center">
               <Button
                 type="submit"
