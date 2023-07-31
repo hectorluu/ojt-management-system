@@ -11,7 +11,7 @@ export const commonPath = {
 
 export const coursePath = {
   GET_COURSE_LIST: "/course",
-  GET_COURSE: "",
+  GET_COURSE: "/course/",
   CREATE_COURSE: "/course",
   UPDATE_COURSE: "",
 };
@@ -35,7 +35,7 @@ export const trainingPlanPath = {
 
 export const userPath = {
   GET_USER_LIST: "/user",
-  GET_USER: "",
+  GET_USER: "user/",
   CREATE_USER: "/user",
   UPADTE_USER: "",
   GET_TRAINEE_LIST: "/user/trainee",

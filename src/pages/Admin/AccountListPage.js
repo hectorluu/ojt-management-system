@@ -52,15 +52,15 @@ const AccountListPage = () => {
 
   useEffect(() => {
     fetchUsers();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, role]);
 
   useEffect(() => {
     const allRole = [{ value: "", label: "Tất cả"}];
     const roles = roleOptions.slice();
-    roles.unshift(...allRole)
+    roles.unshift(...allRole);
     setRoleFilter(roles);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChangePage = (event, newPage) => {
@@ -85,15 +85,23 @@ const AccountListPage = () => {
   const handleSelectRoleDropdownOption = (value) => {
     setRole(value);
   };
+
   const [isUserDetailModalOpen, setIsUserDetailModalOpen] = useState(false);
+  const [userModalId, setUserModalId] = useState(0);
+
+  const handleClickUserModal = (userModalId) => {
+    setIsUserDetailModalOpen(true);
+    setUserModalId(userModalId);
+  };
 
   return (
     <Fragment>
       <ModalUserDetailAdmin
         isOpen={isUserDetailModalOpen}
         onRequestClose={() => setIsUserDetailModalOpen(false)}
+        userIdClicked={userModalId}
       ></ModalUserDetailAdmin>
-      <div className="flex flex-wrap items-center justify-between	">
+      <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center justify-center">
           <Heading className="text-4xl font-bold pt-6">Tài khoản</Heading>
         </div>
@@ -106,32 +114,26 @@ const AccountListPage = () => {
           Thêm tài khoản mới
         </Button>
       </div>
-      <div className="flex flex-wrap items-center justify-between	">
+      <div className="flex flex-wrap items-start gap-5 mt-5">
         <div className=" max-w-[600px] w-full">
           <SearchBar onChangeSearch={setSearchTerm}></SearchBar>
         </div>
-        <div className=" max-w-[200px] w-full">
-          <Dropdown>
+        <div className="flex flex-wrap items-start max-w-[200px] w-full">
+          <Dropdown className="bg-white">
             <Dropdown.Select
-              placeholder={getDropdownLabel(
-              role,
-              roleFiltered,
-              "Phân quyền"
-            )}
+              placeholder={getDropdownLabel(role, roleFiltered, "Phân quyền")}
             ></Dropdown.Select>
             <Dropdown.List>
               {roleFiltered.map((personRole) => (
-              <Dropdown.Option
-                key={personRole.value}
-                onClick={() =>
-                  handleSelectRoleDropdownOption(
-                    personRole.value
-                  )
-                }
-              >
-                <span className="capitalize">{personRole.label}</span>
-              </Dropdown.Option>
-            ))}
+                <Dropdown.Option
+                  key={personRole.value}
+                  onClick={() =>
+                    handleSelectRoleDropdownOption(personRole.value)
+                  }
+                >
+                  <span className="capitalize">{personRole.label}</span>
+                </Dropdown.Option>
+              ))}
             </Dropdown.List>
           </Dropdown>
         </div>
@@ -141,10 +143,11 @@ const AccountListPage = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
+              <TableCell align="center" width={"10%"}></TableCell>
               <TableCell align="left" width={"25%"}>
                 Họ và tên
               </TableCell>
-              <TableCell align="left" width={"45%"}>
+              <TableCell align="left" width={"35%"}>
                 Địa chỉ
               </TableCell>
               <TableCell align="center" width={"20%"}>
@@ -156,21 +159,24 @@ const AccountListPage = () => {
           <TableBody>
             {users.map((item) => (
               <TableRow key={item.id}>
-                <TableCell align="left" width={"25%"}>
-                  {item.fullName}
+                <TableCell className="w-20">
+                  <img
+                    className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
+                    src="logo.png"
+                    alt=""
+                  />
                 </TableCell>
-                <TableCell align="left" width={"45%"}>
-                  {item.address}
-                </TableCell>
-                <TableCell align="center" width={"20%"}>
+                <TableCell align="left">{item.fullName}</TableCell>
+                <TableCell align="left">{item.address}</TableCell>
+                <TableCell align="center">
                   {roleOptions.find((label) => label.value === item.role).label}
                 </TableCell>
-                <TableCell align="right" width={"10%"}>
+                <TableCell align="right">
                   <Button
                     className=""
                     type="button"
                     kind="ghost"
-                    onClick={() => setIsUserDetailModalOpen(true)}
+                    onClick={() => handleClickUserModal(item.id)}
                   >
                     Edit
                   </Button>
