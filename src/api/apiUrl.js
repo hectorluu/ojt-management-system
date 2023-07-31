@@ -22,7 +22,10 @@ export const ojtBatchPath = {};
 
 export const reportPath = {};
 
-export const universityPath = {};
+export const universityPath = {
+  GET_UNIVERSITY_LIST: "/university",
+  GET_UNIVERSITY: "/university/",
+};
 
 export const trainingPlanPath = {
   GET_TRAINING_PLAN_LIST: "training-plan",
