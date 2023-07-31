@@ -3,7 +3,11 @@ import Heading from "components/common/Heading";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { Fragment, useEffect, useState } from "react";
 import { coursePath, skillPath } from "api/apiUrl";
-import { defaultPageSize, defaultPageIndex, positionOptions } from "constants/global";
+import {
+  defaultPageSize,
+  defaultPageIndex,
+  positionOptions,
+} from "constants/global";
 import CourseCardDisplay from "modules/course/CourseCardDisplay";
 import { Button } from "components/button";
 import CourseGrid from "modules/course/CourseGrid";
@@ -36,21 +40,21 @@ const CourseListPage = () => {
       );
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
-      console.log("fetchCourses ~ response", courses);
     } catch (error) {
       console.log("fetchCourses ~ error", error);
     }
-  }
+  };
 
   const fetchSkills = async () => {
     try {
-      const response = await axiosPrivate.get(skillPath.GET_SKILL_LIST + "?PageIndex=" + 1 + "&PageSize=" + 100000);
+      const response = await axiosPrivate.get(
+        skillPath.GET_SKILL_LIST + "?PageIndex=" + 1 + "&PageSize=" + 100000
+      );
       setSkillList(response.data.data);
-      console.log("fetchSkills ~ response", courses);
     } catch (error) {
       console.log("fetchSkills ~ error", error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchCourses();
@@ -59,16 +63,17 @@ const CourseListPage = () => {
   }, [searchTerm, position, skill]);
 
   useEffect(() => {
-    const allPosition = [{ value: positionOptions.length + 1, label: "Tất cả"}];
+    const allPosition = [
+      { value: positionOptions.length + 1, label: "Tất cả" },
+    ];
     const positions = positionOptions.slice();
-    console.log(positionOptions);
     positions.unshift(...allPosition);
     setPositionFiltered(positions);
-    const allSkill = [{ id: skillList.length + 1, name: "Tất cả"}];
+    const allSkill = [{ id: skillList.length + 1, name: "Tất cả" }];
     const skills = skillList.slice();
     skills.unshift(...allSkill);
     setSkillFiltered(skills);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skillList]);
 
   const handleChangePage = (event, newPage) => {
@@ -125,11 +130,11 @@ const CourseListPage = () => {
           Thêm khóa học mới
         </Button>
       </div>
-      <div className="flex flex-wrap items-center justify-between	">
+      <div className="flex flex-wrap items-start gap-5 mt-5">
         <div className=" max-w-[600px] w-full">
           <SearchBar onChangeSearch={setSearchTerm}></SearchBar>
         </div>
-        <div className=" max-w-[200px] w-full">
+        <div className="flex flex-wrap items-start max-w-[200px] w-full">
           <Dropdown>
             <Dropdown.Select
               placeholder={getPositionDropdownLabel(
@@ -142,11 +147,7 @@ const CourseListPage = () => {
               {positionFiltered.map((pos) => (
                 <Dropdown.Option
                   key={pos.value}
-                  onClick={() =>
-                    handleSelectPositionDropdownOption(
-                      pos.value
-                    )
-                  }
+                  onClick={() => handleSelectPositionDropdownOption(pos.value)}
                 >
                   <span className="capitalize">{pos.label}</span>
                 </Dropdown.Option>
@@ -167,11 +168,7 @@ const CourseListPage = () => {
               {skillFiltered.map((ski) => (
                 <Dropdown.Option
                   key={ski.id}
-                  onClick={() =>
-                    handleSelectSkillDropdownOption(
-                      ski.id
-                    )
-                  }
+                  onClick={() => handleSelectSkillDropdownOption(ski.id)}
                 >
                   <span className="capitalize">{ski.name}</span>
                 </Dropdown.Option>

@@ -1,9 +1,64 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import { Button } from "components/button";
-import { defaultImage } from "constants/global";
+import {
+  genderOptions,
+  positionOptions,
+  roleExchange,
+  roleOptions,
+} from "constants/global";
+import { userPath } from "api/apiUrl";
+import useAxiosPrivate from "hooks/useAxiosPrivate";
 
-const ModalUserDetailAdmin = ({ isOpen, onRequestClose }) => {
+import FormRow from "components/common/FormRow";
+import FormGroup from "components/common/FormGroup";
+import { Label } from "components/label";
+import { Input } from "components/input";
+import { Dropdown } from "components/dropdown";
+import { useForm } from "react-hook-form";
+
+const ModalUserDetailAdmin = ({ isOpen, onRequestClose, userIdClicked }) => {
+  const axiosPrivate = useAxiosPrivate();
+  const [user, setUser] = useState([]);
+
+  const fetchUser = async () => {
+    try {
+      const response = await axiosPrivate.get(
+        userPath.GET_USER + userIdClicked
+      );
+      setUser(response.data);
+    } catch (error) {
+      console.log("fetchUser ~ error", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userIdClicked]);
+
+  const { control, setValue, watch } = useForm();
+
+  const getDropdownLabel = (
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
+    const value = watch(name) || defaultValue;
+    const label = options.find((label) => label.value === value);
+    return label ? label.label : defaultValue;
+  };
+
+  const handleSelectDropdownOption = (name, value) => {
+    setValue(name, value);
+  };
+
+  const handleSelectRoleDropdownOption = (name, value) => {
+    setValue(name, value);
+    setValue("rollNumber", "");
+    setValue("position", "");
+  };
+
   return (
     <ReactModal
       isOpen={isOpen}
@@ -34,38 +89,174 @@ const ModalUserDetailAdmin = ({ isOpen, onRequestClose }) => {
         Thông tin chi tiết
       </h2>
       <div>
-        <div className="bg-white shadow-1 rounded-xl">
-          <img
-            src={defaultImage}
-            className="h-[232px] object-cover rounded-xl w-full"
-            alt=""
-          />
-          <div className="p-5">
-            <span className="inline-block px-3 py-1 mb-5 text-xs font-medium text-white rounded-sm bg-secondary">
-              Featured
-            </span>
-            <div className="flex items-center mb-4 gap-x-3">
-              <span className="text-xl font-bold text-text1">$2,724 USD</span>{" "}
-              <span className="text-sm font-medium line-through text-error">
-                $1,504 USD
-              </span>
-              <span className="text-sm font-medium text-error">(12% OFF)</span>
-            </div>
-            <div className="flex flex-col mb-4 gap-y-1">
-              <strong>Estimated Shipping</strong>{" "}
-              <span className="text-text2">October 2022</span>
-            </div>
-            <p className="mb-4 text-text2">
-              <strong className="text-text1">05</strong> claimed
-            </p>
-            <p className="text-text2">Ships worldwide</p>
+        <div className="bg-white shadow-1 rounded-xl w-full flex p-5">
+          <div className="w-full">
+            <form>
+              <FormRow>
+                <FormGroup>
+                  <Label>Họ và tên (*)</Label>
+                  <Input control={control} name="fullName" disabled>
+                    {user.fullName}
+                  </Input>
+                </FormGroup>
+                <FormGroup>
+                  <Label>Số điện thoại (*)</Label>
+                  <Input control={control} name="phoneNumber">
+                    {user.phoneNumber}
+                  </Input>
+                </FormGroup>
+              </FormRow>
+              <FormRow>
+                <FormGroup>
+                  <Label>Email (*)</Label>
+                  <Input control={control} name="email">
+                    {user.email}
+                  </Input>
+                </FormGroup>
+                <FormGroup>
+                  <Label>Địa chỉ (*)</Label>
+                  <Input control={control} name="address">
+                    {user.address}
+                  </Input>
+                </FormGroup>
+              </FormRow>
+              <FormRow>
+                <FormGroup>
+                  <Label>Giới tính (*)</Label>
+                  <Dropdown>
+                    <Dropdown.Select
+                      placeholder={getDropdownLabel(
+                        "gender",
+                        genderOptions,
+                        "Chọn giới tính"
+                      )}
+                    ></Dropdown.Select>
+                    <Dropdown.List>
+                      {genderOptions.map((personGender) => (
+                        <Dropdown.Option
+                          key={personGender.value}
+                          onClick={() =>
+                            handleSelectDropdownOption(
+                              "gender",
+                              personGender.value
+                            )
+                          }
+                        >
+                          <span className="capitalize">
+                            {personGender.label}
+                          </span>
+                        </Dropdown.Option>
+                      ))}
+                    </Dropdown.List>
+                  </Dropdown>
+                </FormGroup>
+                <FormGroup>
+                  <Label>Ngày sinh (*)</Label>
+                  <Input
+                    control={control}
+                    name="address"
+                    value={user.birthday}
+                  ></Input>
+                </FormGroup>
+              </FormRow>
+              {/* This is the line to separate between section */}
+              <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
+              <FormRow>
+                <FormGroup>
+                  <Label>Chức vụ (*)</Label>
+                  <Dropdown>
+                    <Dropdown.Select
+                      placeholder={getDropdownLabel(
+                        "role",
+                        roleOptions,
+                        "Chọn chức vụ"
+                      )}
+                    ></Dropdown.Select>
+                    <Dropdown.List>
+                      {roleOptions.map((personRole) => (
+                        <Dropdown.Option
+                          key={personRole.value}
+                          onClick={() =>
+                            handleSelectRoleDropdownOption(
+                              "role",
+                              personRole.value
+                            )
+                          }
+                        >
+                          <span className="capitalize">{personRole.label}</span>
+                        </Dropdown.Option>
+                      ))}
+                    </Dropdown.List>
+                  </Dropdown>
+                </FormGroup>
+              </FormRow>
+              {(user.role === roleExchange.TRAINER ||
+                user.role === roleExchange.TRAINEE) && (
+                <>
+                  <FormRow>
+                    <FormGroup>
+                      <Label>Mã số nhân viên (*)</Label>
+                      <Input
+                        control={control}
+                        name="rollNumber"
+                        placeholder="Ex: SE150056"
+                        autoComplete="off"
+                      ></Input>
+                    </FormGroup>
+                    <FormGroup>
+                      <Label>Vị trí (*)</Label>
+                      <Dropdown>
+                        <Dropdown.Select
+                          placeholder={getDropdownLabel(
+                            "position",
+                            positionOptions,
+                            "Chọn vị trí"
+                          )}
+                        ></Dropdown.Select>
+                        <Dropdown.List>
+                          {positionOptions.map((personPosition) => (
+                            <Dropdown.Option
+                              key={personPosition.value}
+                              onClick={() =>
+                                handleSelectDropdownOption(
+                                  "position",
+                                  personPosition.value
+                                )
+                              }
+                            >
+                              <span className="capitalize">
+                                {personPosition.label}
+                              </span>
+                            </Dropdown.Option>
+                          ))}
+                        </Dropdown.List>
+                      </Dropdown>
+                    </FormGroup>
+                  </FormRow>
+                  <FormRow>
+                    <FormGroup>
+                      <Label>Avatar</Label>
+                      <label className="w-full h-[200px] border border-gray-200 border-dashed rounded-xl cursor-pointer flex items-center justify-center">
+                        <img
+                          className="w-full h-full object-contain"
+                          src="logo.png"
+                          alt="img"
+                        ></img>
+                      </label>
+                    </FormGroup>
+                  </FormRow>
+                </>
+              )}
+              <div className="mt-5 text-center">
+                <Button
+                  type="submit"
+                  className="px-10 mx-auto text-white bg-primary"
+                >
+                  Sửa thông tin{" "}
+                </Button>
+              </div>
+            </form>
           </div>
-        </div>
-
-        <div className="mt-6">
-          <Button className="w-full text-white bg-secondary">
-            Get this perk
-          </Button>
         </div>
       </div>
     </ReactModal>

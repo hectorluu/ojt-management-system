@@ -6,12 +6,12 @@ const CourseCategory = ({ text = "BE", className = "text-xs", link }) => {
   return (
     <span
       className={classNames(
-        "flex items-baseline mb-4 font-medium gap-x-3 text-text3",
+        "flex items-middle mb-4 font-medium gap-x-3 text-text3",
         className
       )}
     >
       <FolderOpenOutlinedIcon />
-      <span>{text}</span>
+      <span className="mt-1">{text}</span>
     </span>
   );
 };

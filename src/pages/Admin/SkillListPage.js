@@ -11,7 +11,11 @@ import {
   TableRow,
 } from "@mui/material";
 import { skillPath } from "api/apiUrl";
-import { defaultPageSize, defaultPageIndex, positionOptions } from "constants/global";
+import {
+  defaultPageSize,
+  defaultPageIndex,
+  positionOptions,
+} from "constants/global";
 import { Button } from "components/button";
 import TablePagination from "@mui/material/TablePagination";
 import ModalSkillDetailAdmin from "components/modal/ModalSkillDetailAdmin";
@@ -35,14 +39,16 @@ const SkillListPage = () => {
       try {
         const response = await axiosPrivate.get(
           skillPath.GET_SKILL_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage
+            "?PageIndex=" +
+            page +
+            "&PageSize=" +
+            rowsPerPage
         );
         setSkills(response.data.data);
         setTotalItem(response.data.totalItem);
-        const allPosition = [{ value: positionOptions.length + 1, label: "Tất cả" }];
+        const allPosition = [
+          { value: positionOptions.length + 1, label: "Tất cả" },
+        ];
         const positions = positionOptions.slice();
         console.log(positionOptions);
         positions.unshift(...allPosition);
@@ -98,11 +104,11 @@ const SkillListPage = () => {
           Thêm kỹ năng
         </Button>
       </div>
-      <div className="flex flex-wrap items-center justify-between	">
+      <div className="flex flex-wrap items-start gap-5 mt-5">
         <div className=" max-w-[600px] w-full">
           <SearchBar onChangeSearch={setSearchTerm}></SearchBar>
         </div>
-        <div className=" max-w-[200px] w-full">
+        <div className="flex flex-wrap items-start max-w-[200px] w-full">
           <Dropdown>
             <Dropdown.Select
               placeholder={getPositionDropdownLabel(
@@ -115,11 +121,7 @@ const SkillListPage = () => {
               {positionFiltered.map((pos) => (
                 <Dropdown.Option
                   key={pos.value}
-                  onClick={() =>
-                    handleSelectPositionDropdownOption(
-                      pos.value
-                    )
-                  }
+                  onClick={() => handleSelectPositionDropdownOption(pos.value)}
                 >
                   <span className="capitalize">{pos.label}</span>
                 </Dropdown.Option>

@@ -23,7 +23,6 @@ import ModalBackProject from "components/modal/ModalBackProject";
 import ModalThank from "components/modal/ModalThank";
 
 const SignInPage = lazy(() => import("./pages/SignInPage"));
-const SignUpPage = lazy(() => import("./pages/SignUpPage"));
 const UnauthorizePage = lazy(() => import("./pages/UnauthorizePage"));
 
 // prevent adding new lines when importing pages
@@ -145,10 +144,6 @@ const router = createBrowserRouter([
     element: <SignInPage></SignInPage>,
   },
   {
-    path: "/register",
-    element: <SignUpPage></SignUpPage>,
-  },
-  {
     path: "/",
     element: (
       <RequiredAuthPage allowRole={permissions.ADMIN}></RequiredAuthPage>
@@ -167,7 +162,7 @@ const router = createBrowserRouter([
             element: <AccountListPage></AccountListPage>,
           },
           {
-            path: "/course-list/:slug",
+            path: "/course-list/:courseId",
             element: <CourseDetailPage></CourseDetailPage>,
           },
           {
@@ -195,7 +190,7 @@ const router = createBrowserRouter([
             element: <SkillListPage></SkillListPage>,
           },
           {
-            path: "/university-list/:slug",
+            path: "/university-list/:universityId",
             element: <UniversityDetailPage></UniversityDetailPage>,
           },
           {
@@ -229,7 +224,7 @@ const router = createBrowserRouter([
             element: <ManagerReportListPage></ManagerReportListPage>,
           },
           {
-            path: "/trainee-list/:slug",
+            path: "/trainee-list/:traineeId",
             element: <TraineeDetailPage></TraineeDetailPage>,
           },
           {
@@ -241,7 +236,7 @@ const router = createBrowserRouter([
             element: <TrainerAssignmentPage></TrainerAssignmentPage>,
           },
           {
-            path: "/trainer-list/:slug",
+            path: "/trainer-list/:trainerId",
             element: <TrainerDetailPage></TrainerDetailPage>,
           },
           {
