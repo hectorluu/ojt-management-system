@@ -37,11 +37,14 @@ const AccountListPage = () => {
           "?PageSize=" +
           rowsPerPage +
           "&PageIndex=" +
-          page
+          page +
+          // "&searchTerm=" +
+          // searchTerm +
+          "&role=" +
+          role
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
-      // setSearchTerm("");
     } catch (error) {
       console.log("fetchUsers ~ error", error);
     }
@@ -53,7 +56,7 @@ const AccountListPage = () => {
   }, [searchTerm, role]);
 
   useEffect(() => {
-    const allRole = [{ value: roleOptions.length + 1, label: "Tất cả"}];
+    const allRole = [{ value: 0, label: "Tất cả"}];
     const roles = roleOptions.slice();
     roles.unshift(...allRole)
     setRoleFilter(roles);
@@ -157,7 +160,7 @@ const AccountListPage = () => {
                   {item.fullName}
                 </TableCell>
                 <TableCell align="left" width={"45%"}>
-                  {item.location}
+                  {item.address}
                 </TableCell>
                 <TableCell align="center" width={"20%"}>
                   {roleOptions.find((label) => label.value === item.role).label}
