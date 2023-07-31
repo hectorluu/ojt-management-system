@@ -27,7 +27,7 @@ const AccountListPage = () => {
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
-  const [role, setRole] = useState(0);
+  const [role, setRole] = useState("");
   const [roleFiltered, setRoleFilter] = useState([]);
 
   const fetchUsers = async () => {
@@ -37,11 +37,14 @@ const AccountListPage = () => {
           "?PageSize=" +
           rowsPerPage +
           "&PageIndex=" +
-          page
+          page +
+          // "&searchTerm=" +
+          // searchTerm +
+          "&role=" +
+          role
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
-      // setSearchTerm("");
     } catch (error) {
       console.log("fetchUsers ~ error", error);
     }
@@ -53,7 +56,7 @@ const AccountListPage = () => {
   }, [searchTerm, role]);
 
   useEffect(() => {
-    const allRole = [{ value: roleOptions.length + 1, label: "Tất cả" }];
+    const allRole = [{ value: "", label: "Tất cả"}];
     const roles = roleOptions.slice();
     roles.unshift(...allRole);
     setRoleFilter(roles);
@@ -164,7 +167,7 @@ const AccountListPage = () => {
                   />
                 </TableCell>
                 <TableCell align="left">{item.fullName}</TableCell>
-                <TableCell align="left">{item.location}</TableCell>
+                <TableCell align="left">{item.address}</TableCell>
                 <TableCell align="center">
                   {roleOptions.find((label) => label.value === item.role).label}
                 </TableCell>
