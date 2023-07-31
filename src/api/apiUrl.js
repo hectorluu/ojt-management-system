@@ -18,7 +18,9 @@ export const coursePath = {
 
 export const criteriaPath = {};
 
-export const ojtBatchPath = {};
+export const ojtBatchPath = {
+  GET_OJT_BATCH_LIST_OF_UNIVERSITY: "/ojtbatch/batches-of-university",
+};
 
 export const reportPath = {};
 
@@ -28,7 +30,7 @@ export const universityPath = {
 };
 
 export const trainingPlanPath = {
-  GET_TRAINING_PLAN_LIST: "training-plan",
+  GET_TRAINING_PLAN_LIST: "/training-plan",
   GET_TRAINING_PLAN: "",
 };
 

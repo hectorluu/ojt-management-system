@@ -18,3 +18,14 @@ export const accountNoti = {
     SKILL_OVERFLOW: "Đã đạt giới hạn số kỹ năng của hệ thống!!!"
   },
 }
+
+export const courseNoti = {
+  SUCCESS: {
+    CREATE: "Tạo khoá học thành công!!!",
+  },
+
+  ERROR: {
+    SKILL_OVERFLOW: "Đã đạt giới hạn số kỹ năng của hệ thống!!!",
+    POSITION_OVERFLOW: "Đã đạt giới hạn số vị trí của hệ thống!!!"
+  },
+}

@@ -7,12 +7,24 @@ import CourseName from "./part/CourseName";
 import CourseDesc from "./part/CourseDesc";
 import CoursePlatform from "./part/CoursePlatform";
 import { useNavigate } from "react-router-dom";
+import { positionOptions } from "constants/global";
 
 export default function CourseCardDisplay(course) {
+
+  const getPositionLabel = (
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
+    const value = name || defaultValue;
+    const label = options.find((label) => label.value === value);
+    return label ? label.label : defaultValue;
+  };
+
   const coursePosition = (course) => {
-    let text = "";
-    for (let i = 0; i < course.course.coursePositions.length; i++) {
-      text = course.course.coursePositions[i].position + "," + text;
+    let text = getPositionLabel(course.course.coursePositions[0].position, positionOptions, "");
+    for (let i = 1; i < course.course.coursePositions.length; i++) {
+      text = text + "," +getPositionLabel(course.course.coursePositions[i].position, positionOptions, "");
     }
     return text;
   };
