@@ -91,10 +91,10 @@ const CreateNewCoursePage = () => {
         coursePosition,
         courseSkills
       });  
-      toast.success("Create course successfully");
+      toast.success(courseNoti.SUCCESS.CREATE);
       resetValues();
     } catch (error) {
-      toast.error("Can not create new course");
+      toast.error(error);
     }
   };
 
@@ -265,7 +265,7 @@ const CreateNewCoursePage = () => {
               </FormRow>
             ))}
             <button type="button" onClick={() => handleAddPositionField()}>
-              Remove
+              Thêm vị trí
             </button>
             <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
             {courseSkills.map((courseSkills, index) => (
@@ -335,7 +335,7 @@ const CreateNewCoursePage = () => {
               </div>
             ))}
             <button type="button" onClick={() => handleAddSkillField()}>
-              Remove
+              Thêm kỹ năng
             </button>
             <div className="mt-5 text-center">
               <Button

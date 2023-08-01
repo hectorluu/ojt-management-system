@@ -53,7 +53,7 @@ const AccountListPage = () => {
   useEffect(() => {
     fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, role]);
+  }, [searchTerm, role, rowsPerPage, page]);
 
   useEffect(() => {
     const allRole = [{ value: "", label: "Tất cả" }];
