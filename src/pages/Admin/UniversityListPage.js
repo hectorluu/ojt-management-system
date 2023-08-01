@@ -64,8 +64,7 @@ const UniversityListPage = () => {
                   Trường đại học FPT HCM
                 </h1>
                 <p className="mb-6 mt-3 text-sm text-text3">
-                  Lô E2a-7, Đường D1, Đ. D1, Long Thạnh Mỹ, Thành Phố Thủ Đức,
-                  Thành phố Hồ Chí Minh
+                  Lô E2a-7, Đường D1, Đ. D1, Long Thạnh Mỹ, Thành Phố Thủ Đức
                 </p>
               </div>
               <Button className="w-full bg-opacity-20 text-secondary bg-violet-500 hover:bg-violet-300">
