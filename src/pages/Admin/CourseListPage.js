@@ -60,7 +60,7 @@ const CourseListPage = () => {
     fetchCourses();
     fetchSkills();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, position, skill]);
+  }, [searchTerm, position, skill, rowsPerPage, page]);
 
   useEffect(() => {
     const allPosition = [

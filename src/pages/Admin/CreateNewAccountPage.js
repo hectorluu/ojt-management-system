@@ -134,11 +134,11 @@ const CreateNewAccountPage = () => {
         createSkills,
         batchId
       });
-      toast.success("Create account successfully with password ");
+      toast.success(accountNoti.SUCCESS.CREATE);
       resetValues();
     } catch (error) {
       console.log("error", error);
-      toast.error("Can not create new account");
+      toast.error(error);
     }
   };
 
@@ -491,7 +491,7 @@ const CreateNewAccountPage = () => {
                     </FormRow>
                   ))}
                   <button type="button" onClick={() => handleAddField()}>
-                    Remove
+                    Thêm kỹ năng
                   </button>
                 </>
               )}
