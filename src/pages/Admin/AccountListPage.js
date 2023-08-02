@@ -19,6 +19,9 @@ import { Dropdown } from "components/dropdown";
 import { Button } from "components/button";
 import ModalUserDetailAdmin from "components/modal/ModalUserDetailAdmin";
 import useOnChange from "hooks/useOnChange";
+import { ref, getDownloadURL } from "firebase/storage";
+import { storage } from "../../firebase";
+import { defaultUserIcon } from "constants/global";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -32,17 +35,26 @@ const AccountListPage = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axiosPrivate.get(
+      let response = await axiosPrivate.get(
         userPath.GET_USER_LIST +
-          "?PageSize=" +
-          rowsPerPage +
-          "&PageIndex=" +
-          page +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&role=" +
+        "?PageSize=" +
+        rowsPerPage +
+        "&PageIndex=" +
+        page +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&role=" +
         role
       );
+      for (let i = 0; i < response.data.data.length; i++) {
+        try {
+          const a = await getDownloadURL(ref(storage, response.data.data[i].avatarURL));
+          response.data.data[i].avatarURL = a;
+        } catch (e) {
+          response.data.data[i]["avatarURL"] = defaultUserIcon;
+        }
+      }
+      console.log(response.data);
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
@@ -162,7 +174,7 @@ const AccountListPage = () => {
                 <TableCell className="w-20">
                   <img
                     className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
-                    src="logo.png"
+                    src={item.avatarURL}
                     alt=""
                   />
                 </TableCell>

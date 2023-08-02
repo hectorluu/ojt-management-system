@@ -31,7 +31,7 @@ const CourseListPage = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axiosPrivate.get(
+      let response = await axiosPrivate.get(
         coursePath.GET_COURSE_LIST +
           "?PageIndex=" +
           page +

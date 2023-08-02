@@ -14,7 +14,7 @@ const ManagerReportListPage = () => {
         <Button
           className="px-7"
           type="button"
-          href="/create-new-account"
+          href="/manager-define-new-report"
           kind="secondary"
         >
           Thêm file báo cáo

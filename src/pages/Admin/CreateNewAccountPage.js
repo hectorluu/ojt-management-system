@@ -10,7 +10,7 @@ import { Input } from "components/input";
 import { Dropdown } from "components/dropdown";
 import { Button } from "components/button";
 import ImageUpload from "components/image/ImageUpload";
-import { genderOptions, roleOptions, positionOptions, skillLevel } from "constants/global";
+import { genderOptions, roleOptions, positionOptions, skillLevel, defaultUserIcon } from "constants/global";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { ojtBatchPath, skillPath, universityPath, userPath } from "api/apiUrl";
 import { roleExchange } from "constants/global";
@@ -117,23 +117,38 @@ const CreateNewAccountPage = () => {
   };
 
   async function uploadFile() {
-    const imageRef = ref(storage, "images/users/" + avatar.name);
-    uploadBytes(imageRef, avatar).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((downloadURL) => {
-        setValue("avatarUrl", downloadURL);
-      });
-    });
+    if (avatar) {
+      try {
+        const imageRef = ref(storage, "images/users/" + avatar.name);
+        uploadBytes(imageRef, avatar).then((snapshot) => {
+          getDownloadURL(snapshot.ref).then((downloadURL) => {
+            setValue("avatarUrl", downloadURL);
+          });
+        });
+      } catch (e) {
+        toast.error("Upload img error");
+      }
+    } else {
+      setValue("avatarUrl", "images/users/" + defaultUserIcon);
+    }
   }
 
   const handleAddNewAccount = async (values) => {
     try {
       uploadFile();
-      await axiosPrivate.post(userPath.CREATE_USER, {
-        ...values,
-        birthday,
-        createSkills,
-        batchId
-      });
+      if (createSkills[0].skillId) {
+        await axiosPrivate.post(userPath.CREATE_USER, {
+          ...values,
+          birthday,
+          createSkills,
+          batchId
+        });
+      } else {
+        await axiosPrivate.post(userPath.CREATE_USER, {
+          ...values,
+          birthday
+        });
+      }
       toast.success(accountNoti.SUCCESS.CREATE);
       resetValues();
     } catch (error) {
@@ -182,8 +197,8 @@ const CreateNewAccountPage = () => {
   };
 
   const getApiDropdownLabel = (value, options = [{ value: "", label: "" }], defaultValue = "") => {
-      const label = options.find((label) => label.id === value);
-      return label ? label.name : defaultValue;
+    const label = options.find((label) => label.id === value);
+    return label ? label.name : defaultValue;
   };
 
   const onChangeUserSkill = (index, name, value) => {

@@ -1,7 +1,7 @@
-import defaultImage from "../../../default_image/default_course.jpg";
+import { defaultCourseImage } from "constants/global";
 import React from "react";
 
-const CourseImage = ({ className = "h-[158px]", image = defaultImage }) => {
+const CourseImage = ({ className = "h-[158px]", image = defaultCourseImage }) => {
   return (
     <div className={className}>
       <img

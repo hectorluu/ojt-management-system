@@ -1,4 +1,4 @@
-import { courseOptions, positionOptions, skillLevel } from "constants/global";
+import { courseOptions, defaultCourseImage, positionOptions, skillLevel } from "constants/global";
 import { Fragment, useEffect, useState } from "react";
 import { Input, Textarea } from "components/input";
 import ImageUpload from "components/image/ImageUpload";
@@ -90,7 +90,7 @@ const CreateNewCoursePage = () => {
         ...values,
         coursePosition,
         courseSkills
-      });  
+      });
       toast.success(courseNoti.SUCCESS.CREATE);
       resetValues();
     } catch (error) {
@@ -111,13 +111,22 @@ const CreateNewCoursePage = () => {
   };
 
   async function uploadFile() {
-    const imageRef = ref(storage, "images/courses/" + coursePic.name);
-    uploadBytes(imageRef, coursePic).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((downloadURL) => {
-        setValue("imageURL", downloadURL);
-      });
-    });
+    if (coursePic) {
+      try {
+        const imageRef = ref(storage, "images/courses/" + coursePic.name);
+        uploadBytes(imageRef, coursePic).then((snapshot) => {
+          getDownloadURL(snapshot.ref).then((downloadURL) => {
+            setValue("imageURL", downloadURL);
+          });
+        });
+      } catch (e) {
+        toast.error(e);
+      }
+    } else {
+      setValue("imageURL", "images/courses/" + defaultCourseImage);
+    }
   }
+
 
   const getSkillDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
     const skills = courseSkills.slice();
