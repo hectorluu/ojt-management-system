@@ -7,6 +7,7 @@ import {
   defaultPageSize,
   defaultPageIndex,
   positionOptions,
+  defaultCourseImage,
 } from "constants/global";
 import CourseCardDisplay from "modules/course/CourseCardDisplay";
 import { Button } from "components/button";
@@ -15,6 +16,8 @@ import TablePagination from "@mui/material/TablePagination";
 import SearchBar from "modules/SearchBar";
 import { Dropdown } from "components/dropdown";
 import useOnChange from "hooks/useOnChange";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "../../firebase";
 
 const CourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -38,6 +41,14 @@ const CourseListPage = () => {
           "&PageSize=" +
           rowsPerPage
       );
+      for (let i = 0; i < response.data.data.length; i++) {
+        try {
+          const a = await getDownloadURL(ref(storage, response.data.data[i].imageURL));
+          response.data.data[i].imageURL = a;
+        } catch (e) {
+          response.data.data[i]["imageURL"] = defaultCourseImage;
+        }
+      }
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {

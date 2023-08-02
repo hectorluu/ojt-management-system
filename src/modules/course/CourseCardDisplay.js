@@ -34,7 +34,7 @@ export default function CourseCardDisplay(course) {
   return (
     <Card
       sx={{ display: "flex" }}
-      class="rounded-2xl hover:shadow-xl transition duration-500 ease-in-out"
+      className="rounded-2xl hover:shadow-xl transition duration-500 ease-in-out"
     >
       <CardActionArea
         sx={{ display: "flex" }}

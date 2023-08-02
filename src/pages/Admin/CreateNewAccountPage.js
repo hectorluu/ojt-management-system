@@ -30,6 +30,7 @@ const CreateNewAccountPage = () => {
   const [universityList, setUniversityList] = useState([]);
   const [ojtBatchList, setOjtBatchList] = useState([]);
   const [batchId, setBatchId] = useState(0);
+  const [avatarUrl, setAvatarUrl] = useState("");
 
   const { handleSubmit, control, setValue, reset, watch } = useForm();
 
@@ -50,6 +51,11 @@ const CreateNewAccountPage = () => {
     removeItems(createSkills, skillList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createSkills]);
+
+  useEffect(() => {
+    console.log(avatar);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [avatar]);
 
   const removeItems = (rmItems, items) => {
     const filteredItems = items.filter((item) => !rmItems.some((rmItem) => item.id === rmItem.skillId));
@@ -120,37 +126,39 @@ const CreateNewAccountPage = () => {
     if (avatar) {
       try {
         const imageRef = ref(storage, "images/users/" + avatar.name);
-        uploadBytes(imageRef, avatar).then((snapshot) => {
-          getDownloadURL(snapshot.ref).then((downloadURL) => {
-            setValue("avatarUrl", downloadURL);
-          });
+        await uploadBytes(imageRef, avatar).then(async (snapshot) => {
+          await setAvatarUrl(`images/users/${avatar.name}`);
         });
       } catch (e) {
         toast.error("Upload img error");
       }
     } else {
-      setValue("avatarUrl", "images/users/" + defaultUserIcon);
+      setAvatarUrl("images/users/" + defaultUserIcon);
     }
   }
 
   const handleAddNewAccount = async (values) => {
     try {
-      uploadFile();
+      await uploadFile();
       if (createSkills[0].skillId) {
         await axiosPrivate.post(userPath.CREATE_USER, {
           ...values,
           birthday,
           createSkills,
-          batchId
+          batchId,
+          avatarUrl
         });
       } else {
         await axiosPrivate.post(userPath.CREATE_USER, {
           ...values,
-          birthday
+          birthday,
+          avatarUrl
         });
       }
+      console.log("avavassdhaksdhaksd", avatarUrl);
       toast.success(accountNoti.SUCCESS.CREATE);
       resetValues();
+      setAvatar(null);
     } catch (error) {
       console.log("error", error);
       toast.error(error);

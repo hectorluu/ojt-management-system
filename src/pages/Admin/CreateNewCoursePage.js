@@ -24,6 +24,7 @@ const CreateNewCoursePage = () => {
   const [coursePic, setCoursePic] = useState(null);
   const [filteredSkillList, setFilteredSkillList] = useState([]);
   const [filteredPositionList, setFilteredPositionList] = useState([]);
+  const [imageURL, setImageURL] = useState("");
 
   useEffect(() => {
     fetchSkills();
@@ -89,7 +90,8 @@ const CreateNewCoursePage = () => {
       await axiosPrivate.post(coursePath.CREATE_COURSE, {
         ...values,
         coursePosition,
-        courseSkills
+        courseSkills,
+        imageURL
       });
       toast.success(courseNoti.SUCCESS.CREATE);
       resetValues();
@@ -114,10 +116,8 @@ const CreateNewCoursePage = () => {
     if (coursePic) {
       try {
         const imageRef = ref(storage, "images/courses/" + coursePic.name);
-        uploadBytes(imageRef, coursePic).then((snapshot) => {
-          getDownloadURL(snapshot.ref).then((downloadURL) => {
-            setValue("imageURL", downloadURL);
-          });
+        uploadBytes(imageRef, coursePic).then(async (snapshot) => {
+          await setImageURL(`images/courses/${coursePic.name}`);
         });
       } catch (e) {
         toast.error(e);
