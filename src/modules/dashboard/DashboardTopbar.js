@@ -1,32 +1,105 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Avatar from "@mui/material/Avatar";
+import SettingsIcon from "@mui/icons-material/Settings";
+import PersonIcon from "@mui/icons-material/Person";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import { ListItemIcon } from "@mui/material";
+import { useSelector } from "react-redux";
+import { permissions } from "constants/permissions";
+import { useDispatch } from "react-redux";
+import { authLogOut } from "store/auth/auth-slice";
 
 const DashboardTopbar = () => {
+  const { user } = useSelector((state) => state.auth);
+  const userRole = user?.role || "";
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const dispatch = useDispatch();
+  const handleMenuCloseLogout = () => {
+    setAnchorEl(null);
+    dispatch(authLogOut());
+  };
+
   return (
     <div className="flex items-center justify-between mb-8">
-      <div className="flex items-center flex-1 gap-x-10">
-        <Link to="/" className="inline-block">
-          <img srcSet="/logo.png 2x" alt="ojt-management-system" />
-        </Link>
-        {/* <div className=" max-w-[600px] w-full">
-          <DashboardSearch></DashboardSearch>
-        </div> */}
-      </div>
-      <div className="flex items-center justify-end flex-1 gap-x-10">
-        {/* <DashboardFund></DashboardFund>
-        <Button
-          className="px-7"
-          type="button"
-          href="/start-campaign"
-          kind="secondary"
+      <div className="flex items-center flex-1 gap-x-10"></div>
+      <div className="flex items-center justify-end flex-1 gap-x-4">
+        {/* User Dropdown */}
+        <div style={{ position: "relative" }}>
+          <Avatar
+            srcSet="/logo.png 2x"
+            alt="ojt-management-system"
+            onClick={handleMenuOpen}
+            style={{ cursor: "pointer" }}
+          />
+        </div>
+
+        {/* User Dropdown Menu */}
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+          getContentAnchorEl={null}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
         >
-          Start a campaign
-        </Button> */}
-        <img
-          srcSet="/logo.png 2x"
-          alt="ojt-management-system"
-          className="object-cover rounded-full"
-        />
+          {userRole === permissions.TRAINEE ? (
+            <MenuItem
+              onClick={handleMenuClose}
+              component={Link}
+              to="/trainee-profile"
+            >
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              User Profile
+            </MenuItem>
+          ) : userRole === permissions.TRAINER ? (
+            <MenuItem
+              onClick={handleMenuClose}
+              component={Link}
+              to="/trainer-profile"
+            >
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              User Profile
+            </MenuItem>
+          ) : (
+            <></>
+          )}
+
+          <MenuItem onClick={handleMenuClose} component={Link}>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            Settings
+          </MenuItem>
+          <MenuItem onClick={handleMenuCloseLogout} component={Link}>
+            <ListItemIcon>
+              <ExitToAppIcon />
+            </ListItemIcon>
+            Sign Out
+          </MenuItem>
+        </Menu>
       </div>
     </div>
   );
