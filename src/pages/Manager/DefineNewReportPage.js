@@ -12,7 +12,7 @@ import { Dropdown } from "components/dropdown";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { universityPath } from "api/apiUrl";
 import ExcelUpload from "modules/file/ExcelUpload";
-import { Input } from "postcss";
+import { Input } from "components/input";
 import { useForm } from "react-hook-form";
 
 IgrExcelCoreModule.register();
@@ -117,7 +117,7 @@ function DefineNewReportPage() {
                   name="cellIndex"
                   placeholder="Ex: ABZ12"
                   autoComplete="off"
-                ></Input>
+                />
               </FormGroup>
             </FormRow>
           </form>
