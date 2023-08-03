@@ -1,9 +1,6 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { authLogOut } from "store/auth/auth-slice";
 import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
-import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import EditCalendarOutlinedIcon from "@mui/icons-material/EditCalendarOutlined";
 import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
 import SupervisorAccountOutlinedIcon from "@mui/icons-material/SupervisorAccountOutlined";
@@ -53,31 +50,13 @@ const sidebarLinks = [
     title: "Manager Report List",
     url: "/manager-report-list",
   },
-  {
-    icon: <LogoutOutlinedIcon />,
-    title: "Logout",
-    url: "/logout",
-  },
 ];
 const DashboardSidebar = () => {
   const navlinkClass =
     "flex items-center gap-x-5 md:w-12 md:h-12 md:justify-center md:rounded-lg md:mb-8  last:mt-auto last:bg-white last:shadow-sdprimary";
-  const dispatch = useDispatch();
   return (
     <div className="w-full md:w-[76px] rounded-3xl bg-white drop-shadow-2xl shadow-[10px_10px_20px_rgba(218,_213,_213,_0.15)] px-[14px] py-10 flex flex-col flex-shrink-0">
       {sidebarLinks.map((link) => {
-        if (link.url === "/logout") {
-          return (
-            <button
-              onClick={() => dispatch(authLogOut())}
-              className={navlinkClass}
-              key={link.title}
-            >
-              <span>{link.icon}</span>
-              <span className="md:hidden">{link.title}</span>
-            </button>
-          );
-        }
         return (
           <NavLink
             to={link.url}
