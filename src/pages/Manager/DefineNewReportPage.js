@@ -27,6 +27,8 @@ function DefineNewReportPage() {
   const [universityList, setUniversityList] = useState([]);
   const [universityId, setUniversityId] = useState(0);
   const { handleSubmit, control, setValue, reset, watch } = useForm();
+  const [matchedField, setMatchedField] = useState([]);
+
 
   const openFile = (files) => {
     if (files != null && files.length > 0) {
@@ -69,6 +71,14 @@ function DefineNewReportPage() {
     }
   };
 
+  const handleAddField = () => {
+    const newField = {
+      skillId: "",
+      initLevel: "",
+    };
+    setMatchedField([...matchedField, newField]);
+  };
+
   return (
     <Fragment>
       <div className="bg-white rounded-xl py-10 px-[66px]">
@@ -106,7 +116,7 @@ function DefineNewReportPage() {
             <FormGroup>
               <Label>Tệp đánh giá (*) (.xlsx, .xls)</Label>
               <ExcelUpload
-              openFile={openFile}
+                openFile={openFile}
               />
             </FormGroup>
             <FormRow>
