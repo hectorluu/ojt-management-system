@@ -11,13 +11,13 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { coursePath, skillPath } from "api/apiUrl";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
 import { courseNoti } from "constants/notification";
 
 const CreateNewCoursePage = () => {
   const axiosPrivate = useAxiosPrivate();
-  const { handleSubmit, control, setValue, reset } = useForm();
+  const { handleSubmit, control, reset } = useForm();
   const [coursePosition, setCoursePosition] = useState([{ "position": "", "isCompulsory": "" }]);
   const [courseSkills, setCourseSkills] = useState([{ "skillId": "", "recommendedLevel": "", "afterwardLevel": "" }]);
   const [skillList, setSkillList] = useState([]);
