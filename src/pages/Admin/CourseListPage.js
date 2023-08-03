@@ -7,6 +7,7 @@ import {
   defaultPageSize,
   defaultPageIndex,
   positionOptions,
+  defaultCourseImage,
 } from "constants/global";
 import CourseCardDisplay from "modules/course/CourseCardDisplay";
 import { Button } from "components/button";
@@ -15,6 +16,8 @@ import TablePagination from "@mui/material/TablePagination";
 import SearchBar from "modules/SearchBar";
 import { Dropdown } from "components/dropdown";
 import useOnChange from "hooks/useOnChange";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "../../firebase";
 
 const CourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -31,13 +34,20 @@ const CourseListPage = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axiosPrivate.get(
+      let response = await axiosPrivate.get(
         coursePath.GET_COURSE_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage
       );
+      for (let i = 0; i < response.data.data.length; i++) {
+        await getDownloadURL(ref(storage, response.data.data[i].imageURL)).then((url) => {
+          response.data.data[i].imageURL = url;
+        }).catch((e) => {
+          response.data.data[i]["imageURL"] = defaultCourseImage;
+        });
+      }
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {

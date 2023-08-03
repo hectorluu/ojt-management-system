@@ -34,7 +34,7 @@ export default function CourseCardDisplay(course) {
   return (
     <Card
       sx={{ display: "flex" }}
-      class="rounded-2xl hover:shadow-xl transition duration-500 ease-in-out"
+      className="rounded-2xl hover:shadow-xl transition duration-500 ease-in-out"
     >
       <CardActionArea
         sx={{ display: "flex" }}
@@ -44,7 +44,7 @@ export default function CourseCardDisplay(course) {
         }}
       >
         <div className="flex items-center gap-x-[5px] w-full">
-          <CourseImage className="h-[266px] flex-1"></CourseImage>
+          <CourseImage className="h-[266px] flex-1" image={course.course.imageURL}></CourseImage>
           <div className="flex-auto max-w-[600px]">
             <CourseCategory
               text={coursePosition(course)}

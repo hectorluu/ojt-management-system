@@ -1,4 +1,9 @@
-import { courseOptions, positionOptions, skillLevel } from "constants/global";
+import {
+  courseOptions,
+  defaultCourseImage,
+  positionOptions,
+  skillLevel,
+} from "constants/global";
 import { Fragment, useEffect, useState } from "react";
 import { Input, Textarea } from "components/input";
 import ImageUpload from "components/image/ImageUpload";
@@ -11,14 +16,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { coursePath, skillPath } from "api/apiUrl";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
 import { courseNoti } from "constants/notification";
 import AddIcon from "@mui/icons-material/Add";
 
 const CreateNewCoursePage = () => {
   const axiosPrivate = useAxiosPrivate();
-  const { handleSubmit, control, setValue, reset } = useForm();
+  const { handleSubmit, control, reset } = useForm();
   const [coursePosition, setCoursePosition] = useState([
     { position: "", isCompulsory: "" },
   ]);
@@ -29,6 +34,7 @@ const CreateNewCoursePage = () => {
   const [coursePic, setCoursePic] = useState(null);
   const [filteredSkillList, setFilteredSkillList] = useState([]);
   const [filteredPositionList, setFilteredPositionList] = useState([]);
+  const [imageURL, setImageURL] = useState("");
 
   useEffect(() => {
     fetchSkills();
@@ -95,14 +101,20 @@ const CreateNewCoursePage = () => {
 
   const handleAddNewCourse = async (values) => {
     try {
-      uploadFile();
+      await uploadFile();
       await axiosPrivate.post(coursePath.CREATE_COURSE, {
         ...values,
         coursePosition,
         courseSkills,
+        imageURL,
       });
       toast.success(courseNoti.SUCCESS.CREATE);
       resetValues();
+      setCoursePosition([{ position: "", isCompulsory: "" }]);
+      setCourseSkills([
+        { skillId: "", recommendedLevel: "", afterwardLevel: "" },
+      ]);
+      setCoursePic(null);
     } catch (error) {
       toast.error(error);
     }
@@ -124,12 +136,18 @@ const CreateNewCoursePage = () => {
   };
 
   async function uploadFile() {
-    const imageRef = ref(storage, "images/courses/" + coursePic.name);
-    uploadBytes(imageRef, coursePic).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((downloadURL) => {
-        setValue("imageURL", downloadURL);
-      });
-    });
+    if (coursePic) {
+      try {
+        const imageRef = ref(storage, "images/courses/" + coursePic.name);
+        await uploadBytes(imageRef, coursePic).then(async (snapshot) => {
+          await setImageURL(`images/courses/${coursePic.name}`);
+        });
+      } catch (e) {
+        toast.error(e);
+      }
+    } else {
+      await setImageURL(`images/courses/${defaultCourseImage}`);
+    }
   }
 
   const getSkillDropdownLabel = (

@@ -23,6 +23,9 @@ import { Dropdown } from "components/dropdown";
 import { Button } from "components/button";
 import ModalUserDetailAdmin from "components/modal/ModalUserDetailAdmin";
 import useOnChange from "hooks/useOnChange";
+import { ref, getDownloadURL } from "firebase/storage";
+import { storage } from "../../firebase";
+import { defaultUserIcon } from "constants/global";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -36,7 +39,7 @@ const AccountListPage = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axiosPrivate.get(
+      let response = await axiosPrivate.get(
         userPath.GET_USER_LIST +
           "?PageSize=" +
           rowsPerPage +
@@ -47,6 +50,15 @@ const AccountListPage = () => {
           "&role=" +
           role
       );
+      for (let i = 0; i < response.data.data.length; i++) {
+        await getDownloadURL(ref(storage, response.data.data[i].avatarURL))
+          .then((url) => {
+            response.data.data[i].avatarURL = url;
+          })
+          .catch((e) => {
+            response.data.data[i]["avatarURL"] = defaultUserIcon;
+          });
+      }
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
@@ -180,7 +192,7 @@ const AccountListPage = () => {
                 <TableCell className="w-20">
                   <img
                     className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
-                    src="logo.png"
+                    src={item.avatarURL}
                     alt=""
                   />
                 </TableCell>

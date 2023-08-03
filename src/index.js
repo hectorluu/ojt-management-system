@@ -77,6 +77,9 @@ const TrainingPlanCertifyPage = lazy(() =>
 const TrainingPlanListPage = lazy(() =>
   import("./pages/Manager/TrainingPlanListPage")
 );
+const DefineNewReportPage = lazy(() =>
+  import("./pages/Manager/DefineNewReportPage")
+);
 
 // Trainer Page
 const AssignedTraineeListPage = lazy(() =>
@@ -222,6 +225,10 @@ const router = createBrowserRouter([
           {
             path: "/manager-report-list",
             element: <ManagerReportListPage></ManagerReportListPage>,
+          },
+          {
+            path: "/manager-define-new-report",
+            element: <DefineNewReportPage></DefineNewReportPage>,
           },
           {
             path: "/trainee-list/:traineeId",
