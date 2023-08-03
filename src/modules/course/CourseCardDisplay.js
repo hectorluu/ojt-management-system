@@ -7,7 +7,7 @@ import CourseName from "./part/CourseName";
 import CourseDesc from "./part/CourseDesc";
 import CoursePlatform from "./part/CoursePlatform";
 import { useNavigate } from "react-router-dom";
-import { positionOptions } from "constants/global";
+import { defaultCourseImage, positionOptions } from "constants/global";
 
 export default function CourseCardDisplay(course) {
 
@@ -44,7 +44,7 @@ export default function CourseCardDisplay(course) {
         }}
       >
         <div className="flex items-center gap-x-[5px] w-full">
-          <CourseImage className="h-[266px] flex-1" image={course.course.imageURL}></CourseImage>
+          <CourseImage className="h-[266px] flex-1" image={course.course.imageURL || defaultCourseImage}></CourseImage>
           <div className="flex-auto max-w-[600px]">
             <CourseCategory
               text={coursePosition(course)}

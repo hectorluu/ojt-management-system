@@ -14,6 +14,7 @@ import { universityPath } from "api/apiUrl";
 import ExcelUpload from "modules/file/ExcelUpload";
 import { Input } from "components/input";
 import { useForm } from "react-hook-form";
+import Gap from "components/common/Gap";
 
 IgrExcelCoreModule.register();
 IgrExcelModule.register();
@@ -27,7 +28,7 @@ function DefineNewReportPage() {
   const [universityList, setUniversityList] = useState([]);
   const [universityId, setUniversityId] = useState(0);
   const { handleSubmit, control, setValue, reset, watch } = useForm();
-  const [matchedField, setMatchedField] = useState([]);
+  const [matchedField, setMatchedField] = useState([{ name: "", matchedId: "", maxPoint: "", isCriteria: "" }]);
 
 
   const openFile = (files) => {
@@ -73,10 +74,16 @@ function DefineNewReportPage() {
 
   const handleAddField = () => {
     const newField = {
-      skillId: "",
-      initLevel: "",
+      name: "",
+      matchedId: "",
+      maxPoint: "",
+      isCriteria: "",
     };
     setMatchedField([...matchedField, newField]);
+  };
+
+  const handleRemoveField = (index) => {
+    setMatchedField(matchedField.splice(index, 1));
   };
 
   return (
@@ -87,6 +94,15 @@ function DefineNewReportPage() {
             Tạo phiếu đánh giá mới
           </h1>
           <form onSubmit={console.log("aadsads")}>
+            <FormGroup>
+              <Label>Tên phiếu đánh giá (*)</Label>
+              <Input
+                control={control}
+                name="name"
+                placeholder="Ex: Phiếu đánh giá thực tập sinh"
+                autoComplete="off"
+              />
+            </FormGroup>
             <FormGroup>
               <Label>Tên trường (*)</Label>
               <Dropdown>
@@ -130,6 +146,79 @@ function DefineNewReportPage() {
                 />
               </FormGroup>
             </FormRow>
+            {matchedField.map((matchedField, index) => (
+              <div key={index}>
+                <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
+                <FormRow>
+                  <FormGroup>
+                    <Label>Tên cột(*)</Label>
+                    <Input
+                      control={control}
+                      name="cellIndex"
+                      placeholder="Ex: MSSV"
+                      autoComplete="off"
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label>Tiêu chí hệ thống</Label>
+                    <Dropdown>
+                      <Dropdown.Select
+                      // placeholder={getLevelDropdownLabel(index, "initLevel", skillLevel, "Lựa chọn")}
+                      ></Dropdown.Select>
+                      <Dropdown.List>
+                        {/* {skillLevel.map((option) => (
+                        <Dropdown.Option
+                          key={option.value}
+                          onClick={() =>
+                            onChangeUserSkill(index, "initLevel", option.value)
+                          }
+                        >
+                          <span className="capitalize">{option.label}</span>
+                        </Dropdown.Option>
+                      ))} */}
+                      </Dropdown.List>
+                    </Dropdown>
+                  </FormGroup>
+                </FormRow>
+                <FormRow>
+                  <FormGroup>
+                    <Label>Điểm tối đa(*)</Label>
+                    <Input
+                      control={control}
+                      name="cellIndex"
+                      placeholder="Ex: 30"
+                      autoComplete="off"
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label>Tiêu chí đánh giá (*)</Label>
+                    <Dropdown>
+                      <Dropdown.Select
+                      // placeholder={getLevelDropdownLabel(index, "initLevel", skillLevel, "Lựa chọn")}
+                      ></Dropdown.Select>
+                      <Dropdown.List>
+                        {/* {skillLevel.map((option) => (
+                        <Dropdown.Option
+                          key={option.value}
+                          onClick={() =>
+                            onChangeUserSkill(index, "initLevel", option.value)
+                          }
+                        >
+                          <span className="capitalize">{option.label}</span>
+                        </Dropdown.Option>
+                      ))} */}
+                      </Dropdown.List>
+                    </Dropdown>
+                  </FormGroup>
+                </FormRow>
+                <button type="button" onClick={() => handleRemoveField(index)}>
+                  xoá
+                </button>
+              </div>
+            ))}
+            <button type="button" onClick={() => handleAddField()}>
+              Thêm
+            </button>
           </form>
         </div>
       </div>

@@ -16,14 +16,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { coursePath, skillPath } from "api/apiUrl";
-import { ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
 import { courseNoti } from "constants/notification";
 import AddIcon from "@mui/icons-material/Add";
 
 const CreateNewCoursePage = () => {
   const axiosPrivate = useAxiosPrivate();
-  const { handleSubmit, control, reset } = useForm();
+  const { handleSubmit, control, reset, getValues } = useForm();
   const [coursePosition, setCoursePosition] = useState([
     { position: "", isCompulsory: "" },
   ]);
@@ -34,7 +34,7 @@ const CreateNewCoursePage = () => {
   const [coursePic, setCoursePic] = useState(null);
   const [filteredSkillList, setFilteredSkillList] = useState([]);
   const [filteredPositionList, setFilteredPositionList] = useState([]);
-  const [imageURL, setImageURL] = useState("");
+  const [imageURL, setImageURL] = useState();
 
   useEffect(() => {
     fetchSkills();
@@ -50,6 +50,13 @@ const CreateNewCoursePage = () => {
     removePositionItems(coursePosition, positionOptions);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coursePosition]);
+
+  useEffect(() => {
+    if(imageURL){
+      handleAddNewCourse(getValues());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageURL]);
 
   const removeSkillItems = (rmItems, items) => {
     const filteredItems = items.filter(
@@ -101,7 +108,6 @@ const CreateNewCoursePage = () => {
 
   const handleAddNewCourse = async (values) => {
     try {
-      await uploadFile();
       await axiosPrivate.post(coursePath.CREATE_COURSE, {
         ...values,
         coursePosition,
@@ -119,6 +125,8 @@ const CreateNewCoursePage = () => {
       toast.error(error);
     }
   };
+
+  
 
   const handleAddPositionField = () => {
     if (
@@ -140,13 +148,16 @@ const CreateNewCoursePage = () => {
       try {
         const imageRef = ref(storage, "images/courses/" + coursePic.name);
         await uploadBytes(imageRef, coursePic).then(async (snapshot) => {
-          await setImageURL(`images/courses/${coursePic.name}`);
+          await getDownloadURL(snapshot.ref).then(async (downloadURL) => {
+            await setImageURL(downloadURL);
+            console.log(imageURL);
+          })
         });
       } catch (e) {
         toast.error(e);
       }
     } else {
-      await setImageURL(`images/courses/${defaultCourseImage}`);
+      setImageURL(defaultCourseImage);
     }
   }
 
@@ -203,7 +214,7 @@ const CreateNewCoursePage = () => {
           <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
             Tạo khóa học mới
           </h1>
-          <form onSubmit={handleSubmit(handleAddNewCourse)}>
+          <form onSubmit={handleSubmit(uploadFile)}>
             <FormRow>
               <FormGroup>
                 <Label>Tên khóa học (*)</Label>

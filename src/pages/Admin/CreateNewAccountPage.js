@@ -15,7 +15,7 @@ import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { ojtBatchPath, skillPath, universityPath, userPath } from "api/apiUrl";
 import { roleExchange } from "constants/global";
 import { storage } from "../../firebase";
-import { ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { accountNoti } from "constants/notification";
 
 const CreateNewAccountPage = () => {
@@ -32,7 +32,7 @@ const CreateNewAccountPage = () => {
   const [batchId, setBatchId] = useState(0);
   const [avatarUrl, setAvatarUrl] = useState("");
 
-  const { handleSubmit, control, setValue, reset, watch, unregister } = useForm();
+  const { handleSubmit, control, setValue, reset, watch, unregister, getValues } = useForm();
 
   useEffect(() => {
     if (userRoleWhenChosen && userRoleWhenChosen === roleExchange.TRAINEE) {
@@ -53,9 +53,11 @@ const CreateNewAccountPage = () => {
   }, [createSkills]);
 
   useEffect(() => {
-    console.log(avatar);
+    if(avatarUrl){
+      handleAddNewAccount(getValues());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [avatar]);
+  }, [avatarUrl]);
 
   const removeItems = (rmItems, items) => {
     const filteredItems = items.filter((item) => !rmItems.some((rmItem) => item.id === rmItem.skillId));
@@ -127,20 +129,20 @@ const CreateNewAccountPage = () => {
       try {
         const imageRef = ref(storage, "images/users/" + avatar.name);
         await uploadBytes(imageRef, avatar).then(async (snapshot) => {
-          await setAvatarUrl(`images/users/${avatar.name}`);
+          await getDownloadURL(snapshot.ref).then((downloadURL) => {
+            setAvatarUrl(downloadURL);
+          })
         });
       } catch (e) {
         toast.error("Upload img error");
       }
     } else {
-      await setAvatarUrl(`images/users/${defaultUserIcon}`);
+      setAvatarUrl(defaultUserIcon);
     }
   }
 
   const handleAddNewAccount = async (values) => {
     try {
-      await uploadFile();
-      console.log(values);
       if (createSkills[0].skillId) {
         await axiosPrivate.post(userPath.CREATE_USER, {
           ...values,
@@ -224,7 +226,7 @@ const CreateNewAccountPage = () => {
           <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
             Tạo tài khoản mới
           </h1>
-          <form onSubmit={handleSubmit(handleAddNewAccount)}>
+          <form onSubmit={handleSubmit(uploadFile)}>
             <FormRow>
               <FormGroup>
                 <Label>Họ và tên (*)</Label>

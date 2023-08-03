@@ -41,13 +41,6 @@ const CourseListPage = () => {
         "&PageSize=" +
         rowsPerPage
       );
-      for (let i = 0; i < response.data.data.length; i++) {
-        await getDownloadURL(ref(storage, response.data.data[i].imageURL)).then((url) => {
-          response.data.data[i].imageURL = url;
-        }).catch((e) => {
-          response.data.data[i]["imageURL"] = defaultCourseImage;
-        });
-      }
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
