@@ -23,6 +23,7 @@ import ModalSkillDetailAdmin from "components/modal/ModalSkillDetailAdmin";
 import SearchBar from "modules/SearchBar";
 import { Dropdown } from "components/dropdown";
 import useOnChange from "hooks/useOnChange";
+import ModalAddSkillAdmin from "components/modal/ModalAddSkillAdmin";
 
 const SkillListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -34,6 +35,7 @@ const SkillListPage = () => {
   const [position, setPosition] = useState(0);
   const [positionFiltered, setPositionFiltered] = useState([]);
   const [isSkillDetailModalOpen, setIsSkillDetailModalOpen] = useState(false);
+  const [isAddSkillModalOpen, setIsAddSkillModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchSkills() {
@@ -51,7 +53,7 @@ const SkillListPage = () => {
           { value: positionOptions.length + 1, label: "Tất cả" },
         ];
         const positions = positionOptions.slice();
-        console.log(positionOptions);
+
         positions.unshift(...allPosition);
         setPositionFiltered(positions);
         // setPage(response.data.pageIndex);
@@ -103,6 +105,10 @@ const SkillListPage = () => {
         isOpen={isSkillDetailModalOpen}
         onRequestClose={() => setIsSkillDetailModalOpen(false)}
       ></ModalSkillDetailAdmin>
+      <ModalAddSkillAdmin
+        isOpen={isAddSkillModalOpen}
+        onRequestClose={() => setIsAddSkillModalOpen(false)}
+      ></ModalAddSkillAdmin>
       <div className="flex flex-wrap items-center justify-between	">
         <div className="flex items-center justify-center">
           <Heading className="text-[2.25rem] font-bold pt-6">
@@ -112,8 +118,8 @@ const SkillListPage = () => {
         <Button
           className="px-7"
           type="button"
-          href="/create-new-course"
           kind="secondary"
+          onClick={() => setIsAddSkillModalOpen(true)}
         >
           Thêm kỹ năng
         </Button>
@@ -185,12 +191,7 @@ const SkillListPage = () => {
                   </Button>
                 </TableCell>
                 <TableCell align="right" width={"5%"}>
-                  <Button
-                    className=""
-                    type="button"
-                    kind="ghost"
-                    onClick={() => setIsSkillDetailModalOpen(true)}
-                  >
+                  <Button className="bg-red-500 text-white" type="button">
                     Xóa
                   </Button>
                 </TableCell>
