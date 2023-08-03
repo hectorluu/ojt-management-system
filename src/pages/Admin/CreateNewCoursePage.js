@@ -1,4 +1,9 @@
-import { courseOptions, defaultCourseImage, positionOptions, skillLevel } from "constants/global";
+import {
+  courseOptions,
+  defaultCourseImage,
+  positionOptions,
+  skillLevel,
+} from "constants/global";
 import { Fragment, useEffect, useState } from "react";
 import { Input, Textarea } from "components/input";
 import ImageUpload from "components/image/ImageUpload";
@@ -14,12 +19,17 @@ import { coursePath, skillPath } from "api/apiUrl";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
 import { courseNoti } from "constants/notification";
+import AddIcon from "@mui/icons-material/Add";
 
 const CreateNewCoursePage = () => {
   const axiosPrivate = useAxiosPrivate();
   const { handleSubmit, control, reset } = useForm();
-  const [coursePosition, setCoursePosition] = useState([{ "position": "", "isCompulsory": "" }]);
-  const [courseSkills, setCourseSkills] = useState([{ "skillId": "", "recommendedLevel": "", "afterwardLevel": "" }]);
+  const [coursePosition, setCoursePosition] = useState([
+    { position: "", isCompulsory: "" },
+  ]);
+  const [courseSkills, setCourseSkills] = useState([
+    { skillId: "", recommendedLevel: "", afterwardLevel: "" },
+  ]);
   const [skillList, setSkillList] = useState([]);
   const [coursePic, setCoursePic] = useState(null);
   const [filteredSkillList, setFilteredSkillList] = useState([]);
@@ -42,23 +52,23 @@ const CreateNewCoursePage = () => {
   }, [coursePosition]);
 
   const removeSkillItems = (rmItems, items) => {
-    const filteredItems = items.filter((item) => !rmItems.some((rmItem) => item.id === rmItem.skillId));
+    const filteredItems = items.filter(
+      (item) => !rmItems.some((rmItem) => item.id === rmItem.skillId)
+    );
     setFilteredSkillList(filteredItems);
   };
 
   const removePositionItems = (rmItems, items) => {
-    const filteredItems = items.filter((item) => !rmItems.some((rmItem) => item.value === rmItem.position));
+    const filteredItems = items.filter(
+      (item) => !rmItems.some((rmItem) => item.value === rmItem.position)
+    );
     setFilteredPositionList(filteredItems);
   };
 
   const fetchSkills = async () => {
     try {
       const response = await axiosPrivate.get(
-        skillPath.GET_SKILL_LIST +
-        "?PageSize=" +
-        100000 +
-        "&PageIndex=" +
-        1
+        skillPath.GET_SKILL_LIST + "?PageSize=" + 100000 + "&PageIndex=" + 1
       );
       setSkillList(response.data.data);
       setFilteredSkillList(response.data.data);
@@ -67,7 +77,12 @@ const CreateNewCoursePage = () => {
     }
   };
 
-  const getDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
+  const getDropdownLabel = (
+    index,
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
     const position = coursePosition.slice();
     const value = position[index][name] || defaultValue;
     const label = options.find((label) => label.value === value);
@@ -91,12 +106,14 @@ const CreateNewCoursePage = () => {
         ...values,
         coursePosition,
         courseSkills,
-        imageURL
+        imageURL,
       });
       toast.success(courseNoti.SUCCESS.CREATE);
       resetValues();
-      setCoursePosition([{ "position": "", "isCompulsory": "" }]);
-      setCourseSkills([{ "skillId": "", "recommendedLevel": "", "afterwardLevel": "" }]);
+      setCoursePosition([{ position: "", isCompulsory: "" }]);
+      setCourseSkills([
+        { skillId: "", recommendedLevel: "", afterwardLevel: "" },
+      ]);
       setCoursePic(null);
     } catch (error) {
       toast.error(error);
@@ -104,7 +121,10 @@ const CreateNewCoursePage = () => {
   };
 
   const handleAddPositionField = () => {
-    if (filteredPositionList.length > 0 && coursePosition.length < positionOptions.length) {
+    if (
+      filteredPositionList.length > 0 &&
+      coursePosition.length < positionOptions.length
+    ) {
       const newField = {
         position: "",
         isCompulsory: "",
@@ -130,8 +150,12 @@ const CreateNewCoursePage = () => {
     }
   }
 
-
-  const getSkillDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
+  const getSkillDropdownLabel = (
+    index,
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
     const skills = courseSkills.slice();
     const value = skills[index][name] || defaultValue;
     const label = options.find((label) => label.id === value);
@@ -139,7 +163,10 @@ const CreateNewCoursePage = () => {
   };
 
   const handleAddSkillField = () => {
-    if (filteredSkillList.length > 0 && courseSkills.length < skillList.length) {
+    if (
+      filteredSkillList.length > 0 &&
+      courseSkills.length < skillList.length
+    ) {
       const newField = {
         skillId: "",
         recommendedLevel: "",
@@ -157,7 +184,12 @@ const CreateNewCoursePage = () => {
     setCourseSkills(newArray);
   };
 
-  const getLevelDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
+  const getLevelDropdownLabel = (
+    index,
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
     const levels = courseSkills.slice();
     const value = levels[index][name] || defaultValue;
     const label = options.find((label) => label.value === value);
@@ -238,14 +270,23 @@ const CreateNewCoursePage = () => {
                   <Label>Vị trí (*)</Label>
                   <Dropdown>
                     <Dropdown.Select
-                      placeholder={getDropdownLabel(index, "position", positionOptions, "Lựa chọn")}
+                      placeholder={getDropdownLabel(
+                        index,
+                        "position",
+                        positionOptions,
+                        "Lựa chọn"
+                      )}
                     ></Dropdown.Select>
                     <Dropdown.List>
                       {filteredPositionList.map((option) => (
                         <Dropdown.Option
                           key={option.value}
                           onClick={() =>
-                            handleSelectDropdownOption(index, "position", option.value)
+                            handleSelectDropdownOption(
+                              index,
+                              "position",
+                              option.value
+                            )
                           }
                         >
                           <span className="capitalize">{option.label}</span>
@@ -258,14 +299,23 @@ const CreateNewCoursePage = () => {
                   <Label>Bắt buộc / Không bắt buộc (*)</Label>
                   <Dropdown>
                     <Dropdown.Select
-                      placeholder={getDropdownLabel(index, "isCompulsory", courseOptions, "Lựa chọn")}
+                      placeholder={getDropdownLabel(
+                        index,
+                        "isCompulsory",
+                        courseOptions,
+                        "Lựa chọn"
+                      )}
                     ></Dropdown.Select>
                     <Dropdown.List>
                       {courseOptions.map((option) => (
                         <Dropdown.Option
                           key={option.value}
                           onClick={() =>
-                            handleSelectDropdownOption(index, "isCompulsory", option.value)
+                            handleSelectDropdownOption(
+                              index,
+                              "isCompulsory",
+                              option.value
+                            )
                           }
                         >
                           <span className="capitalize">{option.label}</span>
@@ -276,8 +326,12 @@ const CreateNewCoursePage = () => {
                 </FormGroup>
               </FormRow>
             ))}
-            <button type="button" onClick={() => handleAddPositionField()}>
-              Thêm vị trí
+            <button
+              className="rounded-full"
+              type="button"
+              onClick={() => handleAddPositionField()}
+            >
+              <AddIcon></AddIcon> Thêm vị trí
             </button>
             <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
             {courseSkills.map((courseSkills, index) => (
@@ -286,7 +340,12 @@ const CreateNewCoursePage = () => {
                   <Label>Kỹ năng (*)</Label>
                   <Dropdown>
                     <Dropdown.Select
-                      placeholder={getSkillDropdownLabel(index, "skillId", skillList, "Lựa chọn")}
+                      placeholder={getSkillDropdownLabel(
+                        index,
+                        "skillId",
+                        skillList,
+                        "Lựa chọn"
+                      )}
                     ></Dropdown.Select>
                     <Dropdown.List>
                       {filteredSkillList.map((option) => (
@@ -307,14 +366,23 @@ const CreateNewCoursePage = () => {
                     <Label>Trình độ khuyến nghị (*)</Label>
                     <Dropdown>
                       <Dropdown.Select
-                        placeholder={getLevelDropdownLabel(index, "recommendedLevel", skillLevel, "Lựa chọn")}
+                        placeholder={getLevelDropdownLabel(
+                          index,
+                          "recommendedLevel",
+                          skillLevel,
+                          "Lựa chọn"
+                        )}
                       ></Dropdown.Select>
                       <Dropdown.List>
                         {skillLevel.map((option) => (
                           <Dropdown.Option
                             key={option.value}
                             onClick={() =>
-                              onChangeCourseSkill(index, "recommendedLevel", option.value)
+                              onChangeCourseSkill(
+                                index,
+                                "recommendedLevel",
+                                option.value
+                              )
                             }
                           >
                             <span className="capitalize">{option.label}</span>
@@ -327,14 +395,23 @@ const CreateNewCoursePage = () => {
                     <Label>Trình độ hoàn thành (*)</Label>
                     <Dropdown>
                       <Dropdown.Select
-                        placeholder={getLevelDropdownLabel(index, "afterwardLevel", skillLevel, "Lựa chọn")}
+                        placeholder={getLevelDropdownLabel(
+                          index,
+                          "afterwardLevel",
+                          skillLevel,
+                          "Lựa chọn"
+                        )}
                       ></Dropdown.Select>
                       <Dropdown.List>
                         {skillLevel.map((option) => (
                           <Dropdown.Option
                             key={option.value}
                             onClick={() =>
-                              onChangeCourseSkill(index, "afterwardLevel", option.value)
+                              onChangeCourseSkill(
+                                index,
+                                "afterwardLevel",
+                                option.value
+                              )
                             }
                           >
                             <span className="capitalize">{option.label}</span>

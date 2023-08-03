@@ -1,9 +1,9 @@
 import React from "react";
 
-const SearchBar = ({ onChangeSearch = () => { } }) => {
+const SearchBar = ({ onChangeSearch = () => {} }) => {
   return (
     <div className="relative z-50">
-      <div className="bg-white rounded-full shadow-[10px_10px_20px_rgba(218,_213,_213,_0.15)] drop-shadow-2xl p-2 w-full flex items-center ">
+      <div className="bg-white rounded-full shadow-[10px_40px_40px_rgba(218,_213,_213,_0.3)] drop-shadow-1.5xl p-2 w-full flex items-center ">
         <div className="flex-1 px-5">
           <input
             type="text"
