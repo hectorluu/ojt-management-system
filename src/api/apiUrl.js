@@ -31,7 +31,7 @@ export const universityPath = {
 
 export const trainingPlanPath = {
   GET_TRAINING_PLAN_LIST: "/training-plan",
-  GET_TRAINING_PLAN: "",
+  GET_TRAINING_PLAN: "training-plan/",
 };
 
 export const userPath = {

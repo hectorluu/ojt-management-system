@@ -75,3 +75,10 @@ export const skillStatus = [
   { value: 2, label: "Đang sử dụng" },
   { value: 3, label: "Không sử dụng" },
 ];
+
+export const trainingplanStatus = [
+  { value: 1, label: "Đã xóa" },
+  { value: 2, label: "Đang chờ duyệt" },
+  { value: 3, label: "Đang sử dụng" },
+  { value: 4, label: "Bị từ chối" },
+];

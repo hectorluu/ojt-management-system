@@ -24,6 +24,8 @@ import { Button } from "components/button";
 import ModalUserDetailAdmin from "components/modal/ModalUserDetailAdmin";
 import useOnChange from "hooks/useOnChange";
 import { defaultUserIcon } from "constants/global";
+import ModeIcon from "@mui/icons-material/Mode";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -127,7 +129,7 @@ const AccountListPage = () => {
           href="/create-new-account"
           kind="secondary"
         >
-          Thêm tài khoản mới
+          <PersonAddIcon></PersonAddIcon> &nbsp; Thêm tài khoản mới
         </Button>
       </div>
       <div className="flex flex-wrap items-start gap-5 mt-5">
@@ -212,7 +214,7 @@ const AccountListPage = () => {
                     kind="ghost"
                     onClick={() => handleClickUserModal(item.id)}
                   >
-                    Chi tiết
+                    <ModeIcon></ModeIcon>
                   </Button>
                 </TableCell>
               </TableRow>

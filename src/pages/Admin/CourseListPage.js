@@ -7,7 +7,6 @@ import {
   defaultPageSize,
   defaultPageIndex,
   positionOptions,
-  defaultCourseImage,
 } from "constants/global";
 import CourseCardDisplay from "modules/course/CourseCardDisplay";
 import { Button } from "components/button";
@@ -16,8 +15,7 @@ import TablePagination from "@mui/material/TablePagination";
 import SearchBar from "modules/SearchBar";
 import { Dropdown } from "components/dropdown";
 import useOnChange from "hooks/useOnChange";
-import { getDownloadURL, ref } from "firebase/storage";
-import { storage } from "../../firebase";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 const CourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -36,10 +34,10 @@ const CourseListPage = () => {
     try {
       let response = await axiosPrivate.get(
         coursePath.GET_COURSE_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage
       );
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -130,7 +128,7 @@ const CourseListPage = () => {
           href="/create-new-course"
           kind="secondary"
         >
-          Thêm khóa học mới
+          <AddCircleOutlineIcon></AddCircleOutlineIcon> &nbsp;Thêm khóa học mới
         </Button>
       </div>
       <div className="flex flex-wrap items-start gap-5 mt-5">

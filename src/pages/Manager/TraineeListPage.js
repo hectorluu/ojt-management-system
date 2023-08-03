@@ -19,6 +19,7 @@ import {
 import TablePagination from "@mui/material/TablePagination";
 import { Button } from "components/button";
 import ModalTraineeDetailManager from "components/modal/ModalTraineeDetailManager";
+import ModeIcon from "@mui/icons-material/Mode";
 
 const TraineeListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -92,8 +93,7 @@ const TraineeListPage = () => {
               <TableCell>Họ và tên</TableCell>
               <TableCell width="25%">Email</TableCell>
               <TableCell align="center">Vai trò</TableCell>
-              <TableCell>Trạng thái</TableCell>
-              <TableCell align="right" width={"10%"}></TableCell>
+              <TableCell align="right" width={"5%"}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -117,30 +117,14 @@ const TraineeListPage = () => {
                     }
                   </div>
                 </TableCell>
-                <TableCell
-                  align="center"
-                  className="flex items-center justify-center"
-                >
-                  {/* <div
-                    className={`rounded-full m-auto text-white h-7 w-32 flex items-center justify-center ${getStatusColor(
-                      item.status
-                    )}`}
-                  >
-                    {
-                      accountStatus.find(
-                        (label) => label.value === item.data.status
-                      ).label
-                    }
-                  </div> */}
-                </TableCell>
-                <TableCell align="right" width={"10%"}>
+                <TableCell align="right" width={"5%"}>
                   <Button
                     className=""
                     type="button"
                     kind="ghost"
                     onClick={() => setIsTraineeDetailModalOpen(true)}
                   >
-                    Edit
+                    <ModeIcon></ModeIcon>
                   </Button>
                 </TableCell>
               </TableRow>

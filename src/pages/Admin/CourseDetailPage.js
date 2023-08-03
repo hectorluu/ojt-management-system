@@ -26,13 +26,14 @@ const CourseDetailPage = () => {
         setCourse(response.data);
       } catch (error) {}
     }
+    if (courseId === undefined) return;
     fetchCourseDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Fragment>
-      <Heading>Chi tiết khóa học {courseId}</Heading>
+      <Heading>Chi tiết khóa học</Heading>
       <Card sx={{ display: "flex" }}>
         <CardActionArea sx={{ display: "flex" }}>
           <div className="flex items-center gap-x-[30px] w-full">
