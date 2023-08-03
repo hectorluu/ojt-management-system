@@ -45,17 +45,15 @@ const AccountListPage = () => {
         `${searchTerm === null ? "" : searchTerm}` +
         "&role=" +
         role
-      );
+      );      
       for (let i = 0; i < response.data.data.length; i++) {
-        try {
-          const a = await getDownloadURL(ref(storage, response.data.data[i].avatarURL));
-          response.data.data[i].avatarURL = a;
-        } catch (e) {
+        await getDownloadURL(ref(storage, response.data.data[i].avatarURL)).then((url) => {
+          response.data.data[i].avatarURL = url;
+        }).catch((e) => {
           response.data.data[i]["avatarURL"] = defaultUserIcon;
-        }
+        });
       }
-      console.log(response.data);
-      setUsers(response.data.data);
+      setUsers(response.data.data); 
       setTotalItem(response.data.totalItem);
     } catch (error) {
       console.log("fetchUsers ~ error", error);

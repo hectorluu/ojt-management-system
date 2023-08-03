@@ -15,7 +15,7 @@ import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { ojtBatchPath, skillPath, universityPath, userPath } from "api/apiUrl";
 import { roleExchange } from "constants/global";
 import { storage } from "../../firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes } from "firebase/storage";
 import { accountNoti } from "constants/notification";
 
 const CreateNewAccountPage = () => {
@@ -32,7 +32,7 @@ const CreateNewAccountPage = () => {
   const [batchId, setBatchId] = useState(0);
   const [avatarUrl, setAvatarUrl] = useState("");
 
-  const { handleSubmit, control, setValue, reset, watch } = useForm();
+  const { handleSubmit, control, setValue, reset, watch, unregister } = useForm();
 
   useEffect(() => {
     if (userRoleWhenChosen && userRoleWhenChosen === roleExchange.TRAINEE) {
@@ -133,13 +133,14 @@ const CreateNewAccountPage = () => {
         toast.error("Upload img error");
       }
     } else {
-      setAvatarUrl("images/users/" + defaultUserIcon);
+      await setAvatarUrl(`images/users/${defaultUserIcon}`);
     }
   }
 
   const handleAddNewAccount = async (values) => {
     try {
       await uploadFile();
+      console.log(values);
       if (createSkills[0].skillId) {
         await axiosPrivate.post(userPath.CREATE_USER, {
           ...values,
@@ -155,7 +156,7 @@ const CreateNewAccountPage = () => {
           avatarUrl
         });
       }
-      console.log("avavassdhaksdhaksd", avatarUrl);
+      console.log(values);
       toast.success(accountNoti.SUCCESS.CREATE);
       resetValues();
       setAvatar(null);
@@ -172,9 +173,9 @@ const CreateNewAccountPage = () => {
   const handleSelectRoleDropdownOption = (name, value) => {
     setUserRoleWhenChosen(() => value);
     setValue(name, value);
-    setValue("rollNumber", "");
-    setValue("position", "");
     setAvatar(null);
+    unregister("position");
+    setBatchId(0);
     setCreateSkills([{ "skillId": "", "initLevel": "" }]);
   };
 

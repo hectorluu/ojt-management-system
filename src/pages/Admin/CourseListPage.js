@@ -36,18 +36,17 @@ const CourseListPage = () => {
     try {
       let response = await axiosPrivate.get(
         coursePath.GET_COURSE_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage
       );
       for (let i = 0; i < response.data.data.length; i++) {
-        try {
-          const a = await getDownloadURL(ref(storage, response.data.data[i].imageURL));
-          response.data.data[i].imageURL = a;
-        } catch (e) {
+        await getDownloadURL(ref(storage, response.data.data[i].imageURL)).then((url) => {
+          response.data.data[i].imageURL = url;
+        }).catch((e) => {
           response.data.data[i]["imageURL"] = defaultCourseImage;
-        }
+        });
       }
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);

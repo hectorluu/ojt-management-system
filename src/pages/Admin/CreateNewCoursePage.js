@@ -86,7 +86,7 @@ const CreateNewCoursePage = () => {
 
   const handleAddNewCourse = async (values) => {
     try {
-      uploadFile();
+      await uploadFile();
       await axiosPrivate.post(coursePath.CREATE_COURSE, {
         ...values,
         coursePosition,
@@ -95,6 +95,9 @@ const CreateNewCoursePage = () => {
       });
       toast.success(courseNoti.SUCCESS.CREATE);
       resetValues();
+      setCoursePosition([{ "position": "", "isCompulsory": "" }]);
+      setCourseSkills([{ "skillId": "", "recommendedLevel": "", "afterwardLevel": "" }]);
+      setCoursePic(null);
     } catch (error) {
       toast.error(error);
     }
@@ -116,14 +119,14 @@ const CreateNewCoursePage = () => {
     if (coursePic) {
       try {
         const imageRef = ref(storage, "images/courses/" + coursePic.name);
-        uploadBytes(imageRef, coursePic).then(async (snapshot) => {
+        await uploadBytes(imageRef, coursePic).then(async (snapshot) => {
           await setImageURL(`images/courses/${coursePic.name}`);
         });
       } catch (e) {
         toast.error(e);
       }
     } else {
-      setValue("imageURL", "images/courses/" + defaultCourseImage);
+      await setImageURL(`images/courses/${defaultCourseImage}`);
     }
   }
 
