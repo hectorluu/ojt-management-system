@@ -7,7 +7,6 @@ import {
   defaultPageSize,
   defaultPageIndex,
   positionOptions,
-  defaultCourseImage,
 } from "constants/global";
 import CourseCardDisplay from "modules/course/CourseCardDisplay";
 import { Button } from "components/button";
@@ -16,8 +15,6 @@ import TablePagination from "@mui/material/TablePagination";
 import SearchBar from "modules/SearchBar";
 import { Dropdown } from "components/dropdown";
 import useOnChange from "hooks/useOnChange";
-import { getDownloadURL, ref } from "firebase/storage";
-import { storage } from "../../firebase";
 
 const CourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -26,8 +23,8 @@ const CourseListPage = () => {
   const axiosPrivate = useAxiosPrivate();
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
-  const [position, setPosition] = useState(0);
-  const [skill, setSkill] = useState(0);
+  const [position, setPosition] = useState("");
+  const [skill, setSkill] = useState("");
   const [skillList, setSkillList] = useState([]);
   const [positionFiltered, setPositionFiltered] = useState([]);
   const [skillFiltered, setSkillFiltered] = useState([]);
@@ -39,7 +36,13 @@ const CourseListPage = () => {
         "?PageIndex=" +
         page +
         "&PageSize=" +
-        rowsPerPage
+        rowsPerPage +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&filterSkill=" +
+        `${skill === null ? "" : skill}` +
+        "&filterPosition=" +
+        `${position === null ? "" : position}`
       );
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -67,12 +70,12 @@ const CourseListPage = () => {
 
   useEffect(() => {
     const allPosition = [
-      { value: positionOptions.length + 1, label: "Tất cả" },
+      { value: "", label: "Tất cả" },
     ];
     const positions = positionOptions.slice();
     positions.unshift(...allPosition);
     setPositionFiltered(positions);
-    const allSkill = [{ id: skillList.length + 1, name: "Tất cả" }];
+    const allSkill = [{ id: "", name: "Tất cả" }];
     const skills = skillList.slice();
     skills.unshift(...allSkill);
     setSkillFiltered(skills);
