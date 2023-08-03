@@ -15,6 +15,7 @@ import {
   defaultPageSize,
   defaultPageIndex,
   positionOptions,
+  skillStatus,
 } from "constants/global";
 import { Button } from "components/button";
 import TablePagination from "@mui/material/TablePagination";
@@ -85,6 +86,17 @@ const SkillListPage = () => {
     setPosition(value);
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 1:
+        return "bg-red-500";
+      case 2:
+        return "bg-green-500";
+      default:
+        return "bg-gray-500"; // You can set a default color class if needed
+    }
+  };
+
   return (
     <Fragment>
       <ModalSkillDetailAdmin
@@ -93,7 +105,9 @@ const SkillListPage = () => {
       ></ModalSkillDetailAdmin>
       <div className="flex flex-wrap items-center justify-between	">
         <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">Kỹ Năng</Heading>
+          <Heading className="text-[2.25rem] font-bold pt-6">
+            Quản lý kỹ năng
+          </Heading>
         </div>
         <Button
           className="px-7"
@@ -135,26 +149,49 @@ const SkillListPage = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Tên</TableCell>
-              <TableCell>Vị trí</TableCell>
-              <TableCell>Trạng thái</TableCell>
-              <TableCell align="right" width={"10%"}></TableCell>
+              <TableCell width={"30%"}>Kỹ năng</TableCell>
+              <TableCell align="center">Trạng thái</TableCell>
+              <TableCell align="right" width={"5%"}></TableCell>
+              <TableCell align="right" width={"5%"}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {skills.map((item) => (
               <TableRow key={item.id}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.type}</TableCell>
-                <TableCell>{item.status}</TableCell>
-                <TableCell align="right" width={"10%"}>
+                <TableCell width={"30%"}>{item.name}</TableCell>
+                <TableCell
+                  align="center"
+                  className="flex items-center justify-center"
+                >
+                  <div
+                    className={`rounded-full text-white h-7 w-32 flex items-center justify-center m-auto ${getStatusColor(
+                      item.status
+                    )}`}
+                  >
+                    {
+                      skillStatus.find((label) => label.value === item.status)
+                        .label
+                    }
+                  </div>
+                </TableCell>
+                <TableCell align="right" width={"5%"}>
                   <Button
                     className=""
                     type="button"
                     kind="ghost"
                     onClick={() => setIsSkillDetailModalOpen(true)}
                   >
-                    Edit
+                    Sửa
+                  </Button>
+                </TableCell>
+                <TableCell align="right" width={"5%"}>
+                  <Button
+                    className=""
+                    type="button"
+                    kind="ghost"
+                    onClick={() => setIsSkillDetailModalOpen(true)}
+                  >
+                    Xóa
                   </Button>
                 </TableCell>
               </TableRow>

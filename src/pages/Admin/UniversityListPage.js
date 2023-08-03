@@ -38,7 +38,9 @@ const UniversityListPage = () => {
     <Fragment>
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">Trường đại học</Heading>
+          <Heading className="text-[2.25rem] font-bold pt-6">
+            Quản lý trường đại học
+          </Heading>
         </div>
         <Button
           className="px-7"

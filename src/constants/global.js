@@ -65,3 +65,9 @@ export const accountStatus = [
   { value: 1, label: "Đã khóa" },
   { value: 2, label: "Đang hoạt động" },
 ];
+
+export const skillStatus = [
+  { value: 1, label: "Đã xóa" },
+  { value: 2, label: "Đang sử dụng" },
+  { value: 3, label: "Không sử dụng" },
+];

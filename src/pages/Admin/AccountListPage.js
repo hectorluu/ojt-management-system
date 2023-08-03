@@ -118,7 +118,7 @@ const AccountListPage = () => {
       ></ModalUserDetailAdmin>
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">Tài khoản</Heading>
+          <Heading className="text-[2.25rem] font-bold pt-6">Tài khoản</Heading>
         </div>
         <Button
           className="px-7"
@@ -194,7 +194,7 @@ const AccountListPage = () => {
                   className="flex items-center justify-center"
                 >
                   <div
-                    className={`rounded-full text-white h-7 w-32 flex items-center justify-center ${getStatusColor(
+                    className={`rounded-full m-auto text-white h-7 w-32 flex items-center justify-center ${getStatusColor(
                       item.status
                     )}`}
                   >

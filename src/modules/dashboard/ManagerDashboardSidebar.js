@@ -2,59 +2,59 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { authLogOut } from "store/auth/auth-slice";
-import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined';
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import EditCalendarOutlinedIcon from '@mui/icons-material/EditCalendarOutlined';
-import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
-import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
-import SupervisedUserCircleOutlinedIcon from '@mui/icons-material/SupervisedUserCircleOutlined';
-import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
-import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumberedOutlined';
-import AddTaskOutlinedIcon from '@mui/icons-material/AddTaskOutlined';
+import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import EditCalendarOutlinedIcon from "@mui/icons-material/EditCalendarOutlined";
+import SummarizeOutlinedIcon from "@mui/icons-material/SummarizeOutlined";
+import SupervisorAccountOutlinedIcon from "@mui/icons-material/SupervisorAccountOutlined";
+import SupervisedUserCircleOutlinedIcon from "@mui/icons-material/SupervisedUserCircleOutlined";
+import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
+import FormatListNumberedOutlinedIcon from "@mui/icons-material/FormatListNumberedOutlined";
+import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 
 const sidebarLinks = [
   {
-    icon: <SpaceDashboardOutlinedIcon/>,
+    icon: <SpaceDashboardOutlinedIcon />,
     title: "Manager Dashboard",
     url: "/manager-dashboard",
   },
   {
-    icon: <EditCalendarOutlinedIcon/>,
-    title: "Attendance",
-    url: "/attendance",
-  },
-  {
-    icon: <SummarizeOutlinedIcon/>,
-    title: "Manager Report List",
-    url: "/manager-report-list",
-  },
-  {
-    icon: <SupervisedUserCircleOutlinedIcon/>,
+    icon: <SupervisedUserCircleOutlinedIcon />,
     title: "Trainee List",
     url: "/trainee-list",
   },
   {
-    icon: <SupervisorAccountOutlinedIcon/>,
+    icon: <SupervisorAccountOutlinedIcon />,
     title: "Trainer List",
     url: "/trainer-list",
   },
   {
-    icon: <AssignmentIndOutlinedIcon/>,
+    icon: <AssignmentIndOutlinedIcon />,
     title: "Trainer Assignment",
     url: "/trainer-assignment",
   },
   {
-    icon: <FormatListNumberedOutlinedIcon/>,
+    icon: <FormatListNumberedOutlinedIcon />,
     title: "Training Plan List",
     url: "/training-plan-list",
   },
   {
-    icon: <AddTaskOutlinedIcon/>,
+    icon: <AddTaskOutlinedIcon />,
     title: "Training Certify",
     url: "/training-plan-certify",
   },
   {
-    icon: <LogoutOutlinedIcon/>,
+    icon: <EditCalendarOutlinedIcon />,
+    title: "Attendance",
+    url: "/attendance",
+  },
+  {
+    icon: <SummarizeOutlinedIcon />,
+    title: "Manager Report List",
+    url: "/manager-report-list",
+  },
+  {
+    icon: <LogoutOutlinedIcon />,
     title: "Logout",
     url: "/logout",
   },

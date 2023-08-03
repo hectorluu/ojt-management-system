@@ -117,8 +117,8 @@ const CourseListPage = () => {
     <Fragment>
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">
-            Danh sách các khóa học
+          <Heading className="text-[2.25rem] font-bold pt-6">
+            Danh sách khóa học
           </Heading>
         </div>
         <Button
