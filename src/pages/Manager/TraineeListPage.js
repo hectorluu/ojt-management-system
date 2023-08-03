@@ -11,7 +11,11 @@ import {
   TableRow,
 } from "@mui/material";
 import { userPath } from "api/apiUrl";
-import { defaultPageSize, defaultPageIndex } from "constants/global";
+import {
+  defaultPageSize,
+  defaultPageIndex,
+  positionOptions,
+} from "constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { Button } from "components/button";
 import ModalTraineeDetailManager from "components/modal/ModalTraineeDetailManager";
@@ -32,6 +36,7 @@ const TraineeListPage = () => {
             "&PageSize=" +
             rowsPerPage
         );
+
         setUsers(response.data.data);
         setTotalItem(response.data.totalItem);
         // setPage(response.data.pageIndex);
@@ -56,6 +61,17 @@ const TraineeListPage = () => {
   const [isTraineeDetailModalOpen, setIsTraineeDetailModalOpen] =
     useState(false);
 
+  // const getStatusColor = (status) => {
+  //   switch (status) {
+  //     case 1:
+  //       return "bg-red-500";
+  //     case 2:
+  //       return "bg-green-500";
+  //     default:
+  //       return "bg-gray-500"; // You can set a default color class if needed
+  //   }
+  // };
+
   return (
     <Fragment>
       <ModalTraineeDetailManager
@@ -73,9 +89,10 @@ const TraineeListPage = () => {
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
+              <TableCell>Họ và tên</TableCell>
+              <TableCell width="25%">Email</TableCell>
+              <TableCell align="center">Vai trò</TableCell>
+              <TableCell>Trạng thái</TableCell>
               <TableCell align="right" width={"10%"}></TableCell>
             </TableRow>
           </TableHead>
@@ -84,14 +101,38 @@ const TraineeListPage = () => {
               <TableRow key={item.id}>
                 <TableCell className="w-20">
                   <img
-                    class="inline-block h-10 w-10 rounded-full ring-2 ring-white"
+                    className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
                     src="logo.png"
                     alt=""
                   />
                 </TableCell>
                 <TableCell>{item.fullName}</TableCell>
                 <TableCell>{item.email}</TableCell>
-                <TableCell>{item.role}</TableCell>
+                <TableCell align="center">
+                  <div className="mx-auto">
+                    {
+                      positionOptions.find(
+                        (label) => label.value === item.position
+                      ).label
+                    }
+                  </div>
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="flex items-center justify-center"
+                >
+                  {/* <div
+                    className={`rounded-full m-auto text-white h-7 w-32 flex items-center justify-center ${getStatusColor(
+                      item.status
+                    )}`}
+                  >
+                    {
+                      accountStatus.find(
+                        (label) => label.value === item.data.status
+                      ).label
+                    }
+                  </div> */}
+                </TableCell>
                 <TableCell align="right" width={"10%"}>
                   <Button
                     className=""

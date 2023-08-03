@@ -7,7 +7,7 @@ import CourseName from "./part/CourseName";
 import CourseDesc from "./part/CourseDesc";
 import CoursePlatform from "./part/CoursePlatform";
 import { useNavigate } from "react-router-dom";
-import { positionOptions } from "constants/global";
+import { defaultCourseImage, positionOptions } from "constants/global";
 
 export default function CourseCardDisplay(course) {
 
@@ -22,7 +22,7 @@ export default function CourseCardDisplay(course) {
   };
 
   const coursePosition = (course) => {
-    let text = getPositionLabel(course.course.coursePositions[0].position, positionOptions, "");
+    let text = getPositionLabel(course.course.coursePositions[0]?.position, positionOptions, "");
     for (let i = 1; i < course.course.coursePositions.length; i++) {
       text = text + "," +getPositionLabel(course.course.coursePositions[i].position, positionOptions, "");
     }
@@ -34,7 +34,7 @@ export default function CourseCardDisplay(course) {
   return (
     <Card
       sx={{ display: "flex" }}
-      class="rounded-2xl hover:shadow-xl transition duration-500 ease-in-out"
+      className="rounded-2xl hover:shadow-xl transition duration-500 ease-in-out"
     >
       <CardActionArea
         sx={{ display: "flex" }}
@@ -44,7 +44,7 @@ export default function CourseCardDisplay(course) {
         }}
       >
         <div className="flex items-center gap-x-[5px] w-full">
-          <CourseImage className="h-[266px] flex-1"></CourseImage>
+          <CourseImage className="h-[266px] flex-1" image={course.course.imageURL || defaultCourseImage}></CourseImage>
           <div className="flex-auto max-w-[600px]">
             <CourseCategory
               text={coursePosition(course)}

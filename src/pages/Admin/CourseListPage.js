@@ -7,6 +7,7 @@ import {
   defaultPageSize,
   defaultPageIndex,
   positionOptions,
+  defaultCourseImage,
 } from "constants/global";
 import CourseCardDisplay from "modules/course/CourseCardDisplay";
 import { Button } from "components/button";
@@ -15,6 +16,8 @@ import TablePagination from "@mui/material/TablePagination";
 import SearchBar from "modules/SearchBar";
 import { Dropdown } from "components/dropdown";
 import useOnChange from "hooks/useOnChange";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage } from "../../firebase";
 
 const CourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -31,12 +34,12 @@ const CourseListPage = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axiosPrivate.get(
+      let response = await axiosPrivate.get(
         coursePath.GET_COURSE_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage
       );
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -60,7 +63,7 @@ const CourseListPage = () => {
     fetchCourses();
     fetchSkills();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, position, skill]);
+  }, [searchTerm, position, skill, rowsPerPage, page]);
 
   useEffect(() => {
     const allPosition = [
@@ -117,8 +120,8 @@ const CourseListPage = () => {
     <Fragment>
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">
-            Danh sách các khóa học
+          <Heading className="text-[2.25rem] font-bold pt-6">
+            Danh sách khóa học
           </Heading>
         </div>
         <Button

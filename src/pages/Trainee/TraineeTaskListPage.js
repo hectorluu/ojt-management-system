@@ -64,7 +64,7 @@ const TraineeTaskListPage = () => {
     <Fragment>
       <div className="flex flex-wrap items-center justify-between	">
         <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">Công việc</Heading>
+          <Heading className="text-[2.25rem] font-bold pt-6">Công việc</Heading>
         </div>
       </div>
       <div className="flex flex-wrap items-center justify-between	">

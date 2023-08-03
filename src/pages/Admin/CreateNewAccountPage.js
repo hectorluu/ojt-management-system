@@ -10,7 +10,7 @@ import { Input } from "components/input";
 import { Dropdown } from "components/dropdown";
 import { Button } from "components/button";
 import ImageUpload from "components/image/ImageUpload";
-import { genderOptions, roleOptions, positionOptions, skillLevel } from "constants/global";
+import { genderOptions, roleOptions, positionOptions, skillLevel, defaultUserIcon } from "constants/global";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { ojtBatchPath, skillPath, universityPath, userPath } from "api/apiUrl";
 import { roleExchange } from "constants/global";
@@ -30,8 +30,9 @@ const CreateNewAccountPage = () => {
   const [universityList, setUniversityList] = useState([]);
   const [ojtBatchList, setOjtBatchList] = useState([]);
   const [batchId, setBatchId] = useState(0);
+  const [avatarUrl, setAvatarUrl] = useState("");
 
-  const { handleSubmit, control, setValue, reset, watch } = useForm();
+  const { handleSubmit, control, setValue, reset, watch, unregister, getValues } = useForm();
 
   useEffect(() => {
     if (userRoleWhenChosen && userRoleWhenChosen === roleExchange.TRAINEE) {
@@ -50,6 +51,13 @@ const CreateNewAccountPage = () => {
     removeItems(createSkills, skillList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createSkills]);
+
+  useEffect(() => {
+    if(avatarUrl){
+      handleAddNewAccount(getValues());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [avatarUrl]);
 
   const removeItems = (rmItems, items) => {
     const filteredItems = items.filter((item) => !rmItems.some((rmItem) => item.id === rmItem.skillId));
@@ -117,28 +125,46 @@ const CreateNewAccountPage = () => {
   };
 
   async function uploadFile() {
-    const imageRef = ref(storage, "images/users/" + avatar.name);
-    uploadBytes(imageRef, avatar).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((downloadURL) => {
-        setValue("avatarUrl", downloadURL);
-      });
-    });
+    if (avatar) {
+      try {
+        const imageRef = ref(storage, "images/users/" + avatar.name);
+        await uploadBytes(imageRef, avatar).then(async (snapshot) => {
+          await getDownloadURL(snapshot.ref).then((downloadURL) => {
+            setAvatarUrl(downloadURL);
+          })
+        });
+      } catch (e) {
+        toast.error("Upload img error");
+      }
+    } else {
+      setAvatarUrl(defaultUserIcon);
+    }
   }
 
   const handleAddNewAccount = async (values) => {
     try {
-      uploadFile();
-      await axiosPrivate.post(userPath.CREATE_USER, {
-        ...values,
-        birthday,
-        createSkills,
-        batchId
-      });
-      toast.success("Create account successfully with password ");
+      if (createSkills[0].skillId) {
+        await axiosPrivate.post(userPath.CREATE_USER, {
+          ...values,
+          birthday,
+          createSkills,
+          batchId,
+          avatarUrl
+        });
+      } else {
+        await axiosPrivate.post(userPath.CREATE_USER, {
+          ...values,
+          birthday,
+          avatarUrl
+        });
+      }
+      console.log(values);
+      toast.success(accountNoti.SUCCESS.CREATE);
       resetValues();
+      setAvatar(null);
     } catch (error) {
       console.log("error", error);
-      toast.error("Can not create new account");
+      toast.error(error);
     }
   };
 
@@ -149,9 +175,9 @@ const CreateNewAccountPage = () => {
   const handleSelectRoleDropdownOption = (name, value) => {
     setUserRoleWhenChosen(() => value);
     setValue(name, value);
-    setValue("rollNumber", "");
-    setValue("position", "");
     setAvatar(null);
+    unregister("position");
+    setBatchId(0);
     setCreateSkills([{ "skillId": "", "initLevel": "" }]);
   };
 
@@ -182,8 +208,8 @@ const CreateNewAccountPage = () => {
   };
 
   const getApiDropdownLabel = (value, options = [{ value: "", label: "" }], defaultValue = "") => {
-      const label = options.find((label) => label.id === value);
-      return label ? label.name : defaultValue;
+    const label = options.find((label) => label.id === value);
+    return label ? label.name : defaultValue;
   };
 
   const onChangeUserSkill = (index, name, value) => {
@@ -200,7 +226,7 @@ const CreateNewAccountPage = () => {
           <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
             Tạo tài khoản mới
           </h1>
-          <form onSubmit={handleSubmit(handleAddNewAccount)}>
+          <form onSubmit={handleSubmit(uploadFile)}>
             <FormRow>
               <FormGroup>
                 <Label>Họ và tên (*)</Label>
@@ -491,7 +517,7 @@ const CreateNewAccountPage = () => {
                     </FormRow>
                   ))}
                   <button type="button" onClick={() => handleAddField()}>
-                    Remove
+                    Thêm kỹ năng
                   </button>
                 </>
               )}

@@ -1,6 +1,10 @@
 export const defaultImage =
   "https://images.unsplash.com/photo-1533105079780-92b9be482077?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80";
 
+export const defaultUserIcon = "user.png";
+
+export const defaultCourseImage = "default-course.png";
+
 export const defaultPageSize = 10;
 
 export const defaultPageIndex = 1;
@@ -24,7 +28,7 @@ export const roleOptions = [
 ];
 
 export const roleFilter = [
-  { value: 0, label: "Tất cả"},
+  { value: 0, label: "Tất cả" },
   { value: 1, label: "Admin" },
   { value: 2, label: "Quản lý" },
   { value: 3, label: "Đào tạo viên" },
@@ -59,4 +63,15 @@ export const skillLevel = [
   { value: 3, label: "3" },
   { value: 4, label: "4" },
   { value: 5, label: "5" },
-]
+];
+
+export const accountStatus = [
+  { value: 1, label: "Đã khóa" },
+  { value: 2, label: "Đang hoạt động" },
+];
+
+export const skillStatus = [
+  { value: 1, label: "Đã xóa" },
+  { value: 2, label: "Đang sử dụng" },
+  { value: 3, label: "Không sử dụng" },
+];

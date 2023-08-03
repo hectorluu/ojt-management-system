@@ -11,7 +11,11 @@ import {
   TableRow,
 } from "@mui/material";
 import { userPath } from "api/apiUrl";
-import { defaultPageSize, defaultPageIndex } from "constants/global";
+import {
+  defaultPageSize,
+  defaultPageIndex,
+  accountStatus,
+} from "constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { roleOptions } from "constants/global";
 import SearchBar from "modules/SearchBar";
@@ -19,6 +23,7 @@ import { Dropdown } from "components/dropdown";
 import { Button } from "components/button";
 import ModalUserDetailAdmin from "components/modal/ModalUserDetailAdmin";
 import useOnChange from "hooks/useOnChange";
+import { defaultUserIcon } from "constants/global";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -32,14 +37,14 @@ const AccountListPage = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axiosPrivate.get(
+      let response = await axiosPrivate.get(
         userPath.GET_USER_LIST +
           "?PageSize=" +
           rowsPerPage +
           "&PageIndex=" +
           page +
-          // "&searchTerm=" +
-          // searchTerm +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}` +
           "&role=" +
           role
       );
@@ -53,10 +58,10 @@ const AccountListPage = () => {
   useEffect(() => {
     fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, role]);
+  }, [searchTerm, role, rowsPerPage, page]);
 
   useEffect(() => {
-    const allRole = [{ value: "", label: "Tất cả"}];
+    const allRole = [{ value: "", label: "Tất cả" }];
     const roles = roleOptions.slice();
     roles.unshift(...allRole);
     setRoleFilter(roles);
@@ -94,6 +99,17 @@ const AccountListPage = () => {
     setUserModalId(userModalId);
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 1:
+        return "bg-red-500";
+      case 2:
+        return "bg-green-500";
+      default:
+        return "bg-gray-500"; // You can set a default color class if needed
+    }
+  };
+
   return (
     <Fragment>
       <ModalUserDetailAdmin
@@ -103,7 +119,7 @@ const AccountListPage = () => {
       ></ModalUserDetailAdmin>
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">Tài khoản</Heading>
+          <Heading className="text-[2.25rem] font-bold pt-6">Tài khoản</Heading>
         </div>
         <Button
           className="px-7"
@@ -121,7 +137,7 @@ const AccountListPage = () => {
         <div className="flex flex-wrap items-start max-w-[200px] w-full">
           <Dropdown className="bg-white">
             <Dropdown.Select
-              placeholder={getDropdownLabel(role, roleFiltered, "Phân quyền")}
+              placeholder={getDropdownLabel(role, roleFiltered, "Tất cả")}
             ></Dropdown.Select>
             <Dropdown.List>
               {roleFiltered.map((personRole) => (
@@ -147,13 +163,16 @@ const AccountListPage = () => {
               <TableCell align="left" width={"25%"}>
                 Họ và tên
               </TableCell>
-              <TableCell align="left" width={"35%"}>
-                Địa chỉ
+              <TableCell align="left" width={"25%"}>
+                Email
               </TableCell>
-              <TableCell align="center" width={"20%"}>
+              <TableCell align="center" width={"15%"}>
                 Phân quyền
               </TableCell>
-              <TableCell align="right" width={"10%"}></TableCell>
+              <TableCell align="center" width={"15%"}>
+                Trạng thái
+              </TableCell>
+              <TableCell align="right" width={"20%"}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -162,14 +181,29 @@ const AccountListPage = () => {
                 <TableCell className="w-20">
                   <img
                     className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
-                    src="logo.png"
+                    src={item.avatarURL || defaultUserIcon}
                     alt=""
                   />
                 </TableCell>
                 <TableCell align="left">{item.fullName}</TableCell>
-                <TableCell align="left">{item.address}</TableCell>
+                <TableCell align="left">{item.email}</TableCell>
                 <TableCell align="center">
                   {roleOptions.find((label) => label.value === item.role).label}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="flex items-center justify-center"
+                >
+                  <div
+                    className={`rounded-full m-auto text-white h-7 w-32 flex items-center justify-center ${getStatusColor(
+                      item.status
+                    )}`}
+                  >
+                    {
+                      accountStatus.find((label) => label.value === item.status)
+                        .label
+                    }
+                  </div>
                 </TableCell>
                 <TableCell align="right">
                   <Button
@@ -178,7 +212,7 @@ const AccountListPage = () => {
                     kind="ghost"
                     onClick={() => handleClickUserModal(item.id)}
                   >
-                    Edit
+                    Chi tiết
                   </Button>
                 </TableCell>
               </TableRow>
