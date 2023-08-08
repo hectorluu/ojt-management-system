@@ -5,11 +5,12 @@ import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlin
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import CodeOutlinedIcon from "@mui/icons-material/CodeOutlined";
 import ApartmentOutlinedIcon from "@mui/icons-material/ApartmentOutlined";
+import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 const sidebarLinks = [
   {
     icon: <SpaceDashboardOutlinedIcon />,
     title: "Admin Dashboard",
-    url: "/admin-dashboard",
+    url: "/excel",
   },
   {
     icon: <AccountCircleOutlinedIcon />,
@@ -25,6 +26,11 @@ const sidebarLinks = [
     icon: <CodeOutlinedIcon />,
     title: "Skill List",
     url: "/skill-list",
+  },
+  {
+    icon: <BadgeOutlinedIcon />,
+    title: "Position List",
+    url: "/position-list",
   },
   {
     icon: <ApartmentOutlinedIcon />,

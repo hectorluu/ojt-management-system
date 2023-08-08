@@ -36,7 +36,7 @@ export const trainingPlanPath = {
 
 export const userPath = {
   GET_USER_LIST: "/user",
-  GET_USER: "user/",
+  GET_USER: "/user",
   CREATE_USER: "/user",
   UPADTE_USER: "",
   GET_TRAINEE_LIST: "/user/trainee",
@@ -53,3 +53,9 @@ export const skillPath = {
 export const taskPath = {
   GET_TASK_LIST: "trainee-tasks",
 };
+
+export const positionPath = {
+  GET_POSITION_LIST: "/position",
+};
+
+export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

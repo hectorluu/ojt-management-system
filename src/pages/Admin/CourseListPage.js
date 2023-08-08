@@ -2,11 +2,14 @@ import Gap from "components/common/Gap";
 import Heading from "components/common/Heading";
 import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { Fragment, useEffect, useState } from "react";
-import { coursePath, skillPath } from "api/apiUrl";
+import { coursePath, positionPath, skillPath } from "api/apiUrl";
 import {
   defaultPageSize,
   defaultPageIndex,
   positionOptions,
+  signalRMessage,
+  positionStatus,
+  skillStatus,
 } from "constants/global";
 import CourseCardDisplay from "modules/course/CourseCardDisplay";
 import { Button } from "components/button";
@@ -15,6 +18,7 @@ import TablePagination from "@mui/material/TablePagination";
 import SearchBar from "modules/SearchBar";
 import { Dropdown } from "components/dropdown";
 import useOnChange from "hooks/useOnChange";
+import signalRService from "utils/signalRService";
 
 const CourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -26,8 +30,20 @@ const CourseListPage = () => {
   const [position, setPosition] = useState("");
   const [skill, setSkill] = useState("");
   const [skillList, setSkillList] = useState([]);
+  const [positionList, setPositionList] = useState([]);
   const [positionFiltered, setPositionFiltered] = useState([]);
   const [skillFiltered, setSkillFiltered] = useState([]);
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.COURSE, (message) => {
+      fetchCourses();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.COURSE);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchCourses = async () => {
     try {
@@ -54,9 +70,20 @@ const CourseListPage = () => {
   const fetchSkills = async () => {
     try {
       const response = await axiosPrivate.get(
-        skillPath.GET_SKILL_LIST + "?PageIndex=" + 1 + "&PageSize=" + 100000
+        skillPath.GET_SKILL_LIST + "?PageIndex=" + 1 + "&PageSize=" + 100000 + "&filterStatus=" + skillStatus.ACTIVE
       );
       setSkillList(response.data.data);
+    } catch (error) {
+      console.log("fetchSkills ~ error", error);
+    }
+  };
+
+  const fetchPositions = async () => {
+    try {
+      const response = await axiosPrivate.get(
+        positionPath.GET_POSITION_LIST + "?PageIndex=" + 1 + "&PageSize=" + 100000 + "&filterStatus=" + positionStatus.ACTIVE
+      );
+      setPositionList(response.data.data);
     } catch (error) {
       console.log("fetchSkills ~ error", error);
     }
@@ -65,22 +92,27 @@ const CourseListPage = () => {
   useEffect(() => {
     fetchCourses();
     fetchSkills();
+    fetchPositions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, position, skill, rowsPerPage, page]);
 
   useEffect(() => {
-    const allPosition = [
-      { value: "", label: "Tất cả" },
-    ];
-    const positions = positionOptions.slice();
-    positions.unshift(...allPosition);
-    setPositionFiltered(positions);
     const allSkill = [{ id: "", name: "Tất cả" }];
     const skills = skillList.slice();
     skills.unshift(...allSkill);
     setSkillFiltered(skills);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skillList]);
+
+  useEffect(() => {
+    const allPosition = [
+      { id: "", name: "Tất cả" },
+    ];
+    const positions = positionList.slice();
+    positions.unshift(...allPosition);
+    setPositionFiltered(positions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [positionList]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -93,12 +125,12 @@ const CourseListPage = () => {
 
   const getPositionDropdownLabel = (
     name,
-    options = [{ value: "", label: "" }],
+    options = [{ id: "", name: "" }],
     defaultValue = ""
   ) => {
     const value = name || defaultValue;
-    const label = options.find((label) => label.value === value);
-    return label ? label.label : defaultValue;
+    const label = options.find((label) => label.id === value);
+    return label ? label.name : defaultValue;
   };
 
   const getSkillDropdownLabel = (
@@ -152,10 +184,10 @@ const CourseListPage = () => {
             <Dropdown.List>
               {positionFiltered.map((pos) => (
                 <Dropdown.Option
-                  key={pos.value}
-                  onClick={() => handleSelectPositionDropdownOption(pos.value)}
+                  key={pos.id}
+                  onClick={() => handleSelectPositionDropdownOption(pos.id)}
                 >
-                  <span className="capitalize">{pos.label}</span>
+                  <span className="capitalize">{pos.name}</span>
                 </Dropdown.Option>
               ))}
             </Dropdown.List>

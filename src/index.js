@@ -43,8 +43,8 @@ const CreateNewCoursePage = lazy(() =>
 const CreateNewUniversityPage = lazy(() =>
   import("./pages/Admin/CreateNewUniversityPage")
 );
-const CriteriaListPage = lazy(() => import("./pages/Admin/CriteriaListPage"));
 const SkillListPage = lazy(() => import("./pages/Admin/SkillListPage"));
+const PositionListPage = lazy(() => import("./pages/Admin/PositionListPage"));
 const UniversityDetailPage = lazy(() =>
   import("./pages/Admin/UniversityDetailPage")
 );
@@ -115,6 +115,9 @@ const TrainerProfilePage = lazy(() =>
 const TrainerTrainingPlanPage = lazy(() =>
   import("./pages/Trainer/TrainerTrainingPlanPage")
 );
+const EvaluateExcelPage = lazy(() =>
+  import("./pages/Trainer/EvaluateExcelPage")
+);
 
 // Trainee Page
 const TraineeCourseDetailPage = lazy(() =>
@@ -157,6 +160,10 @@ const router = createBrowserRouter([
         element: <LayoutAdmin></LayoutAdmin>,
         children: [
           {
+            path: "/excel",
+            element: <EvaluateExcelPage></EvaluateExcelPage>,
+          },
+          {
             path: "/admin-dashboard",
             element: <AdminDashBoardPage></AdminDashBoardPage>,
           },
@@ -185,12 +192,12 @@ const router = createBrowserRouter([
             element: <CreateNewUniversityPage></CreateNewUniversityPage>,
           },
           {
-            path: "/criteria-list",
-            element: <CriteriaListPage></CriteriaListPage>,
-          },
-          {
             path: "/skill-list",
             element: <SkillListPage></SkillListPage>,
+          },
+          {
+            path: "/position-list",
+            element: <PositionListPage></PositionListPage>,
           },
           {
             path: "/university-list/:universityId",

@@ -10,38 +10,52 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { positionPath, skillPath } from "api/apiUrl";
+import { positionPath } from "api/apiUrl";
 import {
   defaultPageSize,
   defaultPageIndex,
-  skillStatusOptions,
+  statusColor,
+  signalRMessage,
+  positionStatusOptions,
 } from "constants/global";
 import { Button } from "components/button";
 import TablePagination from "@mui/material/TablePagination";
-import ModalSkillDetailAdmin from "components/modal/ModalSkillDetailAdmin";
 import SearchBar from "modules/SearchBar";
 import useOnChange from "hooks/useOnChange";
-import ModalAddSkillAdmin from "components/modal/ModalAddSkillAdmin";
+import signalRService from "utils/signalRService";
+import ModalPositionDetailAdmin from "components/modal/ModalPositionDetailAdmin";
+import ModalAddPositionAdmin from "components/modal/ModalAddPositionAdmin";
 
-const SkillListPage = () => {
+const PositionListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
   const [totalItem, setTotalItem] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
-  const [skills, setSkills] = useState([]);
+  const [positions, setPosition] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isSkillDetailModalOpen, setIsSkillDetailModalOpen] = useState(false);
   const [isAddSkillModalOpen, setIsAddSkillModalOpen] = useState(false);
 
   useEffect(() => {
-    fetchSkills();
+    fetchPositions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, rowsPerPage, page]);
+  }, [searchTerm, page, rowsPerPage]);
 
-  async function fetchSkills() {
+  useEffect(() => {
+    signalRService.on(signalRMessage.POSITION, (message) => {
+      fetchPositions();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.POSITION);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function fetchPositions() {
     try {
       const response = await axiosPrivate.get(
-        skillPath.GET_SKILL_LIST +
+        positionPath.GET_POSITION_LIST +
         "?PageIndex=" +
         page +
         "&PageSize=" +
@@ -49,11 +63,11 @@ const SkillListPage = () => {
         "&searchTerm=" +
         `${searchTerm === null ? "" : searchTerm}`
       );
-      setSkills(response.data.data);
+      setPosition(response.data.data);
       setTotalItem(response.data.totalItem);
       // setPage(response.data.pageIndex);
     } catch (error) {
-      console.log("fetchSkill ~ error", error);
+      console.log("fetchPosition ~ error", error);
     }
   }
 
@@ -69,28 +83,29 @@ const SkillListPage = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 1:
-        return "bg-red-500";
+        return statusColor.DELETED;
       case 2:
-        return "bg-green-500";
+        return statusColor.ACTIVE;
       default:
-        return "bg-gray-500"; // You can set a default color class if needed
+        return statusColor.INACTIVE; // You can set a default color class if needed
     }
   };
 
+
   return (
     <Fragment>
-      <ModalSkillDetailAdmin
+      <ModalPositionDetailAdmin
         isOpen={isSkillDetailModalOpen}
         onRequestClose={() => setIsSkillDetailModalOpen(false)}
-      ></ModalSkillDetailAdmin>
-      <ModalAddSkillAdmin
+      ></ModalPositionDetailAdmin>
+      <ModalAddPositionAdmin
         isOpen={isAddSkillModalOpen}
         onRequestClose={() => setIsAddSkillModalOpen(false)}
-      ></ModalAddSkillAdmin>
+      ></ModalAddPositionAdmin>
       <div className="flex flex-wrap items-center justify-between	">
         <div className="flex items-center justify-center">
           <Heading className="text-[2.25rem] font-bold pt-6">
-            Quản lý kỹ năng
+            Quản lý vị trí
           </Heading>
         </div>
         <Button
@@ -112,14 +127,14 @@ const SkillListPage = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell width={"30%"}>Kỹ năng</TableCell>
+              <TableCell width={"30%"}>Vị trí</TableCell>
               <TableCell align="center">Trạng thái</TableCell>
               <TableCell align="right" width={"5%"}></TableCell>
               <TableCell align="right" width={"5%"}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {skills.map((item) => (
+            {positions.map((item) => (
               <TableRow key={item.id}>
                 <TableCell width={"30%"}>{item.name}</TableCell>
                 <TableCell
@@ -132,7 +147,7 @@ const SkillListPage = () => {
                     )}`}
                   >
                     {/* {
-                      skillStatusOptions.find((label) => label.value === item.status)
+                      positionStatusOptions.find((label) => label.value === item.status)
                         .label
                     } */}
                   </div>
@@ -169,4 +184,4 @@ const SkillListPage = () => {
   );
 };
 
-export default SkillListPage;
+export default PositionListPage;

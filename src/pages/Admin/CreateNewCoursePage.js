@@ -25,7 +25,7 @@ const CreateNewCoursePage = () => {
   const axiosPrivate = useAxiosPrivate();
   const { handleSubmit, control, reset, getValues } = useForm();
   const [coursePosition, setCoursePosition] = useState([
-    { position: "", isCompulsory: "" },
+    { positionId: "", isCompulsory: "" },
   ]);
   const [courseSkills, setCourseSkills] = useState([
     { skillId: "", recommendedLevel: "", afterwardLevel: "" },
@@ -116,7 +116,7 @@ const CreateNewCoursePage = () => {
       });
       toast.success(courseNoti.SUCCESS.CREATE);
       resetValues();
-      setCoursePosition([{ position: "", isCompulsory: "" }]);
+      setCoursePosition([{ positionId: "", isCompulsory: "" }]);
       setCourseSkills([
         { skillId: "", recommendedLevel: "", afterwardLevel: "" },
       ]);
@@ -134,7 +134,7 @@ const CreateNewCoursePage = () => {
       coursePosition.length < positionOptions.length
     ) {
       const newField = {
-        position: "",
+        positionId: "",
         isCompulsory: "",
       };
       setCoursePosition([...coursePosition, newField]);
@@ -295,7 +295,7 @@ const CreateNewCoursePage = () => {
                           onClick={() =>
                             handleSelectDropdownOption(
                               index,
-                              "position",
+                              "positionId",
                               option.value
                             )
                           }

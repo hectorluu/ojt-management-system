@@ -15,6 +15,7 @@ import {
   defaultPageSize,
   defaultPageIndex,
   accountStatus,
+  signalRMessage,
 } from "constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { roleOptions } from "constants/global";
@@ -24,6 +25,7 @@ import { Button } from "components/button";
 import ModalUserDetailAdmin from "components/modal/ModalUserDetailAdmin";
 import useOnChange from "hooks/useOnChange";
 import { defaultUserIcon } from "constants/global";
+import signalRService from "utils/signalRService";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -54,6 +56,17 @@ const AccountListPage = () => {
       console.log("fetchUsers ~ error", error);
     }
   };
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.USER, (message) => {
+      fetchUsers();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.USER);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetchUsers();

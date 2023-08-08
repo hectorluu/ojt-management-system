@@ -70,8 +70,40 @@ export const accountStatus = [
   { value: 2, label: "Đang hoạt động" },
 ];
 
-export const skillStatus = [
+export const skillStatusOptions = [
   { value: 1, label: "Đã xóa" },
   { value: 2, label: "Đang sử dụng" },
   { value: 3, label: "Không sử dụng" },
 ];
+
+export const positionStatusOptions = [
+  { value: 1, label: "Đã xóa" },
+  { value: 2, label: "Đang sử dụng" },
+  { value: 3, label: "Không sử dụng" },
+];
+
+export const statusColor = {
+  DELETED: "bg-red-500",
+  ACTIVE: "bg-green-500",
+  INACTIVE: "bg-yellow-500",
+};
+
+export const signalRMessage = {
+  COURSE: "New Course Created",
+  SKILL: "New Skill Created",
+  USER: "New User Created",
+  TRAINING_PLAN: "New Training Plan Created",
+  POSITION: "New Position Created",
+};
+
+export const skillStatus = {
+  DELETED: 1,
+  ACTIVE: 2,
+  INACTIVE: 3,
+}
+
+export const positionStatus = {
+  DELETED: 1,
+  ACTIVE: 2,
+  INACTIVE: 3,
+}
