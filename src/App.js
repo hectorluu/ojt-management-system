@@ -2,8 +2,8 @@ import React from "react";
 import Modal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { authRefreshToken, authUpdateUser } from "./store/auth/auth-slice";
-import { getToken, logOut } from "utils/auth";
+import { authRefreshToken, authUpdateUser } from "logic/store/auth/auth-slice";
+import { getToken, logOut } from "logic/utils/auth";
 
 Modal.setAppElement("#root");
 Modal.defaultStyles = {};

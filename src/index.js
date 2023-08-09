@@ -4,139 +4,142 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./index.scss";
 import { Provider } from "react-redux";
-import { store } from "./store/configureStore";
+import { store } from "logic/store/configureStore";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import RequiredAuthPage from "pages/RequiredAuthPage";
+import RequiredAuthPage from "views/pages/RequiredAuthPage";
 
-import LayoutAdmin from "layout/LayoutAdmin";
-import LayoutManager from "layout/LayoutManager";
-import LayoutTrainee from "layout/LayoutTrainee";
-import LayoutTrainer from "layout/LayoutTrainer";
-import { permissions } from "constants/permissions";
-import StartCampaignPage from "pages/StartCampaignPage";
-import CampaignPage from "pages/CampaignPage";
-import ModalBackProject from "components/modal/ModalBackProject";
-import ModalThank from "components/modal/ModalThank";
+import LayoutAdmin from "views/layout/LayoutAdmin";
+import LayoutManager from "views/layout/LayoutManager";
+import LayoutTrainee from "views/layout/LayoutTrainee";
+import LayoutTrainer from "views/layout/LayoutTrainer";
+import { permissions } from "logic/constants/permissions";
+import StartCampaignPage from "views/pages/StartCampaignPage";
+import CampaignPage from "views/pages/CampaignPage";
+import ModalBackProject from "views/components/modal/ModalBackProject";
+import ModalThank from "views/components/modal/ModalThank";
 
-const SignInPage = lazy(() => import("./pages/SignInPage"));
-const UnauthorizePage = lazy(() => import("./pages/UnauthorizePage"));
+const SignInPage = lazy(() => import("views/pages/SignInPage"));
+const UnauthorizePage = lazy(() => import("views/pages/UnauthorizePage"));
 
 // prevent adding new lines when importing pages
 
 // Admin Page
 const AdminDashBoardPage = lazy(() =>
-  import("./pages/Admin/AdminDashBoardPage")
+  import("views/pages/Admin/AdminDashBoardPage")
 );
-const AccountListPage = lazy(() => import("./pages/Admin/AccountListPage"));
-const CourseDetailPage = lazy(() => import("./pages/Admin/CourseDetailPage"));
-const CourseListPage = lazy(() => import("./pages/Admin/CourseListPage"));
+const AccountListPage = lazy(() => import("views/pages/Admin/AccountListPage"));
+const CourseDetailPage = lazy(() => import("views/pages/Admin/CourseDetailPage"));
+const CourseListPage = lazy(() => import("views/pages/Admin/CourseListPage"));
 const CreateNewAccountPage = lazy(() =>
-  import("./pages/Admin/CreateNewAccountPage")
+  import("views/pages/Admin/CreateNewAccountPage")
 );
 const CreateNewCoursePage = lazy(() =>
-  import("./pages/Admin/CreateNewCoursePage")
+  import("views/pages/Admin/CreateNewCoursePage")
 );
 const CreateNewUniversityPage = lazy(() =>
-  import("./pages/Admin/CreateNewUniversityPage")
+  import("views/pages/Admin/CreateNewUniversityPage")
 );
-const CriteriaListPage = lazy(() => import("./pages/Admin/CriteriaListPage"));
-const SkillListPage = lazy(() => import("./pages/Admin/SkillListPage"));
+const SkillListPage = lazy(() => import("views/pages/Admin/SkillListPage"));
+const PositionListPage = lazy(() => import("views/pages/Admin/PositionListPage"));
 const UniversityDetailPage = lazy(() =>
-  import("./pages/Admin/UniversityDetailPage")
+  import("views/pages/Admin/UniversityDetailPage")
 );
 const UniversityListPage = lazy(() =>
-  import("./pages/Admin/UniversityListPage")
+  import("views/pages/Admin/UniversityListPage")
 );
 
 // Manager Page
-const AttendancePage = lazy(() => import("./pages/Manager/AttendancePage"));
+const AttendancePage = lazy(() => import("views/pages/Manager/AttendancePage"));
 const ManagerDashboardPage = lazy(() =>
-  import("./pages/Manager/ManagerDashboardPage")
+  import("views/pages/Manager/ManagerDashboardPage")
 );
 const ManagerReportListPage = lazy(() =>
-  import("./pages/Manager/ManagerReportListPage")
+  import("views/pages/Manager/ManagerReportListPage")
 );
 const TraineeDetailPage = lazy(() =>
-  import("./pages/Manager/TraineeDetailPage")
+  import("views/pages/Manager/TraineeDetailPage")
 );
-const TraineeListPage = lazy(() => import("./pages/Manager/TraineeListPage"));
+const TraineeListPage = lazy(() => import("views/pages/Manager/TraineeListPage"));
 const TrainerAssignmentPage = lazy(() =>
-  import("./pages/Manager/TrainerAssignmentPage")
+  import("views/pages/Manager/TrainerAssignmentPage")
 );
 const TrainerDetailPage = lazy(() =>
-  import("./pages/Manager/TrainerDetailPage")
+  import("views/pages/Manager/TrainerDetailPage")
 );
-const TrainerListPage = lazy(() => import("./pages/Manager/TrainerListPage"));
+const TrainerListPage = lazy(() => import("views/pages/Manager/TrainerListPage"));
 const TrainingPlanCertifyPage = lazy(() =>
-  import("./pages/Manager/TrainingPlanCertifyPage")
+  import("views/pages/Manager/TrainingPlanCertifyPage")
 );
 const TrainingPlanListPage = lazy(() =>
-  import("./pages/Manager/TrainingPlanListPage")
+  import("views/pages/Manager/TrainingPlanListPage")
 );
 const DefineNewReportPage = lazy(() =>
-  import("./pages/Manager/DefineNewReportPage")
+  import("views/pages/Manager/DefineNewReportPage")
 );
 
 // Trainer Page
 const AssignedTraineeListPage = lazy(() =>
-  import("./pages/Trainer/AssignedTraineeListPage")
+  import("views/pages/Trainer/AssignedTraineeListPage")
 );
 const AssignedTraineeTaskListPage = lazy(() =>
-  import("./pages/Trainer/AssignedTraineeTaskListPage")
+  import("views/pages/Trainer/AssignedTraineeTaskListPage")
 );
 const CertificateCertifyPage = lazy(() =>
-  import("./pages/Trainer/CertificateCertifyPage")
+  import("views/pages/Trainer/CertificateCertifyPage")
 );
 const CreateNewTrainingPlanPage = lazy(() =>
-  import("./pages/Trainer/CreateNewTrainingPlanPage")
+  import("views/pages/Trainer/CreateNewTrainingPlanPage")
 );
 const ManageTrainingPlanPage = lazy(() =>
-  import("./pages/Trainer/ManageTrainingPlanPage")
+  import("views/pages/Trainer/ManageTrainingPlanPage")
 );
 const OJTEvaluationPage = lazy(() =>
-  import("./pages/Trainer/OJTEvaluationPage")
+  import("views/pages/Trainer/OJTEvaluationPage")
 );
 const OJTStatisticsPage = lazy(() =>
-  import("./pages/Trainer/OJTStatisticsPage")
+  import("views/pages/Trainer/OJTStatisticsPage")
 );
 const TrainerReportListPage = lazy(() =>
-  import("./pages/Trainer/TrainerReportListPage")
+  import("views/pages/Trainer/TrainerReportListPage")
 );
 const TrainerDashboardPage = lazy(() =>
-  import("./pages/Trainer/TrainerDashboardPage")
+  import("views/pages/Trainer/TrainerDashboardPage")
 );
 const TrainerProfilePage = lazy(() =>
-  import("./pages/Trainer/TrainerProfilePage")
+  import("views/pages/Trainer/TrainerProfilePage")
 );
 const TrainerTrainingPlanPage = lazy(() =>
-  import("./pages/Trainer/TrainerTrainingPlanPage")
+  import("views/pages/Trainer/TrainerTrainingPlanPage")
+);
+const EvaluateExcelPage = lazy(() =>
+  import("views/pages/Trainer/EvaluateExcelPage")
 );
 
 // Trainee Page
 const TraineeCourseDetailPage = lazy(() =>
-  import("./pages/Trainee/TraineeCourseDetailPage")
+  import("views/pages/Trainee/TraineeCourseDetailPage")
 );
 const TraineeCourseListPage = lazy(() =>
-  import("./pages/Trainee/TraineeCourseListPage")
+  import("views/pages/Trainee/TraineeCourseListPage")
 );
 const TraineeDashboardPage = lazy(() =>
-  import("./pages/Trainee/TraineeDashboardPage")
+  import("views/pages/Trainee/TraineeDashboardPage")
 );
 const TraineePersonalStatisticsPage = lazy(() =>
-  import("./pages/Trainee/TraineePersonalStatisticsPage")
+  import("views/pages/Trainee/TraineePersonalStatisticsPage")
 );
 const TraineeProfilePage = lazy(() =>
-  import("./pages/Trainee/TraineeProfilePage")
+  import("views/pages/Trainee/TraineeProfilePage")
 );
 const TraineeTaskListPage = lazy(() =>
-  import("./pages/Trainee/TraineeTaskListPage")
+  import("views/pages/Trainee/TraineeTaskListPage")
 );
 const TraineeTrainingPlanPage = lazy(() =>
-  import("./pages/Trainee/TraineeTrainingPlanPage")
+  import("views/pages/Trainee/TraineeTrainingPlanPage")
 );
 
 const container = document.getElementById("root");
@@ -156,6 +159,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <LayoutAdmin></LayoutAdmin>,
         children: [
+          {
+            path: "/excel",
+            element: <EvaluateExcelPage></EvaluateExcelPage>,
+          },
           {
             path: "/admin-dashboard",
             element: <AdminDashBoardPage></AdminDashBoardPage>,
@@ -185,12 +192,12 @@ const router = createBrowserRouter([
             element: <CreateNewUniversityPage></CreateNewUniversityPage>,
           },
           {
-            path: "/criteria-list",
-            element: <CriteriaListPage></CriteriaListPage>,
-          },
-          {
             path: "/skill-list",
             element: <SkillListPage></SkillListPage>,
+          },
+          {
+            path: "/position-list",
+            element: <PositionListPage></PositionListPage>,
           },
           {
             path: "/university-list/:universityId",
