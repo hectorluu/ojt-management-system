@@ -14,7 +14,6 @@ import { universityPath } from "api/apiUrl";
 import ExcelUpload from "modules/file/ExcelUpload";
 import { Input } from "components/input";
 import { useForm } from "react-hook-form";
-import Gap from "components/common/Gap";
 
 IgrExcelCoreModule.register();
 IgrExcelModule.register();
@@ -27,7 +26,7 @@ function DefineNewReportPage() {
   const spreadsheetRef = useRef(null);
   const [universityList, setUniversityList] = useState([]);
   const [universityId, setUniversityId] = useState(0);
-  const { handleSubmit, control, setValue, reset, watch } = useForm();
+  const { control } = useForm();
   const [matchedField, setMatchedField] = useState([{ name: "", matchedId: "", maxPoint: "", isCriteria: "" }]);
 
 
