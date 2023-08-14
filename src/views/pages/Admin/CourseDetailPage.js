@@ -10,6 +10,11 @@ import CourseImage from "views/modules/course/part/CourseImage";
 import CourseName from "views/modules/course/part/CourseName";
 import CourseDesc from "views/modules/course/part/CourseDesc";
 import CoursePlatform from "views/modules/course/part/CoursePlatform";
+import classNames from "logic/utils/classNames";
+import FolderOpenOutlinedIcon from "@mui/icons-material/FolderOpenOutlined";
+import CourseMeta from "views/modules/course/part/CourseMeta";
+import LinkIcon from "@mui/icons-material/Link";
+import { Button } from "views/components/button";
 
 const CourseDetailPage = () => {
   const { courseId } = useParams();
@@ -37,48 +42,61 @@ const CourseDetailPage = () => {
         <CardActionArea sx={{ display: "flex" }}>
           <div className="flex items-center gap-x-[30px] w-full">
             <CourseImage className="h-[266px] flex-1"></CourseImage>
-            <div className="flex-1 ">
+            <div className="flex-1 mt-5">
+              <span
+                className={classNames(
+                  "flex items-middle mb-4 font-medium gap-x-2 text-text3"
+                )}
+              >
+                <FolderOpenOutlinedIcon className="mt-1" />
+                {course.courseSkills?.map((skill, index) => (
+                  <span className="mt-1" key={index}>
+                    {skill.skillName}
+                    {index !== course.courseSkills.length - 1 ? ", " : ""}
+                  </span>
+                ))}
+              </span>
               <CourseName className="mb-4 text-xl font-bold">
                 {course.name}
               </CourseName>
-              <CourseDesc className="mb-6 text-sm">
+              <CourseDesc className="mb-4 text-sm">
                 {course.description}
               </CourseDesc>
-              <div className="w-full rounded-full bg-[#EFEFEF] h-[5px] mb-6">
+              <span
+                className={classNames(
+                  "flex items-middle mb-4 font-medium gap-x-2 text-text3"
+                )}
+              >
+                <LinkIcon /> : &nbsp;
+                <span>{course.link}</span>
+              </span>
+              <div className="w-full rounded-full bg-[#EFEFEF] h-[5px] mb-4">
                 <div className="w-4/4 h-full rounded-full bg-primary"></div>
               </div>
               <CoursePlatform
                 text={course.platformName}
-                className="text-sm"
+                className="text-sm mb-2"
               ></CoursePlatform>
+              <div className="w-96 flex items-start justify-between mt-2 mb-8 gap-x-3">
+                <CourseMeta
+                  amount={course.totalEnrollment}
+                  text={"Tổng số lượt đăng ký"}
+                  size="text-sm"
+                ></CourseMeta>
+                <CourseMeta
+                  amount={course.totalActiveEnrollment}
+                  text={"Số lượt đang học"}
+                  size="text-sm"
+                ></CourseMeta>
+              </div>
             </div>
           </div>
         </CardActionArea>
       </Card>
-      <div className="flex items-start gap-x-6 mt-10">
-        <div className="flex items-center justify-center text-white rounded-full w-14 h-14 bg-secondary bg-opacity-60">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-6 h-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-            />
-          </svg>
-        </div>
-        <div className="flex-1">
-          <h1 className="text-[22px] font-semibold mb-2">Create Your Cert</h1>
-          <p className="mb-2 text-sm text-text3">Jump right into this</p>
-          <a href="/" className="text-sm text-primary">
-            Jump right into this
-          </a>
-        </div>
+      <div className="flex items-center gap-x-6 mt-10">
+        <Button className="w-fit px-10 mx-auto text-white bg-secondary">
+          Chỉnh sửa khóa học này
+        </Button>
       </div>
       <Gap></Gap>
     </Fragment>

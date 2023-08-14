@@ -65,7 +65,7 @@ const AccountListPage = () => {
     return () => {
       signalRService.off(signalRMessage.USER);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -198,7 +198,9 @@ const AccountListPage = () => {
                     alt=""
                   />
                 </TableCell>
-                <TableCell align="left">{item.fullName}</TableCell>
+                <TableCell align="left">
+                  {item.firstName + " " + item.lastName}
+                </TableCell>
                 <TableCell align="left">{item.email}</TableCell>
                 <TableCell align="center">
                   {roleOptions.find((label) => label.value === item.role).label}

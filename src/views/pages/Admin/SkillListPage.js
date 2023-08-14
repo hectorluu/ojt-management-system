@@ -14,6 +14,7 @@ import { skillPath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
   defaultPageIndex,
+  skillStatusOptions,
 } from "logic/constants/global";
 import { Button } from "views/components/button";
 import TablePagination from "@mui/material/TablePagination";
@@ -41,12 +42,12 @@ const SkillListPage = () => {
     try {
       const response = await axiosPrivate.get(
         skillPath.GET_SKILL_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}`
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}`
       );
       setSkills(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -76,11 +77,19 @@ const SkillListPage = () => {
     }
   };
 
+  const [skillModalId, setSkillModalId] = useState(0);
+
+  const handleClickSkillModal = (id) => {
+    setIsSkillDetailModalOpen(true);
+    setSkillModalId(id);
+  };
+
   return (
     <Fragment>
       <ModalSkillDetailAdmin
         isOpen={isSkillDetailModalOpen}
         onRequestClose={() => setIsSkillDetailModalOpen(false)}
+        skillIdClicked={skillModalId}
       ></ModalSkillDetailAdmin>
       <ModalAddSkillAdmin
         isOpen={isAddSkillModalOpen}
@@ -130,10 +139,11 @@ const SkillListPage = () => {
                       item.status
                     )}`}
                   >
-                    {/* {
-                      skillStatusOptions.find((label) => label.value === item.status)
-                        .label
-                    } */}
+                    {
+                      skillStatusOptions.find(
+                        (label) => label.value === item.status
+                      ).label
+                    }
                   </div>
                 </TableCell>
                 <TableCell align="right" width={"5%"}>
@@ -141,7 +151,7 @@ const SkillListPage = () => {
                     className=""
                     type="button"
                     kind="ghost"
-                    onClick={() => setIsSkillDetailModalOpen(true)}
+                    onClick={() => handleClickSkillModal(item.id)}
                   >
                     Sửa
                   </Button>
