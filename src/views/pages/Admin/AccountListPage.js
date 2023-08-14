@@ -26,6 +26,7 @@ import ModalUserDetailAdmin from "views/components/modal/ModalUserDetailAdmin";
 import useOnChange from "logic/hooks/useOnChange";
 import { defaultUserIcon } from "logic/constants/global";
 import signalRService from "logic/utils/signalRService";
+import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -227,7 +228,7 @@ const AccountListPage = () => {
                     kind="ghost"
                     onClick={() => handleClickUserModal(item.id)}
                   >
-                    Chi tiết
+                    <ModeEditOutlineIcon></ModeEditOutlineIcon>
                   </Button>
                 </TableCell>
               </TableRow>

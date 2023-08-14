@@ -25,6 +25,7 @@ import useOnChange from "logic/hooks/useOnChange";
 import signalRService from "logic/utils/signalRService";
 import ModalAddPositionAdmin from "views/components/modal/ModalAddPositionAdmin";
 import ModalEditPositionAdmin from "views/components/modal/ModalEditPositionAdmin";
+import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 
 const PositionListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -167,7 +168,7 @@ const PositionListPage = () => {
                     kind="ghost"
                     onClick={() => handleClickPositionModal(item.id)}
                   >
-                    Sửa
+                    <ModeEditOutlineIcon></ModeEditOutlineIcon>
                   </Button>
                 </TableCell>
                 <TableCell align="right" width={"5%"}>

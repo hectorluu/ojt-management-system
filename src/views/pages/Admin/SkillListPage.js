@@ -22,6 +22,7 @@ import ModalSkillDetailAdmin from "views/components/modal/ModalSkillDetailAdmin"
 import SearchBar from "views/modules/SearchBar";
 import useOnChange from "logic/hooks/useOnChange";
 import ModalAddSkillAdmin from "views/components/modal/ModalAddSkillAdmin";
+import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 
 const SkillListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -153,7 +154,7 @@ const SkillListPage = () => {
                     kind="ghost"
                     onClick={() => handleClickSkillModal(item.id)}
                   >
-                    Sửa
+                    <ModeEditOutlineIcon></ModeEditOutlineIcon>
                   </Button>
                 </TableCell>
                 <TableCell align="right" width={"5%"}>
