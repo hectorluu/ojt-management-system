@@ -1,44 +1,48 @@
 import React, { useEffect, useState } from "react";
 import ReactModal from "react-modal";
-import { Label } from "views/components/label";
-import { Input } from "views/components/input";
 import { Button } from "views/components/button";
+import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
+import { positionPath } from "logic/api/apiUrl";
 import { useForm } from "react-hook-form";
-import axios from "logic/api/axios";
 import { apiURL } from "logic/config/general-config/config";
 import { toast } from "react-toastify";
+import axios from "logic/api/axios";
 import FormGroup from "views/components/common/FormGroup";
-import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { skillPath } from "logic/api/apiUrl";
+import { Label } from "views/components/label";
+import { Input } from "views/components/input";
 
-const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked }) => {
+const ModalEditPositionAdmin = ({
+  isOpen,
+  onRequestClose,
+  positionIdClicked,
+}) => {
   const axiosPrivate = useAxiosPrivate();
-  const [skill, setSkill] = useState([]);
+  const [position, setPosition] = useState([]);
 
-  const fetchSkill = async () => {
+  const fetchPosition = async () => {
     try {
       const response = await axiosPrivate.get(
-        skillPath.GET_SKILL + skillIdClicked
+        positionPath.GET_POSITION + positionIdClicked
       );
-      setSkill(response.data);
+      setPosition(response.data);
     } catch (error) {}
   };
 
   useEffect(() => {
-    if (skillIdClicked !== 0) {
-      fetchSkill();
+    if (positionIdClicked !== 0) {
+      fetchPosition();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skillIdClicked]);
+  }, [positionIdClicked]);
 
   useEffect(() => {
-    if (skillIdClicked) {
-      setValue("skillname", `${skill.name}`);
+    if (positionIdClicked) {
+      setValue("position name", `${position.name}`);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skill]);
+  }, [position]);
 
   const { handleSubmit, control, setValue } = useForm();
 
@@ -59,7 +63,7 @@ const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked }) => {
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       overlayClassName="modal-overlay fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
-      className="modal-content w-full max-w-[500px] bg-white rounded-2xl outline-none p-10 relative max-h-[90vh] overflow-y-auto scroll-hidden"
+      className="modal-content w-full max-w-[700px] bg-white rounded-2xl outline-none p-10 relative max-h-[90vh] overflow-y-auto scroll-hidden"
     >
       <button
         className="absolute z-10 flex items-center justify-center cursor-pointer w-11 h-11 right-10 top-[10px] text-text1"
@@ -81,16 +85,16 @@ const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked }) => {
         </svg>
       </button>
       <h2 className="font-bold text-[25px] mb-5 text-center">
-        Chỉnh sửa kĩ năng
+        Chỉnh sửa vị trí
       </h2>
       <div>
         <div className="bg-white shadow-1 rounded-xl p-4">
           <form onSubmit={handleSubmit(handleEditSkill)}>
             <FormGroup>
-              <Label>Tên kĩ năng (*)</Label>
+              <Label>Tên vị trí (*)</Label>
               <Input
                 control={control}
-                name="skillname"
+                name="position name"
                 autoComplete="off"
               ></Input>
             </FormGroup>
@@ -110,4 +114,4 @@ const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked }) => {
   );
 };
 
-export default ModalSkillDetailAdmin;
+export default ModalEditPositionAdmin;

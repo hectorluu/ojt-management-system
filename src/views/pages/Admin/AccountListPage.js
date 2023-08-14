@@ -26,6 +26,7 @@ import ModalUserDetailAdmin from "views/components/modal/ModalUserDetailAdmin";
 import useOnChange from "logic/hooks/useOnChange";
 import { defaultUserIcon } from "logic/constants/global";
 import signalRService from "logic/utils/signalRService";
+import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -65,7 +66,7 @@ const AccountListPage = () => {
     return () => {
       signalRService.off(signalRMessage.USER);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -198,7 +199,9 @@ const AccountListPage = () => {
                     alt=""
                   />
                 </TableCell>
-                <TableCell align="left">{item.fullName}</TableCell>
+                <TableCell align="left">
+                  {item.firstName + " " + item.lastName}
+                </TableCell>
                 <TableCell align="left">{item.email}</TableCell>
                 <TableCell align="center">
                   {roleOptions.find((label) => label.value === item.role).label}
@@ -225,7 +228,7 @@ const AccountListPage = () => {
                     kind="ghost"
                     onClick={() => handleClickUserModal(item.id)}
                   >
-                    Chi tiết
+                    <ModeEditOutlineIcon></ModeEditOutlineIcon>
                   </Button>
                 </TableCell>
               </TableRow>

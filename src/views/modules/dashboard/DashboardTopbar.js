@@ -51,7 +51,7 @@ const DashboardTopbar = () => {
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
-          getContentAnchorEl={null}
+          getcontentanchorel={null}
           anchorOrigin={{
             vertical: "bottom",
             horizontal: "right",
@@ -84,7 +84,7 @@ const DashboardTopbar = () => {
               User Profile
             </MenuItem>
           ) : (
-            <></>
+            []
           )}
 
           <MenuItem onClick={handleMenuClose} component={Link}>

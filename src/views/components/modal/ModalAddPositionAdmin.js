@@ -35,7 +35,7 @@ const ModalAddPositionAdmin = ({ isOpen, onRequestClose }) => {
         isOpen={isOpen}
         onRequestClose={onRequestClose}
         overlayClassName="modal-overlay fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
-        className="modal-content w-full max-w-[1000px] bg-white rounded-2xl outline-none p-10 relative max-h-[90vh] overflow-y-auto scroll-hidden"
+        className="modal-content w-full max-w-[700px] bg-white rounded-2xl outline-none p-10 relative max-h-[90vh] overflow-y-auto scroll-hidden"
       >
         <button
           className="absolute z-10 flex items-center justify-center cursor-pointer w-11 h-11 right-10 top-[10px] text-text1"
@@ -66,8 +66,8 @@ const ModalAddPositionAdmin = ({ isOpen, onRequestClose }) => {
                 <Label>Tên vị trí (*)</Label>
                 <Input
                   control={control}
-                  name="skill name"
-                  placeholder="Ex: ReactJS"
+                  name="position name"
+                  placeholder="Ex: Frontend Developer"
                   autoComplete="off"
                 ></Input>
               </FormGroup>

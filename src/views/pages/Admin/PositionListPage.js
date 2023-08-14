@@ -23,8 +23,9 @@ import TablePagination from "@mui/material/TablePagination";
 import SearchBar from "views/modules/SearchBar";
 import useOnChange from "logic/hooks/useOnChange";
 import signalRService from "logic/utils/signalRService";
-import ModalPositionDetailAdmin from "views/components/modal/ModalPositionDetailAdmin";
 import ModalAddPositionAdmin from "views/components/modal/ModalAddPositionAdmin";
+import ModalEditPositionAdmin from "views/components/modal/ModalEditPositionAdmin";
+import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 
 const PositionListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -33,8 +34,8 @@ const PositionListPage = () => {
   const axiosPrivate = useAxiosPrivate();
   const [positions, setPosition] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
-  const [isSkillDetailModalOpen, setIsSkillDetailModalOpen] = useState(false);
-  const [isAddSkillModalOpen, setIsAddSkillModalOpen] = useState(false);
+  const [isAddPositionModalOpen, setIsAddPositionModalOpen] = useState(false);
+  const [isEditPositionModalOpen, setIsEditPositionModalOpen] = useState(false);
 
   useEffect(() => {
     fetchPositions();
@@ -56,12 +57,12 @@ const PositionListPage = () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}`
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}`
       );
       setPosition(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -91,16 +92,23 @@ const PositionListPage = () => {
     }
   };
 
+  const [positionModalId, setPositionModalId] = useState(0);
+
+  const handleClickPositionModal = (id) => {
+    setIsEditPositionModalOpen(true);
+    setPositionModalId(id);
+  };
 
   return (
     <Fragment>
-      <ModalPositionDetailAdmin
-        isOpen={isSkillDetailModalOpen}
-        onRequestClose={() => setIsSkillDetailModalOpen(false)}
-      ></ModalPositionDetailAdmin>
+      <ModalEditPositionAdmin
+        isOpen={isEditPositionModalOpen}
+        onRequestClose={() => setIsEditPositionModalOpen(false)}
+        positionIdClicked={positionModalId}
+      ></ModalEditPositionAdmin>
       <ModalAddPositionAdmin
-        isOpen={isAddSkillModalOpen}
-        onRequestClose={() => setIsAddSkillModalOpen(false)}
+        isOpen={isAddPositionModalOpen}
+        onRequestClose={() => setIsAddPositionModalOpen(false)}
       ></ModalAddPositionAdmin>
       <div className="flex flex-wrap items-center justify-between	">
         <div className="flex items-center justify-center">
@@ -112,9 +120,9 @@ const PositionListPage = () => {
           className="px-7"
           type="button"
           kind="secondary"
-          onClick={() => setIsAddSkillModalOpen(true)}
+          onClick={() => setIsAddPositionModalOpen(true)}
         >
-          Thêm kỹ năng
+          Thêm vị trí mới
         </Button>
       </div>
       <div className="flex flex-wrap items-start gap-5 mt-5">
@@ -146,10 +154,11 @@ const PositionListPage = () => {
                       item.status
                     )}`}
                   >
-                    {/* {
-                      positionStatusOptions.find((label) => label.value === item.status)
-                        .label
-                    } */}
+                    {
+                      positionStatusOptions.find(
+                        (label) => label.value === item.status
+                      ).label
+                    }
                   </div>
                 </TableCell>
                 <TableCell align="right" width={"5%"}>
@@ -157,9 +166,9 @@ const PositionListPage = () => {
                     className=""
                     type="button"
                     kind="ghost"
-                    onClick={() => setIsSkillDetailModalOpen(true)}
+                    onClick={() => handleClickPositionModal(item.id)}
                   >
-                    Sửa
+                    <ModeEditOutlineIcon></ModeEditOutlineIcon>
                   </Button>
                 </TableCell>
                 <TableCell align="right" width={"5%"}>
