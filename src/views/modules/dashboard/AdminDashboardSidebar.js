@@ -10,7 +10,7 @@ const sidebarLinks = [
   {
     icon: <SpaceDashboardOutlinedIcon />,
     title: "Admin Dashboard",
-    url: "/excel",
+    url: "/admin-dashboard",
   },
   {
     icon: <AccountCircleOutlinedIcon />,

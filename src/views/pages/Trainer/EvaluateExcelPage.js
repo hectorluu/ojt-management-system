@@ -1,166 +1,129 @@
-import React, { useRef, useState } from 'react';
-import { IgrDataGrid } from 'igniteui-react-grids';
-import { IgrDataGridModule } from 'igniteui-react-grids';
-import { IgrTemplateColumn } from 'igniteui-react-grids';
-import { IgrTextColumn } from 'igniteui-react-grids';
-import { IgrNumericColumn } from 'igniteui-react-grids';
-import { IgrDateTimeColumn } from 'igniteui-react-grids';
-import { IgrImageColumn } from 'igniteui-react-grids';
-import { IgrGridColumnOptionsModule } from 'igniteui-react-grids';
-// import { IgrTemplateCellUpdatingEventArgs } from 'igniteui-react-grids';
-// import { IgrGridCellValueChangingEventArgs } from 'igniteui-react-grids';
-// import { IgrGridRowEditEndedEventArgs } from 'igniteui-react-grids';
-// import { EditModeType } from 'igniteui-react-grids';
-import { DataGridSharedData } from 'logic/utils/DataGridSharedData';
+import React, { Fragment, useState } from 'react';
+import { DataGrid, GridEditInputCell } from '@mui/x-data-grid';
 import { useEffect } from 'react';
-
-IgrDataGridModule.register();
-IgrGridColumnOptionsModule.register();
+import useAxiosPrivate from 'logic/hooks/useAxiosPrivate';
+import { criteriaPath, templatePath } from 'logic/api/apiUrl';
+import { processResponseData } from 'logic/utils/evaluationUtils';
 
 const EvaluateExcelPage = () => {
-  const data = DataGridSharedData.getEmployees();
-  const gridRef = useRef(null);
-  const [editMode, setEditMode] = useState(1);
-  const [excelEditMode, setExcelEditMode] = useState(1);
-
-  const canCommit = gridRef.current?.canCommit || false;
-  const canUndo = gridRef.current?.canUndo || false;
-  const canRedo = gridRef.current?.canRedo || false;
+  const [data, setData] = useState([]);
+  const [headers, setHeaders] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     console.log(data);
-  },[data]);
-  const handleCommitClick = () => {
-    gridRef.current.commitEdits();
-    // request a new render so the undo/redo buttons update.
-  };
+    console.log("header", headers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
-  const handleUndoClick = () => {
-    gridRef.current.undo();
-    // request a new render so the undo/redo buttons update.
-  };
+  useEffect(() => {
+    fetchPoints();
+    fetchHeaders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handleRedoClick = () => {
-    gridRef.current.redo();
-    // request a new render so the undo/redo buttons update.
-  };
-
-  const handleEditModeChange = (event) => {
-    gridRef.current.cancelEdits();
-    setEditMode(parseInt(event.target.value));
-  };
-
-  const handleExcelEditModeChange = (event) => {
-    gridRef.current.editModeClickAction = parseInt(event.target.value);
-    setExcelEditMode(parseInt(event.target.value));
-  };
-
-  const handleCellValueChanging = (s, e) => {
-    console.log("change",e);
-    console.log("slagi",s);
-    console.log("data", data[e.editID]);
-    // request a new render so the undo/redo buttons update.
-    setTimeout(() => {});
-  };
-
-  const handleRowEditEnded = (s, e) => {
-    console.log("end",e);
-    // request a new render so the state updates.
-  };
-
-  const handleDeleteRowClick = (e) => {
-    const button = e.target;
-    const viewIndex = parseInt(button.id);
-    const rowItem = gridRef.current.actualDataSource.getItemAtIndex(viewIndex);
-    gridRef.current.removeItem(rowItem);
-    // request a new render so the state updates.
-  };
-
-  const handleDeleteCellUpdating = (s, e) => {
-    const content = e.content;
-    if (content.childElementCount === 0) {
-      const button = document.createElement('button');
-      button.innerText = 'Delete';
-      button.addEventListener('click', handleDeleteRowClick);
-      content.appendChild(button);
+  const fetchPoints = async () => {
+    try {
+      let response = await axiosPrivate.get(
+        criteriaPath.GET_STUDENT_PONIT_LIST +
+        "/1"
+      );
+      const point = processResponseData(response.data);
+      setData(point);
+    } catch (error) {
+      console.log("fetchPoints ~ error", error);
     }
+  };
 
-    const button = content.children[0];
-    button.disabled = e.cellInfo.isDeleted;
-    button.id = e.cellInfo.dataRow.toString();
+  const fetchHeaders = async () => {
+    try {
+      let response = await axiosPrivate.get(
+        templatePath.GET_TEMPLATE_HEADER +
+        "/1"
+      );
+      let columns = [
+        {
+          id: "firstName",
+          field: "firstName",
+          headerName: "Họ",
+          type: "string",
+          editable: false,
+          align: "left",
+          headerAlign: "left",
+        },
+        {
+          id: "lastName",
+          field: "lastName",
+          headerName: 'Tên',
+          type: 'string',
+          editable: false,
+          align: 'left',
+          headerAlign: 'left',
+        },
+        {
+          id: "rollNumber",
+          field: "rollNumber",
+          headerName: 'MSNV',
+          type: 'string',
+          editable: false,
+          align: 'left',
+          headerAlign: 'left',
+        },
+      ];
+      for (const item of response.data) {
+        const column = {
+          id: item.teamplateHeaderId,
+          field: `${item.teamplateHeaderId}`,
+          headerName: item.name,
+          type: 'number',
+          editable: true,
+          align: 'left',
+          headerAlign: 'left',
+          renderEditCell: (params) => (
+            <GridEditInputCell
+              {...params}
+              inputProps={{
+                max: item.maxPoint,
+                min: 0,
+              }}
+            />
+          ),
+        };
+        columns = [...columns, column];
+      }
+      setHeaders(columns);
+      setTimeout(() => { });
+    } catch (error) {
+      console.log("fetchHeaders ~ error", error);
+    }
+  };
+
+  const onStopEdit = (newr, old) => {
+    console.log("old", old);
+    console.log("newr", newr);
   };
 
   return (
-    <div className="container sample">
-      <div className="options horizontal">
-        <button disabled={!canCommit} onClick={handleCommitClick}>
-          Commit
-        </button>
-        <button disabled={!canUndo} onClick={handleUndoClick}>
-          Undo
-        </button>
-        <button disabled={!canRedo} onClick={handleRedoClick}>
-          Redo
-        </button>
-        <label>
-          Edit Mode:
-          <select value={editMode} onChange={handleEditModeChange}>
-            <option value="0">None</option>
-            <option value="1">Cell</option>
-            <option value="2">CellBatch</option>
-            <option value="3">Row</option>
-          </select>
-        </label>
-        <label>
-          Excel Style Editing:
-          <select value={excelEditMode} onChange={handleExcelEditModeChange}>
-            <option value="1">SingleClick</option>
-            <option value="2">DoubleClick</option>
-          </select>
-        </label>
+    <Fragment>
+      <div className="bg-white rounded-xl py-10 px-[66px]">
+        <div className="text-center">
+          <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
+            Đánh giá sinh viên sau khoá đào tạo
+          </h1>
+          {data.length !== 0 ? (
+            <DataGrid
+              rows={data}
+              columns={headers}
+              disableColumnSelector={true}
+              disableDensitySelector={true}
+              disableRowSelectionOnClick={true}
+              processRowUpdate={onStopEdit}
+            />
+          ) : null}
+
+        </div>
       </div>
-      <IgrDataGrid
-        ref={gridRef}
-        height="calc(100% - 40px)"
-        width="100%"
-        defaultColumnMinWidth={120}
-        autoGenerateColumns={false}
-        dataSource={data}
-        activationMode="Cell"
-        editModeClickAction="SingleClick"
-        selectionMode="SingleRow"
-        selectionBehavior="ModifierBased"
-        isColumnOptionsEnabled="true"
-        cellValueChanging={handleCellValueChanging}
-        rowEditEnded={handleRowEditEnded}
-      >
-        <IgrTextColumn field="Name" headerText="fullName" width="*>150" />
-        <IgrTextColumn field="Street" headerText="Street" width="*>160" />
-        <IgrTextColumn field="City" headerText="City" width="*>120" />
-        <IgrNumericColumn
-          field="Salary"
-          headerText="Salary"
-          width="*>120"
-          positivePrefix="$"
-          showGroupingSeparator="true"
-        />
-        <IgrImageColumn
-          field="Photo"
-          headerText="Photo"
-          contentOpacity="1"
-          horizontalAlignment="center"
-          width="*>110"
-        />
-        <IgrDateTimeColumn field="Birthday" headerText="Date of Birth" width="*>170" />
-        <IgrTemplateColumn
-          isColumnOptionsEnabled="false"
-          field="DeleteColumn"
-          headerText="Delete Row"
-          width="80"
-          cellUpdating={handleDeleteCellUpdating}
-        />
-      </IgrDataGrid>
-    </div>
+    </Fragment>
   );
 };
 

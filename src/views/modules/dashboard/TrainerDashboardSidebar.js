@@ -6,7 +6,7 @@ const sidebarLinks = [
   {
     icon: <IconDashboard></IconDashboard>,
     title: "Trainer Dashboard",
-    url: "/trainer-dashboard",
+    url: "/excel",
   },
   {
     icon: <IconFolder></IconFolder>,

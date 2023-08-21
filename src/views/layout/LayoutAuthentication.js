@@ -32,7 +32,6 @@ const LayoutAuthentication = (props) => {
 
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
-
   return (
     <div className="relative w-full min-h-screen p-10 bg-slate-300 dark:bg-darkbg isolate">
       <img

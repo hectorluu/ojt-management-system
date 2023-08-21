@@ -16,7 +16,9 @@ export const coursePath = {
   UPDATE_COURSE: "",
 };
 
-export const criteriaPath = {};
+export const criteriaPath = {
+  GET_STUDENT_PONIT_LIST: "/criteria/list-of-trainee-point-by-trainer"
+};
 
 export const ojtBatchPath = {
   GET_OJT_BATCH_LIST_OF_UNIVERSITY: "/ojtbatch/batches-of-university",
@@ -56,6 +58,11 @@ export const taskPath = {
 
 export const positionPath = {
   GET_POSITION_LIST: "/position",
+};
+
+export const templatePath = {
+  CREATE_TEMPLATE: "/template",
+  GET_TEMPLATE_HEADER: "/template/template-header/criteriaheader"
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;
