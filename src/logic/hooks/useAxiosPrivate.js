@@ -1,10 +1,10 @@
 import { axiosPrivate } from "logic/api/axios";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-// import useRefreshToken from "./useRefreshToken";
+import useRefreshToken from "./useRefreshToken";
 
 export default function useAxiosPrivate() {
-  //const refresh = useRefreshToken();
+  const refresh = useRefreshToken();
   const { auth } = useSelector((state) => state);
   useEffect(() => {
     const requestInterceptor = axiosPrivate.interceptors.request.use(
@@ -20,13 +20,13 @@ export default function useAxiosPrivate() {
     const responseInterceptor = axiosPrivate.interceptors.response.use(
       (response) => response,
       async (error) => {
-        // const prevRequest = error.config;
-        // if (error?.response?.status === 403 && !prevRequest.sent) {
-        //   prevRequest.sent = true;
-        //   const newAccessToken = await refresh();
-        //   prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        //   return axiosPrivate(prevRequest);
-        // }
+        const prevRequest = error.config;
+        if (error?.response?.status === 403 && !prevRequest.sent) {
+          prevRequest.sent = true;
+          const newAccessToken = await refresh();
+          prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          return axiosPrivate(prevRequest);
+        }
         return Promise.reject(error);
       }
     );
@@ -35,7 +35,8 @@ export default function useAxiosPrivate() {
       axiosPrivate.interceptors.request.eject(requestInterceptor);
       axiosPrivate.interceptors.response.eject(responseInterceptor);
     };
-  }, [auth.accessToken /*refresh*/]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.accessToken, refresh]);
 
   return axiosPrivate;
 }

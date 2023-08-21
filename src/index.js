@@ -160,10 +160,6 @@ const router = createBrowserRouter([
         element: <LayoutAdmin></LayoutAdmin>,
         children: [
           {
-            path: "/excel",
-            element: <EvaluateExcelPage></EvaluateExcelPage>,
-          },
-          {
             path: "/admin-dashboard",
             element: <AdminDashBoardPage></AdminDashBoardPage>,
           },
@@ -279,6 +275,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <LayoutTrainer></LayoutTrainer>,
         children: [
+          {
+            path: "/excel",
+            element: <EvaluateExcelPage></EvaluateExcelPage>,
+          },
           {
             path: "/trainer-dashboard",
             element: <TrainerDashboardPage></TrainerDashboardPage>,

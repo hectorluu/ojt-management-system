@@ -82,6 +82,11 @@ export const positionStatusOptions = [
   { value: 3, label: "Không sử dụng" },
 ];
 
+export const isCriteriaOptions = [
+  { value: true, label: "Có" },
+  { value: false, label: "Không" },
+];
+
 export const statusColor = {
   DELETED: "bg-red-500",
   ACTIVE: "bg-green-500",

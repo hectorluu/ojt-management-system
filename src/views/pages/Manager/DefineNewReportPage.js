@@ -10,10 +10,14 @@ import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
 import { Dropdown } from "views/components/dropdown";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { universityPath } from "logic/api/apiUrl";
+import { templatePath, universityPath } from "logic/api/apiUrl";
 import ExcelUpload from "views/modules/file/ExcelUpload";
 import { Input } from "views/components/input";
 import { useForm } from "react-hook-form";
+import { isCriteriaOptions } from "logic/constants/global";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "logic/config/firebase/firebase";
+import { toast } from "react-toastify";
 
 IgrExcelCoreModule.register();
 IgrExcelModule.register();
@@ -25,15 +29,18 @@ function DefineNewReportPage() {
   const axiosPrivate = useAxiosPrivate();
   const spreadsheetRef = useRef(null);
   const [universityList, setUniversityList] = useState([]);
+  const [file, setFile] = useState(null);
+  const [url, setUrl] = useState("");
   const [universityId, setUniversityId] = useState(0);
-  const { control } = useForm();
-  const [matchedField, setMatchedField] = useState([{ name: "", matchedId: "", maxPoint: "", isCriteria: "" }]);
+  const { handleSubmit, control, getValues } = useForm();
+  const [templateHeaders, setTemplateHeaders] = useState([{ name: "", matchedId: "", totalPoint: "", isCriteria: "", order: 1 }]);
 
 
   const openFile = (files) => {
     if (files != null && files.length > 0) {
       ExcelUtility.load(files[0]).then(
         (w) => {
+          setFile(files[0]);
           spreadsheetRef.current.workbook = w;
         },
         (e) => {
@@ -44,13 +51,21 @@ function DefineNewReportPage() {
   };
 
   useEffect(() => {
-    const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/report%2FFile%20danh%20gia%20danh%20sach%20sv%20BKU.xlsx?alt=media&token=cd63b237-850e-4da3-a18f-7394f25e78fd";
+    const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2FFile%20danh%20gia%20danh%20sach%20sv%20BKU.xlsx?alt=media&token=82ffa24d-5428-4e42-b0fb-dc3027957781";
     ExcelUtility.loadFromUrl(url).then((w) => {
       spreadsheetRef.current.workbook = w;
     });
     fetchUniversities();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (url) {
+      handleAddNewCourse(getValues());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url]);
+
 
   const getApiDropdownLabel = (value, options = [{ value: "", label: "" }], defaultValue = "") => {
     const label = options.find((label) => label.id === value);
@@ -73,16 +88,67 @@ function DefineNewReportPage() {
 
   const handleAddField = () => {
     const newField = {
-      name: "",
-      matchedId: "",
-      maxPoint: "",
-      isCriteria: "",
+      name: "", 
+      matchedId: "", 
+      totalPoint: "", 
+      isCriteria: "", 
+      order: templateHeaders.length + 1
     };
-    setMatchedField([...matchedField, newField]);
+    setTemplateHeaders([...templateHeaders, newField]);
   };
 
   const handleRemoveField = (index) => {
-    setMatchedField(matchedField.splice(index, 1));
+    setTemplateHeaders(templateHeaders.splice(index, 1));
+  };
+
+  const getIsCriteriaDropdownLabel = (
+    index,
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
+    const fields = templateHeaders.slice();
+    const value = fields[index][name];
+    const label = options.find((label) => label.value === value);
+    return label ? label.label : defaultValue;
+  };
+
+  const onChangeIsCriteria = (index, name, value) => {
+    const newArray = templateHeaders.slice();
+    newArray[index][name] = value;
+    setTemplateHeaders(newArray);
+  };
+
+  async function uploadFile() {
+    if (file) {
+      try {
+        const reportRef = ref(storage, "reports/" + file.name);
+        await uploadBytes(reportRef, file).then(async (snapshot) => {
+          await getDownloadURL(snapshot.ref).then(async (downloadURL) => {
+            await setUrl(downloadURL);
+            console.log(url);
+          })
+        });
+      } catch (e) {
+        toast.error(e);
+      }
+    } else {
+      toast.error("File cannot be null");
+    }
+  };
+
+  const handleAddNewCourse = async (values) => {
+    try {
+      await axiosPrivate.post(templatePath.CREATE_TEMPLATE, {
+        ...values,
+        universityId,
+        templateHeaders,
+        url,
+      });
+      // toast.success(courseNoti.SUCCESS.CREATE);
+    } catch (error) {
+      toast.error(error);
+    }
   };
 
   return (
@@ -92,7 +158,7 @@ function DefineNewReportPage() {
           <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
             Tạo phiếu đánh giá mới
           </h1>
-          <form onSubmit={console.log("aadsads")}>
+          <form onSubmit={handleSubmit(uploadFile)}>
             <FormGroup>
               <Label>Tên phiếu đánh giá (*)</Label>
               <Input
@@ -139,13 +205,13 @@ function DefineNewReportPage() {
                 <Label>Ô bắt đầu dữ liệu</Label>
                 <Input
                   control={control}
-                  name="cellIndex"
+                  name="startCell"
                   placeholder="Ex: ABZ12"
                   autoComplete="off"
                 />
               </FormGroup>
             </FormRow>
-            {matchedField.map((matchedField, index) => (
+            {templateHeaders.map((header, index) => (
               <div key={index}>
                 <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
                 <FormRow>
@@ -193,19 +259,19 @@ function DefineNewReportPage() {
                     <Label>Tiêu chí đánh giá (*)</Label>
                     <Dropdown>
                       <Dropdown.Select
-                      // placeholder={getLevelDropdownLabel(index, "initLevel", skillLevel, "Lựa chọn")}
+                        placeholder={getIsCriteriaDropdownLabel(index, "isCriteria", isCriteriaOptions, "Lựa chọn")}
                       ></Dropdown.Select>
                       <Dropdown.List>
-                        {/* {skillLevel.map((option) => (
-                        <Dropdown.Option
-                          key={option.value}
-                          onClick={() =>
-                            onChangeUserSkill(index, "initLevel", option.value)
-                          }
-                        >
-                          <span className="capitalize">{option.label}</span>
-                        </Dropdown.Option>
-                      ))} */}
+                        {isCriteriaOptions.map((option) => (
+                          <Dropdown.Option
+                            key={option.value}
+                            onClick={() =>
+                              onChangeIsCriteria(index, "isCriteria", option.value)
+                            }
+                          >
+                            <span className="capitalize">{option.label}</span>
+                          </Dropdown.Option>
+                        ))}
                       </Dropdown.List>
                     </Dropdown>
                   </FormGroup>
