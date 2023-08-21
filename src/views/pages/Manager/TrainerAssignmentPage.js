@@ -39,8 +39,11 @@ const TrainerAssignmentPage = () => {
     // values
   };
 
+  const [trainerClicked, setTrainerClicked] = useState(null);
+
   const handleSelectDropdownOption = (name, value) => {
     setValue(name, value);
+    setTrainerClicked(name);
   };
 
   const [trainers, setTrainers] = useState([]);
@@ -49,6 +52,7 @@ const TrainerAssignmentPage = () => {
   const axiosPrivate = useAxiosPrivate();
   const [filterTrainers, setFilterTrainers] = useOnChange(500);
 
+  // fetch trainers
   useEffect(() => {
     async function fetchTrainers() {
       if (!filterTrainers) return;
@@ -69,6 +73,27 @@ const TrainerAssignmentPage = () => {
     fetchTrainers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterTrainers]);
+
+  // fetch trainees with chosen trainer
+  // useEffect(() => {
+  //   async function fetchTraineesByTrainer() {
+  //     try {
+  //       const response = await axiosPrivate.get(
+  //         userPath.GET_TRAINER_LIST +
+  //           "?PageIndex=" +
+  //           page +
+  //           "&PageSize=" +
+  //           rowsPerPage
+  //       );
+
+  //       setTrainers(response.data.data);
+  //     } catch (error) {
+  //       toast.error(error.message);
+  //     }
+  //   }
+  //   fetchTrainers();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [trainerClicked]);
 
   ////
   /// create chip

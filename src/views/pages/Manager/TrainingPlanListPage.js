@@ -99,7 +99,7 @@ const TrainingPlanListPage = () => {
                     kind="ghost"
                     onClick={() => setIsTrainingPlanDetailModalOpen(true)}
                   >
-                    Edit
+                    Chi tiết
                   </Button>
                 </TableCell>
               </TableRow>
