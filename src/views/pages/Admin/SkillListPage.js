@@ -156,6 +156,7 @@ const SkillListPage = () => {
           </TableBody>
         </Table>
         <TablePagination
+          labelRowsPerPage="Số dòng"
           component="div"
           count={totalItem}
           page={page - 1}

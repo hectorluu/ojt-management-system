@@ -41,14 +41,14 @@ const AccountListPage = () => {
     try {
       let response = await axiosPrivate.get(
         userPath.GET_USER_LIST +
-          "?PageSize=" +
-          rowsPerPage +
-          "&PageIndex=" +
-          page +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&role=" +
-          role
+        "?PageSize=" +
+        rowsPerPage +
+        "&PageIndex=" +
+        page +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&role=" +
+        role
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -65,7 +65,7 @@ const AccountListPage = () => {
     return () => {
       signalRService.off(signalRMessage.USER);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -196,9 +196,10 @@ const AccountListPage = () => {
                     className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
                     src={item.avatarURL || defaultUserIcon}
                     alt=""
+                    onError={(e) => { e.target.src = defaultUserIcon; }}
                   />
                 </TableCell>
-                <TableCell align="left">{item.fullName}</TableCell>
+                <TableCell align="left">{`${item.lastName} ${item.firstName}`}</TableCell>
                 <TableCell align="left">{item.email}</TableCell>
                 <TableCell align="center">
                   {roleOptions.find((label) => label.value === item.role).label}
@@ -233,6 +234,7 @@ const AccountListPage = () => {
           </TableBody>
         </Table>
         <TablePagination
+          labelRowsPerPage="Số dòng"
           component="div"
           count={totalItem}
           page={page - 1}

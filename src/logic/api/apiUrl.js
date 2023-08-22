@@ -17,7 +17,8 @@ export const coursePath = {
 };
 
 export const criteriaPath = {
-  GET_STUDENT_PONIT_LIST: "/criteria/list-of-trainee-point-by-trainer"
+  GET_STUDENT_PONIT_LIST: "/criteria/list-of-trainee-point-by-trainer",
+  EVALUATE_STUDENT: "/criteria",
 };
 
 export const ojtBatchPath = {

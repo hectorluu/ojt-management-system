@@ -16,14 +16,14 @@ const sidebarLinks = [
     url: "/manager-dashboard",
   },
   {
-    icon: <SupervisedUserCircleOutlinedIcon />,
-    title: "Trainee List",
-    url: "/trainee-list",
-  },
-  {
     icon: <SupervisorAccountOutlinedIcon />,
     title: "Trainer List",
     url: "/trainer-list",
+  },
+  {
+    icon: <SupervisedUserCircleOutlinedIcon />,
+    title: "Trainee List",
+    url: "/trainee-list",
   },
   {
     icon: <AssignmentIndOutlinedIcon />,

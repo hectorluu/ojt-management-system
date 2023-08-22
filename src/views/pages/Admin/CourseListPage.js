@@ -41,7 +41,7 @@ const CourseListPage = () => {
     return () => {
       signalRService.off(signalRMessage.COURSE);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchCourses = async () => {
@@ -225,6 +225,7 @@ const CourseListPage = () => {
         )}
       </CourseGrid>
       <TablePagination
+        labelRowsPerPage="Số dòng"
         component="div"
         count={totalItem}
         page={page - 1}
