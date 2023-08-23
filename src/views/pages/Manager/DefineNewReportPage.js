@@ -14,10 +14,12 @@ import { templatePath, universityPath } from "logic/api/apiUrl";
 import ExcelUpload from "views/modules/file/ExcelUpload";
 import { Input } from "views/components/input";
 import { useForm } from "react-hook-form";
-import { isCriteriaOptions } from "logic/constants/global";
+import { isCriteriaOptions, notCriteriaOptions } from "logic/constants/global";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "logic/config/firebase/firebase";
 import { toast } from "react-toastify";
+import { Button } from "views/components/button";
+import Gap from "views/components/common/Gap";
 
 IgrExcelCoreModule.register();
 IgrExcelModule.register();
@@ -33,7 +35,8 @@ function DefineNewReportPage() {
   const [url, setUrl] = useState("");
   const [universityId, setUniversityId] = useState(0);
   const { handleSubmit, control, getValues } = useForm();
-  const [templateHeaders, setTemplateHeaders] = useState([{ name: "", matchedId: "", totalPoint: "", isCriteria: false, order: 1 }]);
+  const [templateHeaders, setTemplateHeaders] = useState([{ name: "", formulaId: "", matchedAttribute: "", totalPoint: "", isCriteria: false, order: 1 }]);
+  const [notCriteriaList, setNotCriteriaList] = useState(notCriteriaOptions);
 
 
   const openFile = (files) => {
@@ -61,18 +64,25 @@ function DefineNewReportPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (url) {
-      handleAddNewTemplate(getValues());
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url]);
+  // useEffect(() => {
+  //   if (url) {
+  //     handleAddNewTemplate(getValues());
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [url]);
 
   useEffect(() => {
     console.log(templateHeaders);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [templateHeaders]);
 
+  useEffect(() => {
+    const nothing = [{ value: "", label: "Không" }];
+    const notCriteria = notCriteriaOptions.slice();
+    notCriteria.unshift(...nothing);
+    setNotCriteriaList(notCriteria);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getApiDropdownLabel = (value, options = [{ value: "", label: "" }], defaultValue = "") => {
     const label = options.find((label) => label.id === value);
@@ -96,7 +106,8 @@ function DefineNewReportPage() {
   const handleAddField = () => {
     const newField = {
       name: "",
-      matchedId: "",
+      formulaId: "",
+      matchedAttribute: "",
       totalPoint: "",
       isCriteria: false,
       order: templateHeaders.length + 1
@@ -125,21 +136,12 @@ function DefineNewReportPage() {
     return label ? label.label : defaultValue;
   };
 
-  const onChangeIsCriteria = (index, name, value) => {
-    const newArray = templateHeaders.slice();
-    newArray[index][name] = value;
-    setTemplateHeaders(newArray);
-  };
-
   async function uploadFile() {
     if (file) {
       try {
         const reportRef = ref(storage, "reports/" + file.name);
         await uploadBytes(reportRef, file).then(async (snapshot) => {
-          await getDownloadURL(snapshot.ref).then(async (downloadURL) => {
-            await setUrl(downloadURL);
-            console.log(url);
-          })
+          setUrl(`reports/${file.name}`);
         });
       } catch (e) {
         toast.error(e);
@@ -163,6 +165,36 @@ function DefineNewReportPage() {
     }
   };
 
+  const getCriteriaDropdownLabel = (
+    index,
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
+    const criteria = templateHeaders.slice();
+    const value = criteria[index][name] !== undefined ? criteria[index][name] : defaultValue;
+    const label = options.find((label) => label.value === value);
+    return label !== undefined ? label.label : defaultValue;
+  };
+
+  const onChangeCriteria = (index, name, value) => {
+    const newArray = templateHeaders.slice();
+    newArray[index][name] = value;
+    newArray[index].totalPoint = "";
+    setTemplateHeaders(newArray);
+  };
+
+  const onTest = () => {
+    console.log(getValues());
+    const newArray = templateHeaders.slice();
+    for (let i = 0; i < newArray.length; i++) {
+      newArray[i].name = getValues(`headerName${i}`);
+      newArray[i].totalPoint = getValues(`maxPoint${i}`);
+    }
+    setTemplateHeaders(newArray);
+    console.log(templateHeaders);
+  };
+
   return (
     <Fragment>
       <div className="bg-white rounded-xl py-10 px-[66px]">
@@ -170,7 +202,7 @@ function DefineNewReportPage() {
           <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
             Tạo phiếu đánh giá mới
           </h1>
-          <form onSubmit={handleSubmit(uploadFile)}>
+          <form onSubmit={handleSubmit(onTest)}>
             <FormGroup>
               <Label>Tên phiếu đánh giá (*)</Label>
               <Input
@@ -239,35 +271,46 @@ function DefineNewReportPage() {
                   </FormGroup>
                   <FormGroup>
                     <Label>Tiêu chí hệ thống</Label>
-                    <Dropdown>
-                      <Dropdown.Select
-                      // placeholder={getLevelDropdownLabel(index, "initLevel", skillLevel, "Lựa chọn")}
-                      ></Dropdown.Select>
-                      <Dropdown.List>
-                        {/* {skillLevel.map((option) => (
-                        <Dropdown.Option
-                          key={option.value}
-                          onClick={() =>
-                            onChangeUserSkill(index, "initLevel", option.value)
-                          }
-                        >
-                          <span className="capitalize">{option.label}</span>
-                        </Dropdown.Option>
-                      ))} */}
-                      </Dropdown.List>
-                    </Dropdown>
+                    {header.isCriteria ? (
+                      <Dropdown>
+                        <Dropdown.Select
+                        // placeholder={getLevelDropdownLabel(index, "initLevel", skillLevel, "Lựa chọn")}
+                        ></Dropdown.Select>
+                        <Dropdown.List>
+                          {/* {skillLevel.map((option) => (
+                      <Dropdown.Option
+                        key={option.value}
+                        onClick={() =>
+                          onChangeUserSkill(index, "initLevel", option.value)
+                        }
+                      >
+                        <span className="capitalize">{option.label}</span>
+                      </Dropdown.Option>
+                    ))} */}
+                        </Dropdown.List>
+                      </Dropdown>
+                    ) : (
+                      <Dropdown>
+                        <Dropdown.Select
+                          placeholder={getCriteriaDropdownLabel(index, "matchedAttribute", notCriteriaList, "Lựa chọn")}
+                        ></Dropdown.Select>
+                        <Dropdown.List>
+                          {notCriteriaList.map((option) => (
+                            <Dropdown.Option
+                              key={option.value}
+                              onClick={() =>
+                                onChangeCriteria(index, "matchedAttribute", option.value)
+                              }
+                            >
+                              <span className="capitalize">{option.label}</span>
+                            </Dropdown.Option>
+                          ))}
+                        </Dropdown.List>
+                      </Dropdown>
+                    )}
                   </FormGroup>
                 </FormRow>
                 <FormRow>
-                  <FormGroup>
-                    <Label>Điểm tối đa(*)</Label>
-                    <Input
-                      control={control}
-                      name={`maxPoint${index} `}
-                      placeholder="Ex: 30"
-                      autoComplete="off"
-                    />
-                  </FormGroup>
                   <FormGroup>
                     <Label>Tiêu chí đánh giá (*)</Label>
                     <Dropdown>
@@ -279,7 +322,7 @@ function DefineNewReportPage() {
                           <Dropdown.Option
                             key={option.value}
                             onClick={() =>
-                              onChangeIsCriteria(index, "isCriteria", option.value)
+                              onChangeCriteria(index, "isCriteria", option.value)
                             }
                           >
                             <span className="capitalize">{option.label}</span>
@@ -288,6 +331,19 @@ function DefineNewReportPage() {
                       </Dropdown.List>
                     </Dropdown>
                   </FormGroup>
+                  {header.isCriteria ? (
+                    <FormGroup>
+                      <Label>Điểm tối đa(*)</Label>
+                      <Input
+                        control={control}
+                        name={`maxPoint${index} `}
+                        placeholder="Ex: 30"
+                        autoComplete="off"
+                        type="number"
+                        min="0"
+                      />
+                    </FormGroup>
+                  ) : null}
                 </FormRow>
                 <button type="button" onClick={() => handleRemoveField(index)}>
                   xoá
@@ -297,9 +353,18 @@ function DefineNewReportPage() {
             <button type="button" onClick={() => handleAddField()}>
               Thêm
             </button>
+            <div className="mt-5 text-center">
+              <Button
+                type="submit"
+                className="px-10 mx-auto text-white bg-primary"
+              >
+                Tạo
+              </Button>
+            </div>
           </form>
         </div>
       </div>
+      <Gap></Gap>
       <IgrSpreadsheet
         ref={spreadsheetRef}
         height="100vh"
