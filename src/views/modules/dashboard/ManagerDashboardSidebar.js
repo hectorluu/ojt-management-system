@@ -50,6 +50,11 @@ const sidebarLinks = [
     title: "Manager Report List",
     url: "/manager-report-list",
   },
+  {
+    icon: <SpaceDashboardOutlinedIcon />,
+    title: "Define Formula",
+    url: "/define-formula",
+  },
 ];
 const DashboardSidebar = () => {
   const navlinkClass =

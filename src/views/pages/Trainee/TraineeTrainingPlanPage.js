@@ -17,27 +17,27 @@ const TraineeTrainingPlanPage = () => {
   ];
   const DAYS = [
     "Chủ nhật",
-    "Thứ 2",
-    "Thứ 3",
-    "Thứ 4",
-    "Thứ 5",
-    "Thứ 6",
-    "Thứ 7",
+    "Thứ hai",
+    "Thứ ba",
+    "Thứ tư",
+    "Thứ năm",
+    "Thứ sáu",
+    "Thứ bảy",
   ];
 
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
   const [no_of_days, setNoOfDays] = useState([]);
   const [blankdays, setBlankdays] = useState([]);
-  const [days, setDays] = useState([
-    "Sun",
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat",
-  ]);
+  // const [days, setDays] = useState([
+  //   "Sun",
+  //   "Mon",
+  //   "Tue",
+  //   "Wed",
+  //   "Thu",
+  //   "Fri",
+  //   "Sat",
+  // ]);
 
   const [event_title, setEventTitle] = useState("");
   const [event_date, setEventDate] = useState("");

@@ -128,42 +128,50 @@ const SkillListPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {skills.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell width={"30%"}>{item.name}</TableCell>
-                <TableCell
-                  align="center"
-                  className="flex items-center justify-center"
-                >
-                  <div
-                    className={`rounded-full text-white h-7 w-32 flex items-center justify-center m-auto ${getStatusColor(
-                      item.status
-                    )}`}
+            {skills.length !== 0 ? (
+              skills.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell width={"30%"}>{item.name}</TableCell>
+                  <TableCell
+                    align="center"
+                    className="flex items-center justify-center"
                   >
-                    {
-                      skillStatusOptions.find(
-                        (label) => label.value === item.status
-                      ).label
-                    }
-                  </div>
-                </TableCell>
-                <TableCell align="right" width={"5%"}>
-                  <Button
-                    className=""
-                    type="button"
-                    kind="ghost"
-                    onClick={() => handleClickSkillModal(item.id)}
-                  >
-                    <ModeEditOutlineIcon></ModeEditOutlineIcon>
-                  </Button>
-                </TableCell>
-                <TableCell align="right" width={"5%"}>
-                  <Button className="bg-red-500 text-white" type="button">
-                    Xóa
-                  </Button>
+                    <div
+                      className={`rounded-full text-white h-7 w-32 flex items-center justify-center m-auto ${getStatusColor(
+                        item.status
+                      )}`}
+                    >
+                      {
+                        skillStatusOptions.find(
+                          (label) => label.value === item.status
+                        ).label
+                      }
+                    </div>
+                  </TableCell>
+                  <TableCell align="right" width={"5%"}>
+                    <Button
+                      className=""
+                      type="button"
+                      kind="ghost"
+                      onClick={() => handleClickSkillModal(item.id)}
+                    >
+                      <ModeEditOutlineIcon></ModeEditOutlineIcon>
+                    </Button>
+                  </TableCell>
+                  <TableCell align="right" width={"5%"}>
+                    <Button className="bg-red-500 text-white" type="button">
+                      Xóa
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={4}>
+                  Không có kỹ năng nào được tìm thấy.
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
         <TablePagination

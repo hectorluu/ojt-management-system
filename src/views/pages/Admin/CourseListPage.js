@@ -33,6 +33,8 @@ const CourseListPage = () => {
   const [positionFiltered, setPositionFiltered] = useState([]);
   const [skillFiltered, setSkillFiltered] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(true); // New loading state
+
   useEffect(() => {
     signalRService.on(signalRMessage.COURSE, (message) => {
       fetchCourses();
@@ -41,35 +43,44 @@ const CourseListPage = () => {
     return () => {
       signalRService.off(signalRMessage.COURSE);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchCourses = async () => {
     try {
+      setIsLoading(true); // Set loading to true before fetching data
       let response = await axiosPrivate.get(
         coursePath.GET_COURSE_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}` +
-        "&filterSkill=" +
-        `${skill === null ? "" : skill}` +
-        "&filterPosition=" +
-        `${position === null ? "" : position}`
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}` +
+          "&filterSkill=" +
+          `${skill === null ? "" : skill}` +
+          "&filterPosition=" +
+          `${position === null ? "" : position}`
       );
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
       console.log("fetchCourses ~ error", error);
+    } finally {
+      setIsLoading(false); // Set loading to false after fetching data
     }
   };
 
   const fetchSkills = async () => {
     try {
       const response = await axiosPrivate.get(
-        skillPath.GET_SKILL_LIST + "?PageIndex=" + 1 + "&PageSize=" + 100000 + "&filterStatus=" + skillStatus.ACTIVE
+        skillPath.GET_SKILL_LIST +
+          "?PageIndex=" +
+          1 +
+          "&PageSize=" +
+          100000 +
+          "&filterStatus=" +
+          skillStatus.ACTIVE
       );
       setSkillList(response.data.data);
     } catch (error) {
@@ -80,7 +91,13 @@ const CourseListPage = () => {
   const fetchPositions = async () => {
     try {
       const response = await axiosPrivate.get(
-        positionPath.GET_POSITION_LIST + "?PageIndex=" + 1 + "&PageSize=" + 100000 + "&filterStatus=" + positionStatus.ACTIVE
+        positionPath.GET_POSITION_LIST +
+          "?PageIndex=" +
+          1 +
+          "&PageSize=" +
+          100000 +
+          "&filterStatus=" +
+          positionStatus.ACTIVE
       );
       setPositionList(response.data.data);
     } catch (error) {
@@ -104,9 +121,7 @@ const CourseListPage = () => {
   }, [skillList]);
 
   useEffect(() => {
-    const allPosition = [
-      { id: "", name: "Tất cả" },
-    ];
+    const allPosition = [{ id: "", name: "Tất cả" }];
     const positions = positionList.slice();
     positions.unshift(...allPosition);
     setPositionFiltered(positions);
@@ -221,7 +236,7 @@ const CourseListPage = () => {
             <CourseCardDisplay course={item} key={item.id} />
           ))
         ) : (
-          <></>
+          <>Không có khóa học nào được tìm thấy.</>
         )}
       </CourseGrid>
       <TablePagination

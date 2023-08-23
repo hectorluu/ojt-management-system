@@ -25,14 +25,14 @@ import ModalThank from "views/components/modal/ModalThank";
 const SignInPage = lazy(() => import("views/pages/SignInPage"));
 const UnauthorizePage = lazy(() => import("views/pages/UnauthorizePage"));
 
-// prevent adding new lines when importing pages
-
 // Admin Page
 const AdminDashBoardPage = lazy(() =>
   import("views/pages/Admin/AdminDashBoardPage")
 );
 const AccountListPage = lazy(() => import("views/pages/Admin/AccountListPage"));
-const CourseDetailPage = lazy(() => import("views/pages/Admin/CourseDetailPage"));
+const CourseDetailPage = lazy(() =>
+  import("views/pages/Admin/CourseDetailPage")
+);
 const CourseListPage = lazy(() => import("views/pages/Admin/CourseListPage"));
 const CreateNewAccountPage = lazy(() =>
   import("views/pages/Admin/CreateNewAccountPage")
@@ -44,7 +44,9 @@ const CreateNewUniversityPage = lazy(() =>
   import("views/pages/Admin/CreateNewUniversityPage")
 );
 const SkillListPage = lazy(() => import("views/pages/Admin/SkillListPage"));
-const PositionListPage = lazy(() => import("views/pages/Admin/PositionListPage"));
+const PositionListPage = lazy(() =>
+  import("views/pages/Admin/PositionListPage")
+);
 const UniversityDetailPage = lazy(() =>
   import("views/pages/Admin/UniversityDetailPage")
 );
@@ -63,14 +65,18 @@ const ManagerReportListPage = lazy(() =>
 const TraineeDetailPage = lazy(() =>
   import("views/pages/Manager/TraineeDetailPage")
 );
-const TraineeListPage = lazy(() => import("views/pages/Manager/TraineeListPage"));
+const TraineeListPage = lazy(() =>
+  import("views/pages/Manager/TraineeListPage")
+);
 const TrainerAssignmentPage = lazy(() =>
   import("views/pages/Manager/TrainerAssignmentPage")
 );
 const TrainerDetailPage = lazy(() =>
   import("views/pages/Manager/TrainerDetailPage")
 );
-const TrainerListPage = lazy(() => import("views/pages/Manager/TrainerListPage"));
+const TrainerListPage = lazy(() =>
+  import("views/pages/Manager/TrainerListPage")
+);
 const TrainingPlanCertifyPage = lazy(() =>
   import("views/pages/Manager/TrainingPlanCertifyPage")
 );
@@ -79,6 +85,9 @@ const TrainingPlanListPage = lazy(() =>
 );
 const DefineNewReportPage = lazy(() =>
   import("views/pages/Manager/DefineNewReportPage")
+);
+const DefineFormulaPage = lazy(() =>
+  import("views/pages/Manager/DefineFormulaPage")
 );
 
 // Trainer Page
@@ -260,6 +269,10 @@ const router = createBrowserRouter([
           {
             path: "/training-plan-list",
             element: <TrainingPlanListPage></TrainingPlanListPage>,
+          },
+          {
+            path: "/define-formula",
+            element: <DefineFormulaPage></DefineFormulaPage>,
           },
         ],
       },

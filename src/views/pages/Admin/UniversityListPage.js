@@ -45,7 +45,7 @@ const UniversityListPage = () => {
         <Button
           className="px-7"
           type="button"
-          href="/create-new-account"
+          href="/create-new-university"
           kind="secondary"
         >
           Thêm trường đại học mới
