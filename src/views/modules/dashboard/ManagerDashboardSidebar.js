@@ -52,8 +52,8 @@ const sidebarLinks = [
   },
   {
     icon: <SpaceDashboardOutlinedIcon />,
-    title: "Define Formula",
-    url: "/define-formula",
+    title: "List Formula",
+    url: "/list-formula",
   },
 ];
 const DashboardSidebar = () => {

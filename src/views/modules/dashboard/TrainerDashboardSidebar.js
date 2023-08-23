@@ -20,8 +20,8 @@ const sidebarLinks = [
   },
   {
     icon: <IconFolder></IconFolder>,
-    title: "Manage Training Plan",
-    url: "/manage-training-plan",
+    title: "Trainer Training Plan",
+    url: "/trainer-training-plan",
   },
   {
     icon: <IconFolder></IconFolder>,
@@ -37,11 +37,6 @@ const sidebarLinks = [
     icon: <IconFolder></IconFolder>,
     title: "Trainer Report List",
     url: "/trainer-report-list",
-  },
-  {
-    icon: <IconFolder></IconFolder>,
-    title: "Trainer Training Plan",
-    url: "/trainer-training-plan",
   },
 ];
 const DashboardSidebar = () => {

@@ -100,16 +100,17 @@ export const signalRMessage = {
   USER: "New User Created",
   TRAINING_PLAN: "New Training Plan Created",
   POSITION: "New Position Created",
+  OJTBATCH: "New OJT Batch Created",
 };
 
 export const skillStatus = {
   DELETED: 1,
   ACTIVE: 2,
   INACTIVE: 3,
-}
+};
 
 export const positionStatus = {
   DELETED: 1,
   ACTIVE: 2,
   INACTIVE: 3,
-}
+};
