@@ -34,10 +34,10 @@ const TraineeTaskListPage = () => {
     try {
       const response = await axiosPrivate.get(
         taskPath.GET_TASK_LIST +
-          "?PageSize=" +
-          rowsPerPage +
-          "&PageIndex=" +
-          page
+        "?PageSize=" +
+        rowsPerPage +
+        "&PageIndex=" +
+        page
       );
       setTasks(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -121,6 +121,7 @@ const TraineeTaskListPage = () => {
           </TableBody>
         </Table>
         <TablePagination
+          labelRowsPerPage="Số dòng"
           component="div"
           count={totalItem}
           page={page - 1}

@@ -23,14 +23,14 @@ export function processRequestData(data) {
   for (const item of data) {
     const criteria = [];
     for (const key in item) {
-      if (key !== "lastName" && key !== "firstName" && key !== "rollNumber" && key !== "userId") {
-        criteria.push({ id: key, value: item[key] });
+      if (key !== "lastName" && key !== "firstName" && key !== "rollNumber" && key !== "id") {
+        criteria.push({ templateHeaderId: + key, point: item[key] });
       }
     }
 
     convertedJson.push({
-      userId: item.userId,
-      criteria: criteria
+      userId: item.id,
+      userCriterias: criteria
     });
   }
   return convertedJson;

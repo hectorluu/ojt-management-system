@@ -27,10 +27,10 @@ const TrainingPlanListPage = () => {
       try {
         const response = await axiosPrivate.get(
           trainingPlanPath.GET_TRAINING_PLAN_LIST +
-            "?PageIndex=" +
-            page +
-            "&PageSize=" +
-            rowsPerPage
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage
         );
         setTrainingplans(response.data.data);
         setTotalItem(response.data.totalItem);
@@ -107,6 +107,7 @@ const TrainingPlanListPage = () => {
           </TableBody>
         </Table>
         <TablePagination
+          labelRowsPerPage="Số dòng"
           component="div"
           count={totalItem}
           page={page - 1}

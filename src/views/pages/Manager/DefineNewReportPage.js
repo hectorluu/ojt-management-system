@@ -33,7 +33,7 @@ function DefineNewReportPage() {
   const [url, setUrl] = useState("");
   const [universityId, setUniversityId] = useState(0);
   const { handleSubmit, control, getValues } = useForm();
-  const [templateHeaders, setTemplateHeaders] = useState([{ name: "", matchedId: "", totalPoint: "", isCriteria: "", order: 1 }]);
+  const [templateHeaders, setTemplateHeaders] = useState([{ name: "", matchedId: "", totalPoint: "", isCriteria: false, order: 1 }]);
 
 
   const openFile = (files) => {
@@ -51,20 +51,27 @@ function DefineNewReportPage() {
   };
 
   useEffect(() => {
-    const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2FFile%20danh%20gia%20danh%20sach%20sv%20BKU.xlsx?alt=media&token=82ffa24d-5428-4e42-b0fb-dc3027957781";
-    ExcelUtility.loadFromUrl(url).then((w) => {
-      spreadsheetRef.current.workbook = w;
-    });
+    // const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2FFile%20danh%20gia%20danh%20sach%20sv%20BKU.xlsx?alt=media&token=82ffa24d-5428-4e42-b0fb-dc3027957781";
+    // ExcelUtility.loadFromUrl(url).then((w) => {
+    //   if (spreadsheetRef.current) {
+    //     spreadsheetRef.current.workbook = w;
+    //   }
+    // });
     fetchUniversities();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (url) {
-      handleAddNewCourse(getValues());
+      handleAddNewTemplate(getValues());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url]);
+
+  useEffect(() => {
+    console.log(templateHeaders);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [templateHeaders]);
 
 
   const getApiDropdownLabel = (value, options = [{ value: "", label: "" }], defaultValue = "") => {
@@ -88,17 +95,22 @@ function DefineNewReportPage() {
 
   const handleAddField = () => {
     const newField = {
-      name: "", 
-      matchedId: "", 
-      totalPoint: "", 
-      isCriteria: "", 
+      name: "",
+      matchedId: "",
+      totalPoint: "",
+      isCriteria: false,
       order: templateHeaders.length + 1
     };
     setTemplateHeaders([...templateHeaders, newField]);
   };
 
   const handleRemoveField = (index) => {
-    setTemplateHeaders(templateHeaders.splice(index, 1));
+    let temp = templateHeaders.slice();
+    temp.splice(index, 1);
+    for (let i = 0; i < temp.length; i++) {
+      temp[i].order = i + 1;
+    }
+    setTemplateHeaders(temp);
   };
 
   const getIsCriteriaDropdownLabel = (
@@ -137,7 +149,7 @@ function DefineNewReportPage() {
     }
   };
 
-  const handleAddNewCourse = async (values) => {
+  const handleAddNewTemplate = async (values) => {
     try {
       await axiosPrivate.post(templatePath.CREATE_TEMPLATE, {
         ...values,
@@ -219,9 +231,10 @@ function DefineNewReportPage() {
                     <Label>Tên cột(*)</Label>
                     <Input
                       control={control}
-                      name="cellIndex"
+                      name={`headerName${index}`}
                       placeholder="Ex: MSSV"
                       autoComplete="off"
+                      onChange={(e) => console.log("onchange here")}
                     />
                   </FormGroup>
                   <FormGroup>
@@ -250,7 +263,7 @@ function DefineNewReportPage() {
                     <Label>Điểm tối đa(*)</Label>
                     <Input
                       control={control}
-                      name="cellIndex"
+                      name={`maxPoint${index} `}
                       placeholder="Ex: 30"
                       autoComplete="off"
                     />

@@ -3,7 +3,12 @@ import { DataGrid, GridEditInputCell } from '@mui/x-data-grid';
 import { useEffect } from 'react';
 import useAxiosPrivate from 'logic/hooks/useAxiosPrivate';
 import { criteriaPath, templatePath } from 'logic/api/apiUrl';
-import { processResponseData } from 'logic/utils/evaluationUtils';
+import { processRequestData, processResponseData } from 'logic/utils/evaluationUtils';
+import { StyledBox } from 'views/components/common/StyledBox';
+import Button from 'views/components/button/Button';
+import Heading from 'views/components/common/Heading';
+import { toast } from 'react-toastify';
+import { criteraNoti } from 'logic/constants/notification';
 
 const EvaluateExcelPage = () => {
   const [data, setData] = useState([]);
@@ -50,6 +55,7 @@ const EvaluateExcelPage = () => {
           editable: false,
           align: "left",
           headerAlign: "left",
+          flex: 0.15,
         },
         {
           id: "lastName",
@@ -59,6 +65,7 @@ const EvaluateExcelPage = () => {
           editable: false,
           align: 'left',
           headerAlign: 'left',
+          flex: 0.15,
         },
         {
           id: "rollNumber",
@@ -68,17 +75,19 @@ const EvaluateExcelPage = () => {
           editable: false,
           align: 'left',
           headerAlign: 'left',
+          flex: 0.1,
         },
       ];
       for (const item of response.data) {
         const column = {
           id: item.teamplateHeaderId,
           field: `${item.teamplateHeaderId}`,
-          headerName: item.name,
+          headerName: `${item.name}(${item.maxPoint})`,
           type: 'number',
           editable: true,
           align: 'left',
           headerAlign: 'left',
+          flex: 0.1,
           renderEditCell: (params) => (
             <GridEditInputCell
               {...params}
@@ -88,6 +97,10 @@ const EvaluateExcelPage = () => {
               }}
             />
           ),
+          preProcessEditCellProps: (params) => {
+            const hasError = params.props.value > item.maxPoint || params.props.value < 0 || params.props.value === null || params.props.value === undefined;
+            return { ...params.props, error: hasError };
+          },
         };
         columns = [...columns, column];
       }
@@ -99,29 +112,69 @@ const EvaluateExcelPage = () => {
   };
 
   const onStopEdit = (newr, old) => {
-    console.log("old", old);
-    console.log("newr", newr);
+    if (newr.hasError) {
+      return newr;
+    }
+    setData(data.map((row) => (row.id === newr.id ? newr : row)));
+    return newr;
+  };
+
+  const onClickSubmit = () => {
+    const containsNullOrUndefined = data.some(item => {
+      return Object.values(item).some(value => value === null || value === undefined);
+    });
+    if (containsNullOrUndefined) {
+      toast.error(criteraNoti.ERROR.POINT_ERROR);
+      return;
+    };
+    const req = processRequestData(data);
+    console.log("req", req);
+    handleEvaluate(req);
+  };
+
+  const handleEvaluate = async (data) => {
+    try {
+      await axiosPrivate.post(criteriaPath.EVALUATE_STUDENT, data);
+      toast.success(criteraNoti.SUCCESS.CREATE);
+    } catch (error) {
+      toast.error(error);
+    }
   };
 
   return (
     <Fragment>
-      <div className="bg-white rounded-xl py-10 px-[66px]">
-        <div className="text-center">
-          <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
+      <div className="flex flex-wrap items-center justify-between">
+        <div className="flex items-center justify-center">
+          <Heading className="text-[2.25rem] font-bold pt-6">
             Đánh giá sinh viên sau khoá đào tạo
-          </h1>
-          {data.length !== 0 ? (
+          </Heading>
+        </div>
+        <Button
+          className="px-7 float-right"
+          type="button"
+          kind="secondary"
+          onClick={onClickSubmit}
+        >
+          Nộp điểm
+        </Button>
+      </div>
+      <div className="flex flex-wrap items-start">
+        {data.length !== 0 ? (
+          <StyledBox>
             <DataGrid
+              labelRowsPerPage="Số dòng"
               rows={data}
               columns={headers}
               disableColumnSelector={true}
               disableDensitySelector={true}
               disableRowSelectionOnClick={true}
               processRowUpdate={onStopEdit}
+              onProcessRowUpdateError={(error) => {
+                console.log("error", error);
+              }}
             />
-          ) : null}
-
-        </div>
+          </StyledBox>
+        ) : null}
       </div>
     </Fragment>
   );

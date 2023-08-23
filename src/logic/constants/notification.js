@@ -29,3 +29,13 @@ export const courseNoti = {
     POSITION_OVERFLOW: "Đã đạt giới hạn số vị trí của hệ thống!!!"
   },
 }
+
+export const criteraNoti = {
+  SUCCESS: {
+    CREATE: "Thành công lưu đánh giá!!!",
+  },
+
+  ERROR: {
+    POINT_ERROR: "Phiếu đánh giá chưa phù hợp!!!",
+  },
+}

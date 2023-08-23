@@ -52,7 +52,7 @@ const CreateNewCoursePage = () => {
   }, [coursePosition]);
 
   useEffect(() => {
-    if(imageURL){
+    if (imageURL) {
       handleAddNewCourse(getValues());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -126,7 +126,7 @@ const CreateNewCoursePage = () => {
     }
   };
 
-  
+
 
   const handleAddPositionField = () => {
     if (
@@ -202,9 +202,9 @@ const CreateNewCoursePage = () => {
     defaultValue = ""
   ) => {
     const levels = courseSkills.slice();
-    const value = levels[index][name] || defaultValue;
+    const value = levels[index][name] !== undefined ? levels[index][name] : defaultValue;
     const label = options.find((label) => label.value === value);
-    return label ? label.label : defaultValue;
+    return label !== undefined ? label.label : defaultValue;
   };
 
   return (
