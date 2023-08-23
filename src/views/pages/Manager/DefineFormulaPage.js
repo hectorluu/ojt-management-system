@@ -1,8 +1,20 @@
 import Gap from "views/components/common/Gap";
-import React, { Fragment } from "react";
-
-import { styled } from "@mui/system";
-import { TextareaAutosize } from "@mui/material";
+import React, { Fragment, useState } from "react";
+import { TextareaAutosize } from "@mui/base/TextareaAutosize";
+import {
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  Typography,
+  Paper,
+  Chip,
+  ListItem,
+} from "@mui/material";
+import { tableCellClasses } from "@mui/material/TableCell";
+import { styled } from "@mui/material/styles";
 
 const DefineFormulaPage = () => {
   // style
@@ -30,7 +42,7 @@ const DefineFormulaPage = () => {
 
   const StyledTextarea = styled(TextareaAutosize)(
     ({ theme }) => `
-    width: 40rem;
+    width: 45rem;
     font-family: IBM Plex Sans, sans-serif;
     font-size: 0.875rem;
     font-weight: 400;
@@ -62,6 +74,40 @@ const DefineFormulaPage = () => {
   `
   );
 
+  // style table head
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+
+  ///
+  const ListItem = styled("li")(({ theme }) => ({
+    margin: theme.spacing(0.5),
+  }));
+
+  const [chipData, setChipData] = useState([
+    { key: 0, label: "Angular" },
+    { key: 1, label: "jQuery" },
+    { key: 2, label: "Polymer" },
+    { key: 3, label: "React" },
+    { key: 4, label: "Vue.js" },
+  ]);
+
+  const handleDelete = (chipToDelete) => () => {
+    setChipData((chips) =>
+      chips.filter((chip) => chip.key !== chipToDelete.key)
+    );
+  };
+
+  const handleClick = () => {
+    console.info("You clicked the Chip.");
+  };
+
   return (
     <Fragment>
       <div className="bg-blue-100 rounded-xl py-10 px-[66px]">
@@ -72,10 +118,68 @@ const DefineFormulaPage = () => {
         </div>
 
         <div className="flex justify-center">
-          <TextareaAutosize
-            aria-label="minimum height"
-            minRows={3}
-            placeholder="Minimum 3 rows"
+          <TableContainer sx={{ width: 0.8 }}>
+            <Typography
+              sx={{ flex: "1 1 100%" }}
+              variant="h6"
+              id="tableTitle"
+              component="div"
+            >
+              Từ khóa công thức
+            </Typography>
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell
+                    align="center"
+                    width={"33%"}
+                  ></StyledTableCell>
+                  <StyledTableCell
+                    align="center"
+                    width={"33%"}
+                  ></StyledTableCell>
+                  <StyledTableCell
+                    align="center"
+                    width={"33%"}
+                  ></StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody></TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+
+        <div className="flex justify-center mt-5">
+          <Paper
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              listStyle: "none",
+              p: 0.5,
+              m: 0,
+            }}
+            component="ul"
+          >
+            {chipData.map((data) => {
+              return (
+                <ListItem key={data.key}>
+                  <Chip
+                    label={data.label}
+                    onClick={handleClick}
+                    onDelete={handleDelete}
+                  />
+                </ListItem>
+              );
+            })}
+          </Paper>
+        </div>
+
+        <div className="flex justify-center mt-5">
+          <StyledTextarea
+            minRows={5}
+            maxRows={8}
+            placeholder="Điền công thức tính"
           />
         </div>
       </div>

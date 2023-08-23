@@ -10,6 +10,8 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { tableCellClasses } from "@mui/material/TableCell";
+
 import { userPath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
@@ -27,6 +29,7 @@ import useOnChange from "logic/hooks/useOnChange";
 import { defaultUserIcon } from "logic/constants/global";
 import signalRService from "logic/utils/signalRService";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import { styled } from "@mui/material/styles";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -129,6 +132,17 @@ const AccountListPage = () => {
     }
   };
 
+  // style table head
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+
   return (
     <Fragment>
       <ModalUserDetailAdmin
@@ -178,20 +192,20 @@ const AccountListPage = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell align="center" width={"10%"}></TableCell>
-              <TableCell align="left" width={"25%"}>
+              <StyledTableCell align="center" width={"10%"}></StyledTableCell>
+              <StyledTableCell align="left" width={"25%"}>
                 Họ và tên
-              </TableCell>
-              <TableCell align="left" width={"25%"}>
+              </StyledTableCell>
+              <StyledTableCell align="left" width={"25%"}>
                 Email
-              </TableCell>
-              <TableCell align="center" width={"15%"}>
+              </StyledTableCell>
+              <StyledTableCell align="center" width={"15%"}>
                 Phân quyền
-              </TableCell>
-              <TableCell align="center" width={"15%"}>
+              </StyledTableCell>
+              <StyledTableCell align="center" width={"15%"}>
                 Trạng thái
-              </TableCell>
-              <TableCell align="right" width={"20%"}></TableCell>
+              </StyledTableCell>
+              <StyledTableCell align="right" width={"20%"}></StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
