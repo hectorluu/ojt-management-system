@@ -65,6 +65,7 @@ const TrainingPlanCertifyPage = () => {
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
         /> */}
       </TableContainer>
     </Fragment>
