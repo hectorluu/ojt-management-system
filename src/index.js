@@ -89,6 +89,9 @@ const DefineNewReportPage = lazy(() =>
 const DefineFormulaPage = lazy(() =>
   import("views/pages/Manager/DefineFormulaPage")
 );
+const ListFormulaPage = lazy(() =>
+  import("views/pages/Manager/ListFormulaPage")
+);
 
 // Trainer Page
 const AssignedTraineeListPage = lazy(() =>
@@ -102,9 +105,6 @@ const CertificateCertifyPage = lazy(() =>
 );
 const CreateNewTrainingPlanPage = lazy(() =>
   import("views/pages/Trainer/CreateNewTrainingPlanPage")
-);
-const ManageTrainingPlanPage = lazy(() =>
-  import("views/pages/Trainer/ManageTrainingPlanPage")
 );
 const OJTEvaluationPage = lazy(() =>
   import("views/pages/Trainer/OJTEvaluationPage")
@@ -274,6 +274,10 @@ const router = createBrowserRouter([
             path: "/define-formula",
             element: <DefineFormulaPage></DefineFormulaPage>,
           },
+          {
+            path: "/list-formula",
+            element: <ListFormulaPage></ListFormulaPage>,
+          },
         ],
       },
     ],
@@ -313,10 +317,6 @@ const router = createBrowserRouter([
           {
             path: "/create-new-training-plan",
             element: <CreateNewTrainingPlanPage></CreateNewTrainingPlanPage>,
-          },
-          {
-            path: "/manage-training-plan",
-            element: <ManageTrainingPlanPage></ManageTrainingPlanPage>,
           },
           {
             path: "/ojt-evaluation",

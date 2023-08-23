@@ -31,10 +31,10 @@ const TraineeListPage = () => {
       try {
         const response = await axiosPrivate.get(
           userPath.GET_TRAINEE_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage
+            "?PageIndex=" +
+            page +
+            "&PageSize=" +
+            rowsPerPage
         );
 
         setUsers(response.data.data);
@@ -92,7 +92,6 @@ const TraineeListPage = () => {
               <TableCell>Họ và tên</TableCell>
               <TableCell width="25%">Email</TableCell>
               <TableCell align="center">Vai trò</TableCell>
-              <TableCell>Trạng thái</TableCell>
               <TableCell align="right" width={"10%"}></TableCell>
             </TableRow>
           </TableHead>
@@ -106,26 +105,9 @@ const TraineeListPage = () => {
                     alt=""
                   />
                 </TableCell>
-                <TableCell>{item.fullName}</TableCell>
+                <TableCell>{item.firstName + " " + item.lastName}</TableCell>
                 <TableCell>{item.email}</TableCell>
-                <TableCell align="center">
-                  {item.positionName}
-                </TableCell>
-                <TableCell
-                  align="center"
-                  className="flex items-center justify-center"
-                >
-                  {/* <div
-                    className={`rounded-full m-auto text-white h-7 w-32 flex items-center justify-center ${getStatusColor(
-                      item.status
-                    )}`}
-                  >
-                    {
-                      accountStatus.find((label) => label.value === item.status)
-                        .label
-                    }
-                  </div> */}
-                </TableCell>
+                <TableCell align="center">{item.positionName}</TableCell>
                 <TableCell align="right" width={"10%"}>
                   <Button
                     className=""
