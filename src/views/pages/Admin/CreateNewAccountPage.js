@@ -10,9 +10,20 @@ import { Input } from "views/components/input";
 import { Dropdown } from "views/components/dropdown";
 import { Button } from "views/components/button";
 import ImageUpload from "views/components/image/ImageUpload";
-import { genderOptions, roleOptions, skillLevel, defaultUserIcon } from "logic/constants/global";
+import {
+  genderOptions,
+  roleOptions,
+  skillLevel,
+  defaultUserIcon,
+} from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { ojtBatchPath, positionPath, skillPath, universityPath, userPath } from "logic/api/apiUrl";
+import {
+  ojtBatchPath,
+  positionPath,
+  skillPath,
+  universityPath,
+  userPath,
+} from "logic/api/apiUrl";
 import { roleExchange } from "logic/constants/global";
 import { storage } from "logic/config/firebase/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -23,19 +34,29 @@ const CreateNewAccountPage = () => {
   const [avatar, setAvatar] = useState(null);
   const axiosPrivate = useAxiosPrivate();
   const [userRoleWhenChosen, setUserRoleWhenChosen] = useState("");
-  const [createSkills, setCreateSkills] = useState([{ "skillId": "", "level": "" }]);
+  const [createSkills, setCreateSkills] = useState([
+    { skillId: "", level: "" },
+  ]);
   const [skillList, setSkillList] = useState([]);
   const [positionList, setPositionList] = useState([]);
   const [position, setPosition] = useState();
   const [filteredSkillList, setFilteredSkillList] = useState([]);
   const [universityId, setUniversityId] = useState(0);
   const [universityList, setUniversityList] = useState([]);
-  const [ojtBatchList, setOjtBatchList] = useState([{ "id": "", "name": "" }]);
+  const [ojtBatchList, setOjtBatchList] = useState([{ id: "", name: "" }]);
   const [batchId, setBatchId] = useState(0);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const { handleSubmit, control, setValue, reset, watch, unregister, getValues } = useForm();
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    reset,
+    watch,
+    unregister,
+    getValues,
+  } = useForm();
 
   useEffect(() => {
     if (userRoleWhenChosen && userRoleWhenChosen === roleExchange.TRAINEE) {
@@ -67,7 +88,9 @@ const CreateNewAccountPage = () => {
   }, [avatarUrl]);
 
   const removeItems = (rmItems, items) => {
-    const filteredItems = items.filter((item) => !rmItems.some((rmItem) => item.id === rmItem.skillId));
+    const filteredItems = items.filter(
+      (item) => !rmItems.some((rmItem) => item.id === rmItem.skillId)
+    );
 
     // Update the state with the filtered items
     setFilteredSkillList(filteredItems);
@@ -76,11 +99,7 @@ const CreateNewAccountPage = () => {
   const fetchSkills = async () => {
     try {
       const response = await axiosPrivate.get(
-        skillPath.GET_SKILL_LIST +
-        "?PageSize=" +
-        100000 +
-        "&PageIndex=" +
-        1
+        skillPath.GET_SKILL_LIST + "?PageSize=" + 100000 + "&PageIndex=" + 1
       );
       setSkillList(response.data.data);
       setFilteredSkillList(response.data.data);
@@ -93,10 +112,10 @@ const CreateNewAccountPage = () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-        "?PageSize=" +
-        100000 +
-        "&PageIndex=" +
-        1
+          "?PageSize=" +
+          100000 +
+          "&PageIndex=" +
+          1
       );
       setPositionList(response.data.data);
       console.log("fetchPositions ~ success", response);
@@ -109,12 +128,12 @@ const CreateNewAccountPage = () => {
     try {
       const response = await axiosPrivate.get(
         ojtBatchPath.GET_OJT_BATCH_LIST_OF_UNIVERSITY +
-        "/" +
-        universityId +
-        "?PageSize=" +
-        100000 +
-        "&PageIndex=" +
-        1
+          "/" +
+          universityId +
+          "?PageSize=" +
+          100000 +
+          "&PageIndex=" +
+          1
       );
       setOjtBatchList(response.data.data);
     } catch (error) {
@@ -125,9 +144,7 @@ const CreateNewAccountPage = () => {
   const fetchUniversities = async () => {
     try {
       const response = await axiosPrivate.get(
-        universityPath.GET_UNIVERSITY_LIST +
-        "?id=" +
-        universityId
+        universityPath.GET_UNIVERSITY_LIST + "?id=" + universityId
       );
       setUniversityList(response.data.data);
       console.log("fetchUniversities ~ success", response);
@@ -159,7 +176,7 @@ const CreateNewAccountPage = () => {
         await uploadBytes(imageRef, avatar).then(async (snapshot) => {
           await getDownloadURL(snapshot.ref).then((downloadURL) => {
             setAvatarUrl(downloadURL);
-          })
+          });
         });
       } catch (e) {
         toast.error("Upload img error");
@@ -178,14 +195,14 @@ const CreateNewAccountPage = () => {
           createSkills,
           batchId,
           avatarUrl,
-          position
+          position,
         });
       } else {
         await axiosPrivate.post(userPath.CREATE_USER, {
           ...values,
           birthday,
           avatarUrl,
-          position
+          position,
         });
       }
       toast.success(accountNoti.SUCCESS.CREATE);
@@ -211,11 +228,14 @@ const CreateNewAccountPage = () => {
     setAvatar(null);
     unregister("position");
     setBatchId(0);
-    setCreateSkills([{ "skillId": "", "initLevel": "" }]);
+    setCreateSkills([{ skillId: "", initLevel: "" }]);
   };
 
   const handleAddField = () => {
-    if (filteredSkillList.length > 0 && createSkills.length < skillList.length) {
+    if (
+      filteredSkillList.length > 0 &&
+      createSkills.length < skillList.length
+    ) {
       const newField = {
         skillId: "",
         initLevel: "",
@@ -226,21 +246,35 @@ const CreateNewAccountPage = () => {
     }
   };
 
-  const getSkillDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
+  const getSkillDropdownLabel = (
+    index,
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
     const skills = createSkills.slice();
     const value = skills[index][name] || defaultValue;
     const label = options.find((label) => label.id === value);
     return label ? label.name : defaultValue;
   };
 
-  const getLevelDropdownLabel = (index, name, options = [{ value: "", label: "" }], defaultValue = "") => {
+  const getLevelDropdownLabel = (
+    index,
+    name,
+    options = [{ value: "", label: "" }],
+    defaultValue = ""
+  ) => {
     const levels = createSkills.slice();
     const value = levels[index][name] || defaultValue;
     const label = options.find((label) => label.value === value);
     return label ? label.label : defaultValue;
   };
 
-  const getApiDropdownLabel = (value, options = [{ id: "", name: "" }], defaultValue = "") => {
+  const getApiDropdownLabel = (
+    value,
+    options = [{ id: "", name: "" }],
+    defaultValue = ""
+  ) => {
     const label = options.find((label) => label.id === value);
     return label ? label.name : defaultValue;
   };
@@ -408,11 +442,7 @@ const CreateNewAccountPage = () => {
                           {positionList.map((personPosition) => (
                             <Dropdown.Option
                               key={personPosition.id}
-                              onClick={() =>
-                                setPosition(
-                                  personPosition.id
-                                )
-                              }
+                              onClick={() => setPosition(personPosition.id)}
                             >
                               <span className="capitalize">
                                 {personPosition.name}
@@ -446,7 +476,7 @@ const CreateNewAccountPage = () => {
               )}
 
             {userRoleWhenChosen &&
-              (userRoleWhenChosen === roleExchange.TRAINEE) && (
+              userRoleWhenChosen === roleExchange.TRAINEE && (
                 <>
                   <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
                   <FormGroup>
@@ -463,13 +493,11 @@ const CreateNewAccountPage = () => {
                         {universityList.map((university) => (
                           <Dropdown.Option
                             key={university.id}
-                            onClick={() =>
-                              setUniversityId(
-                                university.id
-                              )
-                            }
+                            onClick={() => setUniversityId(university.id)}
                           >
-                            <span className="capitalize">{university.name}</span>
+                            <span className="capitalize">
+                              {university.name}
+                            </span>
                           </Dropdown.Option>
                         ))}
                       </Dropdown.List>
@@ -499,9 +527,7 @@ const CreateNewAccountPage = () => {
                           {ojtBatchList?.map((ojtBatch) => (
                             <Dropdown.Option
                               key={ojtBatch.id}
-                              onClick={() =>
-                                setBatchId(ojtBatch.id)
-                              }
+                              onClick={() => setBatchId(ojtBatch.id)}
                             >
                               <span className="capitalize">
                                 {ojtBatch.name}
@@ -519,7 +545,12 @@ const CreateNewAccountPage = () => {
                         <Label>Kỹ năng (*)</Label>
                         <Dropdown>
                           <Dropdown.Select
-                            placeholder={getSkillDropdownLabel(index, "skillId", skillList, "Lựa chọn")}
+                            placeholder={getSkillDropdownLabel(
+                              index,
+                              "skillId",
+                              skillList,
+                              "Lựa chọn"
+                            )}
                           ></Dropdown.Select>
                           <Dropdown.List>
                             {filteredSkillList.map((option) => (
@@ -529,7 +560,9 @@ const CreateNewAccountPage = () => {
                                   onChangeUserSkill(index, "skillId", option.id)
                                 }
                               >
-                                <span className="capitalize">{option.name}</span>
+                                <span className="capitalize">
+                                  {option.name}
+                                </span>
                               </Dropdown.Option>
                             ))}
                           </Dropdown.List>
@@ -539,17 +572,28 @@ const CreateNewAccountPage = () => {
                         <Label>Trình độ (*)</Label>
                         <Dropdown>
                           <Dropdown.Select
-                            placeholder={getLevelDropdownLabel(index, "initLevel", skillLevel, "Lựa chọn")}
+                            placeholder={getLevelDropdownLabel(
+                              index,
+                              "initLevel",
+                              skillLevel,
+                              "Lựa chọn"
+                            )}
                           ></Dropdown.Select>
                           <Dropdown.List>
                             {skillLevel.map((option) => (
                               <Dropdown.Option
                                 key={option.value}
                                 onClick={() =>
-                                  onChangeUserSkill(index, "initLevel", option.value)
+                                  onChangeUserSkill(
+                                    index,
+                                    "initLevel",
+                                    option.value
+                                  )
                                 }
                               >
-                                <span className="capitalize">{option.label}</span>
+                                <span className="capitalize">
+                                  {option.label}
+                                </span>
                               </Dropdown.Option>
                             ))}
                           </Dropdown.List>
