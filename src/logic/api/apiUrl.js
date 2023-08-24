@@ -68,4 +68,9 @@ export const templatePath = {
   GET_TEMPLATE_HEADER: "/template/template-header/criteriaheader",
 };
 
+export const formulaPath = {
+  GET_FORMULA_LIST: "/formula",
+  CREATE_FORMULA: "/formula",
+};
+
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

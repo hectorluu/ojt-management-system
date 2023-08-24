@@ -170,14 +170,6 @@ const CreateNewAccountPage = () => {
   }
 
   const handleAddNewAccount = async (values) => {
-    console.log({
-      ...values,
-      birthday,
-      createSkills,
-      batchId,
-      avatarUrl,
-      position
-    })
     try {
       if (createSkills[0].skillId) {
         await axiosPrivate.post(userPath.CREATE_USER, {

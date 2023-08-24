@@ -125,5 +125,5 @@ export const notCriteriaOptions = [
   { value: "Address", label: "Địa chỉ" },
   { value: "Birthday", label: "Ngày sinh" },
   { value: "PositionId", label: "Vị trí" },
-  { value: "StudentCode", label: "Mã số nhân viên" },
+  { value: "StudentCode", label: "Mã số sinh viên" },
 ];
