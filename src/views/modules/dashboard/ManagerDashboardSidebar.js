@@ -8,6 +8,7 @@ import SupervisedUserCircleOutlinedIcon from "@mui/icons-material/SupervisedUser
 import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined";
 import FormatListNumberedOutlinedIcon from "@mui/icons-material/FormatListNumberedOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
+import CalculateOutlinedIcon from '@mui/icons-material/CalculateOutlined';
 
 const sidebarLinks = [
   {
@@ -56,7 +57,7 @@ const sidebarLinks = [
     url: "/manager-report-list",
   },
   {
-    icon: <SpaceDashboardOutlinedIcon />,
+    icon: <CalculateOutlinedIcon />,
     title: "List Formula",
     url: "/list-formula",
   },

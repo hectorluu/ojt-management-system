@@ -51,16 +51,16 @@ const CourseListPage = () => {
       setIsLoading(true); // Set loading to true before fetching data
       let response = await axiosPrivate.get(
         coursePath.GET_COURSE_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&filterSkill=" +
-          `${skill === null ? "" : skill}` +
-          "&filterPosition=" +
-          `${position === null ? "" : position}`
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&filterSkill=" +
+        `${skill === null ? "" : skill}` +
+        "&filterPosition=" +
+        `${position === null ? "" : position}`
       );
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -75,12 +75,12 @@ const CourseListPage = () => {
     try {
       const response = await axiosPrivate.get(
         skillPath.GET_SKILL_LIST +
-          "?PageIndex=" +
-          1 +
-          "&PageSize=" +
-          100000 +
-          "&filterStatus=" +
-          skillStatus.ACTIVE
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        100000 +
+        "&filterStatus=" +
+        skillStatus.ACTIVE
       );
       setSkillList(response.data.data);
     } catch (error) {
@@ -92,12 +92,12 @@ const CourseListPage = () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-          "?PageIndex=" +
-          1 +
-          "&PageSize=" +
-          100000 +
-          "&filterStatus=" +
-          positionStatus.ACTIVE
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        100000 +
+        "&filterStatus=" +
+        positionStatus.ACTIVE
       );
       setPositionList(response.data.data);
     } catch (error) {
@@ -247,6 +247,7 @@ const CourseListPage = () => {
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
       />
     </Fragment>
   );

@@ -26,13 +26,14 @@ const CreateNewAccountPage = () => {
   const [createSkills, setCreateSkills] = useState([{ "skillId": "", "level": "" }]);
   const [skillList, setSkillList] = useState([]);
   const [positionList, setPositionList] = useState([]);
-  const [position, setPosition] = useState([]);
+  const [position, setPosition] = useState();
   const [filteredSkillList, setFilteredSkillList] = useState([]);
   const [universityId, setUniversityId] = useState(0);
   const [universityList, setUniversityList] = useState([]);
   const [ojtBatchList, setOjtBatchList] = useState([{ "id": "", "name": "" }]);
   const [batchId, setBatchId] = useState(0);
   const [avatarUrl, setAvatarUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { handleSubmit, control, setValue, reset, watch, unregister, getValues } = useForm();
 
@@ -41,6 +42,9 @@ const CreateNewAccountPage = () => {
       fetchSkills();
       fetchPositions();
       fetchUniversities();
+    }
+    if (userRoleWhenChosen && userRoleWhenChosen === roleExchange.TRAINER) {
+      fetchPositions();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userRoleWhenChosen]);
@@ -95,6 +99,7 @@ const CreateNewAccountPage = () => {
         1
       );
       setPositionList(response.data.data);
+      console.log("fetchPositions ~ success", response);
     } catch (error) {
       console.log("fetchSkills ~ error", error);
     }
@@ -147,6 +152,7 @@ const CreateNewAccountPage = () => {
   };
 
   async function uploadFile() {
+    setIsLoading(true);
     if (avatar) {
       try {
         const imageRef = ref(storage, "images/users/" + avatar.name);
@@ -182,19 +188,21 @@ const CreateNewAccountPage = () => {
           position
         });
       }
-      console.log(values);
       toast.success(accountNoti.SUCCESS.CREATE);
       resetValues();
       setAvatar(null);
+      setAvatarUrl(undefined);
+      setPosition(undefined);
+      setIsLoading(false);
     } catch (error) {
       console.log("error", error);
       toast.error(error);
+      setIsLoading(false);
     }
   };
 
   const handleSelectDropdownOption = (name, value) => {
     setValue(name, value);
-    console.log(getValues(name));
   };
 
   const handleSelectRoleDropdownOption = (name, value) => {
@@ -254,10 +262,19 @@ const CreateNewAccountPage = () => {
           <form onSubmit={handleSubmit(uploadFile)}>
             <FormRow>
               <FormGroup>
-                <Label>Họ và tên (*)</Label>
+                <Label>Họ (*)</Label>
                 <Input
                   control={control}
-                  name="fullName"
+                  name="lastName"
+                  placeholder="Họ và tên đầy đủ"
+                  autoComplete="off"
+                ></Input>
+              </FormGroup>
+              <FormGroup>
+                <Label>Tên (*)</Label>
+                <Input
+                  control={control}
+                  name="firstName"
                   placeholder="Họ và tên đầy đủ"
                   autoComplete="off"
                 ></Input>
@@ -549,6 +566,7 @@ const CreateNewAccountPage = () => {
               <Button
                 type="submit"
                 className="px-10 mx-auto text-white bg-primary"
+                isLoading={isLoading}
               >
                 Tạo tài khoản{" "}
               </Button>
