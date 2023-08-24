@@ -10,9 +10,9 @@ import { Input } from "views/components/input";
 import { Dropdown } from "views/components/dropdown";
 import { Button } from "views/components/button";
 import ImageUpload from "views/components/image/ImageUpload";
-import { genderOptions, roleOptions, positionOptions, skillLevel, defaultUserIcon } from "logic/constants/global";
+import { genderOptions, roleOptions, skillLevel, defaultUserIcon } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { ojtBatchPath, skillPath, universityPath, userPath } from "logic/api/apiUrl";
+import { ojtBatchPath, positionPath, skillPath, universityPath, userPath } from "logic/api/apiUrl";
 import { roleExchange } from "logic/constants/global";
 import { storage } from "logic/config/firebase/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -25,10 +25,12 @@ const CreateNewAccountPage = () => {
   const [userRoleWhenChosen, setUserRoleWhenChosen] = useState("");
   const [createSkills, setCreateSkills] = useState([{ "skillId": "", "level": "" }]);
   const [skillList, setSkillList] = useState([]);
+  const [positionList, setPositionList] = useState([]);
+  const [position, setPosition] = useState([]);
   const [filteredSkillList, setFilteredSkillList] = useState([]);
   const [universityId, setUniversityId] = useState(0);
   const [universityList, setUniversityList] = useState([]);
-  const [ojtBatchList, setOjtBatchList] = useState([]);
+  const [ojtBatchList, setOjtBatchList] = useState([{ "id": "", "name": "" }]);
   const [batchId, setBatchId] = useState(0);
   const [avatarUrl, setAvatarUrl] = useState("");
 
@@ -37,6 +39,7 @@ const CreateNewAccountPage = () => {
   useEffect(() => {
     if (userRoleWhenChosen && userRoleWhenChosen === roleExchange.TRAINEE) {
       fetchSkills();
+      fetchPositions();
       fetchUniversities();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,7 +56,7 @@ const CreateNewAccountPage = () => {
   }, [createSkills]);
 
   useEffect(() => {
-    if(avatarUrl){
+    if (avatarUrl) {
       handleAddNewAccount(getValues());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,14 +85,33 @@ const CreateNewAccountPage = () => {
     }
   };
 
+  const fetchPositions = async () => {
+    try {
+      const response = await axiosPrivate.get(
+        positionPath.GET_POSITION_LIST +
+        "?PageSize=" +
+        100000 +
+        "&PageIndex=" +
+        1
+      );
+      setPositionList(response.data.data);
+    } catch (error) {
+      console.log("fetchSkills ~ error", error);
+    }
+  };
+
   const fetchOJTBatchs = async () => {
     try {
       const response = await axiosPrivate.get(
         ojtBatchPath.GET_OJT_BATCH_LIST_OF_UNIVERSITY +
-        "?id=" +
-        universityId
+        "/" +
+        universityId +
+        "?PageSize=" +
+        100000 +
+        "&PageIndex=" +
+        1
       );
-      setOjtBatchList(response.data);
+      setOjtBatchList(response.data.data);
     } catch (error) {
       console.log("fetchBatchs ~ error", error);
     }
@@ -149,13 +171,15 @@ const CreateNewAccountPage = () => {
           birthday,
           createSkills,
           batchId,
-          avatarUrl
+          avatarUrl,
+          position
         });
       } else {
         await axiosPrivate.post(userPath.CREATE_USER, {
           ...values,
           birthday,
-          avatarUrl
+          avatarUrl,
+          position
         });
       }
       console.log(values);
@@ -170,6 +194,7 @@ const CreateNewAccountPage = () => {
 
   const handleSelectDropdownOption = (name, value) => {
     setValue(name, value);
+    console.log(getValues(name));
   };
 
   const handleSelectRoleDropdownOption = (name, value) => {
@@ -207,7 +232,7 @@ const CreateNewAccountPage = () => {
     return label ? label.label : defaultValue;
   };
 
-  const getApiDropdownLabel = (value, options = [{ value: "", label: "" }], defaultValue = "") => {
+  const getApiDropdownLabel = (value, options = [{ id: "", name: "" }], defaultValue = "") => {
     const label = options.find((label) => label.id === value);
     return label ? label.name : defaultValue;
   };
@@ -356,25 +381,24 @@ const CreateNewAccountPage = () => {
                       <Label>Vị trí (*)</Label>
                       <Dropdown>
                         <Dropdown.Select
-                          placeholder={getDropdownLabel(
-                            "position",
-                            positionOptions,
-                            "Chọn vị trí"
+                          placeholder={getApiDropdownLabel(
+                            getValues("position"),
+                            positionList,
+                            "Chọn vị trí thực tập"
                           )}
                         ></Dropdown.Select>
                         <Dropdown.List>
-                          {positionOptions.map((personPosition) => (
+                          {positionList.map((personPosition) => (
                             <Dropdown.Option
-                              key={personPosition.value}
+                              key={personPosition.id}
                               onClick={() =>
-                                handleSelectDropdownOption(
-                                  "position",
-                                  personPosition.value
+                                setPosition(
+                                  personPosition.id
                                 )
                               }
                             >
                               <span className="capitalize">
-                                {personPosition.label}
+                                {personPosition.name}
                               </span>
                             </Dropdown.Option>
                           ))}

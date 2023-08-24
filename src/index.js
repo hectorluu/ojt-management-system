@@ -25,14 +25,14 @@ import ModalThank from "views/components/modal/ModalThank";
 const SignInPage = lazy(() => import("views/pages/SignInPage"));
 const UnauthorizePage = lazy(() => import("views/pages/UnauthorizePage"));
 
-// prevent adding new lines when importing pages
-
 // Admin Page
 const AdminDashBoardPage = lazy(() =>
   import("views/pages/Admin/AdminDashBoardPage")
 );
 const AccountListPage = lazy(() => import("views/pages/Admin/AccountListPage"));
-const CourseDetailPage = lazy(() => import("views/pages/Admin/CourseDetailPage"));
+const CourseDetailPage = lazy(() =>
+  import("views/pages/Admin/CourseDetailPage")
+);
 const CourseListPage = lazy(() => import("views/pages/Admin/CourseListPage"));
 const CreateNewAccountPage = lazy(() =>
   import("views/pages/Admin/CreateNewAccountPage")
@@ -43,13 +43,21 @@ const CreateNewCoursePage = lazy(() =>
 const CreateNewUniversityPage = lazy(() =>
   import("views/pages/Admin/CreateNewUniversityPage")
 );
-const SkillListPage = lazy(() => import("views/pages/Admin/SkillListPage"));
-const PositionListPage = lazy(() => import("views/pages/Admin/PositionListPage"));
-const UniversityDetailPage = lazy(() =>
-  import("views/pages/Admin/UniversityDetailPage")
+const CreateNewOJTBatch = lazy(() =>
+  import("views/pages/Admin/CreateNewOJTBatch")
 );
+const SkillListPage = lazy(() => import("views/pages/Admin/SkillListPage"));
+const PositionListPage = lazy(() =>
+  import("views/pages/Admin/PositionListPage")
+);
+// const UniversityDetailPage = lazy(() =>
+//   import("views/pages/Admin/UniversityDetailPage")
+// );
 const UniversityListPage = lazy(() =>
   import("views/pages/Admin/UniversityListPage")
+);
+const OJTBatchListPage = lazy(() =>
+  import("views/pages/Admin/OJTBatchListPage")
 );
 
 // Manager Page
@@ -63,14 +71,18 @@ const ManagerReportListPage = lazy(() =>
 const TraineeDetailPage = lazy(() =>
   import("views/pages/Manager/TraineeDetailPage")
 );
-const TraineeListPage = lazy(() => import("views/pages/Manager/TraineeListPage"));
+const TraineeListPage = lazy(() =>
+  import("views/pages/Manager/TraineeListPage")
+);
 const TrainerAssignmentPage = lazy(() =>
   import("views/pages/Manager/TrainerAssignmentPage")
 );
 const TrainerDetailPage = lazy(() =>
   import("views/pages/Manager/TrainerDetailPage")
 );
-const TrainerListPage = lazy(() => import("views/pages/Manager/TrainerListPage"));
+const TrainerListPage = lazy(() =>
+  import("views/pages/Manager/TrainerListPage")
+);
 const TrainingPlanCertifyPage = lazy(() =>
   import("views/pages/Manager/TrainingPlanCertifyPage")
 );
@@ -79,6 +91,15 @@ const TrainingPlanListPage = lazy(() =>
 );
 const DefineNewReportPage = lazy(() =>
   import("views/pages/Manager/DefineNewReportPage")
+);
+const DefineFormulaPage = lazy(() =>
+  import("views/pages/Manager/DefineFormulaPage")
+);
+const ListFormulaPage = lazy(() =>
+  import("views/pages/Manager/ListFormulaPage")
+);
+const ListTemplatePage = lazy(() =>
+  import("views/pages/Manager/ListTemplatePage")
 );
 
 // Trainer Page
@@ -93,9 +114,6 @@ const CertificateCertifyPage = lazy(() =>
 );
 const CreateNewTrainingPlanPage = lazy(() =>
   import("views/pages/Trainer/CreateNewTrainingPlanPage")
-);
-const ManageTrainingPlanPage = lazy(() =>
-  import("views/pages/Trainer/ManageTrainingPlanPage")
 );
 const OJTEvaluationPage = lazy(() =>
   import("views/pages/Trainer/OJTEvaluationPage")
@@ -160,10 +178,6 @@ const router = createBrowserRouter([
         element: <LayoutAdmin></LayoutAdmin>,
         children: [
           {
-            path: "/excel",
-            element: <EvaluateExcelPage></EvaluateExcelPage>,
-          },
-          {
             path: "/admin-dashboard",
             element: <AdminDashBoardPage></AdminDashBoardPage>,
           },
@@ -192,6 +206,10 @@ const router = createBrowserRouter([
             element: <CreateNewUniversityPage></CreateNewUniversityPage>,
           },
           {
+            path: "/create-new-ojt-batch",
+            element: <CreateNewOJTBatch></CreateNewOJTBatch>,
+          },
+          {
             path: "/skill-list",
             element: <SkillListPage></SkillListPage>,
           },
@@ -200,12 +218,12 @@ const router = createBrowserRouter([
             element: <PositionListPage></PositionListPage>,
           },
           {
-            path: "/university-list/:universityId",
-            element: <UniversityDetailPage></UniversityDetailPage>,
-          },
-          {
             path: "/university-list",
             element: <UniversityListPage></UniversityListPage>,
+          },
+          {
+            path: "/batch-list/:batchId",
+            element: <OJTBatchListPage></OJTBatchListPage>,
           },
         ],
       },
@@ -265,6 +283,18 @@ const router = createBrowserRouter([
             path: "/training-plan-list",
             element: <TrainingPlanListPage></TrainingPlanListPage>,
           },
+          {
+            path: "/define-formula",
+            element: <DefineFormulaPage></DefineFormulaPage>,
+          },
+          {
+            path: "/list-formula",
+            element: <ListFormulaPage></ListFormulaPage>,
+          },
+          {
+            path: "/list-template",
+            element: <ListTemplatePage></ListTemplatePage>,
+          },
         ],
       },
     ],
@@ -279,6 +309,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <LayoutTrainer></LayoutTrainer>,
         children: [
+          {
+            path: "/excel",
+            element: <EvaluateExcelPage></EvaluateExcelPage>,
+          },
           {
             path: "/trainer-dashboard",
             element: <TrainerDashboardPage></TrainerDashboardPage>,
@@ -300,10 +334,6 @@ const router = createBrowserRouter([
           {
             path: "/create-new-training-plan",
             element: <CreateNewTrainingPlanPage></CreateNewTrainingPlanPage>,
-          },
-          {
-            path: "/manage-training-plan",
-            element: <ManageTrainingPlanPage></ManageTrainingPlanPage>,
           },
           {
             path: "/ojt-evaluation",

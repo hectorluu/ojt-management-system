@@ -58,6 +58,7 @@ export const traineeTaskStatus = [
 ];
 
 export const skillLevel = [
+  { value: 0, label: "0" },
   { value: 1, label: "1" },
   { value: 2, label: "2" },
   { value: 3, label: "3" },
@@ -82,6 +83,11 @@ export const positionStatusOptions = [
   { value: 3, label: "Không sử dụng" },
 ];
 
+export const isCriteriaOptions = [
+  { value: true, label: "Có" },
+  { value: false, label: "Không" },
+];
+
 export const statusColor = {
   DELETED: "bg-red-500",
   ACTIVE: "bg-green-500",
@@ -94,16 +100,17 @@ export const signalRMessage = {
   USER: "New User Created",
   TRAINING_PLAN: "New Training Plan Created",
   POSITION: "New Position Created",
+  OJTBATCH: "New OJT Batch Created",
 };
 
 export const skillStatus = {
   DELETED: 1,
   ACTIVE: 2,
   INACTIVE: 3,
-}
+};
 
 export const positionStatus = {
   DELETED: 1,
   ACTIVE: 2,
   INACTIVE: 3,
-}
+};

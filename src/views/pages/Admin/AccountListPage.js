@@ -10,6 +10,8 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { tableCellClasses } from "@mui/material/TableCell";
+
 import { userPath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
@@ -27,6 +29,7 @@ import useOnChange from "logic/hooks/useOnChange";
 import { defaultUserIcon } from "logic/constants/global";
 import signalRService from "logic/utils/signalRService";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import { styled } from "@mui/material/styles";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -38,8 +41,11 @@ const AccountListPage = () => {
   const [role, setRole] = useState("");
   const [roleFiltered, setRoleFilter] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(true); // New loading state
+
   const fetchUsers = async () => {
     try {
+      setIsLoading(true);
       let response = await axiosPrivate.get(
         userPath.GET_USER_LIST +
           "?PageSize=" +
@@ -55,6 +61,8 @@ const AccountListPage = () => {
       setTotalItem(response.data.totalItem);
     } catch (error) {
       console.log("fetchUsers ~ error", error);
+    } finally {
+      setIsLoading(false); // Set loading to false after fetching data
     }
   };
 
@@ -124,6 +132,17 @@ const AccountListPage = () => {
     }
   };
 
+  // style table head
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+
   return (
     <Fragment>
       <ModalUserDetailAdmin
@@ -173,69 +192,94 @@ const AccountListPage = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell align="center" width={"10%"}></TableCell>
-              <TableCell align="left" width={"25%"}>
+              <StyledTableCell align="center" width={"10%"}></StyledTableCell>
+              <StyledTableCell align="left" width={"25%"}>
                 Họ và tên
-              </TableCell>
-              <TableCell align="left" width={"25%"}>
+              </StyledTableCell>
+              <StyledTableCell align="left" width={"25%"}>
                 Email
-              </TableCell>
-              <TableCell align="center" width={"15%"}>
+              </StyledTableCell>
+              <StyledTableCell align="center" width={"15%"}>
                 Phân quyền
-              </TableCell>
-              <TableCell align="center" width={"15%"}>
+              </StyledTableCell>
+              <StyledTableCell align="center" width={"15%"}>
                 Trạng thái
-              </TableCell>
-              <TableCell align="right" width={"20%"}></TableCell>
+              </StyledTableCell>
+              <StyledTableCell align="right" width={"20%"}></StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell className="w-20">
-                  <img
-                    className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
-                    src={item.avatarURL || defaultUserIcon}
-                    alt=""
-                  />
-                </TableCell>
-                <TableCell align="left">
-                  {item.firstName + " " + item.lastName}
-                </TableCell>
-                <TableCell align="left">{item.email}</TableCell>
-                <TableCell align="center">
-                  {roleOptions.find((label) => label.value === item.role).label}
-                </TableCell>
-                <TableCell
-                  align="center"
-                  className="flex items-center justify-center"
-                >
-                  <div
-                    className={`rounded-full m-auto text-white h-7 w-32 flex items-center justify-center ${getStatusColor(
-                      item.status
-                    )}`}
-                  >
-                    {
-                      accountStatus.find((label) => label.value === item.status)
-                        .label
-                    }
-                  </div>
-                </TableCell>
-                <TableCell align="right">
-                  <Button
-                    className=""
-                    type="button"
-                    kind="ghost"
-                    onClick={() => handleClickUserModal(item.id)}
-                  >
-                    <ModeEditOutlineIcon></ModeEditOutlineIcon>
-                  </Button>
+            {isLoading ? ( // Render skeleton loading when loading is true
+              // Use the animate-pulse class for skeleton effect
+              <TableRow>
+                <TableCell colSpan={6} className="animate-pulse">
+                  <div className="h-7 w-20 bg-gray-300 rounded"></div>
+                  <div className="h-7 w-25 bg-gray-300 rounded"></div>
+                  <div className="h-7 w-25 bg-gray-300 rounded"></div>
+                  <div className="h-7 w-15 bg-gray-300 rounded"></div>
+                  <div className="h-7 w-15 bg-gray-300 rounded"></div>
+                  <div className="h-7 w-20 bg-gray-300 rounded"></div>
                 </TableCell>
               </TableRow>
-            ))}
+            ) : users.length !== 0 ? (
+              users.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className="w-20">
+                    <img
+                      className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
+                      src={item.avatarURL || defaultUserIcon}
+                      alt=""
+                    />
+                  </TableCell>
+                  <TableCell align="left">
+                    {item.firstName + " " + item.lastName}
+                  </TableCell>
+                  <TableCell align="left">{item.email}</TableCell>
+                  <TableCell align="center">
+                    {
+                      roleOptions.find((label) => label.value === item.role)
+                        .label
+                    }
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="flex items-center justify-center"
+                  >
+                    <div
+                      className={`rounded-full m-auto text-white h-7 w-32 flex items-center justify-center ${getStatusColor(
+                        item.status
+                      )}`}
+                    >
+                      {
+                        accountStatus.find(
+                          (label) => label.value === item.status
+                        ).label
+                      }
+                    </div>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      className=""
+                      type="button"
+                      kind="ghost"
+                      onClick={() => handleClickUserModal(item.id)}
+                    >
+                      <ModeEditOutlineIcon></ModeEditOutlineIcon>
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6}>
+                  Không có tài khoản nào được tìm thấy.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
         <TablePagination
+          labelRowsPerPage="Số dòng"
           component="div"
           count={totalItem}
           page={page - 1}

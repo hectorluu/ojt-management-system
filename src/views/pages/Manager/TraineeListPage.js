@@ -14,7 +14,7 @@ import { userPath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
   defaultPageIndex,
-  positionOptions,
+  accountStatus,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { Button } from "views/components/button";
@@ -61,16 +61,16 @@ const TraineeListPage = () => {
   const [isTraineeDetailModalOpen, setIsTraineeDetailModalOpen] =
     useState(false);
 
-  // const getStatusColor = (status) => {
-  //   switch (status) {
-  //     case 1:
-  //       return "bg-red-500";
-  //     case 2:
-  //       return "bg-green-500";
-  //     default:
-  //       return "bg-gray-500"; // You can set a default color class if needed
-  //   }
-  // };
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 1:
+        return "bg-red-500";
+      case 2:
+        return "bg-green-500";
+      default:
+        return "bg-gray-500"; // You can set a default color class if needed
+    }
+  };
 
   return (
     <Fragment>
@@ -92,7 +92,6 @@ const TraineeListPage = () => {
               <TableCell>Họ và tên</TableCell>
               <TableCell width="25%">Email</TableCell>
               <TableCell align="center">Vai trò</TableCell>
-              <TableCell>Trạng thái</TableCell>
               <TableCell align="right" width={"10%"}></TableCell>
             </TableRow>
           </TableHead>
@@ -106,33 +105,9 @@ const TraineeListPage = () => {
                     alt=""
                   />
                 </TableCell>
-                <TableCell>{item.fullName}</TableCell>
+                <TableCell>{item.firstName + " " + item.lastName}</TableCell>
                 <TableCell>{item.email}</TableCell>
-                <TableCell align="center">
-                  <div className="mx-auto">
-                    {
-                      positionOptions.find(
-                        (label) => label.value === item.position
-                      ).label
-                    }
-                  </div>
-                </TableCell>
-                <TableCell
-                  align="center"
-                  className="flex items-center justify-center"
-                >
-                  {/* <div
-                    className={`rounded-full m-auto text-white h-7 w-32 flex items-center justify-center ${getStatusColor(
-                      item.status
-                    )}`}
-                  >
-                    {
-                      accountStatus.find(
-                        (label) => label.value === item.data.status
-                      ).label
-                    }
-                  </div> */}
-                </TableCell>
+                <TableCell align="center">{item.positionName}</TableCell>
                 <TableCell align="right" width={"10%"}>
                   <Button
                     className=""
@@ -148,6 +123,7 @@ const TraineeListPage = () => {
           </TableBody>
         </Table>
         <TablePagination
+          labelRowsPerPage="Số dòng"
           component="div"
           count={totalItem}
           page={page - 1}

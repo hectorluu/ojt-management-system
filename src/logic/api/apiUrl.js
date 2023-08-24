@@ -16,13 +16,19 @@ export const coursePath = {
   UPDATE_COURSE: "",
 };
 
-export const criteriaPath = {};
+export const criteriaPath = {
+  GET_STUDENT_PONIT_LIST: "/criteria/list-of-trainee-point-by-trainer",
+  EVALUATE_STUDENT: "/criteria",
+};
 
 export const ojtBatchPath = {
   GET_OJT_BATCH_LIST_OF_UNIVERSITY: "/ojtbatch/batches-of-university",
+  GET_NOT_GRADED_BATCH: "/ojtbatch/notgrade-batches",
 };
 
-export const reportPath = {};
+export const reportPath = {
+  GET_LIST_REPORT: "/report",
+};
 
 export const universityPath = {
   GET_UNIVERSITY_LIST: "/university",
@@ -57,6 +63,12 @@ export const taskPath = {
 export const positionPath = {
   GET_POSITION_LIST: "/position",
   GET_POSITION: "/position/",
+};
+
+export const templatePath = {
+  CREATE_TEMPLATE: "/template",
+  GET_TEMPLATE_HEADER: "/template/template-header/criteriaheader",
+  GET_TEMPLATE_LIST: "/template",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;
