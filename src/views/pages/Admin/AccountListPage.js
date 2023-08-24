@@ -48,14 +48,14 @@ const AccountListPage = () => {
       setIsLoading(true);
       let response = await axiosPrivate.get(
         userPath.GET_USER_LIST +
-          "?PageSize=" +
-          rowsPerPage +
-          "&PageIndex=" +
-          page +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&role=" +
-          role
+        "?PageSize=" +
+        rowsPerPage +
+        "&PageIndex=" +
+        page +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&role=" +
+        role
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -229,6 +229,7 @@ const AccountListPage = () => {
                       className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
                       src={item.avatarURL || defaultUserIcon}
                       alt=""
+                      onError={(e) => { e.target.src = defaultUserIcon }}
                     />
                   </TableCell>
                   <TableCell align="left">
@@ -286,6 +287,7 @@ const AccountListPage = () => {
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
         />
       </TableContainer>
     </Fragment>

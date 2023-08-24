@@ -24,7 +24,7 @@ import useOnChange from "logic/hooks/useOnChange";
 import ModalAddSkillAdmin from "views/components/modal/ModalAddSkillAdmin";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 
-const SkillListPage = () => {
+const EvaluateOJTBatchListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
   const [totalItem, setTotalItem] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(defaultPageSize);
@@ -189,4 +189,4 @@ const SkillListPage = () => {
   );
 };
 
-export default SkillListPage;
+export default EvaluateOJTBatchListPage;

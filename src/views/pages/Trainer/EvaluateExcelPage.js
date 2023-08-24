@@ -172,6 +172,12 @@ const EvaluateExcelPage = () => {
               onProcessRowUpdateError={(error) => {
                 console.log("error", error);
               }}
+              componentsProps={{
+                pagination: {
+                  labelRowsPerPage: "Số dòng",
+                  defaultLabelDisplayedRows({ from, to, count }) { return `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`; }
+                }
+              }}
             />
           </StyledBox>
         ) : null}

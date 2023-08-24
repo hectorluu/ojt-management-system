@@ -5,12 +5,14 @@ import { Typography, Paper, Chip, Stack, Button, Card } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import axios from "logic/api/axios";
-import { apiURL } from "logic/config/general-config/config";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
 import { Input } from "views/components/input";
+import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
+import { formulaPath } from "logic/api/apiUrl";
+import { formulaNoti } from "logic/constants/notification";
+import { Button as ButtonC } from "views/components/button";
 
 const DefineFormulaPage = () => {
   // style
@@ -48,9 +50,8 @@ const DefineFormulaPage = () => {
     color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
     background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
     border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
-    box-shadow: 0px 2px 2px ${
-      theme.palette.mode === "dark" ? grey[900] : grey[50]
-    };
+    box-shadow: 0px 2px 2px ${theme.palette.mode === "dark" ? grey[900] : grey[50]
+      };
   
     &:hover {
       border-color: ${blue[400]};
@@ -58,8 +59,7 @@ const DefineFormulaPage = () => {
   
     &:focus {
       border-color: ${blue[400]};
-      box-shadow: 0 0 0 3px ${
-        theme.palette.mode === "dark" ? blue[500] : blue[200]
+      box-shadow: 0 0 0 3px ${theme.palette.mode === "dark" ? blue[500] : blue[200]
       };
     }
   
@@ -110,9 +110,11 @@ const DefineFormulaPage = () => {
 
   const tagCategories = Object.keys(tagData);
 
-  const [textareaValue, setTextareaValue] = useState("");
+  const [calculation, setCalculation] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedLabel, setSelectedLabel] = useState(null);
+  const axiosPrivate = useAxiosPrivate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
@@ -121,7 +123,7 @@ const DefineFormulaPage = () => {
 
   const handleChipClick = (label) => {
     setSelectedLabel(label);
-    setTextareaValue(
+    setCalculation(
       (prevValue) => prevValue + tagData[selectedCategory][label]
     );
   };
@@ -132,38 +134,43 @@ const DefineFormulaPage = () => {
     if (textareaRef.current) {
       textareaRef.current.focus();
 
-      textareaRef.current.value = textareaValue;
+      textareaRef.current.value = calculation;
       // Set the caret position to the end of the textarea
-      textareaRef.current.selectionStart = textareaValue.length;
-      textareaRef.current.selectionEnd = textareaValue.length;
+      textareaRef.current.selectionStart = calculation.length;
+      textareaRef.current.selectionEnd = calculation.length;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [textareaValue]);
+  }, [calculation]);
 
   const handleTextareaChange = (event) => {
     const newValue = event.target.value;
-    setTextareaValue(newValue);
+    setCalculation(newValue);
   };
 
-  const handleTextareaKeyDown = (event) => {};
+  const handleTextareaKeyDown = (event) => { };
 
-  const { handleSubmit, control, reset } = useForm();
+  const { handleSubmit, control, reset, getValues } = useForm();
 
   const resetValues = () => {
     reset({});
   };
 
-  const handleAddNewFormula = async (values) => {
+  const handleAddNewFormula = async () => {
+    setIsLoading(true);
     try {
-      await axios.post(`${apiURL}/campaigns`, {
-        ...values,
+      const name = getValues("name");
+      await axiosPrivate.post(formulaPath.CREATE_FORMULA, {
+        name,
+        calculation
       });
-      toast.success("Create campaign successfully");
       resetValues();
+      setCalculation("");
+      toast.success(formulaNoti.SUCCESS.CREATE);
+      setIsLoading(false);
     } catch (error) {
-      toast.error("Can not create new campaign");
+      setIsLoading(true);
+      toast.error(error);
     }
-    // values, startDate, endDate, content
   };
 
   return (
@@ -181,7 +188,7 @@ const DefineFormulaPage = () => {
               <Label>Tên công thức *</Label>
               <Input
                 control={control}
-                name="formularname"
+                name="name"
                 placeholder="Nhập tên công thức"
               ></Input>
             </FormGroup>
@@ -259,7 +266,7 @@ const DefineFormulaPage = () => {
               minRows={5}
               maxRows={8}
               placeholder="Điền công thức tính"
-              value={textareaValue}
+              value={calculation}
               onChange={handleTextareaChange}
               onKeyDown={handleTextareaKeyDown}
               control={control}
@@ -267,9 +274,13 @@ const DefineFormulaPage = () => {
           </div>
 
           <div className="mt-5 text-center">
-            <Button variant="contained" color="success">
+            <ButtonC
+              type="submit"
+              className="px-10 mx-auto text-white bg-primary"
+              isLoading={isLoading}
+            >
               Tạo công thức{" "}
-            </Button>
+            </ButtonC>
           </div>
         </form>
       </div>

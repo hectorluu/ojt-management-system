@@ -11,10 +11,12 @@ import { useSelector } from "react-redux";
 import { permissions } from "logic/constants/permissions";
 import { useDispatch } from "react-redux";
 import { authLogOut } from "logic/store/auth/auth-slice";
+import { defaultUserIcon } from "logic/constants/global";
 
 const DashboardTopbar = () => {
   const { user } = useSelector((state) => state.auth);
   const userRole = user?.role || "";
+  const userAvatar = user?.avatarURL || defaultUserIcon;
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -39,10 +41,11 @@ const DashboardTopbar = () => {
         {/* User Dropdown */}
         <div style={{ position: "relative" }}>
           <Avatar
-            srcSet="/logo.png 2x"
+            srcSet={userAvatar}
             alt="ojt-management-system"
             onClick={handleMenuOpen}
             style={{ cursor: "pointer" }}
+            onError={(e) => { e.target.src = defaultUserIcon }}
           />
         </div>
 

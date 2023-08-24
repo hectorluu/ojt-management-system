@@ -114,3 +114,16 @@ export const positionStatus = {
   ACTIVE: 2,
   INACTIVE: 3,
 };
+
+export const notCriteriaOptions = [
+  { value: "LastName", label: "Họ" },
+  { value: "FirstName", label: "Tên" },
+  { value: "Email", label: "Email" },
+  { value: "RollNumber", label: "Mã số nhân viên" },
+  { value: "Gender", label: "Giới tính" },
+  { value: "PhoneNumber", label: "Số điện thoại" },
+  { value: "Address", label: "Địa chỉ" },
+  { value: "Birthday", label: "Ngày sinh" },
+  { value: "PositionId", label: "Vị trí" },
+  { value: "StudentCode", label: "Mã số sinh viên" },
+];

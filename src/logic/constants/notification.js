@@ -17,7 +17,7 @@ export const accountNoti = {
     EXISTED_EMAIL: "Email này đã được sử dụng!!!",
     SKILL_OVERFLOW: "Đã đạt giới hạn số kỹ năng của hệ thống!!!"
   },
-}
+};
 
 export const courseNoti = {
   SUCCESS: {
@@ -28,7 +28,7 @@ export const courseNoti = {
     SKILL_OVERFLOW: "Đã đạt giới hạn số kỹ năng của hệ thống!!!",
     POSITION_OVERFLOW: "Đã đạt giới hạn số vị trí của hệ thống!!!"
   },
-}
+};
 
 export const criteraNoti = {
   SUCCESS: {
@@ -38,4 +38,24 @@ export const criteraNoti = {
   ERROR: {
     POINT_ERROR: "Phiếu đánh giá chưa phù hợp!!!",
   },
-}
+};
+
+export const templateNoti = {
+  SUCCESS: {
+    CREATE: "Thành công tạo mẫu đánh giá!!!",
+  },
+
+  ERROR: {
+    POINT_ERROR: "Phiếu đánh giá chưa phù hợp!!!",
+  },
+};
+
+export const formulaNoti = {
+  SUCCESS: {
+    CREATE: "Thành công tạo công thức tính!!!",
+  },
+
+  ERROR: {
+    POINT_ERROR: "Phiếu đánh giá chưa phù hợp!!!",
+  },
+};

@@ -1,4 +1,3 @@
-import { saveAs } from "file-saver";
 import { Workbook, WorkbookFormat, WorkbookLoadOptions, WorkbookSaveOptions } from 'igniteui-react-excel';
 import { IgrExcelXlsxModule, IgrExcelCoreModule, IgrExcelModule } from 'igniteui-react-excel';
 
@@ -58,16 +57,13 @@ export class ExcelUtility {
         });
     }
 
-    static save(workbook, fileNameWithoutExtension) {
+    static save(workbook) {
         return new Promise((resolve, reject) => {
             const opt = new WorkbookSaveOptions();
             opt.type = "blob";
 
             workbook.save(opt, (d) => {
-                const fileExt = ExcelUtility.getExtension(workbook.currentFormat);
-                const fileName = fileNameWithoutExtension + fileExt;
-                saveAs(d, fileName);
-                resolve(fileName);
+                resolve(d);
             }, (e) => {
                 reject(e);
             });
