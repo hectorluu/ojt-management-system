@@ -5,6 +5,7 @@ import { universityPath } from "logic/api/apiUrl";
 import { defaultPageIndex, defaultPageSize } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import useOnChange from "logic/hooks/useOnChange";
+import { useNavigate } from "react-router-dom";
 
 const UniversityListPage = () => {
   const [page] = useState(defaultPageIndex);
@@ -32,7 +33,9 @@ const UniversityListPage = () => {
   useEffect(() => {
     fetchUniversities();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, []);
+
+  const navigate = useNavigate();
 
   return (
     <Fragment>
@@ -69,7 +72,12 @@ const UniversityListPage = () => {
                   Lô E2a-7, Đường D1, Đ. D1, Long Thạnh Mỹ, Thành Phố Thủ Đức
                 </p>
               </div>
-              <Button className="w-full bg-opacity-20 text-secondary bg-violet-500 hover:bg-violet-300">
+              <Button
+                className="w-full bg-opacity-20 text-secondary bg-violet-500 hover:bg-violet-300"
+                onClick={() => {
+                  navigate("/batch-list/" + 1);
+                }}
+              >
                 Connect
               </Button>
             </div>

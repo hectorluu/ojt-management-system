@@ -46,6 +46,11 @@ const sidebarLinks = [
     url: "/attendance",
   },
   {
+    icon: <SpaceDashboardOutlinedIcon />,
+    title: "List Template",
+    url: "/list-template",
+  },
+  {
     icon: <SummarizeOutlinedIcon />,
     title: "Manager Report List",
     url: "/manager-report-list",

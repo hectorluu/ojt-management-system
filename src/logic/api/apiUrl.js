@@ -26,7 +26,9 @@ export const ojtBatchPath = {
   GET_NOT_GRADED_BATCH: "/ojtbatch/notgrade-batches",
 };
 
-export const reportPath = {};
+export const reportPath = {
+  GET_LIST_REPORT: "/report",
+};
 
 export const universityPath = {
   GET_UNIVERSITY_LIST: "/university",
@@ -66,6 +68,7 @@ export const positionPath = {
 export const templatePath = {
   CREATE_TEMPLATE: "/template",
   GET_TEMPLATE_HEADER: "/template/template-header/criteriaheader",
+  GET_TEMPLATE_LIST: "/template",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

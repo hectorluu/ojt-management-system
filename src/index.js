@@ -43,15 +43,21 @@ const CreateNewCoursePage = lazy(() =>
 const CreateNewUniversityPage = lazy(() =>
   import("views/pages/Admin/CreateNewUniversityPage")
 );
+const CreateNewOJTBatch = lazy(() =>
+  import("views/pages/Admin/CreateNewOJTBatch")
+);
 const SkillListPage = lazy(() => import("views/pages/Admin/SkillListPage"));
 const PositionListPage = lazy(() =>
   import("views/pages/Admin/PositionListPage")
 );
-const UniversityDetailPage = lazy(() =>
-  import("views/pages/Admin/UniversityDetailPage")
-);
+// const UniversityDetailPage = lazy(() =>
+//   import("views/pages/Admin/UniversityDetailPage")
+// );
 const UniversityListPage = lazy(() =>
   import("views/pages/Admin/UniversityListPage")
+);
+const OJTBatchListPage = lazy(() =>
+  import("views/pages/Admin/OJTBatchListPage")
 );
 
 // Manager Page
@@ -91,6 +97,9 @@ const DefineFormulaPage = lazy(() =>
 );
 const ListFormulaPage = lazy(() =>
   import("views/pages/Manager/ListFormulaPage")
+);
+const ListTemplatePage = lazy(() =>
+  import("views/pages/Manager/ListTemplatePage")
 );
 
 // Trainer Page
@@ -197,6 +206,10 @@ const router = createBrowserRouter([
             element: <CreateNewUniversityPage></CreateNewUniversityPage>,
           },
           {
+            path: "/create-new-ojt-batch",
+            element: <CreateNewOJTBatch></CreateNewOJTBatch>,
+          },
+          {
             path: "/skill-list",
             element: <SkillListPage></SkillListPage>,
           },
@@ -205,12 +218,12 @@ const router = createBrowserRouter([
             element: <PositionListPage></PositionListPage>,
           },
           {
-            path: "/university-list/:universityId",
-            element: <UniversityDetailPage></UniversityDetailPage>,
-          },
-          {
             path: "/university-list",
             element: <UniversityListPage></UniversityListPage>,
+          },
+          {
+            path: "/batch-list/:batchId",
+            element: <OJTBatchListPage></OJTBatchListPage>,
           },
         ],
       },
@@ -277,6 +290,10 @@ const router = createBrowserRouter([
           {
             path: "/list-formula",
             element: <ListFormulaPage></ListFormulaPage>,
+          },
+          {
+            path: "/list-template",
+            element: <ListTemplatePage></ListTemplatePage>,
           },
         ],
       },

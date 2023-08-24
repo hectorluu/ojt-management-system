@@ -5,7 +5,6 @@ import { Card } from "@mui/material";
 import { Button } from "views/components/button";
 import { ojtBatchPath } from "logic/api/apiUrl";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { ItemHighlightFrameRect } from "igniteui-react-charts";
 
 const OJTEvaluationPage = () => {
   const [ojtBatch, setOjtBatch] = useState([]);
