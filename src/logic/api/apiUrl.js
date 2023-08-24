@@ -24,6 +24,7 @@ export const criteriaPath = {
 export const ojtBatchPath = {
   GET_OJT_BATCH_LIST_OF_UNIVERSITY: "/ojtbatch/batches-of-university",
   GET_NOT_GRADED_BATCH: "/ojtbatch/notgrade-batches",
+  CREATE_OJT_BATCH: "/ojtbatch",
 };
 
 export const reportPath = {
