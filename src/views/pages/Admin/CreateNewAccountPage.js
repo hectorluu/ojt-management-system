@@ -433,7 +433,7 @@ const CreateNewAccountPage = () => {
                       <Dropdown>
                         <Dropdown.Select
                           placeholder={getApiDropdownLabel(
-                            getValues("position"),
+                            position,
                             positionList,
                             "Chọn vị trí thực tập"
                           )}
