@@ -1,5 +1,6 @@
 import { Workbook, WorkbookFormat, WorkbookLoadOptions, WorkbookSaveOptions } from 'igniteui-react-excel';
 import { IgrExcelXlsxModule, IgrExcelCoreModule, IgrExcelModule } from 'igniteui-react-excel';
+import LuckyExcel from 'luckyexcel'
 
 IgrExcelCoreModule.register();
 IgrExcelModule.register();
@@ -28,6 +29,14 @@ export class ExcelUtility {
     static load(file) {
         return new Promise((resolve, reject) => {
             ExcelUtility.readFileAsUint8Array(file).then((a) => {
+                LuckyExcel.transformExcelToLucky(a,
+                    function (exportJson, luckysheetfile) {
+                        console.log("exportJson", exportJson);
+                    },
+                    function (error) {
+                        console.log(error);
+                    }
+                )
                 Workbook.load(a, new WorkbookLoadOptions(), (w) => {
                     resolve(w);
                 }, (e) => {

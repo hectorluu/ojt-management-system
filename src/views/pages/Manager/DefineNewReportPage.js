@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { Button } from "views/components/button";
 import Gap from "views/components/common/Gap";
 import { templateNoti } from "logic/constants/notification";
+import { useNavigate } from "react-router-dom";
 
 IgrExcelCoreModule.register();
 IgrExcelModule.register();
@@ -40,6 +41,7 @@ function DefineNewReportPage() {
   const [notCriteriaList, setNotCriteriaList] = useState(notCriteriaOptions);
   const [formulaList, setFormulaList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
 
   const openFile = (files) => {
@@ -169,11 +171,13 @@ function DefineNewReportPage() {
           });
         } catch (e) {
           setIsLoading(false);
+          setUrl("");
           toast.error(e);
         }
       })
     } else {
       setIsLoading(false);
+      setUrl("");
       toast.error("File cannot be null");
     }
   };
@@ -190,9 +194,12 @@ function DefineNewReportPage() {
         url,
       });
       setIsLoading(false);
+      setUrl("");
       toast.success(templateNoti.SUCCESS.CREATE);
+      navigate("/list-template");
     } catch (error) {
       setIsLoading(false);
+      setUrl("");
       toast.error(error);
     }
   };
@@ -213,7 +220,7 @@ function DefineNewReportPage() {
     const newArray = templateHeaders.slice();
     newArray[index][name] = value;
     if (name === "formulaId") {
-      newArray[index].matchedAttribute = "point";
+      newArray[index].matchedAttribute = "Point";
     }
     if (newArray[index].isCriteria === false) {
       newArray[index].formulaId = undefined;
