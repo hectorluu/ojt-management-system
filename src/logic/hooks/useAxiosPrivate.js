@@ -1,16 +1,20 @@
 import { axiosPrivate } from "logic/api/axios";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import useRefreshToken from "./useRefreshToken";
+import { getToken } from "logic/utils/auth";
 
 export default function useAxiosPrivate() {
   const refresh = useRefreshToken();
-  const { auth } = useSelector((state) => state);
+  // const { auth } = useSelector((state) => state);
+  const { access_token } = getToken();
+  const accessToken = useMemo(() => access_token, [access_token]);
+
   useEffect(() => {
     const requestInterceptor = axiosPrivate.interceptors.request.use(
       (config) => {
         if (!config.headers["Authorization"]) {
-          config.headers["Authorization"] = `Bearer ${auth.accessToken}`;
+          config.headers["Authorization"] = `Bearer ${accessToken}`;
         }
         return config;
       },
@@ -35,8 +39,8 @@ export default function useAxiosPrivate() {
       axiosPrivate.interceptors.request.eject(requestInterceptor);
       axiosPrivate.interceptors.response.eject(responseInterceptor);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth.accessToken, refresh]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accessToken, refresh]);
 
   return axiosPrivate;
 }

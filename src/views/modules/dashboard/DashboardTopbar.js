@@ -1,110 +1,84 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import React, { Fragment } from "react";
 import Avatar from "@mui/material/Avatar";
-import SettingsIcon from "@mui/icons-material/Settings";
-import PersonIcon from "@mui/icons-material/Person";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { ListItemIcon } from "@mui/material";
+import { Badge, Box, IconButton, Stack, SvgIcon, Tooltip } from "@mui/material";
 import { useSelector } from "react-redux";
-import { permissions } from "logic/constants/permissions";
-import { useDispatch } from "react-redux";
-import { authLogOut } from "logic/store/auth/auth-slice";
 import { defaultUserIcon } from "logic/constants/global";
+import { usePopover } from "logic/hooks/usePopOver";
+import { alpha } from "@mui/material/styles";
+import { AccountPopover } from "./AccountPopover";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+
+const SIDE_NAV_WIDTH = 280;
+const TOP_NAV_HEIGHT = 64;
 
 const DashboardTopbar = () => {
   const { user } = useSelector((state) => state.auth);
-  const userRole = user?.role || "";
   const userAvatar = user?.avatarURL || defaultUserIcon;
 
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const dispatch = useDispatch();
-  const handleMenuCloseLogout = () => {
-    setAnchorEl(null);
-    dispatch(authLogOut());
-  };
+  const accountPopover = usePopover();
 
   return (
-    <div className="flex items-center justify-between mb-8">
-      <div className="flex items-center flex-1 gap-x-10"></div>
-      <div className="flex items-center justify-end flex-1 gap-x-4">
-        {/* User Dropdown */}
-        <div style={{ position: "relative" }}>
-          <Avatar
-            srcSet={userAvatar}
-            alt="ojt-management-system"
-            onClick={handleMenuOpen}
-            style={{ cursor: "pointer" }}
-            onError={(e) => { e.target.src = defaultUserIcon }}
-          />
-        </div>
-
-        {/* User Dropdown Menu */}
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-          getcontentanchorel={null}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
+    <Fragment>
+      <Box
+        component="header"
+        sx={{
+          backdropFilter: "blur(6px)",
+          backgroundColor: (theme) =>
+            alpha(theme.palette.background.default, 0.8),
+          position: "sticky",
+          left: {
+            lg: `${SIDE_NAV_WIDTH}px`,
+          },
+          top: 0,
+          width: {
+            lg: `calc(100% - ${SIDE_NAV_WIDTH}px)`,
+          },
+          zIndex: (theme) => theme.zIndex.appBar,
+        }}
+      >
+        <Stack
+          alignItems="center"
+          direction="row"
+          justifyContent="space-between"
+          spacing={2}
+          sx={{
+            minHeight: TOP_NAV_HEIGHT,
           }}
         >
-          {userRole === permissions.TRAINEE ? (
-            <MenuItem
-              onClick={handleMenuClose}
-              component={Link}
-              to="/trainee-profile"
-            >
-              <ListItemIcon>
-                <PersonIcon />
-              </ListItemIcon>
-              User Profile
-            </MenuItem>
-          ) : userRole === permissions.TRAINER ? (
-            <MenuItem
-              onClick={handleMenuClose}
-              component={Link}
-              to="/trainer-profile"
-            >
-              <ListItemIcon>
-                <PersonIcon />
-              </ListItemIcon>
-              User Profile
-            </MenuItem>
-          ) : (
-            []
-          )}
-
-          <MenuItem onClick={handleMenuClose} component={Link}>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            Settings
-          </MenuItem>
-          <MenuItem onClick={handleMenuCloseLogout} component={Link}>
-            <ListItemIcon>
-              <ExitToAppIcon />
-            </ListItemIcon>
-            Sign Out
-          </MenuItem>
-        </Menu>
-      </div>
-    </div>
+          <Stack alignItems="center" direction="row" spacing={2}></Stack>
+          <Stack alignItems="center" direction="row" spacing={2}>
+            <Tooltip title="Notifications">
+              <IconButton>
+                <Badge badgeContent={4} color="success" variant="dot">
+                  <SvgIcon fontSize="small">
+                    <NotificationsIcon />
+                  </SvgIcon>
+                </Badge>
+              </IconButton>
+            </Tooltip>
+            <Avatar
+              onClick={accountPopover.handleOpen}
+              ref={accountPopover.anchorRef}
+              sx={{
+                cursor: "pointer",
+                height: 40,
+                width: 40,
+              }}
+              srcSet={userAvatar}
+              style={{ cursor: "pointer" }}
+              onError={(e) => {
+                e.target.src = defaultUserIcon;
+              }}
+            />
+          </Stack>
+        </Stack>
+      </Box>
+      <AccountPopover
+        anchorEl={accountPopover.anchorRef.current}
+        open={accountPopover.open}
+        onClose={accountPopover.handleClose}
+      />
+    </Fragment>
   );
 };
 

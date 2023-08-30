@@ -4,6 +4,7 @@ export const defaultImage =
 export const defaultUserIcon = "user.png";
 
 export const defaultCourseImage = "default-course.png";
+export const defaultUniversityImage = "default-university.png";
 
 export const defaultPageSize = 10;
 

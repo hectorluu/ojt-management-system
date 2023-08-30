@@ -5,6 +5,7 @@ import { universityPath } from "logic/api/apiUrl";
 import { defaultPageIndex, defaultPageSize } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
+import { defaultUniversityImage } from "logic/constants/global";
 
 const UniversityListPage = () => {
   const [page] = useState(defaultPageIndex);
@@ -55,11 +56,17 @@ const UniversityListPage = () => {
         <div className="w-full max-w-[1000px] mx-auto text-center">
           <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] space-x-10">
             {universities.map((university) => (
-              <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
+              <div
+                className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96"
+                key={university.id}
+              >
                 <img
                   src={university.imgURL}
                   alt=""
                   className="mb-5 w-full h-full max-h-40 object-contain"
+                  onError={(e) => {
+                    e.target.src = defaultUniversityImage;
+                  }}
                 />
                 <div className="max-h-1/2 mt-2">
                   <h1 className="decoration-solid font-medium text-2xl">
