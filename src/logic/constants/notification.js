@@ -1,10 +1,10 @@
 export const authNoti = {
   SUCCESS: {
-    LOGIN: "Đăng nhập thành công!!!"
+    LOGIN: "Đăng nhập thành công!!!",
   },
 
   ERROR: {
-    LOGIN: "Tài khoản hoặc mật khẩu không đúng!!!"
+    LOGIN: "Tài khoản hoặc mật khẩu không đúng!!!",
   },
 };
 
@@ -15,7 +15,7 @@ export const accountNoti = {
 
   ERROR: {
     EXISTED_EMAIL: "Email này đã được sử dụng!!!",
-    SKILL_OVERFLOW: "Đã đạt giới hạn số kỹ năng của hệ thống!!!"
+    SKILL_OVERFLOW: "Đã đạt giới hạn số kỹ năng của hệ thống!!!",
   },
 };
 
@@ -26,7 +26,7 @@ export const courseNoti = {
 
   ERROR: {
     SKILL_OVERFLOW: "Đã đạt giới hạn số kỹ năng của hệ thống!!!",
-    POSITION_OVERFLOW: "Đã đạt giới hạn số vị trí của hệ thống!!!"
+    POSITION_OVERFLOW: "Đã đạt giới hạn số vị trí của hệ thống!!!",
   },
 };
 
@@ -57,5 +57,15 @@ export const formulaNoti = {
 
   ERROR: {
     POINT_ERROR: "Phiếu đánh giá chưa phù hợp!!!",
+  },
+};
+
+export const ojtBatchNoti = {
+  SUCCESS: {
+    CREATE: "Thành công tạo đợt thực tập mới!!!",
+  },
+
+  ERROR: {
+    POINT_ERROR: "Thông tin đợt thực tập chưa phù hợp!!!",
   },
 };

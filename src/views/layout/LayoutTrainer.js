@@ -6,7 +6,7 @@ import { Outlet } from "react-router-dom";
 
 const LayoutTrainer = () => {
   return (
-    <div className="min-h-screen p-10 bg-lite">
+    <div className="min-h-screen p-3 bg-lite">
       <Overlay></Overlay>
       <DashboardTopbar></DashboardTopbar>
       <div className="flex items-start gap-x-10">

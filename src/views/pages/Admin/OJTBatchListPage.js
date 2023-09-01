@@ -53,6 +53,7 @@ const OJTBatchListPage = () => {
         <Card
           sx={{ display: "flex" }}
           className="rounded-2xl border-0 py-3 pb-1"
+          key={item.id}
         >
           <div className="flex items-center space-x-96 gap-x-6 ml-5 w-full">
             <div className="flex-1">
