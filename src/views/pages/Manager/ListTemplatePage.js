@@ -37,6 +37,14 @@ const ListTemplatePage = () => {
             Danh sách mẫu đánh giá
           </Heading>
         </div>
+        <Button
+          className="px-7"
+          type="button"
+          href="/manager-define-new-report"
+          kind="secondary"
+        >
+          Thêm file báo cáo mới
+        </Button>
       </div>
       <Gap></Gap>
 

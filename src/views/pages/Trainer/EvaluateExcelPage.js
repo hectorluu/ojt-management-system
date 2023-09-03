@@ -120,6 +120,7 @@ const EvaluateExcelPage = () => {
   };
 
   const onClickSubmit = () => {
+    console.log("data", data);
     const containsNullOrUndefined = data.some(item => {
       return Object.values(item).some(value => value === null || value === undefined);
     });

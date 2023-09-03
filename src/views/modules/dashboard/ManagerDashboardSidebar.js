@@ -9,6 +9,7 @@ import AssignmentIndOutlinedIcon from "@mui/icons-material/AssignmentIndOutlined
 import FormatListNumberedOutlinedIcon from "@mui/icons-material/FormatListNumberedOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 import CalculateOutlinedIcon from '@mui/icons-material/CalculateOutlined';
+import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
 
 const sidebarLinks = [
   {
@@ -47,7 +48,7 @@ const sidebarLinks = [
     url: "/attendance",
   },
   {
-    icon: <SpaceDashboardOutlinedIcon />,
+    icon: <NoteAddOutlinedIcon />,
     title: "List Template",
     url: "/list-template",
   },

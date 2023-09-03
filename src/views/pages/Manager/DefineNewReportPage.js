@@ -1,9 +1,4 @@
-import React, { useRef, useEffect, Fragment, useState } from "react";
-import { IgrExcelXlsxModule } from "igniteui-react-excel";
-import { IgrExcelCoreModule } from "igniteui-react-excel";
-import { IgrExcelModule } from "igniteui-react-excel";
-import { IgrSpreadsheetModule } from "igniteui-react-spreadsheet";
-import { IgrSpreadsheet } from "igniteui-react-spreadsheet";
+import React, { useEffect, Fragment, useState } from "react";
 import { ExcelUtility } from "logic/utils/excelUtils";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
@@ -21,16 +16,13 @@ import { toast } from "react-toastify";
 import { Button } from "views/components/button";
 import Gap from "views/components/common/Gap";
 import { templateNoti } from "logic/constants/notification";
+import { useNavigate } from "react-router-dom";
+import Luckysheet from "views/components/Luckysheet/Luckysheet";
 
-IgrExcelCoreModule.register();
-IgrExcelModule.register();
-IgrExcelXlsxModule.register();
-IgrSpreadsheetModule.register();
 
 
 function DefineNewReportPage() {
   const axiosPrivate = useAxiosPrivate();
-  const spreadsheetRef = useRef(null);
   const [universityList, setUniversityList] = useState([]);
   const [file, setFile] = useState(null);
   const [url, setUrl] = useState("");
@@ -40,6 +32,8 @@ function DefineNewReportPage() {
   const [notCriteriaList, setNotCriteriaList] = useState(notCriteriaOptions);
   const [formulaList, setFormulaList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const navigate = useNavigate();
 
 
   const openFile = (files) => {
@@ -47,7 +41,7 @@ function DefineNewReportPage() {
       ExcelUtility.load(files[0]).then(
         (w) => {
           setFile(files[0]);
-          spreadsheetRef.current.workbook = w;
+          setData(w.sheets);
         },
         (e) => {
           console.error("Workbook Load Error");
@@ -57,11 +51,13 @@ function DefineNewReportPage() {
   };
 
   useEffect(() => {
-    // const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2Ftest.xlsx?alt=media&token=f9d22c08-4b80-4da8-97de-a0c3711a46f7";
+    console.log(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  useEffect(() => {
+    // const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2FFile%20danh%20gia%20danh%20sach%20sv%20BKU.xlsx?alt=media&token=d2a90118-f684-4f4b-ba12-ba79c9f11067";
     // ExcelUtility.loadFromUrl(url).then((w) => {
-    //   if (spreadsheetRef.current) {
-    //     spreadsheetRef.current.workbook = w;
-    //   }
     // });
     fetchUniversities();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,19 +157,19 @@ function DefineNewReportPage() {
 
   async function uploadFile() {
     if (file) {
-      ExcelUtility.save(spreadsheetRef.current.workbook).then(async (w) => {
-        try {
-          const reportRef = ref(storage, "reports/" + file.name);
-          await uploadBytes(reportRef, file).then(async (snapshot) => {
-            setUrl(`reports/${file.name}`);
-          });
-        } catch (e) {
-          setIsLoading(false);
-          toast.error(e);
-        }
-      })
+      try {
+        const reportRef = ref(storage, "reports/" + file.name);
+        await uploadBytes(reportRef, file).then(async (snapshot) => {
+          setUrl(`reports/${file.name}`);
+        });
+      } catch (e) {
+        setIsLoading(false);
+        setUrl("");
+        toast.error(e);
+      }
     } else {
       setIsLoading(false);
+      setUrl("");
       toast.error("File cannot be null");
     }
   };
@@ -190,9 +186,12 @@ function DefineNewReportPage() {
         url,
       });
       setIsLoading(false);
+      setUrl("");
       toast.success(templateNoti.SUCCESS.CREATE);
+      navigate("/list-template");
     } catch (error) {
       setIsLoading(false);
+      setUrl("");
       toast.error(error);
     }
   };
@@ -213,7 +212,7 @@ function DefineNewReportPage() {
     const newArray = templateHeaders.slice();
     newArray[index][name] = value;
     if (name === "formulaId") {
-      newArray[index].matchedAttribute = "point";
+      newArray[index].matchedAttribute = "Point";
     }
     if (newArray[index].isCriteria === false) {
       newArray[index].formulaId = undefined;
@@ -233,19 +232,6 @@ function DefineNewReportPage() {
     setTemplateHeaders(newArray);
     uploadFile();
   };
-
-  // const onTest = () => {
-  //   ExcelUtility.save(spreadsheetRef.current.workbook).then((w) => {
-  //     console.log(file);
-  //     console.log(w);
-  //     try {
-  //       const reportRef = ref(storage, "reports/" + "test.xlsx");
-  //       uploadBytes(reportRef, w)
-  //     } catch (e) {
-  //       toast.error(e);
-  //     }
-  //   })
-  // }
 
   return (
     <Fragment>
@@ -418,10 +404,9 @@ function DefineNewReportPage() {
         </div>
       </div>
       <Gap></Gap>
-      <IgrSpreadsheet
-        ref={spreadsheetRef}
-        height="100vh"
-        width="100%" />
+      {data.length > 0 ?
+        <Luckysheet data={data} />
+        : null}
     </Fragment >
   );
 }
