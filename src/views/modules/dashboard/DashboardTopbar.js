@@ -31,7 +31,7 @@ const DashboardTopbar = () => {
           },
           top: 0,
           width: {
-            lg: `calc(100% - ${SIDE_NAV_WIDTH}px)`,
+            lg: `100%`,
           },
           zIndex: (theme) => theme.zIndex.appBar,
         }}
