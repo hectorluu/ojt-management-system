@@ -34,6 +34,7 @@ export const reportPath = {
 export const universityPath = {
   GET_UNIVERSITY_LIST: "/university",
   GET_UNIVERSITY: "/university/",
+  CREATE_UNIVERSITY: "/university",
 };
 
 export const trainingPlanPath = {
@@ -75,6 +76,7 @@ export const templatePath = {
 export const formulaPath = {
   GET_FORMULA_LIST: "/formula",
   CREATE_FORMULA: "/formula",
+  GET_KEY_LIST: "/formula/data-operand",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

@@ -3,6 +3,7 @@ import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { Fragment, useEffect, useState } from "react";
 import {
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -135,7 +136,7 @@ const AccountListPage = () => {
   // style table head
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
+      backgroundColor: theme.palette.success.main,
       color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
@@ -189,7 +190,7 @@ const AccountListPage = () => {
       </div>
       <Gap></Gap>
       <TableContainer sx={{ width: 1 }}>
-        <Table stickyHeader>
+        <Table>
           <TableHead>
             <TableRow>
               <StyledTableCell align="center" width={"10%"}></StyledTableCell>
@@ -211,16 +212,68 @@ const AccountListPage = () => {
           <TableBody>
             {isLoading ? ( // Render skeleton loading when loading is true
               // Use the animate-pulse class for skeleton effect
-              <TableRow>
-                <TableCell colSpan={6} className="animate-pulse">
-                  <div className="h-7 w-20 bg-gray-300 rounded"></div>
-                  <div className="h-7 w-25 bg-gray-300 rounded"></div>
-                  <div className="h-7 w-25 bg-gray-300 rounded"></div>
-                  <div className="h-7 w-15 bg-gray-300 rounded"></div>
-                  <div className="h-7 w-15 bg-gray-300 rounded"></div>
-                  <div className="h-7 w-20 bg-gray-300 rounded"></div>
-                </TableCell>
-              </TableRow>
+              <>
+                <TableRow>
+                  <TableCell width={"10%"}>
+                    <Skeleton variant="circular" width={40} height={40} />
+                  </TableCell>
+                  <TableCell width={"25%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"25%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"15%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"15%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"20%"}>
+                    <Skeleton />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell width={"10%"}>
+                    <Skeleton variant="circular" width={40} height={40} />
+                  </TableCell>
+                  <TableCell width={"25%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"25%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"15%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"15%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"20%"}>
+                    <Skeleton />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell width={"10%"}>
+                    <Skeleton variant="circular" width={40} height={40} />
+                  </TableCell>
+                  <TableCell width={"25%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"25%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"15%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"15%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"20%"}>
+                    <Skeleton />
+                  </TableCell>
+                </TableRow>
+              </>
             ) : users.length !== 0 ? (
               users.map((item) => (
                 <TableRow key={item.id}>
@@ -272,7 +325,7 @@ const AccountListPage = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6}>
+                <TableCell colSpan={6} align="center">
                   Không có tài khoản nào được tìm thấy.
                 </TableCell>
               </TableRow>

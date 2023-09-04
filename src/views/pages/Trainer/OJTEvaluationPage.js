@@ -59,6 +59,7 @@ const OJTEvaluationPage = () => {
                 className="px-7 hover:shadow-xl transition duration-500 ease-in-out mr-5"
                 type="button"
                 kind="secondary"
+                isLoading={isLoading}
               >
                 Chấm điểm
               </Button>

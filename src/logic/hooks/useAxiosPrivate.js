@@ -1,6 +1,5 @@
 import { axiosPrivate } from "logic/api/axios";
 import { useEffect, useMemo } from "react";
-import { useSelector } from "react-redux";
 import useRefreshToken from "./useRefreshToken";
 import { getToken } from "logic/utils/auth";
 

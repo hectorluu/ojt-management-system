@@ -14,7 +14,6 @@ import { userPath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
   defaultPageIndex,
-  accountStatus,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { Button } from "views/components/button";
@@ -33,10 +32,10 @@ const TrainerListPage = () => {
       try {
         const response = await axiosPrivate.get(
           userPath.GET_TRAINER_LIST +
-            "?PageIndex=" +
-            page +
-            "&PageSize=" +
-            rowsPerPage
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage
         );
         setUsers(response.data.data);
         setTotalItem(response.data.totalItem);
@@ -55,17 +54,6 @@ const TrainerListPage = () => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 1:
-        return "bg-red-500";
-      case 2:
-        return "bg-green-500";
-      default:
-        return "bg-gray-500"; // You can set a default color class if needed
-    }
   };
 
   return (

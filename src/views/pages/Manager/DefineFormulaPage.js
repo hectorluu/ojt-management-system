@@ -1,7 +1,7 @@
 import Gap from "views/components/common/Gap";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
-import { Typography, Paper, Chip, Stack, Button, Card } from "@mui/material";
+import { Typography, Paper, Chip, Stack, Card } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -13,6 +13,9 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { formulaPath } from "logic/api/apiUrl";
 import { formulaNoti } from "logic/constants/notification";
 import { Button as ButtonC } from "views/components/button";
+import { formulaOptions } from "logic/constants/global";
+import LoadingButton from '@mui/lab/LoadingButton';
+import { useNavigate } from "react-router-dom";
 
 const DefineFormulaPage = () => {
   // style
@@ -75,60 +78,46 @@ const DefineFormulaPage = () => {
     margin: theme.spacing(0.5),
   }));
 
-  const tagData = {
-    Attendance: {
-      "tổng ngày làm đủ giờ": "[FullHourWorkingDays]",
-      "tổng ngày thiếu giờ": "[LackOfHourWorkingDays]",
-      "tổng số ngày của khoá thực tập": "[TotalInternshipDays]",
-      "độ sôi nổi theo tháng()": "[ExcitementByMonth]",
-      "độ sôi nổi theo tuần()": "[ExcitementByWeek]",
-    },
-    Skill: {
-      "tổng số skill ban đầu": "[InitialSkillCount]",
-      "tổng số skill học được(không tính skill đã có)": "[NewlyLearnedSkills]",
-      "tổng số điểm kỹ năng ban đầu": "[InitialSkillPoints]",
-      "tổng số điểm kỹ năng đạt được": "[AchievedSkillPoints]",
-      "tổng số kỹ năng 1 sao": "[SkillRating1Star]",
-      "tổng số kỹ năng 2 sao": "[SkillRating2Stars]",
-      "tổng số kỹ năng 3 sao": "[SkillRating3Stars]",
-      "tổng số kỹ năng 4 sao": "[SkillRating4Stars]",
-      "tổng số kỹ năng 5 sao": "[SkillRating5Stars]",
-    },
-    Certificate: {
-      "tổng số course bắt buộc": "[RequiredCourses]",
-      "tổng số course hoàn thành": "[CompletedCourses]",
-      "tổng số course bắt buộc đã hoàn thành": "[CompletedRequiredCourses]",
-      "tổng số course optional đã hoàn thành": "[CompletedOptionalCourses]",
-    },
-    Task: {
-      "tổng task làm đúng hạn": "[TasksCompletedOnTime]",
-      "tổng task trễ hạn": "[DelayedTasks]",
-      "tổng task": "[TotalTasks]",
-      "Tổng số công việc (is_evaluate_task)": "[EvaluatedTasks]",
-    },
-  };
-
-  const tagCategories = Object.keys(tagData);
-
   const [calculation, setCalculation] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedLabel, setSelectedLabel] = useState(null);
   const axiosPrivate = useAxiosPrivate();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
+  const [keyList, setKeyList] = useState([]);
+  const navigate = useNavigate();
 
   const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
-    setSelectedLabel(null);
+    setSelectedCategory(category.value);
   };
 
-  const handleChipClick = (label) => {
-    setSelectedLabel(label);
+  const handleChipClick = (key) => {
     setCalculation(
-      (prevValue) => prevValue + tagData[selectedCategory][label]
+      (prevValue) => prevValue + `(${key.key})`
     );
   };
 
   const textareaRef = useRef(null);
+
+  const fetchKeys = async () => {
+    try {
+      setIsLoading(true);
+      let response = await axiosPrivate.get(
+        formulaPath.GET_KEY_LIST +
+        "?category=" +
+        `${selectedCategory === null ? "" : selectedCategory}`
+      );
+      setKeyList(response.data);
+    } catch (error) {
+      console.log("fetchKeys ~ error", error);
+    } finally {
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  };
+
+  useEffect(() => {
+    fetchKeys();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -156,7 +145,7 @@ const DefineFormulaPage = () => {
   };
 
   const handleAddNewFormula = async () => {
-    setIsLoading(true);
+    setIsLoadingSubmit(true);
     try {
       const name = getValues("name");
       await axiosPrivate.post(formulaPath.CREATE_FORMULA, {
@@ -166,9 +155,10 @@ const DefineFormulaPage = () => {
       resetValues();
       setCalculation("");
       toast.success(formulaNoti.SUCCESS.CREATE);
-      setIsLoading(false);
+      setIsLoadingSubmit(false);
+      navigate("/list-formula");
     } catch (error) {
-      setIsLoading(true);
+      setIsLoadingSubmit(false);
       toast.error(error);
     }
   };
@@ -211,14 +201,15 @@ const DefineFormulaPage = () => {
                 alignItems="center"
                 spacing={2}
               >
-                {tagCategories.map((category) => (
-                  <Button
-                    key={category}
-                    variant="outlined"
+                {formulaOptions.map((category) => (
+                  <LoadingButton
+                    key={category.value}
+                    variant={selectedCategory === category.value ? "contained" : "outlined"}
                     onClick={() => handleCategoryClick(category)}
+                    loading={selectedCategory === category.value ? isLoading : false}
                   >
-                    {category}
-                  </Button>
+                    {category.label}
+                  </LoadingButton>
                 ))}
               </Stack>
             </Card>
@@ -238,25 +229,14 @@ const DefineFormulaPage = () => {
               elevation={3}
               className="w-full min-h-fit"
             >
-              {selectedCategory === null && (
-                <Typography
-                  sx={{ flex: "1 1 100%" }}
-                  variant="h7"
-                  component="div"
-                >
-                  Chọn category để hiển thị từ khóa
-                </Typography>
-              )}
-              {selectedCategory &&
-                Object.keys(tagData[selectedCategory]).map((label) => (
-                  <ListItem key={label}>
-                    <Chip
-                      label={label}
-                      onClick={() => handleChipClick(label)}
-                      color={selectedLabel === label ? "primary" : undefined}
-                    />
-                  </ListItem>
-                ))}
+              {keyList.map((key) => (
+                <ListItem key={key.key}>
+                  <Chip
+                    label={key.name}
+                    onClick={() => handleChipClick(key)}
+                  />
+                </ListItem>
+              ))}
             </Paper>
           </div>
 
@@ -277,7 +257,7 @@ const DefineFormulaPage = () => {
             <ButtonC
               type="submit"
               className="px-10 mx-auto text-white bg-primary"
-              isLoading={isLoading}
+              isLoading={isLoadingSubmit}
             >
               Tạo công thức{" "}
             </ButtonC>

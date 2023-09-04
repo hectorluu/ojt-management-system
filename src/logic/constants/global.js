@@ -4,6 +4,7 @@ export const defaultImage =
 export const defaultUserIcon = "user.png";
 
 export const defaultCourseImage = "default-course.png";
+
 export const defaultUniversityImage = "default-university.png";
 
 export const defaultPageSize = 10;
@@ -127,4 +128,11 @@ export const notCriteriaOptions = [
   { value: "Birthday", label: "Ngày sinh" },
   { value: "PositionId", label: "Vị trí" },
   { value: "StudentCode", label: "Mã số sinh viên" },
+];
+
+export const formulaOptions = [
+  { value: "Attendance", label: "Điểm danh" },
+  { value: "Skill", label: "Kỹ năng" },
+  { value: "Certificate", label: "Khoá học" },
+  { value: "Task", label: "Công việc" },
 ];

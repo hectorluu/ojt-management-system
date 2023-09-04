@@ -69,3 +69,13 @@ export const ojtBatchNoti = {
     POINT_ERROR: "Thông tin đợt thực tập chưa phù hợp!!!",
   },
 };
+
+export const universityNoti = {
+  SUCCESS: {
+    CREATE: "Thành công tạo trường đại học mới!!!",
+  },
+
+  ERROR: {
+    POINT_ERROR: "Thông tin đợt thực tập chưa phù hợp!!!",
+  },
+};

@@ -18,6 +18,7 @@ import SearchBar from "views/modules/SearchBar";
 import { Dropdown } from "views/components/dropdown";
 import useOnChange from "logic/hooks/useOnChange";
 import signalRService from "logic/utils/signalRService";
+import CourseCardSkeleton from "views/modules/course/CourseCardSkeleton";
 
 const CourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -231,7 +232,14 @@ const CourseListPage = () => {
       </div>
       <Gap></Gap>
       <CourseGrid type="secondary">
-        {courses.length !== 0 ? (
+        {isLoading ? ( // Render skeleton loading when loading is true
+          // Use the animate-pulse class for skeleton effect
+          <>
+            <CourseCardSkeleton />
+            <CourseCardSkeleton />
+            <CourseCardSkeleton />
+          </>
+        ) : courses.length !== 0 ? (
           courses.map((item) => (
             <CourseCardDisplay course={item} key={item.id} />
           ))

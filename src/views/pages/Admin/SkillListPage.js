@@ -3,12 +3,14 @@ import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { Fragment, useEffect, useState } from "react";
 import {
+  Skeleton,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  tableCellClasses,
 } from "@mui/material";
 import { skillPath } from "logic/api/apiUrl";
 import {
@@ -23,6 +25,7 @@ import SearchBar from "views/modules/SearchBar";
 import useOnChange from "logic/hooks/useOnChange";
 import ModalAddSkillAdmin from "views/components/modal/ModalAddSkillAdmin";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import { styled } from "@mui/material/styles";
 
 const SkillListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -33,6 +36,18 @@ const SkillListPage = () => {
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isSkillDetailModalOpen, setIsSkillDetailModalOpen] = useState(false);
   const [isAddSkillModalOpen, setIsAddSkillModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // style table head
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.success.main,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
 
   useEffect(() => {
     fetchSkills();
@@ -52,6 +67,7 @@ const SkillListPage = () => {
       );
       setSkills(response.data.data);
       setTotalItem(response.data.totalItem);
+      setIsLoading(false);
       // setPage(response.data.pageIndex);
     } catch (error) {
       console.log("fetchSkill ~ error", error);
@@ -121,14 +137,60 @@ const SkillListPage = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell width={"30%"}>Kỹ năng</TableCell>
-              <TableCell align="center">Trạng thái</TableCell>
-              <TableCell align="right" width={"5%"}></TableCell>
-              <TableCell align="right" width={"5%"}></TableCell>
+              <StyledTableCell width={"30%"}>Kỹ năng</StyledTableCell>
+              <StyledTableCell align="center">Trạng thái</StyledTableCell>
+              <StyledTableCell align="right" width={"5%"}></StyledTableCell>
+              <StyledTableCell align="right" width={"5%"}></StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {skills.length !== 0 ? (
+            {isLoading ? ( // Render skeleton loading when loading is true
+              // Use the animate-pulse class for skeleton effect
+              <>
+                <TableRow>
+                  <TableCell width={"30%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"5%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"5%"}>
+                    <Skeleton />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell width={"30%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"5%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"5%"}>
+                    <Skeleton />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell width={"30%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"5%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"5%"}>
+                    <Skeleton />
+                  </TableCell>
+                </TableRow>
+              </>
+            ) : skills.length !== 0 ? (
               skills.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell width={"30%"}>{item.name}</TableCell>
@@ -167,7 +229,7 @@ const SkillListPage = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={4} align="center">
                   Không có kỹ năng nào được tìm thấy.
                 </TableCell>
               </TableRow>

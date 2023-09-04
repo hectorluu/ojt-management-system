@@ -14,7 +14,6 @@ import { userPath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
   defaultPageIndex,
-  accountStatus,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { Button } from "views/components/button";
@@ -31,10 +30,10 @@ const TraineeListPage = () => {
       try {
         const response = await axiosPrivate.get(
           userPath.GET_TRAINEE_LIST +
-            "?PageIndex=" +
-            page +
-            "&PageSize=" +
-            rowsPerPage
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage
         );
 
         setUsers(response.data.data);
@@ -60,17 +59,6 @@ const TraineeListPage = () => {
 
   const [isTraineeDetailModalOpen, setIsTraineeDetailModalOpen] =
     useState(false);
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 1:
-        return "bg-red-500";
-      case 2:
-        return "bg-green-500";
-      default:
-        return "bg-gray-500"; // You can set a default color class if needed
-    }
-  };
 
   return (
     <Fragment>

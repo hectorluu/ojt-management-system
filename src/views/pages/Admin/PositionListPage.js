@@ -3,12 +3,14 @@ import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { Fragment, useEffect, useState } from "react";
 import {
+  Skeleton,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  tableCellClasses,
 } from "@mui/material";
 import { positionPath } from "logic/api/apiUrl";
 import {
@@ -26,6 +28,7 @@ import signalRService from "logic/utils/signalRService";
 import ModalAddPositionAdmin from "views/components/modal/ModalAddPositionAdmin";
 import ModalEditPositionAdmin from "views/components/modal/ModalEditPositionAdmin";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import { styled } from "@mui/material/styles";
 
 const PositionListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -36,6 +39,18 @@ const PositionListPage = () => {
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isAddPositionModalOpen, setIsAddPositionModalOpen] = useState(false);
   const [isEditPositionModalOpen, setIsEditPositionModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // style table head
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.success.main,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
 
   useEffect(() => {
     fetchPositions();
@@ -66,9 +81,11 @@ const PositionListPage = () => {
       );
       setPosition(response.data.data);
       setTotalItem(response.data.totalItem);
+      setIsLoading(false);
       // setPage(response.data.pageIndex);
     } catch (error) {
       console.log("fetchPosition ~ error", error);
+      setIsLoading(false);
     }
   }
 
@@ -135,14 +152,60 @@ const PositionListPage = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell width={"30%"}>Vị trí</TableCell>
-              <TableCell align="center">Trạng thái</TableCell>
-              <TableCell align="right" width={"5%"}></TableCell>
-              <TableCell align="right" width={"5%"}></TableCell>
+              <StyledTableCell width={"30%"}>Vị trí</StyledTableCell>
+              <StyledTableCell align="center">Trạng thái</StyledTableCell>
+              <StyledTableCell align="right" width={"5%"}></StyledTableCell>
+              <StyledTableCell align="right" width={"5%"}></StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {positions.length !== 0 ? (
+            {isLoading ? ( // Render skeleton loading when loading is true
+              // Use the animate-pulse class for skeleton effect
+              <>
+                <TableRow>
+                  <TableCell width={"30%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"5%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"5%"}>
+                    <Skeleton />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell width={"30%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"5%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"5%"}>
+                    <Skeleton />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell width={"30%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"5%"}>
+                    <Skeleton />
+                  </TableCell>
+                  <TableCell width={"5%"}>
+                    <Skeleton />
+                  </TableCell>
+                </TableRow>
+              </>
+            ) : positions.length !== 0 ? (
               positions.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell width={"30%"}>{item.name}</TableCell>
@@ -181,7 +244,7 @@ const PositionListPage = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={4} align="center">
                   Không có vị trí nào được tìm thấy.
                 </TableCell>
               </TableRow>
