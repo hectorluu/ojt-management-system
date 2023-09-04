@@ -5,12 +5,20 @@ import { useEffect } from "react";
 import { authRefreshToken, authUpdateUser } from "logic/store/auth/auth-slice";
 import { getToken, logOut } from "logic/utils/auth";
 
+import { ThemeProvider } from "@mui/material/styles";
+import { CssBaseline, StyledEngineProvider } from "@mui/material";
+
+// defaultTheme
+import themes from "themes/themes";
+
 Modal.setAppElement("#root");
 Modal.defaultStyles = {};
 
 function App({ children }) {
+  const customization = useSelector((state) => state.customization);
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (user && user.id) {
       const { access_token } = getToken();
@@ -30,7 +38,15 @@ function App({ children }) {
       }
     }
   }, [dispatch, user]);
-  return <>{children}</>;
+
+  return (
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={themes(customization)}>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
+    </StyledEngineProvider>
+  );
 }
 
 export default App;
