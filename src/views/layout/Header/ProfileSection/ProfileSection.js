@@ -39,7 +39,6 @@ const ProfileSection = () => {
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
 
-  const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
@@ -73,6 +72,16 @@ const ProfileSection = () => {
   const { user } = useSelector((state) => state.auth);
   const userRole = user?.role || "";
   const userAvatar = user?.avatarURL || defaultUserIcon;
+
+  const handleClickProfileTrainer = () => {
+    navigate("/trainer-profile");
+    setOpen(false);
+  };
+
+  const handleClickProfileTrainee = () => {
+    navigate("/trainee-profile");
+    setOpen(false);
+  };
 
   return (
     <>
@@ -194,8 +203,7 @@ const ProfileSection = () => {
                           sx={{
                             borderRadius: `${customization.borderRadius}px`,
                           }}
-                          selected={selectedIndex === 1}
-                          onClick={navigate("/trainer-profile")}
+                          onClick={handleClickProfileTrainer}
                         >
                           <ListItemIcon>
                             <IconUser stroke={2} size="1.3rem" />
@@ -209,7 +217,7 @@ const ProfileSection = () => {
                               >
                                 <Grid item>
                                   <Typography variant="body2">
-                                    Social Profile
+                                    Profile cá nhân
                                   </Typography>
                                 </Grid>
                               </Grid>
@@ -222,8 +230,7 @@ const ProfileSection = () => {
                           sx={{
                             borderRadius: `${customization.borderRadius}px`,
                           }}
-                          selected={selectedIndex === 1}
-                          onClick={navigate("/trainee-profile")}
+                          onClick={handleClickProfileTrainee}
                         >
                           <ListItemIcon>
                             <IconUser stroke={2} size="1.3rem" />
@@ -237,7 +244,7 @@ const ProfileSection = () => {
                               >
                                 <Grid item>
                                   <Typography variant="body2">
-                                    Social Profile
+                                    Profile cá nhân
                                   </Typography>
                                 </Grid>
                               </Grid>
@@ -249,7 +256,6 @@ const ProfileSection = () => {
                         sx={{
                           borderRadius: `${customization.borderRadius}px`,
                         }}
-                        selected={selectedIndex === 4}
                         onClick={handleLogout}
                       >
                         <ListItemIcon>
@@ -257,7 +263,7 @@ const ProfileSection = () => {
                         </ListItemIcon>
                         <ListItemText
                           primary={
-                            <Typography variant="body2">Logout</Typography>
+                            <Typography variant="body2">Đăng xuất</Typography>
                           }
                         />
                       </ListItemButton>
