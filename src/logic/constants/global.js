@@ -118,6 +118,7 @@ export const positionStatus = {
 };
 
 export const notCriteriaOptions = [
+  { value: "STT", label: "Số thứ tự" },
   { value: "LastName", label: "Họ" },
   { value: "FirstName", label: "Tên" },
   { value: "Email", label: "Email" },

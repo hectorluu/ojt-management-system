@@ -57,7 +57,7 @@ const ListTemplatePage = () => {
             <div className="flex-1">
               <h1 className="text-[22px] font-semibold mb-2">{item.name}</h1>
               <p className="mb-2 text-sm text-text2">
-                Tên trường đại học: {item.id}
+                Tên trường đại học: {item.universityName}
               </p>
               <p className="mb-2 text-sm text-text2">
                 URL: <Link underline="always">{item.url}</Link>
