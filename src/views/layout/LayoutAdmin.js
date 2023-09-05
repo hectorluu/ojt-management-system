@@ -14,8 +14,7 @@ import {
 // project imports
 import Breadcrumbs from "views/components/extended/Breadcrumbs";
 import Header from "./Header/Header";
-import Sidebar from "./Sidebar/Sidebar";
-
+import AdminSidebar from "./Sidebar/AdminSidebar";
 // assets
 import { IconChevronRight } from "@tabler/icons";
 
@@ -92,7 +91,7 @@ const LayoutAdmin = () => {
       </AppBar>
 
       {/* drawer */}
-      <Sidebar
+      <AdminSidebar
         drawerOpen={!matchDownMd ? leftDrawerOpened : !leftDrawerOpened}
         drawerToggle={handleLeftDrawerToggle}
       />

@@ -1,6 +1,3 @@
-// project imports
-import config from "logic/config/general-config/config";
-
 // action - state management
 import * as actionTypes from "logic/store/actions";
 
@@ -8,6 +5,7 @@ export const initialState = {
   isOpen: [], // for active default menu
   defaultId: "default",
   opened: true,
+  borderRadius: 12,
 };
 
 // ==============================|| CUSTOMIZATION REDUCER ||============================== //
@@ -26,7 +24,11 @@ const customizationReducer = (state = initialState, action) => {
         ...state,
         opened: action.opened,
       };
-
+    case actionTypes.SET_BORDER_RADIUS:
+      return {
+        ...state,
+        borderRadius: action.borderRadius,
+      };
     default:
       return state;
   }

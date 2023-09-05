@@ -6,18 +6,19 @@ import { Box, Chip, Drawer, Stack, useMediaQuery } from "@mui/material";
 
 // third-party
 import PerfectScrollbar from "react-perfect-scrollbar";
+import "react-perfect-scrollbar/dist/css/styles.css";
 import { BrowserView, MobileView } from "react-device-detect";
 
 // project imports
-import MenuList from "./MenuList/MenuList";
 import LogoSection from "../LogoSection/LogoSection";
+import ManagerMenuList from "./MenuList/ManagerMenuList";
 
 // width of sidebar
 const drawerWidth = 260;
 
 // ==============================|| SIDEBAR DRAWER ||============================== //
 
-const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
+const ManagerSidebar = ({ drawerOpen, drawerToggle, window }) => {
   const theme = useTheme();
   const matchUpMd = useMediaQuery(theme.breakpoints.up("md"));
 
@@ -37,12 +38,12 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
             paddingRight: "16px",
           }}
         >
-          <MenuList />
+          <ManagerMenuList />
         </PerfectScrollbar>
       </BrowserView>
       <MobileView>
         <Box sx={{ px: 2 }}>
-          <MenuList />
+          <ManagerMenuList />
           <Stack direction="row" justifyContent="center" sx={{ mb: 2 }}>
             <Chip
               label={"This is label"}
@@ -92,10 +93,10 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
   );
 };
 
-Sidebar.propTypes = {
+ManagerSidebar.propTypes = {
   drawerOpen: PropTypes.bool,
   drawerToggle: PropTypes.func,
   window: PropTypes.object,
 };
 
-export default Sidebar;
+export default ManagerSidebar;
