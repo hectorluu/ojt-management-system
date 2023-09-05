@@ -88,7 +88,7 @@ const pages = {
       ],
     },
     {
-      id: "accounts",
+      id: "reports",
       title: "Báo cáo",
       type: "collapse",
       icon: iconsPages.StickyNote2Icon,

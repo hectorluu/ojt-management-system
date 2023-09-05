@@ -25,17 +25,12 @@ import { IconChevronDown, IconChevronUp } from "@tabler/icons";
 const NavCollapse = ({ menu, level }) => {
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
-  const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
 
   const handleClick = () => {
     setOpen(!open);
-    setSelected(!selected ? menu.id : null);
-    if (menu?.id !== "authentication") {
-      navigate(menu.children[0]?.url);
-    }
   };
 
   const { pathname } = useLocation();
