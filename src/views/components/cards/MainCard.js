@@ -58,7 +58,13 @@ const MainCard = forwardRef(
           <CardHeader
             sx={headerSX}
             title={
-              darkTitle ? <Typography variant="h3">{title}</Typography> : title
+              darkTitle ? (
+                <Typography variant="h3">
+                  <span className="font-bold text-2xl">{title}</span>
+                </Typography>
+              ) : (
+                <span className="font-bold text-2xl">{title}</span>
+              )
             }
             action={secondary}
           />

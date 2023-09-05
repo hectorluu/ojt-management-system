@@ -21,6 +21,7 @@ import TablePagination from "@mui/material/TablePagination";
 import SearchBar from "views/modules/SearchBar";
 import moment from "moment";
 import useOnChange from "logic/hooks/useOnChange";
+import Chip from "views/components/chip/Chip";
 
 const TraineeTaskListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -34,10 +35,10 @@ const TraineeTaskListPage = () => {
     try {
       const response = await axiosPrivate.get(
         taskPath.GET_TASK_LIST +
-        "?PageSize=" +
-        rowsPerPage +
-        "&PageIndex=" +
-        page
+          "?PageSize=" +
+          rowsPerPage +
+          "&PageIndex=" +
+          page
       );
       setTasks(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -105,11 +106,21 @@ const TraineeTaskListPage = () => {
                   {moment(item.endTime).format("DD/MM/YYYY")}
                 </TableCell>
                 <TableCell align="center" width={"20%"}>
-                  {
-                    traineeTaskStatus.find(
-                      (label) => label.value === item.status
-                    ).label
-                  }
+                  <Chip
+                    color={
+                      item.status === 3
+                        ? "yellow"
+                        : item.status === 2
+                        ? "error"
+                        : "success"
+                    }
+                  >
+                    {
+                      traineeTaskStatus.find(
+                        (label) => label.value === item.status
+                      ).label
+                    }
+                  </Chip>
                 </TableCell>
                 <TableCell align="right" width={"10%"}>
                   <Button className="" type="button" kind="ghost">
@@ -128,7 +139,9 @@ const TraineeTaskListPage = () => {
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
+          labelDisplayedRows={({ from, to, count }) =>
+            `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+          }
         />
       </TableContainer>
     </Fragment>

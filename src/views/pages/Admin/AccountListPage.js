@@ -1,9 +1,13 @@
 import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  Button,
+  Card,
+  InputAdornment,
+  OutlinedInput,
   Skeleton,
+  SvgIcon,
   Table,
   TableBody,
   TableCell,
@@ -22,15 +26,19 @@ import {
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { roleOptions } from "logic/constants/global";
-import SearchBar from "views/modules/SearchBar";
 import { Dropdown } from "views/components/dropdown";
-import { Button } from "views/components/button";
+
 import ModalUserDetailAdmin from "views/components/modal/ModalUserDetailAdmin";
 import useOnChange from "logic/hooks/useOnChange";
 import { defaultUserIcon } from "logic/constants/global";
 import signalRService from "logic/utils/signalRService";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { styled } from "@mui/material/styles";
+import MainCard from "views/components/cards/MainCard";
+import SearchIcon from "@mui/icons-material/Search";
+import AddIcon from "@mui/icons-material/Add";
+import { Link } from "react-router-dom";
+import Chip from "views/components/chip/Chip";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -145,30 +153,51 @@ const AccountListPage = () => {
   }));
 
   return (
-    <Fragment>
+    <MainCard
+      title="Tài khoản"
+      secondary={
+        <Button
+          startIcon={
+            <SvgIcon fontSize="small">
+              <AddIcon />
+            </SvgIcon>
+          }
+          component={Link}
+          to="/create-new-account"
+          variant="contained"
+          size="medium"
+          sx={{ borderRadius: "10px" }}
+        >
+          Thêm tài khoản
+        </Button>
+      }
+    >
       <ModalUserDetailAdmin
         isOpen={isUserDetailModalOpen}
         onRequestClose={() => setIsUserDetailModalOpen(false)}
         userIdClicked={userModalId}
       ></ModalUserDetailAdmin>
-      <div className="flex flex-wrap items-center justify-between">
-        <div className="flex items-center justify-center">
-          <Heading className="text-[2.25rem] font-bold pt-6">Tài khoản</Heading>
-        </div>
-        <Button
-          className="px-7"
-          type="button"
-          href="/create-new-account"
-          kind="secondary"
-        >
-          Thêm tài khoản mới
-        </Button>
-      </div>
-      <div className="flex flex-wrap items-start gap-5 mt-5">
-        <div className=" max-w-[600px] w-full">
-          <SearchBar onChangeSearch={setSearchTerm}></SearchBar>
-        </div>
-        <div className="flex flex-wrap items-start max-w-[200px] w-full">
+
+      <div className="flex flex-wrap items-start gap-3">
+        {/*Custom search bar*/}
+        <Card className="w-2/5">
+          <OutlinedInput
+            defaultValue=""
+            fullWidth
+            placeholder="Tìm kiếm ..."
+            startAdornment={
+              <InputAdornment position="start">
+                <SvgIcon color="action" fontSize="small">
+                  <SearchIcon />
+                </SvgIcon>
+              </InputAdornment>
+            }
+            sx={{ maxWidth: 550 }}
+            onChange={setSearchTerm}
+          />
+        </Card>
+
+        <div className="flex flex-wrap items-start max-w-[180px] w-full">
           <Dropdown className="bg-white">
             <Dropdown.Select
               placeholder={getDropdownLabel(role, roleFiltered, "Tất cả")}
@@ -301,17 +330,13 @@ const AccountListPage = () => {
                     align="center"
                     className="flex items-center justify-center"
                   >
-                    <div
-                      className={`rounded-full m-auto text-white h-7 w-32 flex items-center justify-center ${getStatusColor(
-                        item.status
-                      )}`}
-                    >
+                    <Chip color={item.status === 1 ? "error" : "success"}>
                       {
                         accountStatus.find(
                           (label) => label.value === item.status
                         ).label
                       }
-                    </div>
+                    </Chip>
                   </TableCell>
                   <TableCell align="right">
                     <Button
@@ -347,7 +372,7 @@ const AccountListPage = () => {
           }
         />
       </TableContainer>
-    </Fragment>
+    </MainCard>
   );
 };
 

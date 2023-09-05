@@ -1,7 +1,6 @@
 import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { coursePath, positionPath, skillPath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
@@ -11,7 +10,6 @@ import {
   skillStatus,
 } from "logic/constants/global";
 import CourseCardDisplay from "views/modules/course/CourseCardDisplay";
-import { Button } from "views/components/button";
 import CourseGrid from "views/modules/course/CourseGrid";
 import TablePagination from "@mui/material/TablePagination";
 import SearchBar from "views/modules/SearchBar";
@@ -19,6 +17,17 @@ import { Dropdown } from "views/components/dropdown";
 import useOnChange from "logic/hooks/useOnChange";
 import signalRService from "logic/utils/signalRService";
 import CourseCardSkeleton from "views/modules/course/CourseCardSkeleton";
+import MainCard from "views/components/cards/MainCard";
+import {
+  SvgIcon,
+  Button,
+  Card,
+  OutlinedInput,
+  InputAdornment,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { Link } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
 
 const CourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -52,16 +61,16 @@ const CourseListPage = () => {
       setIsLoading(true); // Set loading to true before fetching data
       let response = await axiosPrivate.get(
         coursePath.GET_COURSE_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}` +
-        "&filterSkill=" +
-        `${skill === null ? "" : skill}` +
-        "&filterPosition=" +
-        `${position === null ? "" : position}`
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}` +
+          "&filterSkill=" +
+          `${skill === null ? "" : skill}` +
+          "&filterPosition=" +
+          `${position === null ? "" : position}`
       );
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -76,12 +85,12 @@ const CourseListPage = () => {
     try {
       const response = await axiosPrivate.get(
         skillPath.GET_SKILL_LIST +
-        "?PageIndex=" +
-        1 +
-        "&PageSize=" +
-        100000 +
-        "&filterStatus=" +
-        skillStatus.ACTIVE
+          "?PageIndex=" +
+          1 +
+          "&PageSize=" +
+          100000 +
+          "&filterStatus=" +
+          skillStatus.ACTIVE
       );
       setSkillList(response.data.data);
     } catch (error) {
@@ -93,12 +102,12 @@ const CourseListPage = () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-        "?PageIndex=" +
-        1 +
-        "&PageSize=" +
-        100000 +
-        "&filterStatus=" +
-        positionStatus.ACTIVE
+          "?PageIndex=" +
+          1 +
+          "&PageSize=" +
+          100000 +
+          "&filterStatus=" +
+          positionStatus.ACTIVE
       );
       setPositionList(response.data.data);
     } catch (error) {
@@ -167,26 +176,43 @@ const CourseListPage = () => {
   };
 
   return (
-    <Fragment>
-      <div className="flex flex-wrap items-center justify-between">
-        <div className="flex items-center justify-center">
-          <Heading className="text-[2.25rem] font-bold pt-6">
-            Danh sách khóa học
-          </Heading>
-        </div>
+    <MainCard
+      title="Khóa học"
+      secondary={
         <Button
-          className="px-7"
-          type="button"
-          href="/create-new-course"
-          kind="secondary"
+          startIcon={
+            <SvgIcon fontSize="small">
+              <AddIcon />
+            </SvgIcon>
+          }
+          component={Link}
+          to="/create-new-course"
+          variant="contained"
+          size="medium"
+          sx={{ borderRadius: "10px" }}
         >
-          Thêm khóa học mới
+          Thêm khóa học
         </Button>
-      </div>
-      <div className="flex flex-wrap items-start gap-5 mt-5">
-        <div className=" max-w-[600px] w-full">
-          <SearchBar onChangeSearch={setSearchTerm}></SearchBar>
-        </div>
+      }
+    >
+      <div className="flex flex-wrap items-start gap-3">
+        {/*Custom search bar*/}
+        <Card className="w-2/5">
+          <OutlinedInput
+            defaultValue=""
+            fullWidth
+            placeholder="Tìm kiếm ..."
+            startAdornment={
+              <InputAdornment position="start">
+                <SvgIcon color="action" fontSize="small">
+                  <SearchIcon />
+                </SvgIcon>
+              </InputAdornment>
+            }
+            sx={{ maxWidth: 550 }}
+            onChange={setSearchTerm}
+          />
+        </Card>
         <div className="flex flex-wrap items-start max-w-[200px] w-full">
           <Dropdown>
             <Dropdown.Select
@@ -255,9 +281,11 @@ const CourseListPage = () => {
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
+        labelDisplayedRows={({ from, to, count }) =>
+          `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+        }
       />
-    </Fragment>
+    </MainCard>
   );
 };
 

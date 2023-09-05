@@ -1,8 +1,10 @@
 import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  Card,
+  InputAdornment,
+  OutlinedInput,
   Skeleton,
   Table,
   TableBody,
@@ -18,14 +20,18 @@ import {
   defaultPageIndex,
   skillStatusOptions,
 } from "logic/constants/global";
-import { Button } from "views/components/button";
 import TablePagination from "@mui/material/TablePagination";
 import ModalSkillDetailAdmin from "views/components/modal/ModalSkillDetailAdmin";
-import SearchBar from "views/modules/SearchBar";
 import useOnChange from "logic/hooks/useOnChange";
 import ModalAddSkillAdmin from "views/components/modal/ModalAddSkillAdmin";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { styled } from "@mui/material/styles";
+import MainCard from "views/components/cards/MainCard";
+import { SvgIcon, Button } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { Link } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
+import Chip from "views/components/chip/Chip";
 
 const SkillListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -58,12 +64,12 @@ const SkillListPage = () => {
     try {
       const response = await axiosPrivate.get(
         skillPath.GET_SKILL_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}`
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}`
       );
       setSkills(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -83,16 +89,16 @@ const SkillListPage = () => {
     setPage(1);
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 1:
-        return "bg-red-500";
-      case 2:
-        return "bg-green-500";
-      default:
-        return "bg-gray-500"; // You can set a default color class if needed
-    }
-  };
+  // const getStatusColor = (status) => {
+  //   switch (status) {
+  //     case 1:
+  //       return "bg-red-500";
+  //     case 2:
+  //       return "bg-green-500";
+  //     default:
+  //       return "bg-gray-500"; // You can set a default color class if needed
+  //   }
+  // };
 
   const [skillModalId, setSkillModalId] = useState(0);
 
@@ -102,7 +108,25 @@ const SkillListPage = () => {
   };
 
   return (
-    <Fragment>
+    <MainCard
+      title="Kỹ năng"
+      secondary={
+        <Button
+          startIcon={
+            <SvgIcon fontSize="small">
+              <AddIcon />
+            </SvgIcon>
+          }
+          component={Link}
+          onClick={() => setIsAddSkillModalOpen(true)}
+          variant="contained"
+          size="medium"
+          sx={{ borderRadius: "10px" }}
+        >
+          Thêm kỹ năng
+        </Button>
+      }
+    >
       <ModalSkillDetailAdmin
         isOpen={isSkillDetailModalOpen}
         onRequestClose={() => setIsSkillDetailModalOpen(false)}
@@ -112,25 +136,24 @@ const SkillListPage = () => {
         isOpen={isAddSkillModalOpen}
         onRequestClose={() => setIsAddSkillModalOpen(false)}
       ></ModalAddSkillAdmin>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className="flex items-center justify-center">
-          <Heading className="text-[2.25rem] font-bold pt-6">
-            Quản lý kỹ năng
-          </Heading>
-        </div>
-        <Button
-          className="px-7"
-          type="button"
-          kind="secondary"
-          onClick={() => setIsAddSkillModalOpen(true)}
-        >
-          Thêm kỹ năng
-        </Button>
-      </div>
-      <div className="flex flex-wrap items-start gap-5 mt-5">
-        <div className=" max-w-[600px] w-full">
-          <SearchBar onChangeSearch={setSearchTerm}></SearchBar>
-        </div>
+      <div className="flex flex-wrap items-start gap-3">
+        {/*Custom search bar*/}
+        <Card className="w-2/5">
+          <OutlinedInput
+            defaultValue=""
+            fullWidth
+            placeholder="Tìm kiếm ..."
+            startAdornment={
+              <InputAdornment position="start">
+                <SvgIcon color="action" fontSize="small">
+                  <SearchIcon />
+                </SvgIcon>
+              </InputAdornment>
+            }
+            sx={{ maxWidth: 550 }}
+            onChange={setSearchTerm}
+          />
+        </Card>
       </div>
       <Gap></Gap>
       <TableContainer>
@@ -198,17 +221,19 @@ const SkillListPage = () => {
                     align="center"
                     className="flex items-center justify-center"
                   >
-                    <div
-                      className={`rounded-full text-white h-7 w-32 flex items-center justify-center m-auto ${getStatusColor(
-                        item.status
-                      )}`}
+                    <Chip
+                      color={
+                        item.status === 1 || item.status === 3
+                          ? "error"
+                          : "success"
+                      }
                     >
                       {
                         skillStatusOptions.find(
                           (label) => label.value === item.status
                         ).label
                       }
-                    </div>
+                    </Chip>
                   </TableCell>
                   <TableCell align="right" width={"5%"}>
                     <Button
@@ -244,10 +269,12 @@ const SkillListPage = () => {
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
+          labelDisplayedRows={({ from, to, count }) =>
+            `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+          }
         />
       </TableContainer>
-    </Fragment>
+    </MainCard>
   );
 };
 
