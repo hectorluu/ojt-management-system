@@ -85,6 +85,12 @@ export const positionStatusOptions = [
   { value: 3, label: "Không sử dụng" },
 ];
 
+export const formulaStatusOptions = [
+  { value: 1, label: "Đã xóa" },
+  { value: 2, label: "Đang sử dụng" },
+  { value: 3, label: "Không sử dụng" },
+];
+
 export const isCriteriaOptions = [
   { value: true, label: "Có" },
   { value: false, label: "Không" },

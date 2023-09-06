@@ -12,30 +12,27 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  tableCellClasses,
 } from "@mui/material";
 import { positionPath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
   defaultPageIndex,
-  statusColor,
   signalRMessage,
   positionStatusOptions,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
-import SearchBar from "views/modules/SearchBar";
 import useOnChange from "logic/hooks/useOnChange";
 import signalRService from "logic/utils/signalRService";
 import ModalAddPositionAdmin from "views/components/modal/ModalAddPositionAdmin";
 import ModalEditPositionAdmin from "views/components/modal/ModalEditPositionAdmin";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
-import { styled } from "@mui/material/styles";
 import MainCard from "views/components/cards/MainCard";
 import { SvgIcon, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import Chip from "views/components/chip/Chip";
+import StyledTableCell from "views/modules/table/StyledTableCell";
 
 const PositionListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -47,17 +44,6 @@ const PositionListPage = () => {
   const [isAddPositionModalOpen, setIsAddPositionModalOpen] = useState(false);
   const [isEditPositionModalOpen, setIsEditPositionModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  // style table head
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.success.main,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
 
   useEffect(() => {
     fetchPositions();
@@ -79,12 +65,12 @@ const PositionListPage = () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}`
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}`
       );
       setPosition(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -103,17 +89,6 @@ const PositionListPage = () => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(1);
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 1:
-        return statusColor.DELETED;
-      case 2:
-        return statusColor.ACTIVE;
-      default:
-        return statusColor.INACTIVE; // You can set a default color class if needed
-    }
   };
 
   const [positionModalId, setPositionModalId] = useState(0);

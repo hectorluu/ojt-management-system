@@ -12,7 +12,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  tableCellClasses,
 } from "@mui/material";
 import { skillPath } from "logic/api/apiUrl";
 import {
@@ -25,13 +24,13 @@ import ModalSkillDetailAdmin from "views/components/modal/ModalSkillDetailAdmin"
 import useOnChange from "logic/hooks/useOnChange";
 import ModalAddSkillAdmin from "views/components/modal/ModalAddSkillAdmin";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
-import { styled } from "@mui/material/styles";
 import MainCard from "views/components/cards/MainCard";
 import { SvgIcon, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import Chip from "views/components/chip/Chip";
+import StyledTableCell from "views/modules/table/StyledTableCell";
 
 const SkillListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -44,17 +43,6 @@ const SkillListPage = () => {
   const [isAddSkillModalOpen, setIsAddSkillModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // style table head
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.success.main,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
-
   useEffect(() => {
     fetchSkills();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,12 +52,12 @@ const SkillListPage = () => {
     try {
       const response = await axiosPrivate.get(
         skillPath.GET_SKILL_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}`
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}`
       );
       setSkills(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -88,17 +76,6 @@ const SkillListPage = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(1);
   };
-
-  // const getStatusColor = (status) => {
-  //   switch (status) {
-  //     case 1:
-  //       return "bg-red-500";
-  //     case 2:
-  //       return "bg-green-500";
-  //     default:
-  //       return "bg-gray-500"; // You can set a default color class if needed
-  //   }
-  // };
 
   const [skillModalId, setSkillModalId] = useState(0);
 

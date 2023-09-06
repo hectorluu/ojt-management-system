@@ -15,7 +15,6 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { tableCellClasses } from "@mui/material/TableCell";
 
 import { userPath } from "logic/api/apiUrl";
 import {
@@ -33,12 +32,12 @@ import useOnChange from "logic/hooks/useOnChange";
 import { defaultUserIcon } from "logic/constants/global";
 import signalRService from "logic/utils/signalRService";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
-import { styled } from "@mui/material/styles";
 import MainCard from "views/components/cards/MainCard";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 import Chip from "views/components/chip/Chip";
+import StyledTableCell from "views/modules/table/StyledTableCell";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -57,14 +56,14 @@ const AccountListPage = () => {
       setIsLoading(true);
       let response = await axiosPrivate.get(
         userPath.GET_USER_LIST +
-          "?PageSize=" +
-          rowsPerPage +
-          "&PageIndex=" +
-          page +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&role=" +
-          role
+        "?PageSize=" +
+        rowsPerPage +
+        "&PageIndex=" +
+        page +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&role=" +
+        role
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -129,28 +128,6 @@ const AccountListPage = () => {
     setIsUserDetailModalOpen(true);
     setUserModalId(userModalId);
   };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 1:
-        return "bg-red-500";
-      case 2:
-        return "bg-green-500";
-      default:
-        return "bg-gray-500"; // You can set a default color class if needed
-    }
-  };
-
-  // style table head
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.success.main,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
 
   return (
     <MainCard
