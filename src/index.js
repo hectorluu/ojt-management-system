@@ -405,7 +405,7 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <>This page is not exist</>,
+    element: <UnauthorizePage></UnauthorizePage>,
   },
   {
     path: "/unauthorize",

@@ -39,7 +39,7 @@ const CreateNewTrainingPlanPage = () => {
     <Fragment>
       <div className="bg-white rounded-xl py-10 px-[66px]">
         <div className="text-center">
-          <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
+          <h1 className="py-4 px-14 bg-slate-700 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
             Tạo kế hoạch đào tạo mới
           </h1>
           <form onSubmit={handleSubmit(handleAddNewTrainingPlan)}>

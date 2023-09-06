@@ -7,6 +7,8 @@ export const defaultCourseImage = "default-course.png";
 
 export const defaultUniversityImage = "default-university.png";
 
+export const errorPage = "error-404.png";
+
 export const defaultPageSize = 10;
 
 export const defaultPageIndex = 1;

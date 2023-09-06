@@ -1,4 +1,3 @@
-import Gap from "views/components/common/Gap";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
 import {
@@ -38,6 +37,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 import Chip from "views/components/chip/Chip";
 import StyledTableCell from "views/modules/table/StyledTableCell";
+import SubCard from "views/components/cards/SubCard";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -145,7 +145,7 @@ const AccountListPage = () => {
           size="medium"
           sx={{ borderRadius: "10px" }}
         >
-          Thêm tài khoản
+          Thêm mới
         </Button>
       }
     >
@@ -155,200 +155,203 @@ const AccountListPage = () => {
         userIdClicked={userModalId}
       ></ModalUserDetailAdmin>
 
-      <div className="flex flex-wrap items-start gap-3">
-        {/*Custom search bar*/}
-        <Card className="w-2/5">
-          <OutlinedInput
-            defaultValue=""
-            fullWidth
-            placeholder="Tìm kiếm ..."
-            startAdornment={
-              <InputAdornment position="start">
-                <SvgIcon color="action" fontSize="small">
-                  <SearchIcon />
-                </SvgIcon>
-              </InputAdornment>
-            }
-            sx={{ maxWidth: 550 }}
-            onChange={setSearchTerm}
-          />
-        </Card>
+      <SubCard>
+        <div className="flex flex-wrap items-start gap-3">
+          {/*Custom search bar*/}
+          <Card className="w-2/5">
+            <OutlinedInput
+              defaultValue=""
+              fullWidth
+              placeholder="Tìm kiếm ..."
+              startAdornment={
+                <InputAdornment position="start">
+                  <SvgIcon color="action" fontSize="small">
+                    <SearchIcon />
+                  </SvgIcon>
+                </InputAdornment>
+              }
+              sx={{ maxWidth: 550 }}
+              onChange={setSearchTerm}
+            />
+          </Card>
 
-        <div className="flex flex-wrap items-start max-w-[180px] w-full">
-          <Dropdown className="bg-white">
-            <Dropdown.Select
-              placeholder={getDropdownLabel(role, roleFiltered, "Tất cả")}
-            ></Dropdown.Select>
-            <Dropdown.List>
-              {roleFiltered.map((personRole) => (
-                <Dropdown.Option
-                  key={personRole.value}
-                  onClick={() =>
-                    handleSelectRoleDropdownOption(personRole.value)
-                  }
-                >
-                  <span className="capitalize">{personRole.label}</span>
-                </Dropdown.Option>
-              ))}
-            </Dropdown.List>
-          </Dropdown>
-        </div>
-      </div>
-      <Gap></Gap>
-      <TableContainer sx={{ width: 1 }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center" width={"10%"}></StyledTableCell>
-              <StyledTableCell align="left" width={"25%"}>
-                Họ và tên
-              </StyledTableCell>
-              <StyledTableCell align="left" width={"25%"}>
-                Email
-              </StyledTableCell>
-              <StyledTableCell align="center" width={"15%"}>
-                Phân quyền
-              </StyledTableCell>
-              <StyledTableCell align="center" width={"15%"}>
-                Trạng thái
-              </StyledTableCell>
-              <StyledTableCell align="right" width={"20%"}></StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {isLoading ? ( // Render skeleton loading when loading is true
-              // Use the animate-pulse class for skeleton effect
-              <>
-                <TableRow>
-                  <TableCell width={"10%"}>
-                    <Skeleton variant="circular" width={40} height={40} />
-                  </TableCell>
-                  <TableCell width={"25%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"25%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"15%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"15%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"20%"}>
-                    <Skeleton />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell width={"10%"}>
-                    <Skeleton variant="circular" width={40} height={40} />
-                  </TableCell>
-                  <TableCell width={"25%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"25%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"15%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"15%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"20%"}>
-                    <Skeleton />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell width={"10%"}>
-                    <Skeleton variant="circular" width={40} height={40} />
-                  </TableCell>
-                  <TableCell width={"25%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"25%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"15%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"15%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"20%"}>
-                    <Skeleton />
-                  </TableCell>
-                </TableRow>
-              </>
-            ) : users.length !== 0 ? (
-              users.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="w-20">
-                    <img
-                      className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
-                      src={item.avatarURL || defaultUserIcon}
-                      alt=""
-                      onError={(e) => {
-                        e.target.src = defaultUserIcon;
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell align="left">
-                    {item.firstName + " " + item.lastName}
-                  </TableCell>
-                  <TableCell align="left">{item.email}</TableCell>
-                  <TableCell align="center">
-                    {
-                      roleOptions.find((label) => label.value === item.role)
-                        .label
+          <div className="flex flex-wrap items-start max-w-[180px] w-full">
+            <Dropdown className="bg-white">
+              <Dropdown.Select
+                placeholder={getDropdownLabel(role, roleFiltered, "Tất cả")}
+              ></Dropdown.Select>
+              <Dropdown.List>
+                {roleFiltered.map((personRole) => (
+                  <Dropdown.Option
+                    key={personRole.value}
+                    onClick={() =>
+                      handleSelectRoleDropdownOption(personRole.value)
                     }
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="flex items-center justify-center"
                   >
-                    <Chip color={item.status === 1 ? "error" : "success"}>
+                    <span className="capitalize">{personRole.label}</span>
+                  </Dropdown.Option>
+                ))}
+              </Dropdown.List>
+            </Dropdown>
+          </div>
+        </div>
+
+        <TableContainer sx={{ width: 1, mt: 2, mb: -2, borderRadius: 4 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell
+                  align="center"
+                  width={"10%"}
+                  className="min-w-fit"
+                ></StyledTableCell>
+                <StyledTableCell align="left" width={"25%"}>
+                  Họ và tên
+                </StyledTableCell>
+                <StyledTableCell align="left" width={"25%"}>
+                  Email
+                </StyledTableCell>
+                <StyledTableCell align="center" width={"15%"}>
+                  Phân quyền
+                </StyledTableCell>
+                <StyledTableCell align="center" width={"15%"}>
+                  Trạng thái
+                </StyledTableCell>
+                <StyledTableCell align="right" width={"10%"}></StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {isLoading ? ( // Render skeleton loading when loading is true
+                // Use the animate-pulse class for skeleton effect
+                <>
+                  <TableRow>
+                    <TableCell width={"10%"}>
+                      <Skeleton variant="circular" width={40} height={40} />
+                    </TableCell>
+                    <TableCell width={"25%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"}>
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"10%"}>
+                      <Skeleton variant="circular" width={40} height={40} />
+                    </TableCell>
+                    <TableCell width={"25%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"}>
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"10%"}>
+                      <Skeleton variant="circular" width={40} height={40} />
+                    </TableCell>
+                    <TableCell width={"25%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"}>
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                </>
+              ) : users.length !== 0 ? (
+                users.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="w-20">
+                      <img
+                        className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
+                        src={item.avatarURL || defaultUserIcon}
+                        alt=""
+                        onError={(e) => {
+                          e.target.src = defaultUserIcon;
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="left">
+                      {item.firstName + " " + item.lastName}
+                    </TableCell>
+                    <TableCell align="left">{item.email}</TableCell>
+                    <TableCell align="center">
                       {
-                        accountStatus.find(
-                          (label) => label.value === item.status
-                        ).label
+                        roleOptions.find((label) => label.value === item.role)
+                          .label
                       }
-                    </Chip>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Button
-                      className=""
-                      type="button"
-                      kind="ghost"
-                      onClick={() => handleClickUserModal(item.id)}
-                    >
-                      <ModeEditOutlineIcon></ModeEditOutlineIcon>
-                    </Button>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Chip color={item.status === 1 ? "error" : "success"}>
+                        {
+                          accountStatus.find(
+                            (label) => label.value === item.status
+                          ).label
+                        }
+                      </Chip>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Button
+                        className=""
+                        type="button"
+                        kind="ghost"
+                        onClick={() => handleClickUserModal(item.id)}
+                      >
+                        <ModeEditOutlineIcon></ModeEditOutlineIcon>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6} align="center">
+                    Không có tài khoản nào được tìm thấy.
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  Không có tài khoản nào được tìm thấy.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        <TablePagination
-          labelRowsPerPage="Số dòng"
-          component="div"
-          count={totalItem}
-          page={page - 1}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelDisplayedRows={({ from, to, count }) =>
-            `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
-          }
-        />
-      </TableContainer>
+              )}
+            </TableBody>
+          </Table>
+          <TablePagination
+            labelRowsPerPage="Số dòng"
+            component="div"
+            count={totalItem}
+            page={page - 1}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+            }
+          />
+        </TableContainer>
+      </SubCard>
     </MainCard>
   );
 };

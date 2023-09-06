@@ -217,7 +217,7 @@ const ProfileSection = () => {
                               >
                                 <Grid item>
                                   <Typography variant="body2">
-                                    Profile cá nhân
+                                    Hồ sơ cá nhân
                                   </Typography>
                                 </Grid>
                               </Grid>
@@ -244,7 +244,7 @@ const ProfileSection = () => {
                               >
                                 <Grid item>
                                   <Typography variant="body2">
-                                    Profile cá nhân
+                                    Hồ sơ cá nhân
                                   </Typography>
                                 </Grid>
                               </Grid>
