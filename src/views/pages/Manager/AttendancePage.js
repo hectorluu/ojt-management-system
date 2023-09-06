@@ -1,27 +1,31 @@
-import Heading from "views/components/common/Heading";
-import { Button } from "views/components/button";
-import Gap from "views/components/common/Gap";
-import React, { Fragment } from "react";
+import React from "react";
+import MainCard from "views/components/cards/MainCard";
+import { Button, SvgIcon } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { Link } from "react-router-dom";
+import Chip from "views/components/chip/Chip";
 
 const AttendancePage = () => {
   return (
-    <Fragment>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">Điểm danh</Heading>
-        </div>
-
+    <MainCard
+      title="Điểm danh"
+      secondary={
         <Button
-          className="px-7"
-          type="button"
-          href="/create-new-account"
-          kind="secondary"
+          startIcon={
+            <SvgIcon fontSize="small">
+              <AddIcon />
+            </SvgIcon>
+          }
+          component={Link}
+          to="/create-new-account"
+          variant="contained"
+          size="medium"
+          sx={{ borderRadius: "10px" }}
         >
           Tải lên file điểm danh
         </Button>
-      </div>
-      <Gap></Gap>
-    </Fragment>
+      }
+    ></MainCard>
   );
 };
 

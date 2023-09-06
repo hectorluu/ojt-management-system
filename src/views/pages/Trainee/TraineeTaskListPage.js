@@ -1,8 +1,11 @@
 import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  Card,
+  InputAdornment,
+  OutlinedInput,
+  SvgIcon,
   Table,
   TableBody,
   TableCell,
@@ -18,10 +21,11 @@ import {
 } from "logic/constants/global";
 import { Button } from "views/components/button";
 import TablePagination from "@mui/material/TablePagination";
-import SearchBar from "views/modules/SearchBar";
 import moment from "moment";
 import useOnChange from "logic/hooks/useOnChange";
 import Chip from "views/components/chip/Chip";
+import MainCard from "views/components/cards/MainCard";
+import SearchIcon from "@mui/icons-material/Search";
 
 const TraineeTaskListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -62,17 +66,24 @@ const TraineeTaskListPage = () => {
   };
 
   return (
-    <Fragment>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className="flex items-center justify-center">
-          <Heading className="text-[2.25rem] font-bold pt-6">Công việc</Heading>
-        </div>
-      </div>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className=" max-w-[600px] w-full">
-          <SearchBar onChangeSearch={setSearchTerm}></SearchBar>
-        </div>
-      </div>
+    <MainCard title="Công việc">
+      {/*Custom search bar*/}
+      <Card className="w-2/5">
+        <OutlinedInput
+          defaultValue=""
+          fullWidth
+          placeholder="Tìm kiếm ..."
+          startAdornment={
+            <InputAdornment position="start">
+              <SvgIcon color="action" fontSize="small">
+                <SearchIcon />
+              </SvgIcon>
+            </InputAdornment>
+          }
+          sx={{ maxWidth: 550 }}
+          onChange={setSearchTerm}
+        />
+      </Card>
       <Gap></Gap>
       <TableContainer>
         <Table stickyHeader>
@@ -144,7 +155,7 @@ const TraineeTaskListPage = () => {
           }
         />
       </TableContainer>
-    </Fragment>
+    </MainCard>
   );
 };
 

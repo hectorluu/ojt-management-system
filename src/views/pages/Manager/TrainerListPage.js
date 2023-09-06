@@ -11,13 +11,11 @@ import {
   TableRow,
 } from "@mui/material";
 import { userPath } from "logic/api/apiUrl";
-import {
-  defaultPageSize,
-  defaultPageIndex,
-} from "logic/constants/global";
+import { defaultPageSize, defaultPageIndex } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { Button } from "views/components/button";
 import ModalTrainerDetailManager from "views/components/modal/ModalTrainerDetailManager";
+import MainCard from "views/components/cards/MainCard";
 
 const TrainerListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -32,10 +30,10 @@ const TrainerListPage = () => {
       try {
         const response = await axiosPrivate.get(
           userPath.GET_TRAINER_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage
+            "?PageIndex=" +
+            page +
+            "&PageSize=" +
+            rowsPerPage
         );
         setUsers(response.data.data);
         setTotalItem(response.data.totalItem);
@@ -57,17 +55,11 @@ const TrainerListPage = () => {
   };
 
   return (
-    <Fragment>
+    <MainCard title="Đào tạo viên">
       <ModalTrainerDetailManager
         isOpen={isTrainerDetailModalOpen}
         onRequestClose={() => setIsTrainerDetailModalOpen(false)}
       ></ModalTrainerDetailManager>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">Đào tạo viên</Heading>
-        </div>
-      </div>
-      <Gap></Gap>
       <TableContainer>
         <Table>
           <TableHead>
@@ -114,10 +106,12 @@ const TrainerListPage = () => {
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
+          labelDisplayedRows={({ from, to, count }) =>
+            `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+          }
         />
       </TableContainer>
-    </Fragment>
+    </MainCard>
   );
 };
 

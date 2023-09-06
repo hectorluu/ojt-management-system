@@ -1,11 +1,12 @@
 import Gap from "views/components/common/Gap";
 import Heading from "views/components/common/Heading";
 import React, { Fragment, useEffect, useState } from "react";
-import { Card, Link } from "@mui/material";
-import { Button } from "views/components/button";
+import { Card, Link, SvgIcon, Button } from "@mui/material";
 
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { templatePath } from "logic/api/apiUrl";
+import MainCard from "views/components/cards/MainCard";
+import AddIcon from "@mui/icons-material/Add";
 
 const ListTemplatePage = () => {
   const [template, setTemplate] = useState([]);
@@ -30,24 +31,25 @@ const ListTemplatePage = () => {
   }, []);
 
   return (
-    <Fragment>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">
-            Danh sách mẫu đánh giá
-          </Heading>
-        </div>
+    <MainCard
+      title="Danh sách mẫu báo cáo"
+      secondary={
         <Button
-          className="px-7"
-          type="button"
-          href="/manager-define-new-report"
-          kind="secondary"
+          startIcon={
+            <SvgIcon fontSize="small">
+              <AddIcon />
+            </SvgIcon>
+          }
+          component={Link}
+          to="/manager-define-new-report"
+          variant="contained"
+          size="medium"
+          sx={{ borderRadius: "10px" }}
         >
           Thêm file báo cáo mới
         </Button>
-      </div>
-      <Gap></Gap>
-
+      }
+    >
       {template.map((item) => (
         <Card
           sx={{ display: "flex" }}
@@ -68,6 +70,7 @@ const ListTemplatePage = () => {
                 className="px-7 hover:shadow-xl transition duration-500 ease-in-out mr-5"
                 type="button"
                 kind="secondary"
+                variant="outlined"
               >
                 Chọn
               </Button>
@@ -75,7 +78,7 @@ const ListTemplatePage = () => {
           </div>
         </Card>
       ))}
-    </Fragment>
+    </MainCard>
   );
 };
 

@@ -1,26 +1,73 @@
-import Heading from "views/components/common/Heading";
-//import { Button } from "components/button";
-import Gap from "views/components/common/Gap";
-import React, { Fragment } from "react";
+import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
+import React, { useEffect, useState } from "react";
 import {
   Table,
+  TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
 } from "@mui/material";
+import {
+  defaultPageSize,
+  defaultPageIndex,
+  trainingPlanStatus,
+} from "logic/constants/global";
+import TablePagination from "@mui/material/TablePagination";
+import { Button } from "views/components/button";
+import ModalTrainingPlanDetailManager from "views/components/modal/ModalTrainingPlanDetailManager";
+import { trainingPlanPath } from "logic/api/apiUrl";
+import MainCard from "views/components/cards/MainCard";
 
 const TrainingPlanCertifyPage = () => {
+  const [page, setPage] = React.useState(defaultPageIndex);
+  const [totalItem, setTotalItem] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
+  const axiosPrivate = useAxiosPrivate();
+  const [trainingplans, setTrainingplans] = useState([]);
+  useEffect(() => {
+    async function fetchTrainingPlans() {
+      try {
+        const response = await axiosPrivate.get(
+          trainingPlanPath.GET_TRAINING_PLAN_LIST +
+            "?PageIndex=" +
+            page +
+            "&PageSize=" +
+            rowsPerPage +
+            "&status=" +
+            trainingPlanStatus.PENDING
+        );
+        setTrainingplans(response.data.data);
+        setTotalItem(response.data.totalItem);
+        // setPage(response.data.pageIndex);
+        // console.log("fetchUsers ~ response", response);
+      } catch (error) {
+        console.log("fetchTrainingPlans ~ error", error);
+      }
+    }
+    fetchTrainingPlans();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage + 1);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const [isTraingingPlanDetailModalOpen, setIsTrainingPlanDetailModalOpen] =
+    useState(false);
+
   return (
-    <Fragment>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">
-            Phê duyệt kế hoạch đào tạo
-          </Heading>
-        </div>
-      </div>
-      <Gap></Gap>
+    <MainCard title="Phê duyệt kế hoạch đào tạo">
+      <ModalTrainingPlanDetailManager
+        isOpen={isTraingingPlanDetailModalOpen}
+        onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
+      ></ModalTrainingPlanDetailManager>
+
       <TableContainer>
         <Table stickyHeader>
           <TableHead>
@@ -37,38 +84,40 @@ const TrainingPlanCertifyPage = () => {
               <TableCell align="right" width={"10%"}></TableCell>
             </TableRow>
           </TableHead>
-          {/* <TableBody>
-            {users.map((item) => (
+          <TableBody>
+            {trainingplans.map((item) => (
               <TableRow key={item.id}>
-                <TableCell align="left" width={"25%"}>
-                  {item.fullName}
-                </TableCell>
-                <TableCell align="left" width={"45%"}>
-                  {item.location}
-                </TableCell>
-                <TableCell align="center" width={"20%"}>
-                  {roleOptions.find((label) => label.value === item.role).label}
-                </TableCell>
+                <TableCell>{item.name}</TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
                 <TableCell align="right" width={"10%"}>
-                  <Button className="" type="button" href="/" kind="ghost">
-                    Edit
+                  <Button
+                    className=""
+                    type="button"
+                    kind="ghost"
+                    onClick={() => setIsTrainingPlanDetailModalOpen(true)}
+                  >
+                    Chi tiết
                   </Button>
                 </TableCell>
               </TableRow>
             ))}
-          </TableBody> */}
+          </TableBody>
         </Table>
-        {/* <TablePagination
+        <TablePagination
+          labelRowsPerPage="Số dòng"
           component="div"
           count={totalItem}
           page={page - 1}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
-        /> */}
+          labelDisplayedRows={({ from, to, count }) =>
+            `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+          }
+        />
       </TableContainer>
-    </Fragment>
+    </MainCard>
   );
 };
 

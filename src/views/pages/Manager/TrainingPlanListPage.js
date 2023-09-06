@@ -1,7 +1,5 @@
-import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -15,6 +13,7 @@ import TablePagination from "@mui/material/TablePagination";
 import { Button } from "views/components/button";
 import ModalTrainingPlanDetailManager from "views/components/modal/ModalTrainingPlanDetailManager";
 import { trainingPlanPath } from "logic/api/apiUrl";
+import MainCard from "views/components/cards/MainCard";
 
 const TrainingPlanListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -27,10 +26,10 @@ const TrainingPlanListPage = () => {
       try {
         const response = await axiosPrivate.get(
           trainingPlanPath.GET_TRAINING_PLAN_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage
+            "?PageIndex=" +
+            page +
+            "&PageSize=" +
+            rowsPerPage
         );
         setTrainingplans(response.data.data);
         setTotalItem(response.data.totalItem);
@@ -57,19 +56,12 @@ const TrainingPlanListPage = () => {
     useState(false);
 
   return (
-    <Fragment>
+    <MainCard title="Danh sách kế hoạch đào tạo">
       <ModalTrainingPlanDetailManager
         isOpen={isTraingingPlanDetailModalOpen}
         onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
       ></ModalTrainingPlanDetailManager>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">
-            Danh sách kế hoạch đào tạo
-          </Heading>
-        </div>
-      </div>
-      <Gap></Gap>
+
       <TableContainer>
         <Table stickyHeader>
           <TableHead>
@@ -114,10 +106,12 @@ const TrainingPlanListPage = () => {
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
+          labelDisplayedRows={({ from, to, count }) =>
+            `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+          }
         />
       </TableContainer>
-    </Fragment>
+    </MainCard>
   );
 };
 

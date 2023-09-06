@@ -1,10 +1,20 @@
 import Gap from "views/components/common/Gap";
 import Heading from "views/components/common/Heading";
 import React, { Fragment, useEffect, useState } from "react";
-import { Card, Table, TableCell, TableContainer, TableHead, TableRow, styled, tableCellClasses } from "@mui/material";
+import {
+  Card,
+  Table,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  styled,
+  tableCellClasses,
+} from "@mui/material";
 import { Button } from "views/components/button";
 import { ojtBatchPath, reportPath } from "logic/api/apiUrl";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
+import MainCard from "views/components/cards/MainCard";
 
 const ManagerReportListPage = () => {
   const [reports, setReports] = useState([]);
@@ -39,13 +49,7 @@ const ManagerReportListPage = () => {
   }));
 
   return (
-    <Fragment>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">Xuất báo cáo</Heading>
-        </div>
-      </div>
-      <Gap></Gap>
+    <MainCard title="Xuất báo cáo">
       {/* <TableContainer sx={{ width: 1 }}>
         <Table stickyHeader>
           <TableHead>
@@ -148,7 +152,7 @@ const ManagerReportListPage = () => {
           labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
         />
       </TableContainer> */}
-    </Fragment>
+    </MainCard>
   );
 };
 

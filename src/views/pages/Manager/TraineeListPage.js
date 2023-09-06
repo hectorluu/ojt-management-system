@@ -11,13 +11,11 @@ import {
   TableRow,
 } from "@mui/material";
 import { userPath } from "logic/api/apiUrl";
-import {
-  defaultPageSize,
-  defaultPageIndex,
-} from "logic/constants/global";
+import { defaultPageSize, defaultPageIndex } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { Button } from "views/components/button";
 import ModalTraineeDetailManager from "views/components/modal/ModalTraineeDetailManager";
+import MainCard from "views/components/cards/MainCard";
 
 const TraineeListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -30,10 +28,10 @@ const TraineeListPage = () => {
       try {
         const response = await axiosPrivate.get(
           userPath.GET_TRAINEE_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage
+            "?PageIndex=" +
+            page +
+            "&PageSize=" +
+            rowsPerPage
         );
 
         setUsers(response.data.data);
@@ -61,17 +59,11 @@ const TraineeListPage = () => {
     useState(false);
 
   return (
-    <Fragment>
+    <MainCard title="Thực tập sinh">
       <ModalTraineeDetailManager
         isOpen={isTraineeDetailModalOpen}
         onRequestClose={() => setIsTraineeDetailModalOpen(false)}
       ></ModalTraineeDetailManager>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">Thực tập sinh</Heading>
-        </div>
-      </div>
-      <Gap></Gap>
       <TableContainer>
         <Table>
           <TableHead>
@@ -118,10 +110,12 @@ const TraineeListPage = () => {
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
+          labelDisplayedRows={({ from, to, count }) =>
+            `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+          }
         />
       </TableContainer>
-    </Fragment>
+    </MainCard>
   );
 };
 

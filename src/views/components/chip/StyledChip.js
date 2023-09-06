@@ -53,7 +53,7 @@ export const StyledChip = styled(Box)(({ theme, ownerState }) => {
   };
 
   return {
-    height: 24,
+    height: 28,
     minWidth: 22,
     lineHeight: 0,
     borderRadius: 6,

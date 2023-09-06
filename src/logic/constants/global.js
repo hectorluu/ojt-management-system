@@ -117,6 +117,13 @@ export const positionStatus = {
   INACTIVE: 3,
 };
 
+export const trainingPlanStatus = {
+  PENDING: 2,
+  ACTIVE: 3,
+  DENIED: 4,
+  CLOSED: 5,
+};
+
 export const notCriteriaOptions = [
   { value: "STT", label: "Số thứ tự" },
   { value: "LastName", label: "Họ" },

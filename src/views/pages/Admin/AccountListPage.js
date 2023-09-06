@@ -130,17 +130,6 @@ const AccountListPage = () => {
     setUserModalId(userModalId);
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 1:
-        return "bg-red-500";
-      case 2:
-        return "bg-green-500";
-      default:
-        return "bg-gray-500"; // You can set a default color class if needed
-    }
-  };
-
   // style table head
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {

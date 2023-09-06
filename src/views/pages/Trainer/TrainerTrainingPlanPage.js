@@ -1,33 +1,34 @@
-import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
-import React, { Fragment } from "react";
-import { Table, TableContainer } from "@mui/material";
-import { Button } from "views/components/button";
+import React from "react";
+import { SvgIcon, Table, TableContainer, Button } from "@mui/material";
+import MainCard from "views/components/cards/MainCard";
+import { Link } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
 
 const TrainerTrainingPlanPage = () => {
   return (
-    <Fragment>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">
-            Danh sách kế hoạch đào tạo
-          </Heading>
-        </div>
-
+    <MainCard
+      title="Kế hoạch đào tạo"
+      secondary={
         <Button
-          className="px-7"
-          type="button"
-          href="/create-new-training-plan"
-          kind="secondary"
+          startIcon={
+            <SvgIcon fontSize="small">
+              <AddIcon />
+            </SvgIcon>
+          }
+          component={Link}
+          to="/create-new-training-plan"
+          variant="contained"
+          size="medium"
+          sx={{ borderRadius: "10px" }}
         >
-          Thêm kế hoạch đào tạo mới
+          Thêm mới
         </Button>
-      </div>
-      <Gap></Gap>
+      }
+    >
       <TableContainer>
         <Table></Table>
       </TableContainer>
-    </Fragment>
+    </MainCard>
   );
 };
 
