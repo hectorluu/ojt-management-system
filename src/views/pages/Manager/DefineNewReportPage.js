@@ -277,7 +277,7 @@ function DefineNewReportPage() {
               </Dropdown>
             </FormGroup>
             <FormGroup>
-              <Label>Tệp đánh giá (*) (.xlsx, .xls)</Label>
+              <Label>Tệp đánh giá (*) (.xlsx)</Label>
               <ExcelUpload
                 openFile={openFile}
               />
