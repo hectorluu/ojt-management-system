@@ -17,13 +17,14 @@ export const coursePath = {
 };
 
 export const criteriaPath = {
-  GET_STUDENT_PONIT_LIST: "/criteria/list-of-trainee-point-by-trainer",
+  GET_STUDENT_UNMARKED_POINT_LIST: "/criteria/list-of-trainee-point-by-trainer",
+  GET_STUDENT_MARKED_POINT_LIST: "/criteria/list-current-point-of-trainee-point-by-trainer",
   EVALUATE_STUDENT: "/criteria",
 };
 
 export const ojtBatchPath = {
   GET_OJT_BATCH_LIST_OF_UNIVERSITY: "/ojtbatch/batches-of-university",
-  GET_NOT_GRADED_BATCH: "/ojtbatch/notgrade-batches",
+  GET_TRAINER_BATCHES: "/ojtbatch/status-grade-batches-trainer",
   CREATE_OJT_BATCH: "/ojtbatch",
 };
 
