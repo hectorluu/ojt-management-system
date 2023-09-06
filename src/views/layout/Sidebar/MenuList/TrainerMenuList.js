@@ -81,14 +81,6 @@ const pages = {
       ],
     },
     {
-      id: "excel",
-      title: "Excel",
-      type: "item",
-      url: "/excel",
-      icon: iconsPages.IconPalette,
-      breadcrumbs: false,
-    },
-    {
       id: "trainer-training-plan",
       title: "Kế hoạch đào tạo",
       type: "item",

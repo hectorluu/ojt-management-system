@@ -1,7 +1,7 @@
 import Gap from "views/components/common/Gap";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainCard from "views/components/cards/MainCard";
-import { SvgIcon, Button, TablePagination, TableCell, TableRow, Skeleton, TableBody, TableContainer, Table, TableHead, Card, OutlinedInput, InputAdornment, Chip } from "@mui/material";
+import { SvgIcon, Button, TablePagination, TableCell, TableRow, Skeleton, TableBody, TableContainer, Table, TableHead, Card, OutlinedInput, InputAdornment } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 import StyledTableCell from "views/modules/table/StyledTableCell";
@@ -10,6 +10,8 @@ import { defaultPageIndex, defaultPageSize, formulaStatusOptions } from "logic/c
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import useOnChange from "logic/hooks/useOnChange";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import { formulaPath } from "logic/api/apiUrl";
+import Chip from "views/components/chip/Chip";
 
 const ListFormulaPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -19,6 +21,31 @@ const ListFormulaPage = () => {
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isLoading, setIsLoading] = useState(true);
   const [formulaList, setFormulaList] = useState([]);
+
+  useEffect(() => {
+    fetchFormulas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm, rowsPerPage, page]);
+
+  async function fetchFormulas() {
+    try {
+      const response = await axiosPrivate.get(
+        formulaPath.GET_FORMULA_LIST +
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}`
+      );
+      setFormulaList(response.data.data);
+      setTotalItem(response.data.totalItem);
+      setIsLoading(false);
+      // setPage(response.data.pageIndex);
+    } catch (error) {
+      console.log("fetchSkill ~ error", error);
+    }
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -142,7 +169,7 @@ const ListFormulaPage = () => {
                       }
                     >
                       {
-                        formulaList.find(
+                        formulaStatusOptions.find(
                           (label) => label.value === item.status
                         ).label
                       }

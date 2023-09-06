@@ -310,7 +310,7 @@ const router = createBrowserRouter([
         element: <LayoutTrainer></LayoutTrainer>,
         children: [
           {
-            path: "/excel",
+            path: "/trainees-evaluate-excel/:ojtBatchId/:action",
             element: <EvaluateExcelPage></EvaluateExcelPage>,
           },
           {

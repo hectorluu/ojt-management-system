@@ -91,6 +91,16 @@ export const formulaStatusOptions = [
   { value: 3, label: "Không sử dụng" },
 ];
 
+export const reportStatusOptions = [
+  { value: "Can export", label: "Có thể xuất báo cáo" },
+  { value: "Can not export", label: "Chưa thể xuất báo cáo" },
+];
+
+export const evaluationStatusOptions = [
+  { value: "Graded", label: "Đã chấm điểm" },
+  { value: "Not Grade yet", label: "Chưa chấm điểm" },
+];
+
 export const isCriteriaOptions = [
   { value: true, label: "Có" },
   { value: false, label: "Không" },
@@ -121,6 +131,21 @@ export const positionStatus = {
   DELETED: 1,
   ACTIVE: 2,
   INACTIVE: 3,
+};
+
+export const reportStatus = {
+  CAN: "Can export",
+  CANNOT: "Can not export",
+};
+
+export const evaluationStatus = {
+  DONE: "Graded",
+  NOTYET: "Not Grade yet",
+};
+
+export const evaluationOptions = {
+  CREATE: 1,
+  EDIT: 2
 };
 
 export const notCriteriaOptions = [
