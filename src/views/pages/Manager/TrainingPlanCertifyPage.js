@@ -18,6 +18,8 @@ import { Button } from "views/components/button";
 import ModalTrainingPlanDetailManager from "views/components/modal/ModalTrainingPlanDetailManager";
 import { trainingPlanPath } from "logic/api/apiUrl";
 import MainCard from "views/components/cards/MainCard";
+import SubCard from "views/components/cards/SubCard";
+import StyledTableCell from "views/modules/table/StyledTableCell";
 
 const TrainingPlanCertifyPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -68,55 +70,57 @@ const TrainingPlanCertifyPage = () => {
         onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
       ></ModalTrainingPlanDetailManager>
 
-      <TableContainer>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell align="left" width={"25%"}>
-                Tên kế hoạch
-              </TableCell>
-              <TableCell align="left" width={"25%"}>
-                Người tạo
-              </TableCell>
-              <TableCell align="center" width={"20%"}>
-                Ngày gửi
-              </TableCell>
-              <TableCell align="right" width={"10%"}></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {trainingplans.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell align="right" width={"10%"}>
-                  <Button
-                    className=""
-                    type="button"
-                    kind="ghost"
-                    onClick={() => setIsTrainingPlanDetailModalOpen(true)}
-                  >
-                    Chi tiết
-                  </Button>
-                </TableCell>
+      <SubCard>
+        <TableContainer sx={{ width: 1, mb: -2, borderRadius: 4 }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align="left" width={"25%"}>
+                  Tên kế hoạch
+                </StyledTableCell>
+                <StyledTableCell align="left" width={"25%"}>
+                  Người tạo
+                </StyledTableCell>
+                <StyledTableCell align="center" width={"20%"}>
+                  Ngày gửi
+                </StyledTableCell>
+                <StyledTableCell align="right" width={"10%"}></StyledTableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          labelRowsPerPage="Số dòng"
-          component="div"
-          count={totalItem}
-          page={page - 1}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelDisplayedRows={({ from, to, count }) =>
-            `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
-          }
-        />
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {trainingplans.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell align="right" width={"10%"}>
+                    <Button
+                      className=""
+                      type="button"
+                      kind="ghost"
+                      onClick={() => setIsTrainingPlanDetailModalOpen(true)}
+                    >
+                      Chi tiết
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <TablePagination
+            labelRowsPerPage="Số dòng"
+            component="div"
+            count={totalItem}
+            page={page - 1}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+            }
+          />
+        </TableContainer>
+      </SubCard>
     </MainCard>
   );
 };

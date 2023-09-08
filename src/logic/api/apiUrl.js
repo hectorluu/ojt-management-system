@@ -18,7 +18,8 @@ export const coursePath = {
 
 export const criteriaPath = {
   GET_STUDENT_UNMARKED_POINT_LIST: "/criteria/list-of-trainee-point-by-trainer",
-  GET_STUDENT_MARKED_POINT_LIST: "/criteria/list-current-point-of-trainee-point-by-trainer",
+  GET_STUDENT_MARKED_POINT_LIST:
+    "/criteria/list-current-point-of-trainee-point-by-trainer",
   EVALUATE_STUDENT: "/criteria",
 };
 
@@ -78,6 +79,10 @@ export const formulaPath = {
   GET_FORMULA_LIST: "/formula",
   CREATE_FORMULA: "/formula",
   GET_KEY_LIST: "/formula/data-operand",
+};
+
+export const trainerPath = {
+  GET_TRAINEE_LIST: "/user/trainer/trainee",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

@@ -27,6 +27,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
+import SubCard from "views/components/cards/SubCard";
 
 const CourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -80,6 +81,21 @@ const CourseListPage = () => {
     }
   };
 
+  const [totalCourses, setTotalCourses] = useState([]); // New state for total courses [1
+  const fetchTotalCourses = async () => {
+    try {
+      setIsLoading(true); // Set loading to true before fetching data
+      let response = await axiosPrivate.get(
+        coursePath.GET_COURSE_LIST + "?PageSize=" + 1000000
+      );
+      setTotalCourses(response.data.data);
+    } catch (error) {
+      console.log("Error", error);
+    } finally {
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  };
+
   const fetchSkills = async () => {
     try {
       const response = await axiosPrivate.get(
@@ -116,6 +132,7 @@ const CourseListPage = () => {
 
   useEffect(() => {
     fetchCourses();
+    fetchTotalCourses();
     fetchSkills();
     fetchPositions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,7 +193,7 @@ const CourseListPage = () => {
 
   return (
     <MainCard
-      title="Khóa học"
+      title={`Khóa học (${totalCourses.length})`}
       secondary={
         <Button
           startIcon={
@@ -194,96 +211,98 @@ const CourseListPage = () => {
         </Button>
       }
     >
-      <div className="flex flex-wrap items-start gap-3">
-        {/*Custom search bar*/}
-        <Card className="w-2/5">
-          <OutlinedInput
-            defaultValue=""
-            fullWidth
-            placeholder="Tìm kiếm ..."
-            startAdornment={
-              <InputAdornment position="start">
-                <SvgIcon color="action" fontSize="small">
-                  <SearchIcon />
-                </SvgIcon>
-              </InputAdornment>
-            }
-            sx={{ maxWidth: 550 }}
-            onChange={setSearchTerm}
-          />
-        </Card>
-        <div className="flex flex-wrap items-start max-w-[200px] w-full">
-          <Dropdown>
-            <Dropdown.Select
-              placeholder={getPositionDropdownLabel(
-                position,
-                positionFiltered,
-                "Vị trí"
-              )}
-            ></Dropdown.Select>
-            <Dropdown.List>
-              {positionFiltered.map((pos) => (
-                <Dropdown.Option
-                  key={pos.id}
-                  onClick={() => handleSelectPositionDropdownOption(pos.id)}
-                >
-                  <span className="capitalize">{pos.name}</span>
-                </Dropdown.Option>
-              ))}
-            </Dropdown.List>
-          </Dropdown>
+      <SubCard>
+        <div className="flex flex-wrap items-start gap-3">
+          {/*Custom search bar*/}
+          <Card className="w-2/5">
+            <OutlinedInput
+              defaultValue=""
+              fullWidth
+              placeholder="Tìm kiếm ..."
+              startAdornment={
+                <InputAdornment position="start">
+                  <SvgIcon color="action" fontSize="small">
+                    <SearchIcon />
+                  </SvgIcon>
+                </InputAdornment>
+              }
+              sx={{ maxWidth: 550 }}
+              onChange={setSearchTerm}
+            />
+          </Card>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Dropdown>
+              <Dropdown.Select
+                placeholder={getPositionDropdownLabel(
+                  position,
+                  positionFiltered,
+                  "Vị trí"
+                )}
+              ></Dropdown.Select>
+              <Dropdown.List>
+                {positionFiltered.map((pos) => (
+                  <Dropdown.Option
+                    key={pos.id}
+                    onClick={() => handleSelectPositionDropdownOption(pos.id)}
+                  >
+                    <span className="capitalize">{pos.name}</span>
+                  </Dropdown.Option>
+                ))}
+              </Dropdown.List>
+            </Dropdown>
+          </div>
+          <div className=" max-w-[200px] w-full">
+            <Dropdown>
+              <Dropdown.Select
+                placeholder={getSkillDropdownLabel(
+                  skill,
+                  skillFiltered,
+                  "Kỹ năng"
+                )}
+              ></Dropdown.Select>
+              <Dropdown.List>
+                {skillFiltered.map((ski) => (
+                  <Dropdown.Option
+                    key={ski.id}
+                    onClick={() => handleSelectSkillDropdownOption(ski.id)}
+                  >
+                    <span className="capitalize">{ski.name}</span>
+                  </Dropdown.Option>
+                ))}
+              </Dropdown.List>
+            </Dropdown>
+          </div>
         </div>
-        <div className=" max-w-[200px] w-full">
-          <Dropdown>
-            <Dropdown.Select
-              placeholder={getSkillDropdownLabel(
-                skill,
-                skillFiltered,
-                "Kỹ năng"
-              )}
-            ></Dropdown.Select>
-            <Dropdown.List>
-              {skillFiltered.map((ski) => (
-                <Dropdown.Option
-                  key={ski.id}
-                  onClick={() => handleSelectSkillDropdownOption(ski.id)}
-                >
-                  <span className="capitalize">{ski.name}</span>
-                </Dropdown.Option>
-              ))}
-            </Dropdown.List>
-          </Dropdown>
-        </div>
-      </div>
-      <Gap></Gap>
-      <CourseGrid type="secondary">
-        {isLoading ? ( // Render skeleton loading when loading is true
-          // Use the animate-pulse class for skeleton effect
-          <>
-            <CourseCardSkeleton />
-            <CourseCardSkeleton />
-            <CourseCardSkeleton />
-          </>
-        ) : courses.length !== 0 ? (
-          courses.map((item) => (
-            <CourseCardDisplay course={item} key={item.id} />
-          ))
-        ) : (
-          <>Không có khóa học nào được tìm thấy.</>
-        )}
-      </CourseGrid>
-      <TablePagination
-        labelRowsPerPage="Số dòng"
-        component="div"
-        count={totalItem}
-        page={page - 1}
-        onPageChange={handleChangePage}
-        rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        labelDisplayedRows={({ from, to, count }) =>
-          `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
-        }
-      />
+        <Gap></Gap>
+        <CourseGrid type="secondary">
+          {isLoading ? ( // Render skeleton loading when loading is true
+            // Use the animate-pulse class for skeleton effect
+            <>
+              <CourseCardSkeleton />
+              <CourseCardSkeleton />
+              <CourseCardSkeleton />
+            </>
+          ) : courses.length !== 0 ? (
+            courses.map((item) => (
+              <CourseCardDisplay course={item} key={item.id} />
+            ))
+          ) : (
+            <>Không có khóa học nào được tìm thấy.</>
+          )}
+        </CourseGrid>
+        <TablePagination
+          labelRowsPerPage="Số dòng"
+          component="div"
+          count={totalItem}
+          page={page - 1}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelDisplayedRows={({ from, to, count }) =>
+            `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+          }
+        />
+      </SubCard>
     </MainCard>
   );
 };

@@ -1,6 +1,4 @@
-import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Link, SvgIcon, Button } from "@mui/material";
 
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
@@ -12,7 +10,7 @@ const ListTemplatePage = () => {
   const [template, setTemplate] = useState([]);
   const axiosPrivate = useAxiosPrivate();
 
-  const [isLoading, setIsLoading] = useState(true); // New loading state
+  const [, setIsLoading] = useState(true); // New loading state
 
   useEffect(() => {
     async function fetchTemplates() {
@@ -32,7 +30,7 @@ const ListTemplatePage = () => {
 
   return (
     <MainCard
-      title="Danh sách mẫu báo cáo"
+      title={`Danh sách mẫu báo cáo (${template.length})`}
       secondary={
         <Button
           startIcon={
