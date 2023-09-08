@@ -194,10 +194,7 @@ const SkillListPage = () => {
               skills.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell width={"30%"}>{item.name}</TableCell>
-                  <TableCell
-                    align="center"
-                    className="flex items-center justify-center"
-                  >
+                  <TableCell align="center">
                     <Chip
                       color={
                         item.status === 1 || item.status === 3

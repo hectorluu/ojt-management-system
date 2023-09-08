@@ -6,9 +6,7 @@ import { useTheme } from "@mui/material/styles";
 import {
   Avatar,
   Box,
-  Button,
   ButtonBase,
-  CardActions,
   Chip,
   ClickAwayListener,
   Divider,
@@ -31,6 +29,8 @@ import NotificationList from "./NotificationList";
 
 // assets
 import { IconBell } from "@tabler/icons";
+import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
+import { notificationPath } from "logic/api/apiUrl";
 
 // notification status options
 const status = [
@@ -54,16 +54,26 @@ const status = [
 
 // ==============================|| NOTIFICATION ||============================== //
 
-const NotificationSection = () => {
+export default function NotificationSection() {
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down("md"));
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+  const [notiList, setNotiList] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
+  const [isLoading, setIsLoading] = useState(false);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
    * */
   const anchorRef = useRef(null);
+
+  useEffect(() => {
+    if (open) {
+      fetchNotifications();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -86,6 +96,18 @@ const NotificationSection = () => {
 
   const handleChange = (event) => {
     if (event?.target.value) setValue(event?.target.value);
+  };
+
+  const fetchNotifications = async () => {
+    try {
+      setIsLoading(true);
+      const res = await axiosPrivate.get(notificationPath.GET_NOTIFICATION_LIST);
+      setNotiList(res.data);
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -227,16 +249,12 @@ const NotificationSection = () => {
                             <Divider sx={{ my: 0 }} />
                           </Grid>
                         </Grid>
-                        <NotificationList />
+                        <NotificationList
+                          notiList={notiList}
+                          isLoading={isLoading} />
                       </PerfectScrollbar>
                     </Grid>
                   </Grid>
-                  <Divider />
-                  <CardActions sx={{ p: 1.25, justifyContent: "center" }}>
-                    <Button size="small" disableElevation>
-                      View All
-                    </Button>
-                  </CardActions>
                 </MainCard>
               </ClickAwayListener>
             </Paper>
@@ -246,5 +264,3 @@ const NotificationSection = () => {
     </>
   );
 };
-
-export default NotificationSection;

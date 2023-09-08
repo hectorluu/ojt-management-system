@@ -78,6 +78,16 @@ export const formulaPath = {
   GET_FORMULA_LIST: "/formula",
   CREATE_FORMULA: "/formula",
   GET_KEY_LIST: "/formula/data-operand",
+  DELETE_FORMULA: "/formula/",
+  UPDATE_FORMULA: "/formula/",
+};
+
+export const notificationPath = {
+  GET_NOTIFICATION_LIST: "/notifications",
+};
+
+export const taskProcessPath = {
+  SYNC_WEBHOOK: "/task-process/board-webhook",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

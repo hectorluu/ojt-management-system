@@ -30,6 +30,8 @@ import useOnChange from "logic/hooks/useOnChange";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { formulaPath } from "logic/api/apiUrl";
 import Chip from "views/components/chip/Chip";
+import { formulaNoti } from "logic/constants/notification";
+import { toast } from "react-toastify";
 
 const ListFormulaPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -47,14 +49,15 @@ const ListFormulaPage = () => {
 
   async function fetchFormulas() {
     try {
+      setIsLoading(true);
       const response = await axiosPrivate.get(
         formulaPath.GET_FORMULA_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}`
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}`
       );
       setFormulaList(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -72,6 +75,39 @@ const ListFormulaPage = () => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(1);
+  };
+
+  const onClickDelete = async (id) => {
+    try {
+      setIsLoading(true);
+      await axiosPrivate.delete(
+        formulaPath.DELETE_FORMULA + id
+      );
+      fetchFormulas();
+      toast.success(formulaNoti.SUCCESS.CREATE);
+      setIsLoading(false);
+      // setPage(response.data.pageIndex);
+    } catch (error) {
+      console.log("fetchSkill ~ error", error);
+      setIsLoading(false);
+    }
+  };
+
+  const onClickActive = async (item) => {
+    try {
+      setIsLoading(true);
+      await axiosPrivate.put(formulaPath.UPDATE_FORMULA + item.id, {
+        calculation: item.calculation,
+        name: item.name,
+        status: 2
+      });
+      fetchFormulas();
+      toast.success(formulaNoti.SUCCESS.ACTIVE);
+      setIsLoading(false);
+    } catch (error) {
+      console.log("Active error", error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -121,7 +157,7 @@ const ListFormulaPage = () => {
               <StyledTableCell width={"30%"}>Công thức</StyledTableCell>
               <StyledTableCell align="center">Trạng thái</StyledTableCell>
               <StyledTableCell align="right" width={"5%"}></StyledTableCell>
-              <StyledTableCell align="right" width={"5%"}></StyledTableCell>
+              <StyledTableCell align="right" width={"15%"}></StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -175,10 +211,7 @@ const ListFormulaPage = () => {
               formulaList.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell width={"30%"}>{item.name}</TableCell>
-                  <TableCell
-                    align="center"
-                    className="flex items-center justify-center"
-                  >
+                  <TableCell align="center">
                     <Chip
                       color={
                         item.status === 1 || item.status === 3
@@ -203,10 +236,18 @@ const ListFormulaPage = () => {
                       <ModeEditOutlineIcon></ModeEditOutlineIcon>
                     </Button>
                   </TableCell>
-                  <TableCell align="right" width={"5%"}>
-                    <Button className="bg-red-500 text-white" type="button">
-                      Xóa
-                    </Button>
+                  <TableCell align="center" width={"15%"}>
+                    {item.status === 2 ?
+                      <Button variant="contained" component="label" color="error"
+                        onClick={() => onClickDelete(item.id)}
+                      >
+                        Vô hiệu
+                      </Button> :
+                      <Button variant="contained" component="label" color="success"
+                        onClick={() => onClickActive(item)}
+                      >
+                        Kích hoạt
+                      </Button>}
                   </TableCell>
                 </TableRow>
               ))

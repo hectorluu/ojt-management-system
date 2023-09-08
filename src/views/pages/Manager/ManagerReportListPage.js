@@ -1,17 +1,4 @@
-import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
-import React, { Fragment, useEffect, useState } from "react";
-import {
-  Card,
-  Table,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  styled,
-  tableCellClasses,
-} from "@mui/material";
-import { Button } from "views/components/button";
+import React, { useEffect, useState } from "react";
 import { ojtBatchPath, reportPath } from "logic/api/apiUrl";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import MainCard from "views/components/cards/MainCard";
@@ -37,16 +24,6 @@ const ManagerReportListPage = () => {
     fetchReports();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
 
   return (
     <MainCard title="Xuất báo cáo">

@@ -53,6 +53,8 @@ export const templateNoti = {
 export const formulaNoti = {
   SUCCESS: {
     CREATE: "Thành công tạo công thức tính!!!",
+    DELETE: "Thành công xóa công thức tính!!!",
+    ACTIVE: "Thành công kích hoạt công thức tính!!!"
   },
 
   ERROR: {

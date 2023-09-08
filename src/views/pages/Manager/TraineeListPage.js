@@ -1,7 +1,5 @@
-import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -28,10 +26,10 @@ const TraineeListPage = () => {
       try {
         const response = await axiosPrivate.get(
           userPath.GET_TRAINEE_LIST +
-            "?PageIndex=" +
-            page +
-            "&PageSize=" +
-            rowsPerPage
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage
         );
 
         setUsers(response.data.data);
