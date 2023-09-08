@@ -194,8 +194,8 @@ export default function NotificationList({ notiList = [], isLoading = false }) {
         </>
       ) : notiList.length > 0 ? (
         notiList.map((item, index) => (
-          <>
-            <ListItemWrapper key={item.id}>
+          <span key={index}>
+            <ListItemWrapper>
               <ListItem alignItems="center">
                 <ListItemAvatar>
                   <Avatar alt="John Doe" src={defaultUserIcon} />
@@ -230,7 +230,7 @@ export default function NotificationList({ notiList = [], isLoading = false }) {
               </Grid>
             </ListItemWrapper>
             <Divider />
-          </>
+          </span>
         ))) :
         <>
           <ListItemWrapper>

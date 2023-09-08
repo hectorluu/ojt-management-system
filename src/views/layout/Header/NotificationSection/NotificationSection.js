@@ -31,26 +31,7 @@ import NotificationList from "./NotificationList";
 import { IconBell } from "@tabler/icons";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { notificationPath } from "logic/api/apiUrl";
-
-// notification status options
-const status = [
-  {
-    value: "all",
-    label: "All Notification",
-  },
-  {
-    value: "new",
-    label: "New",
-  },
-  {
-    value: "unread",
-    label: "Unread",
-  },
-  {
-    value: "other",
-    label: "Other",
-  },
-];
+import { notiOptions } from "logic/constants/global";
 
 // ==============================|| NOTIFICATION ||============================== //
 
@@ -73,7 +54,7 @@ export default function NotificationSection() {
       fetchNotifications();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, value]);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -189,11 +170,11 @@ export default function NotificationSection() {
                         <Grid item>
                           <Stack direction="row" spacing={2}>
                             <Typography variant="subtitle1">
-                              All Notification
+                              Thông báo
                             </Typography>
                             <Chip
                               size="small"
-                              label="01"
+                              label={notiList.filter(item => !item.isRead).length}
                               sx={{
                                 color: theme.palette.background.default,
                                 bgcolor: theme.palette.warning.dark,
@@ -208,7 +189,7 @@ export default function NotificationSection() {
                             variant="subtitle2"
                             color="primary"
                           >
-                            Mark as all read
+                            Đánh dấu tất cả đã đọc
                           </Typography>
                         </Grid>
                       </Grid>
@@ -234,7 +215,7 @@ export default function NotificationSection() {
                                   native: true,
                                 }}
                               >
-                                {status.map((option) => (
+                                {notiOptions.map((option) => (
                                   <option
                                     key={option.value}
                                     value={option.value}
