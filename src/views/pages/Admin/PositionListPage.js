@@ -258,6 +258,42 @@ const PositionListPage = () => {
                     </TableCell>
                   </TableRow>
                 ))
+              ) : positions.length !== 0 ? (
+                positions.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell width={"30%"}>{item.name}</TableCell>
+                    <TableCell align="center">
+                      <Chip
+                        color={
+                          item.status === 1 || item.status === 3
+                            ? "error"
+                            : "success"
+                        }
+                      >
+                        {
+                          positionStatusOptions.find(
+                            (label) => label.value === item.status
+                          ).label
+                        }
+                      </Chip>
+                    </TableCell>
+                    <TableCell align="right" width={"5%"}>
+                      <Button
+                        className=""
+                        type="button"
+                        kind="ghost"
+                        onClick={() => handleClickPositionModal(item.id)}
+                      >
+                        <ModeEditOutlineIcon></ModeEditOutlineIcon>
+                      </Button>
+                    </TableCell>
+                    <TableCell align="right" width={"5%"}>
+                      <Button className="bg-red-500 text-white" type="button">
+                        Xóa
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
               ) : (
                 <TableRow>
                   <TableCell colSpan={4} align="center">

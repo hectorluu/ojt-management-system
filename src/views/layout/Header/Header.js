@@ -11,11 +11,16 @@ import NotificationSection from "./NotificationSection/NotificationSection";
 
 // assets
 import { IconMenu2 } from "@tabler/icons";
+import SyncSection from "./SyncSection/SyncSection";
+import { useSelector } from "react-redux";
+import { roleExchange } from "logic/constants/global";
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
 const Header = ({ handleLeftDrawerToggle }) => {
   const theme = useTheme();
+  const { user } = useSelector((state) => state.auth);
+  const userRole = user?.role || "";
 
   return (
     <>
@@ -63,6 +68,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
       <Box sx={{ flexGrow: 1 }} />
 
       {/* notification & profile */}
+      {userRole === roleExchange.TRAINER ? <SyncSection /> : null}
       <NotificationSection />
       <ProfileSection />
     </>

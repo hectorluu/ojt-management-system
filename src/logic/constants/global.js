@@ -177,3 +177,9 @@ export const formulaOptions = [
   { value: "Certificate", label: "Khoá học" },
   { value: "Task", label: "Công việc" },
 ];
+
+export const notiOptions = [
+  { value: "All", label: "Tất cả" },
+  { value: true, label: "Đã đọc" },
+  { value: false, label: "Chưa đọc" },
+];

@@ -30,6 +30,8 @@ import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { formulaPath } from "logic/api/apiUrl";
 import Chip from "views/components/chip/Chip";
 import SubCard from "views/components/cards/SubCard";
+import { formulaNoti } from "logic/constants/notification";
+import { toast } from "react-toastify";
 
 const ListFormulaPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -47,6 +49,7 @@ const ListFormulaPage = () => {
 
   async function fetchFormulas() {
     try {
+      setIsLoading(true);
       const response = await axiosPrivate.get(
         formulaPath.GET_FORMULA_LIST +
           "?PageIndex=" +
@@ -72,6 +75,37 @@ const ListFormulaPage = () => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(1);
+  };
+
+  const onClickDelete = async (id) => {
+    try {
+      setIsLoading(true);
+      await axiosPrivate.delete(formulaPath.DELETE_FORMULA + id);
+      fetchFormulas();
+      toast.success(formulaNoti.SUCCESS.CREATE);
+      setIsLoading(false);
+      // setPage(response.data.pageIndex);
+    } catch (error) {
+      console.log("fetchSkill ~ error", error);
+      setIsLoading(false);
+    }
+  };
+
+  const onClickActive = async (item) => {
+    try {
+      setIsLoading(true);
+      await axiosPrivate.put(formulaPath.UPDATE_FORMULA + item.id, {
+        calculation: item.calculation,
+        name: item.name,
+        status: 2,
+      });
+      fetchFormulas();
+      toast.success(formulaNoti.SUCCESS.ACTIVE);
+      setIsLoading(false);
+    } catch (error) {
+      console.log("Active error", error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -122,7 +156,7 @@ const ListFormulaPage = () => {
                 <StyledTableCell width={"30%"}>Công thức</StyledTableCell>
                 <StyledTableCell align="center">Trạng thái</StyledTableCell>
                 <StyledTableCell align="right" width={"5%"}></StyledTableCell>
-                <StyledTableCell align="right" width={"5%"}></StyledTableCell>
+                <StyledTableCell align="right" width={"15%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -172,6 +206,58 @@ const ListFormulaPage = () => {
                     </TableCell>
                   </TableRow>
                 </>
+              ) : formulaList.length !== 0 ? (
+                formulaList.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell width={"30%"}>{item.name}</TableCell>
+                    <TableCell align="center">
+                      <Chip
+                        color={
+                          item.status === 1 || item.status === 3
+                            ? "error"
+                            : "success"
+                        }
+                      >
+                        {
+                          formulaStatusOptions.find(
+                            (label) => label.value === item.status
+                          ).label
+                        }
+                      </Chip>
+                    </TableCell>
+                    <TableCell align="right" width={"5%"}>
+                      <Button
+                        className=""
+                        type="button"
+                        kind="ghost"
+                        onClick={() => console.log("edit")}
+                      >
+                        <ModeEditOutlineIcon></ModeEditOutlineIcon>
+                      </Button>
+                    </TableCell>
+                    <TableCell align="center" width={"15%"}>
+                      {item.status === 2 ? (
+                        <Button
+                          variant="contained"
+                          component="label"
+                          color="error"
+                          onClick={() => onClickDelete(item.id)}
+                        >
+                          Vô hiệu
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          component="label"
+                          color="success"
+                          onClick={() => onClickActive(item)}
+                        >
+                          Kích hoạt
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
               ) : formulaList.length !== 0 ? (
                 formulaList.map((item) => (
                   <TableRow key={item.id}>

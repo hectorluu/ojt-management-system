@@ -11,6 +11,7 @@ import {
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
+  Skeleton,
   Typography,
 } from "@mui/material";
 
@@ -37,7 +38,7 @@ const ListItemWrapper = styled("div")(({ theme }) => ({
 
 // ==============================|| NOTIFICATION LIST ITEM ||============================== //
 
-const NotificationList = () => {
+export default function NotificationList({ notiList = [], isLoading = false }) {
   const theme = useTheme();
 
   const chipSX = {
@@ -85,6 +86,163 @@ const NotificationList = () => {
         },
       }}
     >
+      {isLoading ? (
+        <>
+          <ListItemWrapper>
+            <ListItem alignItems="center">
+              <ListItemAvatar>
+                <Skeleton variant="circular" width={40} height={40} />
+              </ListItemAvatar>
+              <ListItemText>
+                <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+              </ListItemText>
+              <ListItemSecondaryAction>
+                <Grid container justifyContent="flex-end">
+                  <Grid item xs={12}>
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                  </Grid>
+                </Grid>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <Grid container direction="column" className="list-container">
+              <Grid item xs={12} sx={{ pb: 2 }}>
+                <Skeleton width={250} />
+                <Skeleton width={250} />
+                <Skeleton width={250} />
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container>
+                  <Grid item>
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                  </Grid>
+                  <Grid item>
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </ListItemWrapper>
+          <Divider />
+          <ListItemWrapper>
+            <ListItem alignItems="center">
+              <ListItemAvatar>
+                <Skeleton variant="circular" width={40} height={40} />
+              </ListItemAvatar>
+              <ListItemText>
+                <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+              </ListItemText>
+              <ListItemSecondaryAction>
+                <Grid container justifyContent="flex-end">
+                  <Grid item xs={12}>
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                  </Grid>
+                </Grid>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <Grid container direction="column" className="list-container">
+              <Grid item xs={12} sx={{ pb: 2 }}>
+                <Skeleton width={250} />
+                <Skeleton width={250} />
+                <Skeleton width={250} />
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container>
+                  <Grid item>
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                  </Grid>
+                  <Grid item>
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </ListItemWrapper>
+          <Divider /><ListItemWrapper>
+            <ListItem alignItems="center">
+              <ListItemAvatar>
+                <Skeleton variant="circular" width={40} height={40} />
+              </ListItemAvatar>
+              <ListItemText>
+                <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+              </ListItemText>
+              <ListItemSecondaryAction>
+                <Grid container justifyContent="flex-end">
+                  <Grid item xs={12}>
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                  </Grid>
+                </Grid>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <Grid container direction="column" className="list-container">
+              <Grid item xs={12} sx={{ pb: 2 }}>
+                <Skeleton width={250} />
+                <Skeleton width={250} />
+                <Skeleton width={250} />
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container>
+                  <Grid item>
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                  </Grid>
+                  <Grid item>
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </ListItemWrapper>
+        </>
+      ) : notiList.length > 0 ? (
+        notiList.map((item, index) => (
+          <span key={index}>
+            <ListItemWrapper>
+              <ListItem alignItems="center">
+                <ListItemAvatar>
+                  <Avatar alt="John Doe" src={defaultUserIcon} />
+                </ListItemAvatar>
+                <ListItemText primary="John Doe" />
+                <ListItemSecondaryAction>
+                  <Grid container justifyContent="flex-end">
+                    <Grid item xs={12}>
+                      <Typography variant="caption" display="block" gutterBottom>
+                        2 min ago
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </ListItemSecondaryAction>
+              </ListItem>
+              <Grid container direction="column" className="list-container">
+                <Grid item xs={12} sx={{ pb: 2 }}>
+                  <Typography variant="subtitle2">
+                    It is a long established fact that a reader will be distracted
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid container>
+                    <Grid item>
+                      <Chip label="Unread" sx={chipErrorSX} />
+                    </Grid>
+                    <Grid item>
+                      <Chip label="New" sx={chipWarningSX} />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </ListItemWrapper>
+            <Divider />
+          </span>
+        ))) :
+        <>
+          <ListItemWrapper>
+            <Grid container direction="column" className="list-container">
+              <Grid item xs={12} sx={{ pb: 2 }}>
+                <Typography variant="subtitle2" sx={{pl: 5}}>
+                  Không có thông báo!!!
+                </Typography>
+              </Grid>
+            </Grid>
+          </ListItemWrapper>
+        </>}
       <ListItemWrapper>
         <ListItem alignItems="center">
           <ListItemAvatar>
@@ -255,5 +413,3 @@ const NotificationList = () => {
     </List>
   );
 };
-
-export default NotificationList;

@@ -204,8 +204,8 @@ const DefineFormulaPage = () => {
                 {formulaOptions.map((category) => (
                   <LoadingButton
                     key={category.value}
-                    variant="outlined"
-                    color={selectedCategory === category.value ? "success" : "primary"}
+                    component="label"
+                    variant={selectedCategory === category.value ? "contained" : "outlined"}
                     onClick={() => handleCategoryClick(category)}
                     loading={selectedCategory === category.value ? isLoading : false}
                   >
