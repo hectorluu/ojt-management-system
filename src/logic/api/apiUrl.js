@@ -85,6 +85,7 @@ export const formulaPath = {
 
 export const notificationPath = {
   GET_NOTIFICATION_LIST: "/notifications",
+  MARK_ALL_AS_READ: "/notifications",
 };
 
 export const taskProcessPath = {

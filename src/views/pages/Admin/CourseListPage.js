@@ -46,12 +46,20 @@ const CourseListPage = () => {
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
   useEffect(() => {
-    signalRService.on(signalRMessage.COURSE, (message) => {
+    signalRService.on(signalRMessage.COURSE.CREATED, (message) => {
+      fetchCourses();
+    });
+    signalRService.on(signalRMessage.COURSE.UPDATED, (message) => {
+      fetchCourses();
+    });
+    signalRService.on(signalRMessage.COURSE.DELETED, (message) => {
       fetchCourses();
     });
 
     return () => {
-      signalRService.off(signalRMessage.COURSE);
+      signalRService.off(signalRMessage.COURSE.CREATED);
+      signalRService.off(signalRMessage.COURSE.DELETED);
+      signalRService.off(signalRMessage.COURSE.UPDATED);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

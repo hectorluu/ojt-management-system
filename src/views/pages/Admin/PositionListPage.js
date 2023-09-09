@@ -52,12 +52,20 @@ const PositionListPage = () => {
   }, [searchTerm, page, rowsPerPage]);
 
   useEffect(() => {
-    signalRService.on(signalRMessage.POSITION, (message) => {
+    signalRService.on(signalRMessage.POSITION.CREATED, (message) => {
+      fetchPositions();
+    });
+    signalRService.on(signalRMessage.POSITION.DELETED, (message) => {
+      fetchPositions();
+    });
+    signalRService.on(signalRMessage.POSITION.UPDATED, (message) => {
       fetchPositions();
     });
 
     return () => {
-      signalRService.off(signalRMessage.POSITION);
+      signalRService.off(signalRMessage.POSITION.CREATED);
+      signalRService.off(signalRMessage.POSITION.DELETED);
+      signalRService.off(signalRMessage.POSITION.UPDATED);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

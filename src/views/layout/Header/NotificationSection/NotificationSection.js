@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import signalRService from "logic/utils/signalRService";
+import { styled } from '@mui/material/styles';
 
 // material-ui
 import { useTheme } from "@mui/material/styles";
 import {
   Avatar,
+  Badge,
   Box,
   ButtonBase,
   Chip,
@@ -31,7 +34,34 @@ import NotificationList from "./NotificationList";
 import { IconBell } from "@tabler/icons";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { notificationPath } from "logic/api/apiUrl";
-import { notiOptions } from "logic/constants/global";
+import { notiOptions, notiOptionsVaue, signalRMessage } from "logic/constants/global";
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    '&::after': {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      borderRadius: '50%',
+      animation: 'ripple 1.2s infinite ease-in-out',
+      border: '1px solid currentColor',
+      content: '""',
+    },
+  },
+  '@keyframes ripple': {
+    '0%': {
+      transform: 'scale(.8)',
+      opacity: 1,
+    },
+    '100%': {
+      transform: 'scale(2.4)',
+      opacity: 0,
+    },
+  },
+}));
 
 // ==============================|| NOTIFICATION ||============================== //
 
@@ -50,11 +80,31 @@ export default function NotificationSection() {
   const anchorRef = useRef(null);
 
   useEffect(() => {
+    fetchNotifications();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (open) {
       fetchNotifications();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, value]);
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.NOTIFICATION.CREATE_NOTI, (message) => {
+      fetchNotifications();
+    });
+    signalRService.on(signalRMessage.NOTIFICATION.UPDATE_NOTI, (message) => {
+      fetchNotifications();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.NOTIFICATION.CREATED);
+      signalRService.off(signalRMessage.NOTIFICATION.DELETED);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -82,12 +132,21 @@ export default function NotificationSection() {
   const fetchNotifications = async () => {
     try {
       setIsLoading(true);
-      const res = await axiosPrivate.get(notificationPath.GET_NOTIFICATION_LIST);
+      const res = await axiosPrivate.get(`${notificationPath.GET_NOTIFICATION_LIST}${value !== notiOptionsVaue.ALL ? "?statusRead=" + value : ""}`);
       setNotiList(res.data);
       setIsLoading(false);
     } catch (err) {
       console.log(err);
       setIsLoading(false);
+    }
+  };
+
+  const markAllAsRead = async () => {
+    try {
+      await axiosPrivate.put(notificationPath.MARK_ALL_AS_READ);
+      fetchNotifications();
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -103,27 +162,35 @@ export default function NotificationSection() {
         }}
       >
         <ButtonBase sx={{ borderRadius: "12px" }}>
-          <Avatar
-            variant="rounded"
-            sx={{
-              ...theme.typography.commonAvatar,
-              ...theme.typography.mediumAvatar,
-              transition: "all .2s ease-in-out",
-              background: "#EDE7F6",
-              color: "#5E35B1",
-              '&[aria-controls="menu-list-grow"],&:hover': {
-                background: "#5E35B1",
-                color: "#EDE7F6",
-              },
-            }}
-            ref={anchorRef}
-            aria-controls={open ? "menu-list-grow" : undefined}
-            aria-haspopup="true"
-            onClick={handleToggle}
-            color="inherit"
+          <StyledBadge
+            color={notiList.filter(item => !item.isRead).length > 0 ? "error" : "success"}
+            backgroundColor={notiList.filter(item => !item.isRead).length > 0 ? "error" : "success"}
+            overlap="circular"
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            variant="dot"
           >
-            <IconBell stroke={1.5} size="1.3rem" />
-          </Avatar>
+            <Avatar
+              variant="rounded"
+              sx={{
+                ...theme.typography.commonAvatar,
+                ...theme.typography.mediumAvatar,
+                transition: "all .2s ease-in-out",
+                background: "#EDE7F6",
+                color: "#5E35B1",
+                '&[aria-controls="menu-list-grow"],&:hover': {
+                  background: "#5E35B1",
+                  color: "#EDE7F6",
+                },
+              }}
+              ref={anchorRef}
+              aria-controls={open ? "menu-list-grow" : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+              color="inherit"
+            >
+              <IconBell stroke={1.5} size="1.3rem" />
+            </Avatar>
+          </StyledBadge>
         </ButtonBase>
       </Box>
       <Popper
@@ -188,6 +255,7 @@ export default function NotificationSection() {
                             to="#"
                             variant="subtitle2"
                             color="primary"
+                            onClick={markAllAsRead}
                           >
                             Đánh dấu tất cả đã đọc
                           </Typography>

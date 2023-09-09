@@ -114,15 +114,6 @@ export const statusColor = {
   INACTIVE: "bg-yellow-500",
 };
 
-export const signalRMessage = {
-  COURSE: "New Course Created",
-  SKILL: "New Skill Created",
-  USER: "New User Created",
-  TRAINING_PLAN: "New Training Plan Created",
-  POSITION: "New Position Created",
-  OJTBATCH: "New OJT Batch Created",
-};
-
 export const skillStatus = {
   DELETED: 1,
   ACTIVE: 2,
@@ -183,3 +174,75 @@ export const notiOptions = [
   { value: true, label: "Đã đọc" },
   { value: false, label: "Chưa đọc" },
 ];
+
+export const notiOptionsVaue = {
+  ALL: "All",
+  READ: true,
+  NOT_READ: false,
+};
+
+export const notiStyle = {
+  CERTIFICATE_TYPE: 1,
+  TRAINING_PLAN_TYPE: 2,
+  BATCH_TYPE: 3,
+};
+
+export const signalRMessage = {
+  COURSE: {
+    CREATED: "New Course Created",
+    UPDATED: "New Course Updated",
+    DELETED: "New Course Deleted",
+  },
+  SKILL: {
+    CREATED: "New Skill Created",
+    UPDATED: "New Skill Updated",
+    DELETED: "New Skill Deleted",
+  },
+  USER: {
+    CREATE: "New User Created",
+    UPDATE: "User Profile Updated",
+  },
+  TRAINING_PLAN: {
+    CREATE: "New Training Plan Created",
+    UPDATE: "Training Plan Updated",
+    DELETE: "Training Plan Deleted",
+    DETAIL_DELETE: "Detail of training plan Deleted",
+    ASSIGN: "Training plan assigned to trainee",
+    PROCESS: "Training plan has been process. Please reload get training plan and get notification for user.",
+  },
+  TASK: {
+    UPDATE_FINISH: "Trainee has checked finish a Task on Trello. Please process it.",
+    UPDATE_PROCESS: "Update Task Processing for Trainer",
+  },
+  CERTIFICATE: {
+    PROCESS_CERTIFICATE: "Trainer process Trainee certificate. Trainee reload notificattion and get certificate.",
+    UPDATE_PROCESS: "Update Task Processing for Trainer",
+  },
+  NOTIFICATION: {
+    UPDATE_NOTI: "Update Notification Read. Reload notification list.",
+    CREATE_NOTI: "Notification created. Reload notification list.",
+  },
+  TEMPLATE: {
+    CREATED: "New Template Created",
+    UPDATED: "New Template Updated",
+    DELETED: "New Template Deleted",
+  },
+  TEMPLATE_HEADER: {
+    CREATED: "New Template Header Created",
+    UPDATED: "New Template Header Updated",
+    DELETED: "New Template Header Deleted",
+  },
+  UNIVERSITY: {
+    CREATED: "New University Created",
+    UPDATED: "New University Updated",
+    DELETED: "New University Deleted",
+  },
+  POSITION: {
+    CREATED: "New Position Created",
+    UPDATED: "New Position Updated",
+    DELETED: "New Position Deleted",
+  },
+  OJTBATCH: {
+
+  },
+};

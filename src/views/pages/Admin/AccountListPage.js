@@ -91,12 +91,16 @@ const AccountListPage = () => {
   };
 
   useEffect(() => {
-    signalRService.on(signalRMessage.USER, (message) => {
+    signalRService.on(signalRMessage.USER.CREATE, (message) => {
+      fetchUsers();
+    });
+    signalRService.on(signalRMessage.USER.UPDATE, (message) => {
       fetchUsers();
     });
 
     return () => {
-      signalRService.off(signalRMessage.USER);
+      signalRService.off(signalRMessage.USER.CREATE);
+      signalRService.off(signalRMessage.USER.UPDATE);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
