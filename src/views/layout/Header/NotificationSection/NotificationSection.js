@@ -150,6 +150,17 @@ export default function NotificationSection() {
     }
   };
 
+  const onClickRead = async (item) => {
+    try {
+      if (!item.isRead) {
+        await axiosPrivate.put(notificationPath.MARK_ONE_AS_READ + item.id);
+        fetchNotifications();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Box
@@ -299,7 +310,8 @@ export default function NotificationSection() {
                         </Grid>
                         <NotificationList
                           notiList={notiList}
-                          isLoading={isLoading} />
+                          isLoading={isLoading}
+                          onClickRead={onClickRead} />
                       </PerfectScrollbar>
                     </Grid>
                   </Grid>
