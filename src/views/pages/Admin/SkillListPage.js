@@ -18,6 +18,7 @@ import {
   defaultPageSize,
   defaultPageIndex,
   skillStatusOptions,
+  signalRMessage,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import ModalSkillDetailAdmin from "views/components/modal/ModalSkillDetailAdmin";
@@ -31,6 +32,7 @@ import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import Chip from "views/components/chip/Chip";
 import StyledTableCell from "views/modules/table/StyledTableCell";
+import signalRService from "logic/utils/signalRService";
 
 const SkillListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -47,6 +49,25 @@ const SkillListPage = () => {
     fetchSkills();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, rowsPerPage, page]);
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.SKILL.CREATED, (message) => {
+      fetchSkills();
+    });
+    signalRService.on(signalRMessage.SKILL.DELETED, (message) => {
+      fetchSkills();
+    });
+    signalRService.on(signalRMessage.SKILL.UPDATED, (message) => {
+      fetchSkills();    
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.SKILL.CREATED);
+      signalRService.off(signalRMessage.SKILL.DELETED);
+      signalRService.off(signalRMessage.SKILL.UPDATED);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function fetchSkills() {
     try {

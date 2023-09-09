@@ -2,7 +2,7 @@ import Heading from "views/components/common/Heading";
 import { Fragment, useEffect, useState } from "react";
 import { Button } from "views/components/button";
 import { universityPath } from "logic/api/apiUrl";
-import { defaultPageIndex, defaultPageSize } from "logic/constants/global";
+import { defaultPageIndex, defaultPageSize, signalRMessage } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 import { defaultUniversityImage } from "logic/constants/global";
@@ -10,6 +10,7 @@ import { Skeleton, TablePagination } from "@mui/material";
 import Gap from "views/components/common/Gap";
 import SearchBar from "views/modules/SearchBar";
 import useOnChange from "logic/hooks/useOnChange";
+import signalRService from "logic/utils/signalRService";
 
 const UniversityListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -41,6 +42,25 @@ const UniversityListPage = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.UNIVERSITY.CREATED, (message) => {
+      fetchUniversities();
+    });
+    signalRService.on(signalRMessage.UNIVERSITY.DELETED, (message) => {
+      fetchUniversities();
+    });
+    signalRService.on(signalRMessage.UNIVERSITY.UPDATED, (message) => {
+      fetchUniversities();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.UNIVERSITY.CREATED);
+      signalRService.off(signalRMessage.UNIVERSITY.DELETED);
+      signalRService.off(signalRMessage.UNIVERSITY.UPDATED);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetchUniversities();

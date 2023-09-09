@@ -2,7 +2,6 @@
 import { useTheme, styled } from "@mui/material/styles";
 import {
   Avatar,
-  Button,
   Chip,
   Divider,
   Grid,
@@ -17,12 +16,12 @@ import {
 
 // assets
 import {
-  IconBrandTelegram,
-  IconBuildingStore,
-  IconMailbox,
+  IconCertificate,
+  IconCalendarEvent,
+  IconBuildingCommunity,
+  IconBellRinging
 } from "@tabler/icons";
-
-import { defaultUserIcon } from "logic/constants/global";
+import { notiStyle } from "logic/constants/global";
 
 // styles
 const ListItemWrapper = styled("div")(({ theme }) => ({
@@ -58,11 +57,24 @@ export default function NotificationList({ notiList = [], isLoading = false }) {
     backgroundColor: theme.palette.warning.light,
   };
 
-  const chipSuccessSX = {
-    ...chipSX,
-    color: theme.palette.success.dark,
-    backgroundColor: theme.palette.success.light,
-    height: 28,
+  // const chipSuccessSX = {
+  //   ...chipSX,
+  //   color: theme.palette.success.dark,
+  //   backgroundColor: theme.palette.success.light,
+  //   height: 28,
+  // };
+
+  const getIcon = (type) => {
+    switch (type) {
+      case notiStyle.CERTIFICATE_TYPE:
+        return <IconCertificate stroke={1.5} size="1.3rem" />;
+      case notiStyle.TRAINING_PLAN_TYPE:
+        return <IconCalendarEvent stroke={1.5} size="1.3rem" />;
+      case notiStyle.BATCH_TYPE:
+        return <IconBuildingCommunity stroke={1.5} size="1.3rem" />;
+      default:
+        return <IconBellRinging stroke={1.5} size="1.3rem" />;
+    }
   };
 
   return (
@@ -198,33 +210,27 @@ export default function NotificationList({ notiList = [], isLoading = false }) {
             <ListItemWrapper>
               <ListItem alignItems="center">
                 <ListItemAvatar>
-                  <Avatar alt="John Doe" src={defaultUserIcon} />
+                  <Avatar>
+                    {getIcon(item.type)}
+                  </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary="John Doe" />
-                <ListItemSecondaryAction>
-                  <Grid container justifyContent="flex-end">
-                    <Grid item xs={12}>
-                      <Typography variant="caption" display="block" gutterBottom>
-                        2 min ago
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </ListItemSecondaryAction>
+                <ListItemText primary={item.title} />
               </ListItem>
               <Grid container direction="column" className="list-container">
                 <Grid item xs={12} sx={{ pb: 2 }}>
                   <Typography variant="subtitle2">
-                    It is a long established fact that a reader will be distracted
+                    {item.message}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Grid container>
-                    <Grid item>
-                      <Chip label="Unread" sx={chipErrorSX} />
-                    </Grid>
-                    <Grid item>
-                      <Chip label="New" sx={chipWarningSX} />
-                    </Grid>
+                    {item.isRead ?
+                      <Grid item>
+                        <Chip label="Đã đọc" sx={chipErrorSX} />
+                      </Grid> :
+                      <Grid item>
+                        <Chip label="Mới" sx={chipWarningSX} />
+                      </Grid>}
                   </Grid>
                 </Grid>
               </Grid>
@@ -236,180 +242,13 @@ export default function NotificationList({ notiList = [], isLoading = false }) {
           <ListItemWrapper>
             <Grid container direction="column" className="list-container">
               <Grid item xs={12} sx={{ pb: 2 }}>
-                <Typography variant="subtitle2" sx={{pl: 5}}>
+                <Typography variant="subtitle2" align="center">
                   Không có thông báo!!!
                 </Typography>
               </Grid>
             </Grid>
           </ListItemWrapper>
         </>}
-      <ListItemWrapper>
-        <ListItem alignItems="center">
-          <ListItemAvatar>
-            <Avatar alt="John Doe" src={defaultUserIcon} />
-          </ListItemAvatar>
-          <ListItemText primary="John Doe" />
-          <ListItemSecondaryAction>
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={12}>
-                <Typography variant="caption" display="block" gutterBottom>
-                  2 min ago
-                </Typography>
-              </Grid>
-            </Grid>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Grid container direction="column" className="list-container">
-          <Grid item xs={12} sx={{ pb: 2 }}>
-            <Typography variant="subtitle2">
-              It is a long established fact that a reader will be distracted
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item>
-                <Chip label="Unread" sx={chipErrorSX} />
-              </Grid>
-              <Grid item>
-                <Chip label="New" sx={chipWarningSX} />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </ListItemWrapper>
-      <Divider />
-      <ListItemWrapper>
-        <ListItem alignItems="center">
-          <ListItemAvatar>
-            <Avatar
-              sx={{
-                color: theme.palette.success.dark,
-                backgroundColor: theme.palette.success.light,
-                border: "none",
-                borderColor: theme.palette.success.main,
-              }}
-            >
-              <IconBuildingStore stroke={1.5} size="1.3rem" />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <Typography variant="subtitle1">
-                Store Verification Done
-              </Typography>
-            }
-          />
-          <ListItemSecondaryAction>
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={12}>
-                <Typography variant="caption" display="block" gutterBottom>
-                  2 min ago
-                </Typography>
-              </Grid>
-            </Grid>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Grid container direction="column" className="list-container">
-          <Grid item xs={12} sx={{ pb: 2 }}>
-            <Typography variant="subtitle2">
-              We have successfully received your request.
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item>
-                <Chip label="Unread" sx={chipErrorSX} />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </ListItemWrapper>
-      <Divider />
-      <ListItemWrapper>
-        <ListItem alignItems="center">
-          <ListItemAvatar>
-            <Avatar
-              sx={{
-                color: theme.palette.primary.dark,
-                backgroundColor: theme.palette.primary.light,
-                border: "none",
-                borderColor: theme.palette.primary.main,
-              }}
-            >
-              <IconMailbox stroke={1.5} size="1.3rem" />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <Typography variant="subtitle1">Check Your Mail.</Typography>
-            }
-          />
-          <ListItemSecondaryAction>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Typography variant="caption" display="block" gutterBottom>
-                  2 min ago
-                </Typography>
-              </Grid>
-            </Grid>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Grid container direction="column" className="list-container">
-          <Grid item xs={12} sx={{ pb: 2 }}>
-            <Typography variant="subtitle2">
-              All done! Now check your inbox as you&apos;re in for a sweet
-              treat!
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  disableElevation
-                  endIcon={<IconBrandTelegram stroke={1.5} size="1.3rem" />}
-                >
-                  Mail
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </ListItemWrapper>
-      <Divider />
-      <ListItemWrapper>
-        <ListItem alignItems="center">
-          <ListItemAvatar>
-            <Avatar alt="John Doe" src={defaultUserIcon} />
-          </ListItemAvatar>
-          <ListItemText
-            primary={<Typography variant="subtitle1">John Doe</Typography>}
-          />
-          <ListItemSecondaryAction>
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={12}>
-                <Typography variant="caption" display="block" gutterBottom>
-                  2 min ago
-                </Typography>
-              </Grid>
-            </Grid>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Grid container direction="column" className="list-container">
-          <Grid item xs={12} sx={{ pb: 2 }}>
-            <Typography variant="subtitle2">
-              It is a long established fact that a reader will be distracted
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item>
-                <Chip label="Confirmation of Account." sx={chipSuccessSX} />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </ListItemWrapper>
     </List>
   );
 };
