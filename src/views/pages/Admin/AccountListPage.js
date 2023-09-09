@@ -74,6 +74,22 @@ const AccountListPage = () => {
     }
   };
 
+  const [totalUsers, setTotalUsers] = useState([]); // New loading state
+  const fetchTotalUsers = async () => {
+    try {
+      setIsLoading(true);
+      let response = await axiosPrivate.get(
+        userPath.GET_USER_LIST + "?PageSize=" + 1000000
+      );
+      setTotalUsers(response.data.data);
+      console.log("response.data.data", response.data.data);
+    } catch (error) {
+      console.log("error: ", error);
+    } finally {
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  };
+
   useEffect(() => {
     signalRService.on(signalRMessage.USER.CREATE, (message) => {
       fetchUsers();
@@ -91,6 +107,7 @@ const AccountListPage = () => {
 
   useEffect(() => {
     fetchUsers();
+    fetchTotalUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, role, rowsPerPage, page]);
 
@@ -135,7 +152,7 @@ const AccountListPage = () => {
 
   return (
     <MainCard
-      title="Tài khoản"
+      title={`Tài khoản (${totalUsers.length})`}
       secondary={
         <Button
           startIcon={

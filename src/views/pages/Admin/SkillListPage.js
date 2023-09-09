@@ -1,4 +1,3 @@
-import Gap from "views/components/common/Gap";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
 import {
@@ -32,6 +31,7 @@ import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import Chip from "views/components/chip/Chip";
 import StyledTableCell from "views/modules/table/StyledTableCell";
+import SubCard from "views/components/cards/SubCard";
 import signalRService from "logic/utils/signalRService";
 
 const SkillListPage = () => {
@@ -47,6 +47,7 @@ const SkillListPage = () => {
 
   useEffect(() => {
     fetchSkills();
+    fetchTotalSkills();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, rowsPerPage, page]);
 
@@ -73,12 +74,12 @@ const SkillListPage = () => {
     try {
       const response = await axiosPrivate.get(
         skillPath.GET_SKILL_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}`
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}`
       );
       setSkills(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -86,6 +87,20 @@ const SkillListPage = () => {
       // setPage(response.data.pageIndex);
     } catch (error) {
       console.log("fetchSkill ~ error", error);
+    }
+  }
+
+  const [totalSkills, setTotalSkills] = useState([]);
+  async function fetchTotalSkills() {
+    try {
+      const response = await axiosPrivate.get(
+        skillPath.GET_SKILL_LIST + "?PageSize=" + 1000000
+      );
+      setTotalSkills(response.data.data);
+      setIsLoading(false);
+      // setPage(response.data.pageIndex);
+    } catch (error) {
+      console.log("Error", error);
     }
   }
 
@@ -107,7 +122,7 @@ const SkillListPage = () => {
 
   return (
     <MainCard
-      title="Kỹ năng"
+      title={`Kỹ năng (${totalSkills.length})`}
       secondary={
         <Button
           startIcon={
@@ -134,141 +149,144 @@ const SkillListPage = () => {
         isOpen={isAddSkillModalOpen}
         onRequestClose={() => setIsAddSkillModalOpen(false)}
       ></ModalAddSkillAdmin>
-      <div className="flex flex-wrap items-start gap-3">
-        {/*Custom search bar*/}
-        <Card className="w-2/5">
-          <OutlinedInput
-            defaultValue=""
-            fullWidth
-            placeholder="Tìm kiếm ..."
-            startAdornment={
-              <InputAdornment position="start">
-                <SvgIcon color="action" fontSize="small">
-                  <SearchIcon />
-                </SvgIcon>
-              </InputAdornment>
-            }
-            sx={{ maxWidth: 550 }}
-            onChange={setSearchTerm}
-          />
-        </Card>
-      </div>
-      <Gap></Gap>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell width={"30%"}>Kỹ năng</StyledTableCell>
-              <StyledTableCell align="center">Trạng thái</StyledTableCell>
-              <StyledTableCell align="right" width={"5%"}></StyledTableCell>
-              <StyledTableCell align="right" width={"5%"}></StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {isLoading ? ( // Render skeleton loading when loading is true
-              // Use the animate-pulse class for skeleton effect
-              <>
-                <TableRow>
-                  <TableCell width={"30%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"5%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"5%"}>
-                    <Skeleton />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell width={"30%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"5%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"5%"}>
-                    <Skeleton />
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell width={"30%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"5%"}>
-                    <Skeleton />
-                  </TableCell>
-                  <TableCell width={"5%"}>
-                    <Skeleton />
-                  </TableCell>
-                </TableRow>
-              </>
-            ) : skills.length !== 0 ? (
-              skills.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell width={"30%"}>{item.name}</TableCell>
-                  <TableCell align="center">
-                    <Chip
-                      color={
-                        item.status === 1 || item.status === 3
-                          ? "error"
-                          : "success"
-                      }
-                    >
-                      {
-                        skillStatusOptions.find(
-                          (label) => label.value === item.status
-                        ).label
-                      }
-                    </Chip>
-                  </TableCell>
-                  <TableCell align="right" width={"5%"}>
-                    <Button
-                      className=""
-                      type="button"
-                      kind="ghost"
-                      onClick={() => handleClickSkillModal(item.id)}
-                    >
-                      <ModeEditOutlineIcon></ModeEditOutlineIcon>
-                    </Button>
-                  </TableCell>
-                  <TableCell align="right" width={"5%"}>
-                    <Button className="bg-red-500 text-white" type="button">
-                      Xóa
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
+
+      <SubCard>
+        <div className="flex flex-wrap items-start gap-3">
+          {/*Custom search bar*/}
+          <Card className="w-2/5">
+            <OutlinedInput
+              defaultValue=""
+              fullWidth
+              placeholder="Tìm kiếm ..."
+              startAdornment={
+                <InputAdornment position="start">
+                  <SvgIcon color="action" fontSize="small">
+                    <SearchIcon />
+                  </SvgIcon>
+                </InputAdornment>
+              }
+              sx={{ maxWidth: 550 }}
+              onChange={setSearchTerm}
+            />
+          </Card>
+        </div>
+
+        <TableContainer sx={{ width: 1, mt: 2, mb: -2, borderRadius: 4 }}>
+          <Table>
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={4} align="center">
-                  Không có kỹ năng nào được tìm thấy.
-                </TableCell>
+                <StyledTableCell width={"30%"}>Kỹ năng</StyledTableCell>
+                <StyledTableCell align="center">Trạng thái</StyledTableCell>
+                <StyledTableCell align="right" width={"5%"}></StyledTableCell>
+                <StyledTableCell align="right" width={"5%"}></StyledTableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        <TablePagination
-          labelRowsPerPage="Số dòng"
-          component="div"
-          count={totalItem}
-          page={page - 1}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelDisplayedRows={({ from, to, count }) =>
-            `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
-          }
-        />
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {isLoading ? ( // Render skeleton loading when loading is true
+                // Use the animate-pulse class for skeleton effect
+                <>
+                  <TableRow>
+                    <TableCell width={"30%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"5%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"5%"}>
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"30%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"5%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"5%"}>
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"30%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"5%"}>
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"5%"}>
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                </>
+              ) : skills.length !== 0 ? (
+                skills.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell width={"30%"}>{item.name}</TableCell>
+                    <TableCell align="center">
+                      <Chip
+                        color={
+                          item.status === 1 || item.status === 3
+                            ? "error"
+                            : "success"
+                        }
+                      >
+                        {
+                          skillStatusOptions.find(
+                            (label) => label.value === item.status
+                          ).label
+                        }
+                      </Chip>
+                    </TableCell>
+                    <TableCell align="right" width={"5%"}>
+                      <Button
+                        className=""
+                        type="button"
+                        kind="ghost"
+                        onClick={() => handleClickSkillModal(item.id)}
+                      >
+                        <ModeEditOutlineIcon></ModeEditOutlineIcon>
+                      </Button>
+                    </TableCell>
+                    <TableCell align="right" width={"5%"}>
+                      <Button className="bg-red-500 text-white" type="button">
+                        Xóa
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    Không có kỹ năng nào được tìm thấy.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          <TablePagination
+            labelRowsPerPage="Số dòng"
+            component="div"
+            count={totalItem}
+            page={page - 1}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+            }
+          />
+        </TableContainer>
+      </SubCard>
     </MainCard>
   );
 };

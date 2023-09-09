@@ -30,7 +30,7 @@ const ListTemplatePage = () => {
 
   return (
     <MainCard
-      title="Danh sách mẫu báo cáo"
+      title={`Danh sách mẫu báo cáo (${template.length})`}
       secondary={
         <Button
           startIcon={
