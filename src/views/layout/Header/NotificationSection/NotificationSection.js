@@ -164,7 +164,6 @@ export default function NotificationSection() {
         <ButtonBase sx={{ borderRadius: "12px" }}>
           <StyledBadge
             color={notiList.filter(item => !item.isRead).length > 0 ? "error" : "success"}
-            backgroundColor={notiList.filter(item => !item.isRead).length > 0 ? "error" : "success"}
             overlap="circular"
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             variant="dot"

@@ -207,7 +207,7 @@ export default function NotificationList({ notiList = [], isLoading = false }) {
       ) : notiList.length > 0 ? (
         notiList.map((item, index) => (
           <span key={index}>
-            <ListItemWrapper>
+            <ListItemWrapper onClick={console.log("here")}>
               <ListItem alignItems="center">
                 <ListItemAvatar>
                   <Avatar>
