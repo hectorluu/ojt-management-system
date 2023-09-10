@@ -10,7 +10,7 @@ const ListTemplatePage = () => {
   const [template, setTemplate] = useState([]);
   const axiosPrivate = useAxiosPrivate();
 
-  const [, setIsLoading] = useState(true); // New loading state
+  const [, /*isLoading*/ setIsLoading] = useState(true); // New loading state
 
   useEffect(() => {
     async function fetchTemplates() {

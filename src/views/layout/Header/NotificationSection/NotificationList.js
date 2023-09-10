@@ -37,7 +37,7 @@ const ListItemWrapper = styled("div")(({ theme }) => ({
 
 // ==============================|| NOTIFICATION LIST ITEM ||============================== //
 
-export default function NotificationList({ notiList = [], isLoading = false }) {
+export default function NotificationList({ notiList = [], isLoading = false, onClickRead = () => { } }) {
   const theme = useTheme();
 
   const chipSX = {
@@ -205,9 +205,9 @@ export default function NotificationList({ notiList = [], isLoading = false }) {
           </ListItemWrapper>
         </>
       ) : notiList.length > 0 ? (
-        notiList.map((item, index) => (
-          <span key={index}>
-            <ListItemWrapper>
+        notiList.map((item) => (
+          <span key={item.id}>
+            <ListItemWrapper onClick={(e) => onClickRead(item)}>
               <ListItem alignItems="center">
                 <ListItemAvatar>
                   <Avatar>
