@@ -67,9 +67,9 @@ const AccountListPage = () => {
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
+      setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
       console.log("fetchUsers ~ error", error);
-    } finally {
       setIsLoading(false); // Set loading to false after fetching data
     }
   };

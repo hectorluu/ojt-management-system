@@ -81,3 +81,24 @@ export const universityNoti = {
     POINT_ERROR: "Thông tin đợt thực tập chưa phù hợp!!!",
   },
 };
+
+export const reportNoti = {
+  SUCCESS: {
+    EXPORT: "Thành công xuất tệp báo cáo!!!",
+    NOTI: "Thành công thông báo đánh giá sinh viên!!!",
+  },
+
+  ERROR: {
+    TEMPLATE_URL_FALSE: "Tệp báo cáo mẫu không có đường dẫn phù hợp!!!",
+  },
+};
+
+export const generalNoti = {
+  SUCCESS: {
+
+  },
+
+  ERROR: {
+    SERVER_ERROR: "Lỗi hệ thống!!!",
+  },
+};

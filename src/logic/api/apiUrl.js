@@ -27,10 +27,7 @@ export const ojtBatchPath = {
   GET_OJT_BATCH_LIST_OF_UNIVERSITY: "/ojtbatch/batches-of-university",
   GET_TRAINER_BATCHES: "/ojtbatch/status-grade-batches-trainer",
   CREATE_OJT_BATCH: "/ojtbatch",
-};
-
-export const reportPath = {
-  GET_LIST_REPORT: "/report",
+  GET_BATCH_EXPORT_STATUS: "/ojtbatch/export-status-batches",
 };
 
 export const universityPath = {
@@ -87,6 +84,7 @@ export const notificationPath = {
   GET_NOTIFICATION_LIST: "/notifications",
   MARK_ALL_AS_READ: "/notifications",
   MARK_ONE_AS_READ: "/notifications/",
+  CREATE_EVALUATION_NOTIFICATION: "/notifications/batch/",
 };
 
 export const taskProcessPath = {
@@ -95,6 +93,10 @@ export const taskProcessPath = {
 
 export const trainerPath = {
   GET_TRAINEE_LIST: "/user/trainer/trainee",
+};
+
+export const reportPath = {
+  EXPORT_REPORT: "/report",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;
