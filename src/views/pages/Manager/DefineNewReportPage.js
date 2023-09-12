@@ -18,6 +18,7 @@ import Gap from "views/components/common/Gap";
 import { templateNoti } from "logic/constants/notification";
 import { useNavigate } from "react-router-dom";
 import Luckysheet from "views/components/Luckysheet/Luckysheet";
+import { reportValid } from "logic/utils/validateUtils";
 
 
 
@@ -49,11 +50,6 @@ function DefineNewReportPage() {
       );
     }
   };
-
-  useEffect(() => {
-    console.log(data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
 
   useEffect(() => {
     // const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2FFile%20danh%20gia%20danh%20sach%20sv%20BKU.xlsx?alt=media&token=d2a90118-f684-4f4b-ba12-ba79c9f11067";
@@ -112,8 +108,12 @@ function DefineNewReportPage() {
     try {
       const response = await axiosPrivate.get(
         universityPath.GET_UNIVERSITY_LIST +
-        "?id=" +
-        universityId
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        100000 +
+        "&filterStatus=" +
+        2
       );
       setUniversityList(response.data.data);
       console.log("fetchUniversities ~ success", response);
@@ -170,7 +170,7 @@ function DefineNewReportPage() {
     } else {
       setIsLoading(false);
       setUrl("");
-      toast.error("File cannot be null");
+      toast.error(templateNoti.ERROR.BLANK_FILE);
     }
   };
 
@@ -230,7 +230,18 @@ function DefineNewReportPage() {
       newArray[i].totalPoint = getValues(`maxPoint${i}`);
     }
     setTemplateHeaders(newArray);
-    uploadFile();
+    const template = {
+      name: getValues("name"),
+      startCell: getValues("startCell"),
+      universityId: universityId,
+      templateHeaders: templateHeaders,
+      file: file
+    };
+    const valid = reportValid(template);
+    if (valid) {
+      uploadFile();
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -394,7 +405,7 @@ function DefineNewReportPage() {
             <div className="mt-5 text-center">
               <Button
                 type="submit"
-                className="px-10 mx-auto text-white bg-primary"
+                className="px-20 mx-auto text-white bg-primary"
                 isLoading={isLoading}
               >
                 Tạo

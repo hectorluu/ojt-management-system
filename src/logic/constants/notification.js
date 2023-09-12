@@ -46,7 +46,12 @@ export const templateNoti = {
   },
 
   ERROR: {
-    POINT_ERROR: "Phiếu đánh giá chưa phù hợp!!!",
+    BLANK_NAME: "Tên mẫu đánh giá không được để trống!!!",
+    BLANK_UNIVERSITY: "Phải chọn trường đại học!!!",
+    BLANK_FILE: "Tệp mẫu không được để trống!!!",
+    BLANK_START_CELL: "Ô bắt đầu không được để trống!!!",
+    BLANK_HEADER_NAME: "Tên cột không được để trống!!!",
+    BLANK_MAX_POINT: "Điểm tối đa không được để trống!!!",
   },
 };
 
@@ -58,7 +63,8 @@ export const formulaNoti = {
   },
 
   ERROR: {
-    POINT_ERROR: "Phiếu đánh giá chưa phù hợp!!!",
+    BLANK_NAME: "Tên công thức không được để trống!!!",
+    BLANK_CALCULATION: "Công thức tính không được để trống!!!",
   },
 };
 

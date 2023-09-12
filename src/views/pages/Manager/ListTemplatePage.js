@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Card, Link, SvgIcon, Button } from "@mui/material";
+import { Card, SvgIcon, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { templatePath } from "logic/api/apiUrl";
