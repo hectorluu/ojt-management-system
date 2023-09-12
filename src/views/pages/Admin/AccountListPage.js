@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import {
   Button,
   Card,
+  IconButton,
   InputAdornment,
+  MenuItem,
   OutlinedInput,
+  Popover,
   Skeleton,
   SvgIcon,
   Table,
@@ -13,6 +16,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  useTheme,
 } from "@mui/material";
 
 import { userPath } from "logic/api/apiUrl";
@@ -38,6 +42,9 @@ import { Link } from "react-router-dom";
 import Chip from "views/components/chip/Chip";
 import StyledTableCell from "views/modules/table/StyledTableCell";
 import SubCard from "views/components/cards/SubCard";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -82,7 +89,6 @@ const AccountListPage = () => {
         userPath.GET_USER_LIST + "?PageSize=" + 1000000
       );
       setTotalUsers(response.data.data);
-      console.log("response.data.data", response.data.data);
     } catch (error) {
       console.log("error: ", error);
     } finally {
@@ -142,6 +148,7 @@ const AccountListPage = () => {
     setRole(value);
   };
 
+  // Modal
   const [isUserDetailModalOpen, setIsUserDetailModalOpen] = useState(false);
   const [userModalId, setUserModalId] = useState(0);
 
@@ -149,6 +156,21 @@ const AccountListPage = () => {
     setIsUserDetailModalOpen(true);
     setUserModalId(userModalId);
   };
+
+  // Popover
+  const [open, setOpen] = useState(null); // use for AnchorEl
+  const [idSeclected, setIdSeclected] = useState(0);
+
+  const handleOpenMenu = (event, id) => {
+    setOpen(event.currentTarget);
+    setIdSeclected(id);
+  };
+
+  const handleCloseMenu = () => {
+    setOpen(null);
+  };
+
+  const theme = useTheme();
 
   return (
     <MainCard
@@ -170,11 +192,41 @@ const AccountListPage = () => {
         </Button>
       }
     >
+      {/* Modal and Popover */}
       <ModalUserDetailAdmin
         isOpen={isUserDetailModalOpen}
         onRequestClose={() => setIsUserDetailModalOpen(false)}
         userIdClicked={userModalId}
       ></ModalUserDetailAdmin>
+
+      <Popover
+        open={Boolean(open)}
+        anchorEl={open}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        PaperProps={{
+          sx: {
+            p: 1,
+            width: 120,
+            "& .MuiMenuItem-root": {
+              px: 1,
+              typography: "body2",
+              borderRadius: 0.75,
+            },
+          },
+        }}
+      >
+        <MenuItem onClick={() => handleClickUserModal(idSeclected)}>
+          <ModeEditOutlineIcon sx={{ mr: 2 }} />
+          Sửa
+        </MenuItem>
+
+        <MenuItem>
+          <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
+          <span style={{ color: theme.palette.error.main }}>Xóa</span>
+        </MenuItem>
+      </Popover>
 
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
@@ -339,14 +391,12 @@ const AccountListPage = () => {
                       </Chip>
                     </TableCell>
                     <TableCell align="right">
-                      <Button
-                        className=""
-                        type="button"
-                        kind="ghost"
-                        onClick={() => handleClickUserModal(item.id)}
+                      <IconButton
+                        size="large"
+                        onClick={(event) => handleOpenMenu(event, item.id)}
                       >
-                        <ModeEditOutlineIcon></ModeEditOutlineIcon>
-                      </Button>
+                        <MoreVertIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))
