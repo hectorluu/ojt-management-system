@@ -13,6 +13,10 @@ export const defaultPageSize = 10;
 
 export const defaultPageIndex = 1;
 
+export const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
+export const phoneRegex = /^[0-9]{10}$/;
+
 export const genderOptions = [
   { value: 1, label: "Nam" },
   { value: 2, label: "Nữ" },

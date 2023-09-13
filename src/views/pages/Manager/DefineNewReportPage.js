@@ -19,6 +19,9 @@ import { templateNoti } from "logic/constants/notification";
 import { useNavigate } from "react-router-dom";
 import Luckysheet from "views/components/Luckysheet/Luckysheet";
 import { reportValid } from "logic/utils/validateUtils";
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
 
 
@@ -28,7 +31,7 @@ function DefineNewReportPage() {
   const [file, setFile] = useState(null);
   const [url, setUrl] = useState("");
   const [universityId, setUniversityId] = useState(0);
-  const { handleSubmit, control, getValues, setValue } = useForm();
+  const { handleSubmit, control, getValues, setValue, unregister } = useForm();
   const [templateHeaders, setTemplateHeaders] = useState([{ name: "", formulaId: undefined, matchedAttribute: "", totalPoint: undefined, isCriteria: false, order: 1 }]);
   const [notCriteriaList, setNotCriteriaList] = useState(notCriteriaOptions);
   const [formulaList, setFormulaList] = useState([]);
@@ -137,10 +140,17 @@ function DefineNewReportPage() {
   const handleRemoveField = (index) => {
     let temp = templateHeaders.slice();
     temp.splice(index, 1);
+    for (let i = index; i < templateHeaders.length - 1; i++) {
+      setValue(`headerName${i}`, getValues(`headerName${i + 1}`));
+      setValue(`maxPoint${i}`, getValues(`maxPoint${i + 1}`));
+    };
+    unregister(`headerName${templateHeaders.length - 1}`);
+    unregister(`maxPoint${templateHeaders.length - 1}`);
     for (let i = 0; i < temp.length; i++) {
       temp[i].order = i + 1;
     }
     setTemplateHeaders(temp);
+    console.log(temp);
   };
 
   const getFormulaDropdownLabel = (
@@ -394,14 +404,14 @@ function DefineNewReportPage() {
                     </FormGroup>
                   ) : null}
                 </FormRow>
-                <button type="button" onClick={() => handleRemoveField(index)}>
-                  xoá
-                </button>
+                <IconButton color="error" aria-label="delete" onClick={() => handleRemoveField(index)}>
+                  <DeleteIcon />
+                </IconButton>
               </div>
             ))}
-            <button type="button" onClick={() => handleAddField()}>
-              Thêm
-            </button>
+            <IconButton color="primary" aria-label="delete" onClick={() => handleAddField()}>
+              <AddIcon />
+            </IconButton>
             <div className="mt-5 text-center">
               <Button
                 type="submit"
