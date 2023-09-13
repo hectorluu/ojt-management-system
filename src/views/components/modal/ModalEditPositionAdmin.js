@@ -4,28 +4,34 @@ import { Button } from "views/components/button";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { positionPath } from "logic/api/apiUrl";
 import { useForm } from "react-hook-form";
-import { apiURL } from "logic/config/general-config/config";
-import { toast } from "react-toastify";
-import axios from "logic/api/axios";
 import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
 import { Input } from "views/components/input";
+import { Skeleton } from "@mui/material";
 
 const ModalEditPositionAdmin = ({
   isOpen,
   onRequestClose,
   positionIdClicked,
+  isSubmitLoading,
+  handleUpdatePosition
 }) => {
   const axiosPrivate = useAxiosPrivate();
   const [position, setPosition] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchPosition = async () => {
     try {
+      setIsLoading(true);
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION + positionIdClicked
       );
       setPosition(response.data);
-    } catch (error) {}
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -38,7 +44,7 @@ const ModalEditPositionAdmin = ({
 
   useEffect(() => {
     if (positionIdClicked) {
-      setValue("position name", `${position.name}`);
+      setValue("name", `${position.name}`);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -47,14 +53,11 @@ const ModalEditPositionAdmin = ({
   const { handleSubmit, control, setValue } = useForm();
 
   const handleEditSkill = async (values) => {
-    try {
-      await axios.post(`${apiURL}/`, {
-        ...values,
-      });
-      toast.success("Create new skill successfully");
-    } catch (error) {
-      toast.error("Can not create new skill");
-    }
+    handleUpdatePosition({
+      id: positionIdClicked,
+      status: position.status,
+      ...values,
+    });
     // values, dateOfBirth
   };
 
@@ -92,19 +95,22 @@ const ModalEditPositionAdmin = ({
           <form onSubmit={handleSubmit(handleEditSkill)}>
             <FormGroup>
               <Label>Tên vị trí (*)</Label>
-              <Input
-                control={control}
-                name="position name"
-                autoComplete="off"
-              ></Input>
+              {isLoading ? <Skeleton height={60} /> :
+                <Input
+                  control={control}
+                  name="name"
+                  autoComplete="off"
+                ></Input>
+              }
             </FormGroup>
 
             <div className="mt-5 text-center">
               <Button
                 type="submit"
                 className="px-10 mx-auto text-white bg-primary"
+                isLoading={isSubmitLoading}
               >
-                Chấp nhận{" "}
+                Cập nhật{" "}
               </Button>
             </div>
           </form>

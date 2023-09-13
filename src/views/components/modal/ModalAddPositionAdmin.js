@@ -1,32 +1,17 @@
 import { Fragment } from "react";
 import FormGroup from "views/components/common/FormGroup";
-import axios from "axios";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { Label } from "views/components/label";
 import { Input } from "views/components/input";
 import { Button } from "views/components/button";
-import { apiURL } from "logic/config/general-config/config";
 import ReactModal from "react-modal";
 
-const ModalAddPositionAdmin = ({ isOpen, onRequestClose }) => {
+const ModalAddPositionAdmin = ({ isOpen, onRequestClose, handleAddNewPosition, isSubmitLoading }) => {
   const { handleSubmit, control, reset } = useForm();
 
-  const resetValues = () => {
-    reset({});
-  };
-
-  const handleAddNewPosition = async (values) => {
-    try {
-      await axios.post(`${apiURL}/`, {
-        ...values,
-      });
-      toast.success("Create new skill successfully");
-      resetValues();
-    } catch (error) {
-      toast.error("Can not create new skill");
-    }
-    // values, dateOfBirth
+  const handleAdd = async (values) => {
+    await handleAddNewPosition(values);
+    reset();
   };
 
   return (
@@ -61,12 +46,12 @@ const ModalAddPositionAdmin = ({ isOpen, onRequestClose }) => {
         </h2>
         <div>
           <div className="bg-white shadow-1 rounded-xl p-2">
-            <form onSubmit={handleSubmit(handleAddNewPosition)}>
+            <form onSubmit={handleSubmit(handleAdd)}>
               <FormGroup>
                 <Label>Tên vị trí (*)</Label>
                 <Input
                   control={control}
-                  name="position name"
+                  name="name"
                   placeholder="Ex: Frontend Developer"
                   autoComplete="off"
                 ></Input>
@@ -76,6 +61,7 @@ const ModalAddPositionAdmin = ({ isOpen, onRequestClose }) => {
                 <Button
                   type="submit"
                   className="px-10 mx-auto text-white bg-primary"
+                  isLoading={isSubmitLoading}
                 >
                   Thêm mới{" "}
                 </Button>

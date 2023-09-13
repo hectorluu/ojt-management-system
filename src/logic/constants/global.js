@@ -164,6 +164,7 @@ export const notCriteriaOptions = [
   { value: "Birthday", label: "Ngày sinh" },
   { value: "PositionId", label: "Vị trí" },
   { value: "StudentCode", label: "Mã số sinh viên" },
+  { value: "Total", label: "Tổng điểm" },
 ];
 
 export const formulaOptions = [

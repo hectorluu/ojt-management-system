@@ -53,8 +53,8 @@ export const userPath = {
 export const skillPath = {
   GET_SKILL_LIST: "/skill",
   GET_SKILL: "/skill/",
-  CREATE_SKILL: "",
-  UPDATE_SKILL: "",
+  CREATE_SKILL: "/skill",
+  UPDATE_SKILL: "/skill/",
 };
 
 export const taskPath = {
@@ -64,6 +64,8 @@ export const taskPath = {
 export const positionPath = {
   GET_POSITION_LIST: "/position",
   GET_POSITION: "/position/",
+  CREATE_POSITION: "/position",
+  UPDATE_POSITION: "/position/",
 };
 
 export const templatePath = {

@@ -4,24 +4,28 @@ import { Label } from "views/components/label";
 import { Input } from "views/components/input";
 import { Button } from "views/components/button";
 import { useForm } from "react-hook-form";
-import axios from "logic/api/axios";
-import { apiURL } from "logic/config/general-config/config";
-import { toast } from "react-toastify";
 import FormGroup from "views/components/common/FormGroup";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { skillPath } from "logic/api/apiUrl";
+import { Skeleton } from "@mui/material";
 
-const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked }) => {
+const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked, handleUpdateSkill, isSubmitLoading }) => {
   const axiosPrivate = useAxiosPrivate();
   const [skill, setSkill] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchSkill = async () => {
     try {
+      setIsLoading(true);
       const response = await axiosPrivate.get(
         skillPath.GET_SKILL + skillIdClicked
       );
       setSkill(response.data);
-    } catch (error) {}
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -34,7 +38,7 @@ const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked }) => {
 
   useEffect(() => {
     if (skillIdClicked) {
-      setValue("skillname", `${skill.name}`);
+      setValue("name", `${skill.name}`);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,15 +47,11 @@ const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked }) => {
   const { handleSubmit, control, setValue } = useForm();
 
   const handleEditSkill = async (values) => {
-    try {
-      await axios.post(`${apiURL}/`, {
-        ...values,
-      });
-      toast.success("Create new skill successfully");
-    } catch (error) {
-      toast.error("Can not create new skill");
-    }
-    // values, dateOfBirth
+    await handleUpdateSkill({
+      id: skillIdClicked,
+      status: skill.status,
+      ...values,
+    });
   };
 
   return (
@@ -88,19 +88,23 @@ const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked }) => {
           <form onSubmit={handleSubmit(handleEditSkill)}>
             <FormGroup>
               <Label>Tên kĩ năng (*)</Label>
-              <Input
-                control={control}
-                name="skillname"
-                autoComplete="off"
-              ></Input>
+              {isLoading ? <Skeleton height={60} /> :
+                <Input
+                  control={control}
+                  name="name"
+                  autoComplete="off"
+                ></Input>
+              }
+
             </FormGroup>
 
             <div className="mt-5 text-center">
               <Button
                 type="submit"
                 className="px-10 mx-auto text-white bg-primary"
+                isLoading={isSubmitLoading}
               >
-                Chấp nhận{" "}
+                Cập nhật{" "}
               </Button>
             </div>
           </form>

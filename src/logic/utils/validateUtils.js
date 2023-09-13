@@ -1,4 +1,4 @@
-import { accountNoti, authNoti, formulaNoti, templateNoti } from "logic/constants/notification";
+import { accountNoti, authNoti, formulaNoti, positionNoti, skillNoti, templateNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
 import { emailRegex, phoneRegex, roleExchange } from "logic/constants/global";
 
@@ -128,11 +128,19 @@ export function ojtBatchValid(ojtBatch) {
 };
 
 export function positionValid(position) {
-
+  if(position.name === "" || position.name === undefined || position.name === null) {
+    toast.error(positionNoti.ERROR.BLANK_NAME);
+    return false;
+  };
+  return true;
 };
 
 export function skillValid(skill) {
-
+  if(skill.name === "" || skill.name === undefined || skill.name === null) {
+    toast.error(skillNoti.ERROR.BLANK_NAME);
+    return false;
+  };
+  return true;
 };
 
 export function universityValid(university) {

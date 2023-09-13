@@ -8,7 +8,6 @@ import {
   requestAuthRegister,
 } from "./auth-requests";
 import { authUpdateUser } from "./auth-slice";
-import { authNoti } from "logic/constants/notification";
 
 export default function* handleAuthRegister(action) {
   const { payload } = action;
@@ -30,9 +29,9 @@ function* handleAuthLogin({ payload }) {
       yield call(handleAuthFetchMe, { payload: response.data.token });
     }
   } catch (error) {
-    const response = error.response.data;
-    if (response.statusCode === 401) {
-      toast.error(authNoti.ERROR.WRONG_EMAIL_PASSWORD);
+    const response = error.response;
+    if (response.status === 400) {
+      toast.error(response.data);
       return;
     }
   }

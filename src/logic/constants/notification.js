@@ -129,3 +129,29 @@ export const generalNoti = {
     SERVER_ERROR: "Lỗi hệ thống!!!",
   },
 };
+
+export const skillNoti = {
+  SUCCESS:{
+    CREATE: "Thành công tạo kỹ năng mới!!!",
+    UPDATE: "Thành công cập nhật kỹ năng!!!",
+  },
+
+  ERROR:{
+    CREATE: "Không tạo được kỹ năng mới!!!",
+    UPDATE: "Không cập nhật được kỹ năng!!!",
+    BLANK_NAME: "Tên kỹ năng không được để trống!!!",
+  },
+};
+
+export const positionNoti = {
+  SUCCESS: {
+    CREATE: "Thành công tạo vị trí mới!!!",
+    UPDATE: "Thành công cập nhật vị trí!!!",
+  },
+
+  ERROR: {
+    CREATE: "Không tạo được vị trí mới!!!",
+    UPDATE: "Không cập nhật được vị trí!!!",
+    BLANK_NAME: "Tên vị trí không được để trống!!!",
+  },
+};
