@@ -1,13 +1,11 @@
 //eslint-disable-next-line
-import { object, string, number, date, InferType } from 'yup';
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, use, useEffect, useState } from "react";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Label } from "views/components/label";
-import { Input } from "views/components/input";
 import { Button } from "views/components/button";
 import ImageUpload from "views/components/image/ImageUpload";
 import {
@@ -33,12 +31,20 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { Autocomplete, TextField } from "@mui/material";
-import moment from "moment";
 import { useNavigate } from "react-router-dom";
 
 
 const CreateNewAccountPage = () => {
-  const [birthday, setBirthDay] = useState(moment());
+  const [lastName, setLastName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [gender, setGender] = useState("");
+  const [rollNumber, setRollNumber] = useState("");
+  const [studentCode, setStudentCode] = useState("");
+  const [role, setRole] = useState("");
+  const [birthday, setBirthDay] = useState();
   const [avatar, setAvatar] = useState(null);
   const axiosPrivate = useAxiosPrivate();
   const [userRoleWhenChosen, setUserRoleWhenChosen] = useState("");
@@ -55,20 +61,13 @@ const CreateNewAccountPage = () => {
   const [batchId, setBatchId] = useState(0);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState([]);
   const navigate = useNavigate();
-
-  let userSchema = object({
-    name: string().required()
-  });
 
   const {
     handleSubmit,
-    control,
-    setValue,
     reset,
-    unregister,
     getValues,
-    register
   } = useForm();
 
   useEffect(() => {
@@ -99,17 +98,6 @@ const CreateNewAccountPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [avatarUrl]);
-
-  useEffect(() => {
-    const abc = asdadsad();
-    console.log(abc);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const asdadsad = async () => {
-    const valid = await userSchema.isValid({ name: "" });
-    return valid;
-  };
 
   const removeItems = (rmItems, items) => {
     const filteredItems = items.filter(
@@ -185,15 +173,24 @@ const CreateNewAccountPage = () => {
   async function uploadFile() {
     setIsLoading(true);
     const account = {
-      ...getValues(),
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      address,
+      gender,
+      role,
+      position,
+      rollNumber,
+      batchId,
+      studentCode,
       birthday,
       createSkills,
-      batchId,
       avatarUrl,
-      position,
     };
     const valid = accountValid(account);
-    if (valid) {
+    setError(valid);
+    if (valid.length === 0) {
       if (avatar) {
         try {
           const imageRef = ref(storage, "images/users/" + avatar.name);
@@ -216,19 +213,34 @@ const CreateNewAccountPage = () => {
     try {
       if (createSkills[0].skillId) {
         await axiosPrivate.post(userPath.CREATE_USER, {
-          ...values,
+          firstName,
+          lastName,
+          phoneNumber,
+          email,
+          address,
+          gender,
+          role,
+          position,
+          rollNumber,
+          batchId,
+          studentCode,
           birthday,
           createSkills,
-          batchId,
           avatarUrl,
-          position,
         });
       } else {
         await axiosPrivate.post(userPath.CREATE_USER, {
-          ...values,
+          firstName,
+          lastName,
+          phoneNumber,
+          email,
+          address,
+          gender,
+          role,
+          position,
+          rollNumber,
           birthday,
           avatarUrl,
-          position,
         });
       }
       toast.success(accountNoti.SUCCESS.CREATE);
@@ -245,13 +257,14 @@ const CreateNewAccountPage = () => {
     }
   };
 
-  const handleSelectRoleDropdownOption = (name, value) => {
+  const handleSelectRoleDropdownOption = (value) => {
     setUserRoleWhenChosen(() => value);
-    setValue(name, value);
+    setRole(value);
     setAvatar(null);
-    unregister("position");
-    unregister("rollNumber");
+    setPosition(undefined);
+    setRollNumber(undefined);
     setBatchId("");
+    setError([]);
     setCreateSkills([{ skillId: "", initLevel: "" }]);
   };
 
@@ -295,33 +308,32 @@ const CreateNewAccountPage = () => {
               <FormGroup>
                 <Label>Họ (*)</Label>
                 <TextField
+                  error={error.lastName}
+                  helperText={error.lastName}
                   name="lastName"
-                  placeholder="Họ và tên đầy đủ"
-                  {...register("lastName")} />
-                {/* <Input
-                  control={control}
-                  name="lastName"
-                  placeholder="Họ và tên đầy đủ"
-                  autoComplete="off"
-                ></Input> */}
+                  placeholder="Họ"
+                  onChange={(e) => setLastName(e.target.value)}
+                  onBlur={(e) => setLastName(e.target.value)} />
               </FormGroup>
               <FormGroup>
                 <Label>Tên (*)</Label>
-                <Input
-                  control={control}
+                <TextField
+                  error={error.firstName}
+                  helperText={error.firstName}
                   name="firstName"
-                  placeholder="Họ và tên đầy đủ"
-                  autoComplete="off"
-                ></Input>
+                  placeholder="Tên"
+                  onChange={(e) => setFirstName(e.target.value)}
+                  onBlur={(e) => setFirstName(e.target.value)} />
               </FormGroup>
               <FormGroup>
                 <Label>Số điện thoại (*)</Label>
-                <Input
-                  control={control}
+                <TextField
+                  error={error.phoneNumber}
+                  helperText={error.phoneNumber}
                   name="phoneNumber"
-                  placeholder="123-456-7890"
-                  autoComplete="off"
-                ></Input>
+                  placeholder="1234567890"
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  onBlur={(e) => setPhoneNumber(e.target.value)} />
               </FormGroup>
             </FormRow>
             {/* This is the line to separate between section */}
@@ -329,20 +341,23 @@ const CreateNewAccountPage = () => {
             <FormRow>
               <FormGroup>
                 <Label>Email (*)</Label>
-                <Input
-                  control={control}
+                <TextField
+                  error={error.email}
+                  helperText={error.email}
                   name="email"
                   placeholder="admin@gmail.com"
-                  autoComplete="off"
-                ></Input>
+                  onChange={(e) => setEmail(e.target.value)}
+                  onBlur={(e) => setEmail(e.target.value)} />
               </FormGroup>
               <FormGroup>
                 <Label>Địa chỉ (*)</Label>
-                <Input
-                  control={control}
+                <TextField
+                  error={error.address}
+                  helperText={error.address}
                   name="address"
                   placeholder="Ex: số 54 Liễu Giai, Phường Cống Vị, Quận Ba Đình, Hà Nội..."
-                ></Input>
+                  onChange={(e) => setAddress(e.target.value)}
+                  onBlur={(e) => setAddress(e.target.value)} />
               </FormGroup>
             </FormRow>
             <FormRow>
@@ -352,12 +367,12 @@ const CreateNewAccountPage = () => {
                   disablePortal={false}
                   id="combo-box-demo"
                   options={genderOptions}
-                  renderInput={(params) => <TextField {...params} placeholder="Chọn giới tính" />}
+                  renderInput={(params) => <TextField {...params} placeholder="Chọn giới tính" error={error.gender} helperText={error.gender} />}
                   onChange={(event, newValue) => {
                     if (newValue) {
-                      setValue("gender", newValue.value);
+                      setGender(newValue.value);
                     } else {
-                      setValue("gender", "");
+                      setGender("");
                     }
                   }}
                 />
@@ -365,8 +380,7 @@ const CreateNewAccountPage = () => {
               <FormGroup>
                 <Label>Ngày sinh (*)</Label>
                 <DatePicker
-                  value={birthday}
-                  onChange={(newValue) => setBirthDay(newValue)}
+                  onChange={(newValue) => setBirthDay(newValue.toDate())}
                 />
               </FormGroup>
             </FormRow>
@@ -379,12 +393,12 @@ const CreateNewAccountPage = () => {
                   disablePortal={false}
                   id="combo-box-demo"
                   options={roleOptions}
-                  renderInput={(params) => <TextField {...params} placeholder="Chọn chức vụ" />}
+                  renderInput={(params) => <TextField {...params} placeholder="Chọn chức vụ" error={error.role} helperText={error.role} />}
                   onChange={(event, newValue) => {
                     if (newValue) {
-                      handleSelectRoleDropdownOption("role", newValue.value);
+                      handleSelectRoleDropdownOption(newValue.value);
                     } else {
-                      handleSelectRoleDropdownOption("role", "");
+                      handleSelectRoleDropdownOption("");
                     }
                   }}
                 />
@@ -397,12 +411,13 @@ const CreateNewAccountPage = () => {
                   <FormRow>
                     <FormGroup>
                       <Label>Mã số nhân viên (*)</Label>
-                      <Input
-                        control={control}
+                      <TextField
+                        error={error.rollNumber}
+                        helperText={error.rollNumber}
                         name="rollNumber"
                         placeholder="Ex: KNS1234"
-                        autoComplete="off"
-                      ></Input>
+                        onChange={(e) => setRollNumber(e.target.value)}
+                        onBlur={(e) => setRollNumber(e.target.value)} />
                     </FormGroup>
                     <FormGroup>
                       <Label>Vị trí (*)</Label>
@@ -411,7 +426,7 @@ const CreateNewAccountPage = () => {
                         id="combo-box-demo"
                         options={positionList}
                         getOptionLabel={(option) => option.name}
-                        renderInput={(params) => <TextField {...params} label="Chọn vị trí" />}
+                        renderInput={(params) => <TextField {...params} placeholder="Chọn vị trí" error={error.position} helperText={error.position} />}
                         onChange={(event, newValue) => {
                           if (newValue) {
                             setPosition(newValue.id);
@@ -456,7 +471,7 @@ const CreateNewAccountPage = () => {
                       id="combo-box-demo"
                       options={universityList}
                       getOptionLabel={(option) => option.name}
-                      renderInput={(params) => <TextField {...params} label="Chọn trường đại học" />}
+                      renderInput={(params) => <TextField {...params} placeholder="Chọn trường đại học" />}
                       onChange={(event, newValue) => {
                         if (newValue) {
                           setUniversityId(newValue.id);
@@ -470,12 +485,13 @@ const CreateNewAccountPage = () => {
                   <FormRow>
                     <FormGroup>
                       <Label>Mã số sinh viên (*)</Label>
-                      <Input
-                        control={control}
+                      <TextField
+                        error={error.studentCode}
+                        helperText={error.studentCode}
                         name="studentCode"
                         placeholder="Ex: SE150056"
-                        autoComplete="off"
-                      ></Input>
+                        onChange={(e) => setStudentCode(e.target.value)}
+                        onBlur={(e) => setStudentCode(e.target.value)} />
                     </FormGroup>
                     <FormGroup>
                       <Label>Kì thực tập (*)</Label>
@@ -484,7 +500,7 @@ const CreateNewAccountPage = () => {
                         id="combo-box-demo"
                         options={ojtBatchList}
                         getOptionLabel={(option) => option.name}
-                        renderInput={(params) => <TextField {...params} label="Chọn kì thực tập" />}
+                      renderInput={(params) => <TextField {...params} placeholder="Chọn kì thực tập" error={error.batchId} helperText={error.batchId} />}
                         onChange={(event, newValue) => {
                           if (newValue) {
                             setBatchId(newValue.id);
@@ -507,7 +523,7 @@ const CreateNewAccountPage = () => {
                             id="combo-box-demo"
                             options={filteredSkillList}
                             getOptionLabel={(option) => option.name}
-                            renderInput={(params) => <TextField {...params} label="Chọn kỹ năng" />}
+                            renderInput={(params) => <TextField {...params} placeholder="Chọn kỹ năng" error={error.createSkills[index].skillId} helperText={error.createSkills[index].skillId} />}
                             onChange={(event, newValue) => {
                               if (newValue) {
                                 onChangeUserSkill(index, "skillId", newValue.id);
@@ -524,7 +540,7 @@ const CreateNewAccountPage = () => {
                             disablePortal={false}
                             id="combo-box-demo"
                             options={skillLevel}
-                            renderInput={(params) => <TextField {...params} label="Chọn trình độ" type="number" />}
+                            renderInput={(params) => <TextField {...params} placeholder="Chọn trình độ" type="number" error={error.createSkills[index].initLevel} helperText={error.createSkills[index].initLevel} />}
                             onChange={(event, newValue) => {
                               if (newValue) {
                                 onChangeUserSkill(
