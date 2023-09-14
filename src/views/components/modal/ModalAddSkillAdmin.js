@@ -1,17 +1,17 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import FormGroup from "views/components/common/FormGroup";
 import { useForm } from "react-hook-form";
 import { Label } from "views/components/label";
-import { Input } from "views/components/input";
 import { Button } from "views/components/button";
 import ReactModal from "react-modal";
+import { TextField } from "@mui/material";
 
-const ModalAddSkillAdmin = ({ isOpen, onRequestClose, handleAddNewSkill, isLoading }) => {
-  const { handleSubmit, control, getValues, reset } = useForm();
+const ModalAddSkillAdmin = ({ isOpen, onRequestClose, handleAddNewSkill, isLoading, error }) => {
+  const { handleSubmit } = useForm();
+  const [name, setName] = useState("");
 
   const handleClick = async () => {
-    await handleAddNewSkill(getValues());
-    reset();
+    await handleAddNewSkill(name);
   };
 
 
@@ -50,12 +50,13 @@ const ModalAddSkillAdmin = ({ isOpen, onRequestClose, handleAddNewSkill, isLoadi
             <form onSubmit={handleSubmit(handleClick)}>
               <FormGroup>
                 <Label>Tên kĩ năng (*)</Label>
-                <Input
-                  control={control}
+                <TextField
+                  // error={error.rollNumber}
+                  // helperText={error.rollNumber}
                   name="name"
                   placeholder="Ex: ReactJS"
-                  autoComplete="off"
-                ></Input>
+                  onChange={(e) => setName(e.target.value)}
+                  onBlur={(e) => setName(e.target.value)} />
               </FormGroup>
 
               <div className="mt-5 text-center">

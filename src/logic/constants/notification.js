@@ -34,6 +34,8 @@ export const accountNoti = {
     BLANK_OJT_BATCH: "Vui lòng chọn đợt thực tập!!!",
     BLANK_STUDENT_CODE: "Mã sinh viên không được để trống!!!",
     BLANK_SKILL: "Vui lòng chọn kỹ năng!!!",
+    BLANK_INIT_LEVEL: "Vui lòng chọn trình độ!!!",
+    INIT_LEVEL_ERROR: "Trình độ không được nhỏ hơn 1",
     EMAIL_FORMAT: "Email không hợp lệ!!!",
     PHONE_FORMAT: "Số điện thoại không hợp lệ!!!",
     BIRTHDAY_ERROR: "Nhân viên phải ít nhất 18 tuổi!!!",
