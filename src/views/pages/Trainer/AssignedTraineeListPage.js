@@ -22,6 +22,7 @@ import StyledTableCell from "views/modules/table/StyledTableCell";
 // import SearchIcon from "@mui/icons-material/Search";
 // import useOnChange from "logic/hooks/useOnChange";
 import { trainerPath } from "logic/api/apiUrl";
+import { useNavigate } from "react-router-dom";
 
 const AssignedTraineeListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -79,6 +80,8 @@ const AssignedTraineeListPage = () => {
   // const [isTraineeDetailModalOpen, setIsTraineeDetailModalOpen] =
   //   useState(false);
 
+  const navigate = useNavigate();
+
   return (
     <MainCard title={`Thực tập sinh (${totalUsers.length})`}>
       {/* <ModalTraineeDetailManager
@@ -119,9 +122,11 @@ const AssignedTraineeListPage = () => {
                         className=""
                         type="button"
                         kind="ghost"
-                        // onClick={() => setIsTraineeDetailModalOpen(true)}
+                        onClick={() => {
+                          navigate("/user-detail");
+                        }}
                       >
-                        Edit
+                        Chi tiết
                       </Button>
                     </TableCell>
                   </TableRow>

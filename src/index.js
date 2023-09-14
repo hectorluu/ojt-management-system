@@ -49,7 +49,6 @@ const SkillListPage = lazy(() => import("views/pages/Admin/SkillListPage"));
 const PositionListPage = lazy(() =>
   import("views/pages/Admin/PositionListPage")
 );
-const UserDetailPage = lazy(() => import("views/pages/Admin/UserDetailPage"));
 
 // const UniversityDetailPage = lazy(() =>
 //   import("views/pages/Admin/UniversityDetailPage")
@@ -137,6 +136,7 @@ const TrainerTrainingPlanPage = lazy(() =>
 const EvaluateExcelPage = lazy(() =>
   import("views/pages/Trainer/EvaluateExcelPage")
 );
+const UserDetailPage = lazy(() => import("views/pages/Trainer/UserDetailPage"));
 
 // Trainee Page
 const TraineeCourseDetailPage = lazy(() =>
@@ -356,6 +356,10 @@ const router = createBrowserRouter([
             path: "/trainer-training-plan",
             element: <TrainerTrainingPlanPage></TrainerTrainingPlanPage>,
           },
+          {
+            path: "/user-detail",
+            element: <UserDetailPage></UserDetailPage>,
+          },
         ],
       },
     ],
@@ -427,10 +431,6 @@ const router = createBrowserRouter([
   {
     path: "modal-thank",
     element: <ModalThank></ModalThank>,
-  },
-  {
-    path: "/user-detail",
-    element: <UserDetailPage></UserDetailPage>,
   },
 ]);
 

@@ -20,6 +20,8 @@ import {
   Tooltip,
   Typography,
   Divider,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 import { IconProfile } from "views/components/icons";
 import { userPath } from "logic/api/apiUrl";
@@ -232,14 +234,14 @@ const TrainerAssignmentPage = () => {
                 </Dropdown>
                 <SubCard sx={{ minHeight: "200px" }}>
                   <h4 class="text-xl text-gray-900 font-bold text-left ml-2">
-                    Personal Info
+                    Thông tin đào tạo viên
                   </h4>
                   <List className="mt-2 text-gray-700">
                     <ListItem className="flex border-y py-2">
                       <Typography className="font-bold w-24">
                         Full name:
                       </Typography>
-                      <ListItemText primary="Amanda S. Ross" />
+                      <ListItemText primary="Amanda  aS. Ross" />
                     </ListItem>
                     <Divider />
                     <ListItem className="flex border-b py-2">
@@ -318,6 +320,15 @@ const TrainerAssignmentPage = () => {
                       ))}
                   </Dropdown.List>
                 </Dropdown>
+
+                {/* <Autocomplete
+                  disablePortal
+                  options={searchTraineeResults}
+                  sx={{ width: 300 }}
+                  renderInput={(params) => (
+                    <TextField onChange={() => setFilterTrainees} {...params} />
+                  )}
+                /> */}
 
                 {/* {searchTraineeResults.length > 0 && (
                   <Dropdown>
