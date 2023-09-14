@@ -2,8 +2,11 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
 import {
   Card,
+  IconButton,
   InputAdornment,
+  MenuItem,
   OutlinedInput,
+  Popover,
   Skeleton,
   Table,
   TableBody,
@@ -11,6 +14,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  useTheme,
 } from "@mui/material";
 import { skillPath } from "logic/api/apiUrl";
 import {
@@ -36,6 +40,9 @@ import signalRService from "logic/utils/signalRService";
 import { toast } from "react-toastify";
 import { skillNoti } from "logic/constants/notification";
 import { skillValid } from "logic/utils/validateUtils";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const SkillListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -63,7 +70,7 @@ const SkillListPage = () => {
       fetchSkills();
     });
     signalRService.on(signalRMessage.SKILL.UPDATED, (message) => {
-      fetchSkills();    
+      fetchSkills();
     });
 
     return () => {
@@ -122,7 +129,27 @@ const SkillListPage = () => {
   const handleClickSkillModal = (id) => {
     setIsSkillDetailModalOpen(true);
     setSkillModalId(id);
+    setOpen(null);
   };
+
+  const handleClickDeleteModal = (userModalId) => {
+    setOpen(null);
+  };
+
+  // Popover
+  const [open, setOpen] = useState(null); // use for AnchorEl
+  const [idSeclected, setIdSeclected] = useState(0);
+
+  const handleOpenMenu = (event, id) => {
+    setOpen(event.currentTarget);
+    setIdSeclected(id);
+  };
+
+  const handleCloseMenu = () => {
+    setOpen(null);
+  };
+
+  const theme = useTheme();
 
   const handleAddNewSkill = async (values) => {
     const valid = skillValid(values);
@@ -181,6 +208,7 @@ const SkillListPage = () => {
         </Button>
       }
     >
+      {/* Modal and Popover */}
       <ModalSkillDetailAdmin
         isOpen={isSkillDetailModalOpen}
         onRequestClose={() => setIsSkillDetailModalOpen(false)}
@@ -194,6 +222,35 @@ const SkillListPage = () => {
         isLoading={isSubmitLoading}
         handleAddNewSkill={handleAddNewSkill}
       ></ModalAddSkillAdmin>
+
+      <Popover
+        open={Boolean(open)}
+        anchorEl={open}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        PaperProps={{
+          sx: {
+            p: 1,
+            width: 120,
+            "& .MuiMenuItem-root": {
+              px: 1,
+              typography: "body2",
+              borderRadius: 0.75,
+            },
+          },
+        }}
+      >
+        <MenuItem onClick={() => handleClickSkillModal(idSeclected)}>
+          <ModeEditOutlineIcon sx={{ mr: 2 }} />
+          Sửa
+        </MenuItem>
+
+        <MenuItem onClick={() => handleClickDeleteModal(idSeclected)}>
+          <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
+          <span style={{ color: theme.palette.error.main }}>Xóa</span>
+        </MenuItem>
+      </Popover>
 
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
@@ -240,9 +297,6 @@ const SkillListPage = () => {
                     <TableCell width={"5%"}>
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"5%"}>
-                      <Skeleton />
-                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell width={"30%"}>
@@ -254,18 +308,12 @@ const SkillListPage = () => {
                     <TableCell width={"5%"}>
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"5%"}>
-                      <Skeleton />
-                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell width={"30%"}>
                       <Skeleton />
                     </TableCell>
                     <TableCell>
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"5%"}>
                       <Skeleton />
                     </TableCell>
                     <TableCell width={"5%"}>
@@ -292,20 +340,13 @@ const SkillListPage = () => {
                         }
                       </Chip>
                     </TableCell>
-                    <TableCell align="right" width={"5%"}>
-                      <Button
-                        className=""
-                        type="button"
-                        kind="ghost"
-                        onClick={() => handleClickSkillModal(item.id)}
+                    <TableCell align="right">
+                      <IconButton
+                        size="large"
+                        onClick={(event) => handleOpenMenu(event, item.id)}
                       >
-                        <ModeEditOutlineIcon></ModeEditOutlineIcon>
-                      </Button>
-                    </TableCell>
-                    <TableCell align="right" width={"5%"}>
-                      <Button className="bg-red-500 text-white" type="button">
-                        Xóa
-                      </Button>
+                        <MoreVertIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))

@@ -48,6 +48,8 @@ export const userPath = {
   UPADTE_USER: "",
   GET_TRAINEE_LIST: "/user/trainee",
   GET_TRAINER_LIST: "/user/trainer",
+  GET_TRAINER_BY_ID: "/user/trainer/",
+  GET_TRAINEE_LIST_BY_TRAINER: "/user/manager/trainee-list/",
 };
 
 export const skillPath = {
@@ -59,6 +61,12 @@ export const skillPath = {
 
 export const taskPath = {
   GET_TASK_LIST: "trainee-tasks",
+};
+
+export const traineeTaskPath = {
+  GET_TASK_LIST: "/task-process",
+  GET_TASK: "/task-process/",
+  GET_TASK_OF_TRAINEE: "/task-process/trainee/",
 };
 
 export const positionPath = {

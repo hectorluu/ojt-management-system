@@ -52,12 +52,12 @@ const ListFormulaPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         formulaPath.GET_FORMULA_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}`
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}`
       );
       setFormulaList(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -80,9 +80,7 @@ const ListFormulaPage = () => {
   const onClickDelete = async (id) => {
     try {
       setIsLoading(true);
-      await axiosPrivate.delete(
-        formulaPath.DELETE_FORMULA + id
-      );
+      await axiosPrivate.delete(formulaPath.DELETE_FORMULA + id);
       fetchFormulas();
       toast.success(formulaNoti.SUCCESS.CREATE);
       setIsLoading(false);
@@ -99,7 +97,7 @@ const ListFormulaPage = () => {
       await axiosPrivate.put(formulaPath.UPDATE_FORMULA + item.id, {
         calculation: item.calculation,
         name: item.name,
-        status: 2
+        status: 2,
       });
       fetchFormulas();
       toast.success(formulaNoti.SUCCESS.ACTIVE);
@@ -158,7 +156,7 @@ const ListFormulaPage = () => {
                 <StyledTableCell width={"30%"}>Công thức</StyledTableCell>
                 <StyledTableCell align="center">Trạng thái</StyledTableCell>
                 <StyledTableCell align="right" width={"5%"}></StyledTableCell>
-                <StyledTableCell align="right" width={"5%"}></StyledTableCell>
+                <StyledTableCell align="right" width={"15%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -208,6 +206,58 @@ const ListFormulaPage = () => {
                     </TableCell>
                   </TableRow>
                 </>
+              ) : formulaList.length !== 0 ? (
+                formulaList.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell width={"30%"}>{item.name}</TableCell>
+                    <TableCell align="center">
+                      <Chip
+                        color={
+                          item.status === 1 || item.status === 3
+                            ? "error"
+                            : "success"
+                        }
+                      >
+                        {
+                          formulaStatusOptions.find(
+                            (label) => label.value === item.status
+                          ).label
+                        }
+                      </Chip>
+                    </TableCell>
+                    <TableCell align="right" width={"5%"}>
+                      <Button
+                        className=""
+                        type="button"
+                        kind="ghost"
+                        onClick={() => console.log("edit")}
+                      >
+                        <ModeEditOutlineIcon></ModeEditOutlineIcon>
+                      </Button>
+                    </TableCell>
+                    <TableCell align="center" width={"15%"}>
+                      {item.status === 2 ? (
+                        <Button
+                          variant="contained"
+                          component="label"
+                          color="error"
+                          onClick={() => onClickDelete(item.id)}
+                        >
+                          Vô hiệu
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          component="label"
+                          color="success"
+                          onClick={() => onClickActive(item)}
+                        >
+                          Kích hoạt
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
               ) : formulaList.length !== 0 ? (
                 formulaList.map((item) => (
                   <TableRow key={item.id}>
