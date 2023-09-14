@@ -28,6 +28,10 @@ import { roleExchange } from "logic/constants/global";
 import { storage } from "logic/config/firebase/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { accountNoti } from "logic/constants/notification";
+import { accountValid } from "logic/utils/validateUtils";
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
 const CreateNewAccountPage = () => {
   const [birthday, setBirthDay] = useState(new Date());
@@ -112,10 +116,10 @@ const CreateNewAccountPage = () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-          "?PageSize=" +
-          100000 +
-          "&PageIndex=" +
-          1
+        "?PageSize=" +
+        100000 +
+        "&PageIndex=" +
+        1
       );
       setPositionList(response.data.data);
       console.log("fetchPositions ~ success", response);
@@ -128,12 +132,12 @@ const CreateNewAccountPage = () => {
     try {
       const response = await axiosPrivate.get(
         ojtBatchPath.GET_OJT_BATCH_LIST_OF_UNIVERSITY +
-          "/" +
-          universityId +
-          "?PageSize=" +
-          100000 +
-          "&PageIndex=" +
-          1
+        "/" +
+        universityId +
+        "?PageSize=" +
+        100000 +
+        "&PageIndex=" +
+        1
       );
       setOjtBatchList(response.data.data);
     } catch (error) {
@@ -170,20 +174,32 @@ const CreateNewAccountPage = () => {
 
   async function uploadFile() {
     setIsLoading(true);
-    if (avatar) {
-      try {
-        const imageRef = ref(storage, "images/users/" + avatar.name);
-        await uploadBytes(imageRef, avatar).then(async (snapshot) => {
-          await getDownloadURL(snapshot.ref).then((downloadURL) => {
-            setAvatarUrl(downloadURL);
+    const account = {
+      ...getValues(),
+      birthday,
+      createSkills,
+      batchId,
+      avatarUrl,
+      position,
+    };
+    const valid = accountValid(account);
+    if (valid) {
+      if (avatar) {
+        try {
+          const imageRef = ref(storage, "images/users/" + avatar.name);
+          await uploadBytes(imageRef, avatar).then(async (snapshot) => {
+            await getDownloadURL(snapshot.ref).then((downloadURL) => {
+              setAvatarUrl(downloadURL);
+            });
           });
-        });
-      } catch (e) {
-        toast.error("Upload img error");
+        } catch (e) {
+          toast.error("Upload img error");
+        }
+      } else {
+        setAvatarUrl(defaultUserIcon);
       }
-    } else {
-      setAvatarUrl(defaultUserIcon);
     }
+    setIsLoading(false);
   }
 
   const handleAddNewAccount = async (values) => {
@@ -244,6 +260,12 @@ const CreateNewAccountPage = () => {
     } else {
       toast.error(accountNoti.ERROR.SKILL_OVERFLOW);
     }
+  };
+
+  const handleRemoveField = (index) => {
+    let temp = createSkills.slice();
+    temp.splice(index, 1);
+    setCreateSkills(temp);
   };
 
   const getSkillDropdownLabel = (
@@ -540,70 +562,75 @@ const CreateNewAccountPage = () => {
                   </FormRow>
                   <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
                   {createSkills.map((userSkill, index) => (
-                    <FormRow key={index}>
-                      <FormGroup>
-                        <Label>Kỹ năng (*)</Label>
-                        <Dropdown>
-                          <Dropdown.Select
-                            placeholder={getSkillDropdownLabel(
-                              index,
-                              "skillId",
-                              skillList,
-                              "Lựa chọn"
-                            )}
-                          ></Dropdown.Select>
-                          <Dropdown.List>
-                            {filteredSkillList.map((option) => (
-                              <Dropdown.Option
-                                key={option.id}
-                                onClick={() =>
-                                  onChangeUserSkill(index, "skillId", option.id)
-                                }
-                              >
-                                <span className="capitalize">
-                                  {option.name}
-                                </span>
-                              </Dropdown.Option>
-                            ))}
-                          </Dropdown.List>
-                        </Dropdown>
-                      </FormGroup>
-                      <FormGroup>
-                        <Label>Trình độ (*)</Label>
-                        <Dropdown>
-                          <Dropdown.Select
-                            placeholder={getLevelDropdownLabel(
-                              index,
-                              "initLevel",
-                              skillLevel,
-                              "Lựa chọn"
-                            )}
-                          ></Dropdown.Select>
-                          <Dropdown.List>
-                            {skillLevel.map((option) => (
-                              <Dropdown.Option
-                                key={option.value}
-                                onClick={() =>
-                                  onChangeUserSkill(
-                                    index,
-                                    "initLevel",
-                                    option.value
-                                  )
-                                }
-                              >
-                                <span className="capitalize">
-                                  {option.label}
-                                </span>
-                              </Dropdown.Option>
-                            ))}
-                          </Dropdown.List>
-                        </Dropdown>
-                      </FormGroup>
-                    </FormRow>
+                    <div key={index}>
+                      <FormRow>
+                        <FormGroup>
+                          <Label>Kỹ năng (*)</Label>
+                          <Dropdown>
+                            <Dropdown.Select
+                              placeholder={getSkillDropdownLabel(
+                                index,
+                                "skillId",
+                                skillList,
+                                "Lựa chọn"
+                              )}
+                            ></Dropdown.Select>
+                            <Dropdown.List>
+                              {filteredSkillList.map((option) => (
+                                <Dropdown.Option
+                                  key={option.id}
+                                  onClick={() =>
+                                    onChangeUserSkill(index, "skillId", option.id)
+                                  }
+                                >
+                                  <span className="capitalize">
+                                    {option.name}
+                                  </span>
+                                </Dropdown.Option>
+                              ))}
+                            </Dropdown.List>
+                          </Dropdown>
+                        </FormGroup>
+                        <FormGroup>
+                          <Label>Trình độ (*)</Label>
+                          <Dropdown>
+                            <Dropdown.Select
+                              placeholder={getLevelDropdownLabel(
+                                index,
+                                "initLevel",
+                                skillLevel,
+                                0
+                              )}
+                            ></Dropdown.Select>
+                            <Dropdown.List>
+                              {skillLevel.map((option) => (
+                                <Dropdown.Option
+                                  key={option.value}
+                                  onClick={() =>
+                                    onChangeUserSkill(
+                                      index,
+                                      "initLevel",
+                                      option.value
+                                    )
+                                  }
+                                >
+                                  <span className="capitalize">
+                                    {option.label}
+                                  </span>
+                                </Dropdown.Option>
+                              ))}
+                            </Dropdown.List>
+                          </Dropdown>
+                        </FormGroup>
+                      </FormRow>
+                      <IconButton color="error" aria-label="delete" onClick={() => handleRemoveField(index)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </div>
                   ))}
-                  <button type="button" onClick={() => handleAddField()}>
-                    Thêm kỹ năng
-                  </button>
+                  <IconButton color="primary" aria-label="delete" onClick={() => handleAddField()}>
+                    <AddIcon />
+                  </IconButton>
                 </>
               )}
             <div className="mt-5 text-center">

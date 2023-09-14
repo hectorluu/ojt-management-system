@@ -1,33 +1,19 @@
 import { Fragment } from "react";
 import FormGroup from "views/components/common/FormGroup";
-import axios from "axios";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { Label } from "views/components/label";
 import { Input } from "views/components/input";
 import { Button } from "views/components/button";
-import { apiURL } from "logic/config/general-config/config";
 import ReactModal from "react-modal";
 
-const ModalAddSkillAdmin = ({ isOpen, onRequestClose }) => {
-  const { handleSubmit, control, reset } = useForm();
+const ModalAddSkillAdmin = ({ isOpen, onRequestClose, handleAddNewSkill, isLoading }) => {
+  const { handleSubmit, control, getValues, reset } = useForm();
 
-  const resetValues = () => {
-    reset({});
+  const handleClick = async () => {
+    await handleAddNewSkill(getValues());
+    reset();
   };
 
-  const handleAddNewSkill = async (values) => {
-    try {
-      await axios.post(`${apiURL}/`, {
-        ...values,
-      });
-      toast.success("Create new skill successfully");
-      resetValues();
-    } catch (error) {
-      toast.error("Can not create new skill");
-    }
-    // values, dateOfBirth
-  };
 
   return (
     <Fragment>
@@ -61,12 +47,12 @@ const ModalAddSkillAdmin = ({ isOpen, onRequestClose }) => {
         </h2>
         <div>
           <div className="bg-white shadow-1 rounded-xl p-4">
-            <form onSubmit={handleSubmit(handleAddNewSkill)}>
+            <form onSubmit={handleSubmit(handleClick)}>
               <FormGroup>
                 <Label>Tên kĩ năng (*)</Label>
                 <Input
                   control={control}
-                  name="skill name"
+                  name="name"
                   placeholder="Ex: ReactJS"
                   autoComplete="off"
                 ></Input>
@@ -76,6 +62,7 @@ const ModalAddSkillAdmin = ({ isOpen, onRequestClose }) => {
                 <Button
                   type="submit"
                   className="px-10 mx-auto text-white bg-primary"
+                  isLoading={isLoading}
                 >
                   Thêm mới{" "}
                 </Button>

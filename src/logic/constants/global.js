@@ -13,6 +13,10 @@ export const defaultPageSize = 10;
 
 export const defaultPageIndex = 1;
 
+export const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
+export const phoneRegex = /^[0-9]{10}$/;
+
 export const genderOptions = [
   { value: 1, label: "Nam" },
   { value: 2, label: "Nữ" },
@@ -160,6 +164,7 @@ export const notCriteriaOptions = [
   { value: "Birthday", label: "Ngày sinh" },
   { value: "PositionId", label: "Vị trí" },
   { value: "StudentCode", label: "Mã số sinh viên" },
+  { value: "Total", label: "Tổng điểm" },
 ];
 
 export const formulaOptions = [
@@ -169,11 +174,21 @@ export const formulaOptions = [
   { value: "Task", label: "Công việc" },
 ];
 
+export const configOptions = [
+  { value: "Total Working Days Per Month", label: "Số ngày làm việc trong tháng:", maxValue: 31 },
+  { value: "Work Hours Required", label: "Số giờ làm việc trong ngày:", maxValue: 24 },
+];
+
 export const notiOptions = [
   { value: "All", label: "Tất cả" },
   { value: true, label: "Đã đọc" },
   { value: false, label: "Chưa đọc" },
 ];
+
+export const configType = {
+  TOTAL_WORKING_DAYS_PER_MONTH: "Total Working Days Per Month",
+  WORK_HOURS_REQUIRED: "Work Hours Required",
+};
 
 export const notiOptionsVaue = {
   ALL: "All",

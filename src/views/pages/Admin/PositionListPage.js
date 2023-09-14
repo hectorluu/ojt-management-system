@@ -37,6 +37,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import Chip from "views/components/chip/Chip";
 import StyledTableCell from "views/modules/table/StyledTableCell";
 import SubCard from "views/components/cards/SubCard";
+import { positionValid } from "logic/utils/validateUtils";
+import { toast } from "react-toastify";
+import { positionNoti } from "logic/constants/notification";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -51,6 +54,7 @@ const PositionListPage = () => {
   const [isAddPositionModalOpen, setIsAddPositionModalOpen] = useState(false);
   const [isEditPositionModalOpen, setIsEditPositionModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
   useEffect(() => {
     fetchPositions();
@@ -149,6 +153,43 @@ const PositionListPage = () => {
 
   const theme = useTheme();
 
+  const handleAddNewPosition = async (values) => {
+    const valid = positionValid(values);
+    if (valid) {
+      try {
+        setIsSubmitLoading(true);
+        await axiosPrivate.post(positionPath.CREATE_POSITION, values);
+        setIsSubmitLoading(false);
+        setIsAddPositionModalOpen(false);
+        toast.success(positionNoti.SUCCESS.CREATE);
+      } catch (error) {
+        setIsSubmitLoading(false);
+        toast.error(positionNoti.ERROR.CREATE);
+      }
+    };
+    setIsSubmitLoading(false);
+  };
+
+  const handleUpdatePosition = async (values) => {
+    const valid = positionValid(values);
+    if (valid) {
+      try {
+        setIsSubmitLoading(true);
+        await axiosPrivate.put(positionPath.UPDATE_POSITION + values.id, {
+          name: values.name,
+          status: values.status,
+        });
+        setIsSubmitLoading(false);
+        setIsEditPositionModalOpen(false);
+        toast.success(positionNoti.SUCCESS.UPDATE);
+      } catch (error) {
+        setIsSubmitLoading(false);
+        toast.error(positionNoti.ERROR.UPDATE);
+      }
+    }
+    setIsSubmitLoading(false);
+  };
+
   return (
     <MainCard
       title={`Vị trí (${totalPositions.length})`}
@@ -174,10 +215,14 @@ const PositionListPage = () => {
         isOpen={isEditPositionModalOpen}
         onRequestClose={() => setIsEditPositionModalOpen(false)}
         positionIdClicked={positionModalId}
+        isSubmitLoading={isSubmitLoading}
+        handleUpdatePosition={handleUpdatePosition}
       ></ModalEditPositionAdmin>
       <ModalAddPositionAdmin
         isOpen={isAddPositionModalOpen}
         onRequestClose={() => setIsAddPositionModalOpen(false)}
+        isSubmitLoading={isSubmitLoading}
+        handleAddNewPosition={handleAddNewPosition}
       ></ModalAddPositionAdmin>
 
       <Popover

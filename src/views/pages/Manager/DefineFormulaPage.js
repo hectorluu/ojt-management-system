@@ -16,6 +16,7 @@ import { Button as ButtonC } from "views/components/button";
 import { formulaOptions } from "logic/constants/global";
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useNavigate } from "react-router-dom";
+import { formulaValid } from "logic/utils/validateUtils";
 
 const DefineFormulaPage = () => {
   // style
@@ -146,21 +147,25 @@ const DefineFormulaPage = () => {
 
   const handleAddNewFormula = async () => {
     setIsLoadingSubmit(true);
-    try {
-      const name = getValues("name");
-      await axiosPrivate.post(formulaPath.CREATE_FORMULA, {
-        name,
-        calculation
-      });
-      resetValues();
-      setCalculation("");
-      toast.success(formulaNoti.SUCCESS.CREATE);
-      setIsLoadingSubmit(false);
-      navigate("/list-formula");
-    } catch (error) {
-      setIsLoadingSubmit(false);
-      toast.error(error);
-    }
+    const formula = {
+      name: getValues("name"),
+      calculation: calculation,
+    };
+    const valid = formulaValid(formula);
+    if(valid){
+      try {
+        await axiosPrivate.post(formulaPath.CREATE_FORMULA, formula);
+        resetValues();
+        setCalculation("");
+        toast.success(formulaNoti.SUCCESS.CREATE);
+        setIsLoadingSubmit(false);
+        navigate("/list-formula");
+      } catch (error) {
+        setIsLoadingSubmit(false);
+        toast.error(error);
+      }
+    };
+    setIsLoadingSubmit(false);
   };
 
   return (

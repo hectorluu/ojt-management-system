@@ -29,9 +29,9 @@ function* handleAuthLogin({ payload }) {
       yield call(handleAuthFetchMe, { payload: response.data.token });
     }
   } catch (error) {
-    const response = error.response.data;
-    if (response.statusCode === 403) {
-      toast.error(response.error.message);
+    const response = error.response;
+    if (response.status === 400) {
+      toast.error(response.data);
       return;
     }
   }

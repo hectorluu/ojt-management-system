@@ -9,6 +9,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import DvrIcon from "@mui/icons-material/Dvr";
 import SensorOccupiedIcon from "@mui/icons-material/SensorOccupied";
 import KeyboardIcon from "@mui/icons-material/Keyboard";
+import SettingsIcon from '@mui/icons-material/Settings';
 
 //items
 const iconsDaskboard = { IconDashboard };
@@ -33,6 +34,7 @@ const iconsPages = {
   DvrIcon,
   SensorOccupiedIcon,
   KeyboardIcon,
+  SettingsIcon,
 };
 
 const pages = {
@@ -70,6 +72,14 @@ const pages = {
       type: "item",
       url: "/position-list",
       icon: iconsPages.KeyboardIcon,
+      breadcrumbs: false,
+    },
+    {
+      id: "config",
+      title: "Cài đặt",
+      type: "item",
+      url: "/config",
+      icon: iconsPages.SettingsIcon,
       breadcrumbs: false,
     },
   ],

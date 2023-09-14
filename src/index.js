@@ -28,6 +28,9 @@ const UnauthorizePage = lazy(() => import("views/pages/UnauthorizePage"));
 const AdminDashBoardPage = lazy(() =>
   import("views/pages/Admin/AdminDashBoardPage")
 );
+const ConfigPage = lazy(() =>
+  import("views/pages/Admin/ConfigPage")
+);
 const AccountListPage = lazy(() => import("views/pages/Admin/AccountListPage"));
 const CourseDetailPage = lazy(() =>
   import("views/pages/Admin/CourseDetailPage")
@@ -225,6 +228,10 @@ const router = createBrowserRouter([
           {
             path: "/batch-list/:batchId",
             element: <OJTBatchListPage></OJTBatchListPage>,
+          },
+          {
+            path: "/config",
+            element: <ConfigPage></ConfigPage>,
           },
         ],
       },

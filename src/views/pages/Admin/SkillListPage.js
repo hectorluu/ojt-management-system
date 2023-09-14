@@ -37,6 +37,9 @@ import Chip from "views/components/chip/Chip";
 import StyledTableCell from "views/modules/table/StyledTableCell";
 import SubCard from "views/components/cards/SubCard";
 import signalRService from "logic/utils/signalRService";
+import { toast } from "react-toastify";
+import { skillNoti } from "logic/constants/notification";
+import { skillValid } from "logic/utils/validateUtils";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -51,6 +54,7 @@ const SkillListPage = () => {
   const [isSkillDetailModalOpen, setIsSkillDetailModalOpen] = useState(false);
   const [isAddSkillModalOpen, setIsAddSkillModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
   useEffect(() => {
     fetchSkills();
@@ -147,6 +151,43 @@ const SkillListPage = () => {
 
   const theme = useTheme();
 
+  const handleAddNewSkill = async (values) => {
+    const valid = skillValid(values);
+    if(valid){
+      try {
+        setIsSubmitLoading(true);
+        await axiosPrivate.post(skillPath.CREATE_SKILL, values);
+        setIsSubmitLoading(false);
+        setIsAddSkillModalOpen(false)
+        toast.success(skillNoti.SUCCESS.CREATE);
+      } catch (error) {
+        setIsSubmitLoading(false);
+        toast.error(skillNoti.ERROR.CREATE);
+      }
+    };
+    setIsSubmitLoading(false);
+  };
+
+  const handleUpdateSkill = async (values) => {
+    const valid = skillValid(values);
+    if(valid){
+      try{
+        setIsSubmitLoading(true);
+        await axiosPrivate.put(skillPath.UPDATE_SKILL + values.id, {
+          name: values.name,
+          status: values.status,
+        });
+        setIsSubmitLoading(false);
+        setIsSkillDetailModalOpen(false);
+        toast.success(skillNoti.SUCCESS.UPDATE);
+      }catch(error){
+        setIsSubmitLoading(false);
+        toast.error(skillNoti.ERROR.UPDATE);
+      }
+    }
+    setIsSubmitLoading(false);
+  };
+
   return (
     <MainCard
       title={`Kỹ năng (${totalSkills.length})`}
@@ -172,10 +213,14 @@ const SkillListPage = () => {
         isOpen={isSkillDetailModalOpen}
         onRequestClose={() => setIsSkillDetailModalOpen(false)}
         skillIdClicked={skillModalId}
+        handleUpdateSkill={handleUpdateSkill}
+        isSubmitLoading={isSubmitLoading}
       ></ModalSkillDetailAdmin>
       <ModalAddSkillAdmin
         isOpen={isAddSkillModalOpen}
         onRequestClose={() => setIsAddSkillModalOpen(false)}
+        isLoading={isSubmitLoading}
+        handleAddNewSkill={handleAddNewSkill}
       ></ModalAddSkillAdmin>
 
       <Popover

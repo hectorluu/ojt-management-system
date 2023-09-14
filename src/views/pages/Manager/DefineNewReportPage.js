@@ -18,6 +18,10 @@ import Gap from "views/components/common/Gap";
 import { templateNoti } from "logic/constants/notification";
 import { useNavigate } from "react-router-dom";
 import Luckysheet from "views/components/Luckysheet/Luckysheet";
+import { reportValid } from "logic/utils/validateUtils";
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
 
 
@@ -27,7 +31,7 @@ function DefineNewReportPage() {
   const [file, setFile] = useState(null);
   const [url, setUrl] = useState("");
   const [universityId, setUniversityId] = useState(0);
-  const { handleSubmit, control, getValues, setValue } = useForm();
+  const { handleSubmit, control, getValues, setValue, unregister } = useForm();
   const [templateHeaders, setTemplateHeaders] = useState([{ name: "", formulaId: undefined, matchedAttribute: "", totalPoint: undefined, isCriteria: false, order: 1 }]);
   const [notCriteriaList, setNotCriteriaList] = useState(notCriteriaOptions);
   const [formulaList, setFormulaList] = useState([]);
@@ -49,11 +53,6 @@ function DefineNewReportPage() {
       );
     }
   };
-
-  useEffect(() => {
-    console.log(data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
 
   useEffect(() => {
     // const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2FFile%20danh%20gia%20danh%20sach%20sv%20BKU.xlsx?alt=media&token=d2a90118-f684-4f4b-ba12-ba79c9f11067";
@@ -112,8 +111,12 @@ function DefineNewReportPage() {
     try {
       const response = await axiosPrivate.get(
         universityPath.GET_UNIVERSITY_LIST +
-        "?id=" +
-        universityId
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        100000 +
+        "&filterStatus=" +
+        2
       );
       setUniversityList(response.data.data);
       console.log("fetchUniversities ~ success", response);
@@ -137,10 +140,17 @@ function DefineNewReportPage() {
   const handleRemoveField = (index) => {
     let temp = templateHeaders.slice();
     temp.splice(index, 1);
+    for (let i = index; i < templateHeaders.length - 1; i++) {
+      setValue(`headerName${i}`, getValues(`headerName${i + 1}`));
+      setValue(`maxPoint${i}`, getValues(`maxPoint${i + 1}`));
+    };
+    unregister(`headerName${templateHeaders.length - 1}`);
+    unregister(`maxPoint${templateHeaders.length - 1}`);
     for (let i = 0; i < temp.length; i++) {
       temp[i].order = i + 1;
     }
     setTemplateHeaders(temp);
+    console.log(temp);
   };
 
   const getFormulaDropdownLabel = (
@@ -170,7 +180,7 @@ function DefineNewReportPage() {
     } else {
       setIsLoading(false);
       setUrl("");
-      toast.error("File cannot be null");
+      toast.error(templateNoti.ERROR.BLANK_FILE);
     }
   };
 
@@ -230,7 +240,18 @@ function DefineNewReportPage() {
       newArray[i].totalPoint = getValues(`maxPoint${i}`);
     }
     setTemplateHeaders(newArray);
-    uploadFile();
+    const template = {
+      name: getValues("name"),
+      startCell: getValues("startCell"),
+      universityId: universityId,
+      templateHeaders: templateHeaders,
+      file: file
+    };
+    const valid = reportValid(template);
+    if (valid) {
+      uploadFile();
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -383,18 +404,18 @@ function DefineNewReportPage() {
                     </FormGroup>
                   ) : null}
                 </FormRow>
-                <button type="button" onClick={() => handleRemoveField(index)}>
-                  xoá
-                </button>
+                <IconButton color="error" aria-label="delete" onClick={() => handleRemoveField(index)}>
+                  <DeleteIcon />
+                </IconButton>
               </div>
             ))}
-            <button type="button" onClick={() => handleAddField()}>
-              Thêm
-            </button>
+            <IconButton color="primary" aria-label="delete" onClick={() => handleAddField()}>
+              <AddIcon />
+            </IconButton>
             <div className="mt-5 text-center">
               <Button
                 type="submit"
-                className="px-10 mx-auto text-white bg-primary"
+                className="px-20 mx-auto text-white bg-primary"
                 isLoading={isLoading}
               >
                 Tạo
