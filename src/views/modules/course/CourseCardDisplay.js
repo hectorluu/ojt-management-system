@@ -22,6 +22,7 @@ export default function CourseCardDisplay(course) {
   };
 
   const coursePosition = (course) => {
+    console.log(course.course);
     let text = getPositionLabel(course.course.coursePositions[0]?.position, positionOptions, "");
     for (let i = 1; i < course.course.coursePositions.length; i++) {
       text = text + "," +getPositionLabel(course.course.coursePositions[i].position, positionOptions, "");

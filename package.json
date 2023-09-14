@@ -12,6 +12,7 @@
     "@mui/lab": "^5.0.0-alpha.142",
     "@mui/material": "^5.11.11",
     "@mui/x-data-grid": "^6.11.1",
+    "@mui/x-date-pickers": "^6.13.0",
     "@reduxjs/toolkit": "^1.8.2",
     "@tabler/icons": "^1.72.0",
     "@testing-library/jest-dom": "^5.16.4",

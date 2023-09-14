@@ -1,13 +1,13 @@
 //eslint-disable-next-line
+import { object, string, number, date, InferType } from 'yup';
 import { Fragment, useEffect, useState } from "react";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
-import DatePicker from "react-date-picker";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Label } from "views/components/label";
 import { Input } from "views/components/input";
-import { Dropdown } from "views/components/dropdown";
 import { Button } from "views/components/button";
 import ImageUpload from "views/components/image/ImageUpload";
 import {
@@ -32,9 +32,13 @@ import { accountValid } from "logic/utils/validateUtils";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import { Autocomplete, TextField } from "@mui/material";
+import moment from "moment";
+import { useNavigate } from "react-router-dom";
+
 
 const CreateNewAccountPage = () => {
-  const [birthday, setBirthDay] = useState(new Date());
+  const [birthday, setBirthDay] = useState(moment());
   const [avatar, setAvatar] = useState(null);
   const axiosPrivate = useAxiosPrivate();
   const [userRoleWhenChosen, setUserRoleWhenChosen] = useState("");
@@ -51,15 +55,20 @@ const CreateNewAccountPage = () => {
   const [batchId, setBatchId] = useState(0);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  let userSchema = object({
+    name: string().required()
+  });
 
   const {
     handleSubmit,
     control,
     setValue,
     reset,
-    watch,
     unregister,
     getValues,
+    register
   } = useForm();
 
   useEffect(() => {
@@ -90,6 +99,17 @@ const CreateNewAccountPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [avatarUrl]);
+
+  useEffect(() => {
+    const abc = asdadsad();
+    console.log(abc);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const asdadsad = async () => {
+    const valid = await userSchema.isValid({ name: "" });
+    return valid;
+  };
 
   const removeItems = (rmItems, items) => {
     const filteredItems = items.filter(
@@ -157,16 +177,6 @@ const CreateNewAccountPage = () => {
     }
   };
 
-  const getDropdownLabel = (
-    name,
-    options = [{ value: "", label: "" }],
-    defaultValue = ""
-  ) => {
-    const value = watch(name) || defaultValue;
-    const label = options.find((label) => label.value === value);
-    return label ? label.label : defaultValue;
-  };
-
   const resetValues = () => {
     setBirthDay("");
     reset({});
@@ -227,6 +237,7 @@ const CreateNewAccountPage = () => {
       setAvatarUrl(undefined);
       setPosition(undefined);
       setIsLoading(false);
+      navigate("/account-list");
     } catch (error) {
       console.log("error", error);
       toast.error(error);
@@ -234,16 +245,13 @@ const CreateNewAccountPage = () => {
     }
   };
 
-  const handleSelectDropdownOption = (name, value) => {
-    setValue(name, value);
-  };
-
   const handleSelectRoleDropdownOption = (name, value) => {
     setUserRoleWhenChosen(() => value);
     setValue(name, value);
     setAvatar(null);
     unregister("position");
-    setBatchId(0);
+    unregister("rollNumber");
+    setBatchId("");
     setCreateSkills([{ skillId: "", initLevel: "" }]);
   };
 
@@ -268,39 +276,6 @@ const CreateNewAccountPage = () => {
     setCreateSkills(temp);
   };
 
-  const getSkillDropdownLabel = (
-    index,
-    name,
-    options = [{ value: "", label: "" }],
-    defaultValue = ""
-  ) => {
-    const skills = createSkills.slice();
-    const value = skills[index][name] || defaultValue;
-    const label = options.find((label) => label.id === value);
-    return label ? label.name : defaultValue;
-  };
-
-  const getLevelDropdownLabel = (
-    index,
-    name,
-    options = [{ value: "", label: "" }],
-    defaultValue = ""
-  ) => {
-    const levels = createSkills.slice();
-    const value = levels[index][name] || defaultValue;
-    const label = options.find((label) => label.value === value);
-    return label ? label.label : defaultValue;
-  };
-
-  const getApiDropdownLabel = (
-    value,
-    options = [{ id: "", name: "" }],
-    defaultValue = ""
-  ) => {
-    const label = options.find((label) => label.id === value);
-    return label ? label.name : defaultValue;
-  };
-
   const onChangeUserSkill = (index, name, value) => {
     const newArray = createSkills.slice();
     newArray[index][name] = value;
@@ -319,12 +294,16 @@ const CreateNewAccountPage = () => {
             <FormRow>
               <FormGroup>
                 <Label>Họ (*)</Label>
-                <Input
+                <TextField
+                  name="lastName"
+                  placeholder="Họ và tên đầy đủ"
+                  {...register("lastName")} />
+                {/* <Input
                   control={control}
                   name="lastName"
                   placeholder="Họ và tên đầy đủ"
                   autoComplete="off"
-                ></Input>
+                ></Input> */}
               </FormGroup>
               <FormGroup>
                 <Label>Tên (*)</Label>
@@ -369,39 +348,25 @@ const CreateNewAccountPage = () => {
             <FormRow>
               <FormGroup>
                 <Label>Giới tính (*)</Label>
-                <Dropdown>
-                  <Dropdown.Select
-                    placeholder={getDropdownLabel(
-                      "gender",
-                      genderOptions,
-                      "Chọn giới tính"
-                    )}
-                  ></Dropdown.Select>
-                  <Dropdown.List>
-                    {genderOptions.map((personGender) => (
-                      <Dropdown.Option
-                        key={personGender.value}
-                        onClick={() =>
-                          handleSelectDropdownOption(
-                            "gender",
-                            personGender.value
-                          )
-                        }
-                      >
-                        <span className="capitalize">{personGender.label}</span>
-                      </Dropdown.Option>
-                    ))}
-                  </Dropdown.List>
-                </Dropdown>
+                <Autocomplete
+                  disablePortal={false}
+                  id="combo-box-demo"
+                  options={genderOptions}
+                  renderInput={(params) => <TextField {...params} placeholder="Chọn giới tính" />}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setValue("gender", newValue.value);
+                    } else {
+                      setValue("gender", "");
+                    }
+                  }}
+                />
               </FormGroup>
               <FormGroup>
                 <Label>Ngày sinh (*)</Label>
                 <DatePicker
-                  name=""
-                  onChange={setBirthDay}
                   value={birthday}
-                  format="dd-MM-yyyy"
-                  autoComplete="off"
+                  onChange={(newValue) => setBirthDay(newValue)}
                 />
               </FormGroup>
             </FormRow>
@@ -410,30 +375,19 @@ const CreateNewAccountPage = () => {
             <FormRow>
               <FormGroup>
                 <Label>Chức vụ (*)</Label>
-                <Dropdown>
-                  <Dropdown.Select
-                    placeholder={getDropdownLabel(
-                      "role",
-                      roleOptions,
-                      "Chọn chức vụ"
-                    )}
-                  ></Dropdown.Select>
-                  <Dropdown.List>
-                    {roleOptions.map((personRole) => (
-                      <Dropdown.Option
-                        key={personRole.value}
-                        onClick={() =>
-                          handleSelectRoleDropdownOption(
-                            "role",
-                            personRole.value
-                          )
-                        }
-                      >
-                        <span className="capitalize">{personRole.label}</span>
-                      </Dropdown.Option>
-                    ))}
-                  </Dropdown.List>
-                </Dropdown>
+                <Autocomplete
+                  disablePortal={false}
+                  id="combo-box-demo"
+                  options={roleOptions}
+                  renderInput={(params) => <TextField {...params} placeholder="Chọn chức vụ" />}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      handleSelectRoleDropdownOption("role", newValue.value);
+                    } else {
+                      handleSelectRoleDropdownOption("role", "");
+                    }
+                  }}
+                />
               </FormGroup>
             </FormRow>
             {userRoleWhenChosen &&
@@ -452,27 +406,21 @@ const CreateNewAccountPage = () => {
                     </FormGroup>
                     <FormGroup>
                       <Label>Vị trí (*)</Label>
-                      <Dropdown>
-                        <Dropdown.Select
-                          placeholder={getApiDropdownLabel(
-                            position,
-                            positionList,
-                            "Chọn vị trí thực tập"
-                          )}
-                        ></Dropdown.Select>
-                        <Dropdown.List>
-                          {positionList.map((personPosition) => (
-                            <Dropdown.Option
-                              key={personPosition.id}
-                              onClick={() => setPosition(personPosition.id)}
-                            >
-                              <span className="capitalize">
-                                {personPosition.name}
-                              </span>
-                            </Dropdown.Option>
-                          ))}
-                        </Dropdown.List>
-                      </Dropdown>
+                      <Autocomplete
+                        disablePortal={false}
+                        id="combo-box-demo"
+                        options={positionList}
+                        getOptionLabel={(option) => option.name}
+                        renderInput={(params) => <TextField {...params} label="Chọn vị trí" />}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setPosition(newValue.id);
+                          } else {
+                            setPosition("");
+                          }
+                        }}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                      />
                     </FormGroup>
                   </FormRow>
                   <FormRow>
@@ -503,27 +451,21 @@ const CreateNewAccountPage = () => {
                   <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
                   <FormGroup>
                     <Label>Tên trường (*)</Label>
-                    <Dropdown>
-                      <Dropdown.Select
-                        placeholder={getApiDropdownLabel(
-                          universityId,
-                          universityList,
-                          "Chọn trường đại học"
-                        )}
-                      ></Dropdown.Select>
-                      <Dropdown.List>
-                        {universityList.map((university) => (
-                          <Dropdown.Option
-                            key={university.id}
-                            onClick={() => setUniversityId(university.id)}
-                          >
-                            <span className="capitalize">
-                              {university.name}
-                            </span>
-                          </Dropdown.Option>
-                        ))}
-                      </Dropdown.List>
-                    </Dropdown>
+                    <Autocomplete
+                      disablePortal={false}
+                      id="combo-box-demo"
+                      options={universityList}
+                      getOptionLabel={(option) => option.name}
+                      renderInput={(params) => <TextField {...params} label="Chọn trường đại học" />}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          setUniversityId(newValue.id);
+                        } else {
+                          setUniversityId("");
+                        }
+                      }}
+                      isOptionEqualToValue={(option, value) => option.id === value.id}
+                    />
                   </FormGroup>
                   <FormRow>
                     <FormGroup>
@@ -537,27 +479,21 @@ const CreateNewAccountPage = () => {
                     </FormGroup>
                     <FormGroup>
                       <Label>Kì thực tập (*)</Label>
-                      <Dropdown>
-                        <Dropdown.Select
-                          placeholder={getApiDropdownLabel(
-                            batchId,
-                            ojtBatchList,
-                            "Chọn kì thực tập"
-                          )}
-                        ></Dropdown.Select>
-                        <Dropdown.List>
-                          {ojtBatchList?.map((ojtBatch) => (
-                            <Dropdown.Option
-                              key={ojtBatch.id}
-                              onClick={() => setBatchId(ojtBatch.id)}
-                            >
-                              <span className="capitalize">
-                                {ojtBatch.name}
-                              </span>
-                            </Dropdown.Option>
-                          ))}
-                        </Dropdown.List>
-                      </Dropdown>
+                      <Autocomplete
+                        disablePortal={false}
+                        id="combo-box-demo"
+                        options={ojtBatchList}
+                        getOptionLabel={(option) => option.name}
+                        renderInput={(params) => <TextField {...params} label="Chọn kì thực tập" />}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setBatchId(newValue.id);
+                          } else {
+                            setBatchId("");
+                          }
+                        }}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                      />
                     </FormGroup>
                   </FormRow>
                   <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
@@ -566,61 +502,45 @@ const CreateNewAccountPage = () => {
                       <FormRow>
                         <FormGroup>
                           <Label>Kỹ năng (*)</Label>
-                          <Dropdown>
-                            <Dropdown.Select
-                              placeholder={getSkillDropdownLabel(
-                                index,
-                                "skillId",
-                                skillList,
-                                "Lựa chọn"
-                              )}
-                            ></Dropdown.Select>
-                            <Dropdown.List>
-                              {filteredSkillList.map((option) => (
-                                <Dropdown.Option
-                                  key={option.id}
-                                  onClick={() =>
-                                    onChangeUserSkill(index, "skillId", option.id)
-                                  }
-                                >
-                                  <span className="capitalize">
-                                    {option.name}
-                                  </span>
-                                </Dropdown.Option>
-                              ))}
-                            </Dropdown.List>
-                          </Dropdown>
+                          <Autocomplete
+                            disablePortal={false}
+                            id="combo-box-demo"
+                            options={filteredSkillList}
+                            getOptionLabel={(option) => option.name}
+                            renderInput={(params) => <TextField {...params} label="Chọn kỹ năng" />}
+                            onChange={(event, newValue) => {
+                              if (newValue) {
+                                onChangeUserSkill(index, "skillId", newValue.id);
+                              } else {
+                                onChangeUserSkill(index, "skillId", "");
+                              }
+                            }}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                          />
                         </FormGroup>
                         <FormGroup>
                           <Label>Trình độ (*)</Label>
-                          <Dropdown>
-                            <Dropdown.Select
-                              placeholder={getLevelDropdownLabel(
-                                index,
-                                "initLevel",
-                                skillLevel,
-                                0
-                              )}
-                            ></Dropdown.Select>
-                            <Dropdown.List>
-                              {skillLevel.map((option) => (
-                                <Dropdown.Option
-                                  key={option.value}
-                                  onClick={() =>
-                                    onChangeUserSkill(
-                                      index,
-                                      "initLevel",
-                                      option.value
-                                    )
-                                  }
-                                >
-                                  <span className="capitalize">
-                                    {option.label}
-                                  </span>
-                                </Dropdown.Option>
-                              ))}
-                            </Dropdown.List>
-                          </Dropdown>
+                          <Autocomplete
+                            disablePortal={false}
+                            id="combo-box-demo"
+                            options={skillLevel}
+                            renderInput={(params) => <TextField {...params} label="Chọn trình độ" type="number" />}
+                            onChange={(event, newValue) => {
+                              if (newValue) {
+                                onChangeUserSkill(
+                                  index,
+                                  "initLevel",
+                                  newValue.value
+                                )
+                              } else {
+                                onChangeUserSkill(
+                                  index,
+                                  "initLevel",
+                                  ""
+                                )
+                              }
+                            }}
+                          />
                         </FormGroup>
                       </FormRow>
                       <IconButton color="error" aria-label="delete" onClick={() => handleRemoveField(index)}>

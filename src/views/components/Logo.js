@@ -11,7 +11,6 @@
 // ==============================|| LOGO SVG ||============================== //
 
 const Logo = () => {
-
   return (
     /**
      * if you want to use image instead of svg uncomment following, and comment out <svg> element.
@@ -19,7 +18,7 @@ const Logo = () => {
      * <img src={logo} alt="Berry" width="100" />
      *
      */
-    <img src="logoDera.png" alt="logo"/>
+    <img src="logoDera.png" alt="logo" width="100" />
   );
 };
 

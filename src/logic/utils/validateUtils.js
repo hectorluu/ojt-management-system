@@ -86,7 +86,7 @@ export function accountValid(account) {
     toast.error(accountNoti.ERROR.PHONE_FORMAT);
     return false;
   };
-  if ((new Date().getFullYear() - account.birthday.getFullYear() + 1) < 18) {
+  if ((new Date().getFullYear() - account.birthday.year() + 1) < 18) {
     toast.error(accountNoti.ERROR.BIRTHDAY_ERROR);
     return false;
   };

@@ -1,6 +1,7 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
 import {
+  Autocomplete,
   Button,
   Card,
   IconButton,
@@ -16,6 +17,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   useTheme,
 } from "@mui/material";
 
@@ -28,7 +30,6 @@ import {
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { roleOptions } from "logic/constants/global";
-import { Dropdown } from "views/components/dropdown";
 
 import ModalUserDetailAdmin from "views/components/modal/ModalUserDetailAdmin";
 import useOnChange from "logic/hooks/useOnChange";
@@ -54,7 +55,6 @@ const AccountListPage = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [role, setRole] = useState("");
-  const [roleFiltered, setRoleFilter] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
@@ -63,35 +63,20 @@ const AccountListPage = () => {
       setIsLoading(true);
       let response = await axiosPrivate.get(
         userPath.GET_USER_LIST +
-          "?PageSize=" +
-          rowsPerPage +
-          "&PageIndex=" +
-          page +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&role=" +
-          role
+        "?PageSize=" +
+        rowsPerPage +
+        "&PageIndex=" +
+        page +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&role=" +
+        role
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
       console.log("fetchUsers ~ error", error);
-      setIsLoading(false); // Set loading to false after fetching data
-    }
-  };
-
-  const [totalUsers, setTotalUsers] = useState([]); // New loading state
-  const fetchTotalUsers = async () => {
-    try {
-      setIsLoading(true);
-      let response = await axiosPrivate.get(
-        userPath.GET_USER_LIST + "?PageSize=" + 1000000
-      );
-      setTotalUsers(response.data.data);
-    } catch (error) {
-      console.log("error: ", error);
-    } finally {
       setIsLoading(false); // Set loading to false after fetching data
     }
   };
@@ -113,17 +98,8 @@ const AccountListPage = () => {
 
   useEffect(() => {
     fetchUsers();
-    fetchTotalUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, role, rowsPerPage, page]);
-
-  useEffect(() => {
-    const allRole = [{ value: "", label: "Tất cả" }];
-    const roles = roleOptions.slice();
-    roles.unshift(...allRole);
-    setRoleFilter(roles);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -132,20 +108,6 @@ const AccountListPage = () => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(1);
-  };
-
-  const getDropdownLabel = (
-    name,
-    options = [{ value: "", label: "" }],
-    defaultValue = ""
-  ) => {
-    const value = name || defaultValue;
-    const label = options.find((label) => label.value === value);
-    return label ? label.label : defaultValue;
-  };
-
-  const handleSelectRoleDropdownOption = (value) => {
-    setRole(value);
   };
 
   // Modal
@@ -179,7 +141,7 @@ const AccountListPage = () => {
 
   return (
     <MainCard
-      title={`Tài khoản (${totalUsers.length})`}
+      title={`Tài khoản`}
       secondary={
         <Button
           startIcon={
@@ -254,23 +216,20 @@ const AccountListPage = () => {
           </Card>
 
           <div className="flex flex-wrap items-start max-w-[180px] w-full">
-            <Dropdown className="bg-white">
-              <Dropdown.Select
-                placeholder={getDropdownLabel(role, roleFiltered, "Tất cả")}
-              ></Dropdown.Select>
-              <Dropdown.List>
-                {roleFiltered.map((personRole) => (
-                  <Dropdown.Option
-                    key={personRole.value}
-                    onClick={() =>
-                      handleSelectRoleDropdownOption(personRole.value)
-                    }
-                  >
-                    <span className="capitalize">{personRole.label}</span>
-                  </Dropdown.Option>
-                ))}
-              </Dropdown.List>
-            </Dropdown>
+            <Autocomplete
+              disablePortal={false}
+              id="combo-box-demo"
+              options={roleOptions}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Vai trò" />}
+              onChange={(event, newValue) => {
+                if(newValue){
+                  setRole(newValue.value);
+                }else{
+                  setRole("");
+                }
+              }}
+            />
           </div>
         </div>
 
