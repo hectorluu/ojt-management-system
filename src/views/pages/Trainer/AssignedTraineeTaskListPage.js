@@ -45,6 +45,7 @@ const AssignedTraineeTaskListPage = () => {
           page
       );
       setTasks(response.data.data);
+      console.log(tasks);
       setTotalItem(response.data.totalItem);
     } catch (error) {
       console.log("fetchTasks ~ error", error);
@@ -89,7 +90,7 @@ const AssignedTraineeTaskListPage = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell align="left" width={"30%"}>
+              <TableCell align="left" width={"40%"}>
                 Tên công việc
               </TableCell>
               <TableCell align="left" width={"20%"}>
@@ -101,13 +102,12 @@ const AssignedTraineeTaskListPage = () => {
               <TableCell align="center" width={"20%"}>
                 Trạng thái
               </TableCell>
-              <TableCell align="right" width={"10%"}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {tasks.map((item) => (
               <TableRow key={item.id}>
-                <TableCell align="left" width={"30%"}>
+                <TableCell align="left" width={"40%"}>
                   {item.name}
                 </TableCell>
                 <TableCell align="left" width={"20%"}>
@@ -132,11 +132,6 @@ const AssignedTraineeTaskListPage = () => {
                       ).label
                     }
                   </Chip>
-                </TableCell>
-                <TableCell align="right" width={"10%"}>
-                  <Button className="" type="button" kind="ghost">
-                    Edit
-                  </Button>
                 </TableCell>
               </TableRow>
             ))}

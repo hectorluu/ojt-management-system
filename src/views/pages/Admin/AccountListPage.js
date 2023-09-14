@@ -39,7 +39,7 @@ import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import MainCard from "views/components/cards/MainCard";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Chip from "views/components/chip/Chip";
 import StyledTableCell from "views/modules/table/StyledTableCell";
 import SubCard from "views/components/cards/SubCard";
@@ -63,14 +63,14 @@ const AccountListPage = () => {
       setIsLoading(true);
       let response = await axiosPrivate.get(
         userPath.GET_USER_LIST +
-        "?PageSize=" +
-        rowsPerPage +
-        "&PageIndex=" +
-        page +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}` +
-        "&role=" +
-        role
+          "?PageSize=" +
+          rowsPerPage +
+          "&PageIndex=" +
+          page +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}` +
+          "&role=" +
+          role
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -114,9 +114,10 @@ const AccountListPage = () => {
   const [isUserDetailModalOpen, setIsUserDetailModalOpen] = useState(false);
   const [userModalId, setUserModalId] = useState(0);
 
-  const handleClickUserModal = (userModalId) => {
-    setIsUserDetailModalOpen(true);
-    setUserModalId(userModalId);
+  const handleClickUserDetail = (userId) => {
+    // setIsUserDetailModalOpen(true);
+    // setUserModalId(userModalId);
+    navigate("/account-list/" + userId);
     setOpen(null);
   };
 
@@ -138,6 +139,7 @@ const AccountListPage = () => {
   };
 
   const theme = useTheme();
+  const navigate = useNavigate();
 
   return (
     <MainCard
@@ -184,7 +186,7 @@ const AccountListPage = () => {
           },
         }}
       >
-        <MenuItem onClick={() => handleClickUserModal(idSeclected)}>
+        <MenuItem onClick={() => handleClickUserDetail(idSeclected)}>
           <ModeEditOutlineIcon sx={{ mr: 2 }} />
           Sửa
         </MenuItem>
@@ -221,11 +223,13 @@ const AccountListPage = () => {
               id="combo-box-demo"
               options={roleOptions}
               sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} label="Vai trò" />}
+              renderInput={(params) => (
+                <TextField {...params} label="Vai trò" />
+              )}
               onChange={(event, newValue) => {
-                if(newValue){
+                if (newValue) {
                   setRole(newValue.value);
-                }else{
+                } else {
                   setRole("");
                 }
               }}
