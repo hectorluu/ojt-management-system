@@ -12,7 +12,6 @@ import {
 import CourseCardDisplay from "views/modules/course/CourseCardDisplay";
 import CourseGrid from "views/modules/course/CourseGrid";
 import TablePagination from "@mui/material/TablePagination";
-import { Dropdown } from "views/components/dropdown";
 import useOnChange from "logic/hooks/useOnChange";
 import signalRService from "logic/utils/signalRService";
 import CourseCardSkeleton from "views/modules/course/CourseCardSkeleton";
@@ -23,6 +22,8 @@ import {
   Card,
   OutlinedInput,
   InputAdornment,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
@@ -40,8 +41,6 @@ const CourseListPage = () => {
   const [skill, setSkill] = useState("");
   const [skillList, setSkillList] = useState([]);
   const [positionList, setPositionList] = useState([]);
-  const [positionFiltered, setPositionFiltered] = useState([]);
-  const [skillFiltered, setSkillFiltered] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
@@ -69,16 +68,16 @@ const CourseListPage = () => {
       setIsLoading(true); // Set loading to true before fetching data
       let response = await axiosPrivate.get(
         coursePath.GET_COURSE_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&filterSkill=" +
-          `${skill === null ? "" : skill}` +
-          "&filterPosition=" +
-          `${position === null ? "" : position}`
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&filterSkill=" +
+        `${skill === null ? "" : skill}` +
+        "&filterPosition=" +
+        `${position === null ? "" : position}`
       );
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -89,31 +88,16 @@ const CourseListPage = () => {
     }
   };
 
-  const [totalCourses, setTotalCourses] = useState([]); // New state for total courses [1
-  const fetchTotalCourses = async () => {
-    try {
-      setIsLoading(true); // Set loading to true before fetching data
-      let response = await axiosPrivate.get(
-        coursePath.GET_COURSE_LIST + "?PageSize=" + 1000000
-      );
-      setTotalCourses(response.data.data);
-    } catch (error) {
-      console.log("Error", error);
-    } finally {
-      setIsLoading(false); // Set loading to false after fetching data
-    }
-  };
-
   const fetchSkills = async () => {
     try {
       const response = await axiosPrivate.get(
         skillPath.GET_SKILL_LIST +
-          "?PageIndex=" +
-          1 +
-          "&PageSize=" +
-          100000 +
-          "&filterStatus=" +
-          skillStatus.ACTIVE
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        100000 +
+        "&filterStatus=" +
+        skillStatus.ACTIVE
       );
       setSkillList(response.data.data);
     } catch (error) {
@@ -125,12 +109,12 @@ const CourseListPage = () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-          "?PageIndex=" +
-          1 +
-          "&PageSize=" +
-          100000 +
-          "&filterStatus=" +
-          positionStatus.ACTIVE
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        100000 +
+        "&filterStatus=" +
+        positionStatus.ACTIVE
       );
       setPositionList(response.data.data);
     } catch (error) {
@@ -140,27 +124,10 @@ const CourseListPage = () => {
 
   useEffect(() => {
     fetchCourses();
-    fetchTotalCourses();
     fetchSkills();
     fetchPositions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, position, skill, rowsPerPage, page]);
-
-  useEffect(() => {
-    const allSkill = [{ id: "", name: "Tất cả" }];
-    const skills = skillList.slice();
-    skills.unshift(...allSkill);
-    setSkillFiltered(skills);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skillList]);
-
-  useEffect(() => {
-    const allPosition = [{ id: "", name: "Tất cả" }];
-    const positions = positionList.slice();
-    positions.unshift(...allPosition);
-    setPositionFiltered(positions);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [positionList]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -171,37 +138,9 @@ const CourseListPage = () => {
     setPage(1);
   };
 
-  const getPositionDropdownLabel = (
-    name,
-    options = [{ id: "", name: "" }],
-    defaultValue = ""
-  ) => {
-    const value = name || defaultValue;
-    const label = options.find((label) => label.id === value);
-    return label ? label.name : defaultValue;
-  };
-
-  const getSkillDropdownLabel = (
-    name,
-    options = [{ value: "", label: "" }],
-    defaultValue = ""
-  ) => {
-    const value = name || defaultValue;
-    const label = options.find((label) => label.id === value);
-    return label ? label.name : defaultValue;
-  };
-
-  const handleSelectPositionDropdownOption = (value) => {
-    setPosition(value);
-  };
-
-  const handleSelectSkillDropdownOption = (value) => {
-    setSkill(value);
-  };
-
   return (
     <MainCard
-      title={`Khóa học (${totalCourses.length})`}
+      title={`Khóa học`}
       secondary={
         <Button
           startIcon={
@@ -239,46 +178,40 @@ const CourseListPage = () => {
             />
           </Card>
           <div className="flex flex-wrap items-start max-w-[200px] w-full">
-            <Dropdown>
-              <Dropdown.Select
-                placeholder={getPositionDropdownLabel(
-                  position,
-                  positionFiltered,
-                  "Vị trí"
-                )}
-              ></Dropdown.Select>
-              <Dropdown.List>
-                {positionFiltered.map((pos) => (
-                  <Dropdown.Option
-                    key={pos.id}
-                    onClick={() => handleSelectPositionDropdownOption(pos.id)}
-                  >
-                    <span className="capitalize">{pos.name}</span>
-                  </Dropdown.Option>
-                ))}
-              </Dropdown.List>
-            </Dropdown>
+            <Autocomplete
+              disablePortal={false}
+              id="combo-box-demo"
+              options={positionList}
+              getOptionLabel={(option)=>option.name}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Vị trí" />}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setPosition(newValue.id);
+                } else {
+                  setPosition("");
+                }
+              }}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+            />
           </div>
-          <div className=" max-w-[200px] w-full">
-            <Dropdown>
-              <Dropdown.Select
-                placeholder={getSkillDropdownLabel(
-                  skill,
-                  skillFiltered,
-                  "Kỹ năng"
-                )}
-              ></Dropdown.Select>
-              <Dropdown.List>
-                {skillFiltered.map((ski) => (
-                  <Dropdown.Option
-                    key={ski.id}
-                    onClick={() => handleSelectSkillDropdownOption(ski.id)}
-                  >
-                    <span className="capitalize">{ski.name}</span>
-                  </Dropdown.Option>
-                ))}
-              </Dropdown.List>
-            </Dropdown>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              id="combo-box-demo"
+              options={skillList}
+              getOptionLabel={(option) => option.name}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Kỹ năng" />}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setSkill(newValue.id);
+                } else {
+                  setSkill("");
+                }
+              }}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+            />
           </div>
         </div>
         <Gap></Gap>

@@ -58,7 +58,6 @@ const SkillListPage = () => {
 
   useEffect(() => {
     fetchSkills();
-    fetchTotalSkills();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, rowsPerPage, page]);
 
@@ -99,21 +98,7 @@ const SkillListPage = () => {
     } catch (error) {
       console.log("fetchSkill ~ error", error);
     }
-  }
-
-  const [totalSkills, setTotalSkills] = useState([]);
-  async function fetchTotalSkills() {
-    try {
-      const response = await axiosPrivate.get(
-        skillPath.GET_SKILL_LIST + "?PageSize=" + 1000000
-      );
-      setTotalSkills(response.data.data);
-      setIsLoading(false);
-      // setPage(response.data.pageIndex);
-    } catch (error) {
-      console.log("Error", error);
-    }
-  }
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -190,7 +175,7 @@ const SkillListPage = () => {
 
   return (
     <MainCard
-      title={`Kỹ năng (${totalSkills.length})`}
+      title={`Kỹ năng`}
       secondary={
         <Button
           startIcon={
@@ -279,8 +264,7 @@ const SkillListPage = () => {
               <TableRow>
                 <StyledTableCell width={"30%"}>Kỹ năng</StyledTableCell>
                 <StyledTableCell align="center">Trạng thái</StyledTableCell>
-                <StyledTableCell align="right" width={"5%"}></StyledTableCell>
-                <StyledTableCell align="right" width={"5%"}></StyledTableCell>
+                <StyledTableCell align="right" width={"10%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -294,7 +278,7 @@ const SkillListPage = () => {
                     <TableCell>
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"5%"}>
+                    <TableCell width={"10%"}>
                       <Skeleton />
                     </TableCell>
                   </TableRow>
@@ -305,7 +289,7 @@ const SkillListPage = () => {
                     <TableCell>
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"5%"}>
+                    <TableCell width={"10%"}>
                       <Skeleton />
                     </TableCell>
                   </TableRow>
@@ -316,7 +300,7 @@ const SkillListPage = () => {
                     <TableCell>
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"5%"}>
+                    <TableCell width={"10%"}>
                       <Skeleton />
                     </TableCell>
                   </TableRow>
@@ -340,7 +324,7 @@ const SkillListPage = () => {
                         }
                       </Chip>
                     </TableCell>
-                    <TableCell align="right">
+                    <TableCell align="right" width={"10%"}>
                       <IconButton
                         size="large"
                         onClick={(event) => handleOpenMenu(event, item.id)}

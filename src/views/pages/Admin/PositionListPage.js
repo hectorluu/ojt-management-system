@@ -58,7 +58,6 @@ const PositionListPage = () => {
 
   useEffect(() => {
     fetchPositions();
-    fetchTotalPositions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, page, rowsPerPage]);
 
@@ -100,22 +99,7 @@ const PositionListPage = () => {
       console.log("fetchPosition ~ error", error);
       setIsLoading(false);
     }
-  }
-
-  const [totalPositions, setTotalPositions] = useState([]);
-  async function fetchTotalPositions() {
-    try {
-      const response = await axiosPrivate.get(
-        positionPath.GET_POSITION_LIST + "?PageSize=" + 1000000
-      );
-      setTotalPositions(response.data.data);
-      setIsLoading(false);
-      // setPage(response.data.pageIndex);
-    } catch (error) {
-      console.log("Error", error);
-      setIsLoading(false);
-    }
-  }
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -192,7 +176,7 @@ const PositionListPage = () => {
 
   return (
     <MainCard
-      title={`Vị trí (${totalPositions.length})`}
+      title={`Vị trí`}
       secondary={
         <Button
           startIcon={
@@ -281,8 +265,7 @@ const PositionListPage = () => {
               <TableRow>
                 <StyledTableCell width={"30%"}>Vị trí</StyledTableCell>
                 <StyledTableCell align="center">Trạng thái</StyledTableCell>
-                <StyledTableCell align="right" width={"5%"}></StyledTableCell>
-                <StyledTableCell align="right" width={"5%"}></StyledTableCell>
+                <StyledTableCell align="right" width={"10%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -296,7 +279,7 @@ const PositionListPage = () => {
                     <TableCell>
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"5%"}>
+                    <TableCell width={"10%"}>
                       <Skeleton />
                     </TableCell>
                   </TableRow>
@@ -307,7 +290,7 @@ const PositionListPage = () => {
                     <TableCell>
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"5%"}>
+                    <TableCell width={"10%"}>
                       <Skeleton />
                     </TableCell>
                   </TableRow>
@@ -318,7 +301,7 @@ const PositionListPage = () => {
                     <TableCell>
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"5%"}>
+                    <TableCell width={"10%"}>
                       <Skeleton />
                     </TableCell>
                   </TableRow>
@@ -342,7 +325,7 @@ const PositionListPage = () => {
                         }
                       </Chip>
                     </TableCell>
-                    <TableCell align="right">
+                    <TableCell align="right" width={"10%"}>
                       <IconButton
                         size="large"
                         onClick={(event) => handleOpenMenu(event, item.id)}
