@@ -174,11 +174,21 @@ export const formulaOptions = [
   { value: "Task", label: "Công việc" },
 ];
 
+export const configOptions = [
+  { value: "Total Working Days Per Month", label: "Số ngày làm việc trong tháng:", maxValue: 31 },
+  { value: "Work Hours Required", label: "Số giờ làm việc trong ngày:", maxValue: 24 },
+];
+
 export const notiOptions = [
   { value: "All", label: "Tất cả" },
   { value: true, label: "Đã đọc" },
   { value: false, label: "Chưa đọc" },
 ];
+
+export const configType = {
+  TOTAL_WORKING_DAYS_PER_MONTH: "Total Working Days Per Month",
+  WORK_HOURS_REQUIRED: "Work Hours Required",
+};
 
 export const notiOptionsVaue = {
   ALL: "All",

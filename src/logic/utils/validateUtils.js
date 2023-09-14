@@ -1,6 +1,6 @@
-import { accountNoti, authNoti, formulaNoti, positionNoti, skillNoti, templateNoti } from "logic/constants/notification";
+import { accountNoti, authNoti, configNoti, formulaNoti, positionNoti, skillNoti, templateNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
-import { emailRegex, phoneRegex, roleExchange } from "logic/constants/global";
+import { configOptions, configType, emailRegex, phoneRegex, roleExchange } from "logic/constants/global";
 
 export function formulaValid(formula) {
   if (!formula.name) {
@@ -162,3 +162,30 @@ export function loginValid(user) {
   };
   return true;
 };
+
+
+export function configValid(configs){
+  for(let i = 0; i < configs.length; i++){
+    if(configs[i].name === configType.TOTAL_WORKING_DAYS_PER_MONTH){
+      if (configs[i].value === "" || configs[i].value === undefined || configs[i].value === null) {
+        toast.error(configNoti.ERROR.BLANK_DAY_PER_MONTH);
+        return false;
+      };
+      if(configs[i].value <= 1 || configs[i].value > configOptions.find((item)=>item.value === configType.TOTAL_WORKING_DAYS_PER_MONTH).maxValue){
+        toast.error(configNoti.ERROR.MAX_DAY);
+        return false;
+      };
+    }
+    if (configs[i].name === configType.WORK_HOURS_REQUIRED) {
+      if (configs[i].value === "" || configs[i].value === undefined || configs[i].value === null) {
+        toast.error(configNoti.ERROR.BLANK_HOUR_PER_DAY);
+        return false;
+      };
+      if (configs[i].value <= 1 || configs[i].value > configOptions.find((item) => item.value === configType.WORK_HOURS_REQUIRED).maxValue) {
+        toast.error(configNoti.ERROR.MAX_HOUR);
+        return false;
+      };
+    }
+  }
+  return true;
+}

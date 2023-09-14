@@ -101,4 +101,9 @@ export const reportPath = {
   EXPORT_REPORT: "/report",
 };
 
+export const configPath = {
+  GET_CONFIG_LIST: "/config",
+  UPDATE_CONFIG: "/config"
+};
+
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

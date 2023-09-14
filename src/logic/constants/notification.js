@@ -155,3 +155,16 @@ export const positionNoti = {
     BLANK_NAME: "Tên vị trí không được để trống!!!",
   },
 };
+
+export const configNoti = {
+  SUCCESS: {
+    UPDATE: "Thành công cập nhật cài đặt!!!",
+  },
+
+  ERROR: {
+    BLANK_DAY_PER_MONTH: "Số ngày không được để trống!!!",
+    BLANK_HOUR_PER_DAY: "Số giờ không được để trống!!!",
+    MAX_DAY: "Số ngày không phù hợp!!!",
+    MAX_HOUR: "Số giờ không phù hợp!!!",
+  },
+};
