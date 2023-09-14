@@ -2,8 +2,11 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
 import {
   Card,
+  IconButton,
   InputAdornment,
+  MenuItem,
   OutlinedInput,
+  Popover,
   Skeleton,
   Table,
   TableBody,
@@ -11,6 +14,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  useTheme,
 } from "@mui/material";
 import { positionPath } from "logic/api/apiUrl";
 import {
@@ -33,6 +37,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import Chip from "views/components/chip/Chip";
 import StyledTableCell from "views/modules/table/StyledTableCell";
 import SubCard from "views/components/cards/SubCard";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const PositionListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -120,7 +127,27 @@ const PositionListPage = () => {
   const handleClickPositionModal = (id) => {
     setIsEditPositionModalOpen(true);
     setPositionModalId(id);
+    setOpen(null);
   };
+
+  const handleClickDeleteModal = (userModalId) => {
+    setOpen(null);
+  };
+
+  // Popover
+  const [open, setOpen] = useState(null); // use for AnchorEl
+  const [idSeclected, setIdSeclected] = useState(0);
+
+  const handleOpenMenu = (event, id) => {
+    setOpen(event.currentTarget);
+    setIdSeclected(id);
+  };
+
+  const handleCloseMenu = () => {
+    setOpen(null);
+  };
+
+  const theme = useTheme();
 
   return (
     <MainCard
@@ -142,6 +169,7 @@ const PositionListPage = () => {
         </Button>
       }
     >
+      {/* Modal and Popover */}
       <ModalEditPositionAdmin
         isOpen={isEditPositionModalOpen}
         onRequestClose={() => setIsEditPositionModalOpen(false)}
@@ -151,6 +179,35 @@ const PositionListPage = () => {
         isOpen={isAddPositionModalOpen}
         onRequestClose={() => setIsAddPositionModalOpen(false)}
       ></ModalAddPositionAdmin>
+
+      <Popover
+        open={Boolean(open)}
+        anchorEl={open}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        PaperProps={{
+          sx: {
+            p: 1,
+            width: 120,
+            "& .MuiMenuItem-root": {
+              px: 1,
+              typography: "body2",
+              borderRadius: 0.75,
+            },
+          },
+        }}
+      >
+        <MenuItem onClick={() => handleClickPositionModal(idSeclected)}>
+          <ModeEditOutlineIcon sx={{ mr: 2 }} />
+          Sửa
+        </MenuItem>
+
+        <MenuItem onClick={() => handleClickDeleteModal(idSeclected)}>
+          <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
+          <span style={{ color: theme.palette.error.main }}>Xóa</span>
+        </MenuItem>
+      </Popover>
 
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
@@ -197,9 +254,6 @@ const PositionListPage = () => {
                     <TableCell width={"5%"}>
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"5%"}>
-                      <Skeleton />
-                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell width={"30%"}>
@@ -211,18 +265,12 @@ const PositionListPage = () => {
                     <TableCell width={"5%"}>
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"5%"}>
-                      <Skeleton />
-                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell width={"30%"}>
                       <Skeleton />
                     </TableCell>
                     <TableCell>
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"5%"}>
                       <Skeleton />
                     </TableCell>
                     <TableCell width={"5%"}>
@@ -249,56 +297,13 @@ const PositionListPage = () => {
                         }
                       </Chip>
                     </TableCell>
-                    <TableCell align="right" width={"5%"}>
-                      <Button
-                        className=""
-                        type="button"
-                        kind="ghost"
-                        onClick={() => handleClickPositionModal(item.id)}
+                    <TableCell align="right">
+                      <IconButton
+                        size="large"
+                        onClick={(event) => handleOpenMenu(event, item.id)}
                       >
-                        <ModeEditOutlineIcon></ModeEditOutlineIcon>
-                      </Button>
-                    </TableCell>
-                    <TableCell align="right" width={"5%"}>
-                      <Button className="bg-red-500 text-white" type="button">
-                        Xóa
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : positions.length !== 0 ? (
-                positions.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell width={"30%"}>{item.name}</TableCell>
-                    <TableCell align="center">
-                      <Chip
-                        color={
-                          item.status === 1 || item.status === 3
-                            ? "error"
-                            : "success"
-                        }
-                      >
-                        {
-                          positionStatusOptions.find(
-                            (label) => label.value === item.status
-                          ).label
-                        }
-                      </Chip>
-                    </TableCell>
-                    <TableCell align="right" width={"5%"}>
-                      <Button
-                        className=""
-                        type="button"
-                        kind="ghost"
-                        onClick={() => handleClickPositionModal(item.id)}
-                      >
-                        <ModeEditOutlineIcon></ModeEditOutlineIcon>
-                      </Button>
-                    </TableCell>
-                    <TableCell align="right" width={"5%"}>
-                      <Button className="bg-red-500 text-white" type="button">
-                        Xóa
-                      </Button>
+                        <MoreVertIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))

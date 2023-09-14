@@ -21,7 +21,6 @@ import StartCampaignPage from "views/pages/StartCampaignPage";
 import CampaignPage from "views/pages/CampaignPage";
 import ModalBackProject from "views/components/modal/ModalBackProject";
 import ModalThank from "views/components/modal/ModalThank";
-
 const SignInPage = lazy(() => import("views/pages/SignInPage"));
 const UnauthorizePage = lazy(() => import("views/pages/UnauthorizePage"));
 
@@ -50,6 +49,8 @@ const SkillListPage = lazy(() => import("views/pages/Admin/SkillListPage"));
 const PositionListPage = lazy(() =>
   import("views/pages/Admin/PositionListPage")
 );
+const UserDetailPage = lazy(() => import("views/pages/Admin/UserDetailPage"));
+
 // const UniversityDetailPage = lazy(() =>
 //   import("views/pages/Admin/UniversityDetailPage")
 // );
@@ -426,6 +427,10 @@ const router = createBrowserRouter([
   {
     path: "modal-thank",
     element: <ModalThank></ModalThank>,
+  },
+  {
+    path: "/user-detail",
+    element: <UserDetailPage></UserDetailPage>,
   },
 ]);
 

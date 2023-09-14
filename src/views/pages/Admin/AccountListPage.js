@@ -155,6 +155,11 @@ const AccountListPage = () => {
   const handleClickUserModal = (userModalId) => {
     setIsUserDetailModalOpen(true);
     setUserModalId(userModalId);
+    setOpen(null);
+  };
+
+  const handleClickDeleteModal = (userModalId) => {
+    setOpen(null);
   };
 
   // Popover
@@ -222,7 +227,7 @@ const AccountListPage = () => {
           Sửa
         </MenuItem>
 
-        <MenuItem>
+        <MenuItem onClick={() => handleClickDeleteModal(idSeclected)}>
           <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
           <span style={{ color: theme.palette.error.main }}>Xóa</span>
         </MenuItem>
