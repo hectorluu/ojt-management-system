@@ -49,6 +49,7 @@ export const userPath = {
   GET_TRAINEE_LIST: "/user/trainee",
   GET_TRAINER_LIST: "/user/trainer",
   GET_TRAINER_BY_ID: "/user/trainer/",
+  GET_TRAINEE_BY_ID: "/user/trainee/",
   GET_TRAINEE_LIST_BY_TRAINER: "/user/manager/trainee-list/",
 };
 
@@ -111,7 +112,7 @@ export const reportPath = {
 
 export const configPath = {
   GET_CONFIG_LIST: "/config",
-  UPDATE_CONFIG: "/config"
+  UPDATE_CONFIG: "/config",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

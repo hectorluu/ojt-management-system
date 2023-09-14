@@ -12,6 +12,8 @@ import {
   Stack,
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
+import DatePicker from "react-date-picker";
+import { Label } from "views/components/label";
 
 const TrainerProfilePage = () => {
   const handleChange = useCallback((event) => {
@@ -31,9 +33,9 @@ const TrainerProfilePage = () => {
             <Box sx={{ m: -1.5 }}>
               <Grid container spacing={3}>
                 <Grid xs={12} md={6}>
+                  <Label className="mb-2">Họ</Label>
                   <TextField
                     fullWidth
-                    label="First name"
                     name="firstName"
                     onChange={handleChange}
                     required
@@ -41,9 +43,9 @@ const TrainerProfilePage = () => {
                   />
                 </Grid>
                 <Grid xs={12} md={6}>
+                  <Label className="mb-2">Tên</Label>
                   <TextField
                     fullWidth
-                    label="Last name"
                     name="lastName"
                     onChange={handleChange}
                     required
@@ -51,9 +53,9 @@ const TrainerProfilePage = () => {
                   />
                 </Grid>
                 <Grid xs={12} md={6}>
+                  <Label className="mb-2">Email</Label>
                   <TextField
                     fullWidth
-                    label="Email Address"
                     name="email"
                     onChange={handleChange}
                     required
@@ -61,9 +63,9 @@ const TrainerProfilePage = () => {
                   />
                 </Grid>
                 <Grid xs={12} md={6}>
+                  <Label className="mb-2">Số điện thoại</Label>
                   <TextField
                     fullWidth
-                    label="Phone Number"
                     name="phone"
                     onChange={handleChange}
                     type="number"
@@ -71,10 +73,41 @@ const TrainerProfilePage = () => {
                   />
                 </Grid>
                 <Grid xs={12} md={6}>
+                  <Label className="mb-2">Giới tính</Label>
                   <TextField
                     fullWidth
-                    label="Country"
-                    name="country"
+                    name="gender"
+                    onChange={handleChange}
+                    required
+                    value={""}
+                  />
+                </Grid>
+                <Grid xs={12} md={6}>
+                  <Label className="mb-2">Ngày sinh</Label>
+                  <DatePicker
+                    name=""
+                    value={""}
+                    format="dd-MM-yyyy"
+                    autoComplete="off"
+                  />
+                </Grid>
+                <Grid xs={12} md={6}>
+                  <Label className="mb-2">Mã số nhân viên</Label>
+                  <TextField
+                    disabled
+                    fullWidth
+                    name="rollNumber"
+                    onChange={handleChange}
+                    required
+                    value={""}
+                  />
+                </Grid>
+                <Grid xs={12} md={6}>
+                  <Label className="mb-2">Vị trí</Label>
+                  <TextField
+                    disabled
+                    fullWidth
+                    name="positionName"
                     onChange={handleChange}
                     required
                     value={""}
@@ -97,7 +130,13 @@ const TrainerProfilePage = () => {
             <Stack spacing={3} sx={{ maxWidth: 400 }}>
               <TextField
                 fullWidth
-                label="Password"
+                name="currentpassword"
+                onChange={handleChange}
+                type="password"
+                value={""}
+              />
+              <TextField
+                fullWidth
                 name="password"
                 onChange={handleChange}
                 type="password"

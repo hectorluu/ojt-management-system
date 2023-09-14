@@ -20,12 +20,10 @@ import {
   Tooltip,
   Typography,
   Divider,
-  Autocomplete,
-  TextField,
 } from "@mui/material";
 import { IconProfile } from "views/components/icons";
 import { userPath } from "logic/api/apiUrl";
-import { defaultPageIndex } from "logic/constants/global";
+import { defaultPageIndex, genderOptions } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import SubCard from "views/components/cards/SubCard";
 
@@ -84,7 +82,7 @@ const TrainerAssignmentPage = () => {
   const [rowsPerPage] = React.useState(100000);
   const axiosPrivate = useAxiosPrivate();
   const [filterTrainers, setFilterTrainers] = useOnChange(500);
-  const [filterTrainees, setFilterTrainees] = useOnChange(100);
+  const [filterTrainees, setFilterTrainees] = useOnChange(200);
 
   // fetch trainers
   useEffect(() => {
@@ -109,7 +107,7 @@ const TrainerAssignmentPage = () => {
   }, [filterTrainers]);
 
   const [currentTrainer, setCurrentTrainer] = useState({});
-  // fetch trainees with chosen trainer
+  // get chosen trainer
   useEffect(() => {
     async function getCurrentTrainer() {
       try {
@@ -117,35 +115,27 @@ const TrainerAssignmentPage = () => {
           userPath.GET_TRAINER_BY_ID + trainerClicked
         );
 
-        setCurrentTrainer(response.data.data);
+        setCurrentTrainer(response.data);
       } catch (error) {}
     }
     if (trainerClicked !== 0) getCurrentTrainer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trainerClicked]);
 
-  // search Trainee
+  // fetch Trainee with chosen trainer
   useEffect(() => {
-    async function searchTrainees() {
+    async function fetchTraineesByTrainer() {
       try {
-        if (!filterTrainees) return;
-
         const response = await axiosPrivate.get(
-          userPath.GET_TRAINEE_LIST +
-            "?PageIndex=" +
-            page +
-            "&PageSize=" +
-            rowsPerPage +
-            "&keyword=" +
-            filterTrainees
+          userPath.GET_TRAINEE_LIST_BY_TRAINER + trainerClicked
         );
 
-        setSearchTraineeResults(response.data.data);
+        setTrainees(response.data.data);
       } catch (error) {}
     }
-    searchTrainees();
+    fetchTraineesByTrainer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterTrainees]);
+  }, [trainerClicked]);
 
   // search Trainee
   useEffect(() => {
@@ -227,7 +217,6 @@ const TrainerAssignmentPage = () => {
                           }
                         >
                           {trainer?.firstName + " " + trainer?.lastName}
-                          {console.log(trainer)}
                         </Dropdown.Option>
                       ))}
                   </Dropdown.List>
@@ -236,54 +225,51 @@ const TrainerAssignmentPage = () => {
                   <h4 class="text-xl text-gray-900 font-bold text-left ml-2">
                     Thông tin đào tạo viên
                   </h4>
-                  <List className="mt-2 text-gray-700">
-                    <ListItem className="flex border-y py-2">
-                      <Typography className="font-bold w-24">
-                        Full name:
-                      </Typography>
-                      <ListItemText primary="Amanda  aS. Ross" />
-                    </ListItem>
-                    <Divider />
-                    <ListItem className="flex border-b py-2">
-                      <Typography className="font-bold w-24">
-                        Birthday:
-                      </Typography>
-                      <ListItemText primary="24 Jul, 1991" />
-                    </ListItem>
-                    <Divider />
-                    <ListItem className="flex border-b py-2">
-                      <Typography className="font-bold w-24">
-                        Joined:
-                      </Typography>
-                      <ListItemText primary="10 Jan 2022 (25 days ago)" />
-                    </ListItem>
-                    <Divider />
-                    <ListItem className="flex border-b py-2">
-                      <Typography className="font-bold w-24">
-                        Mobile:
-                      </Typography>
-                      <ListItemText primary="(123) 123-1234" />
-                    </ListItem>
-                    <Divider />
-                    <ListItem className="flex border-b py-2">
-                      <Typography className="font-bold w-24">Email:</Typography>
-                      <ListItemText primary="amandaross@example.com" />
-                    </ListItem>
-                    <Divider />
-                    <ListItem className="flex border-b py-2">
-                      <Typography className="font-bold w-24">
-                        Location:
-                      </Typography>
-                      <ListItemText primary="New York, US" />
-                    </ListItem>
-                    <Divider />
-                    <ListItem className="flex border-b py-2">
-                      <Typography className="font-bold w-24">
-                        Languages:
-                      </Typography>
-                      <ListItemText primary="English, Spanish" />
-                    </ListItem>
-                  </List>
+                  {Object.keys(currentTrainer).length !== 0 && (
+                    <List className="mt-2 text-gray-700">
+                      <ListItem className="flex border-y py-2">
+                        <Typography className="font-bold w-24">
+                          Họ và tên
+                        </Typography>
+                        <ListItemText
+                          primary={
+                            currentTrainer.firstName +
+                            " " +
+                            currentTrainer.lastName
+                          }
+                          consol
+                        />
+                      </ListItem>
+                      <Divider />
+                      <ListItem className="flex border-b py-2">
+                        <Typography className="font-bold w-24">
+                          Email:
+                        </Typography>
+                        <ListItemText primary={currentTrainer.email} />
+                      </ListItem>
+                      <Divider />
+                      <ListItem className="flex border-b py-2">
+                        <Typography className="font-bold w-24">
+                          Giới tính:
+                        </Typography>
+                        <ListItemText
+                          primary={
+                            genderOptions.find(
+                              (option) => option.value === currentTrainer.gender
+                            )?.label
+                          }
+                        />
+                      </ListItem>
+                      <Divider />
+                      <ListItem className="flex border-b py-2">
+                        <Typography className="font-bold w-24">
+                          Vị trí:
+                        </Typography>
+                        <ListItemText primary={currentTrainer.positionName} />
+                      </ListItem>
+                      <Divider />
+                    </List>
+                  )}
                 </SubCard>
               </FormGroup>
 

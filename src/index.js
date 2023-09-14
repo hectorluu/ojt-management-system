@@ -21,6 +21,7 @@ import StartCampaignPage from "views/pages/StartCampaignPage";
 import CampaignPage from "views/pages/CampaignPage";
 import ModalBackProject from "views/components/modal/ModalBackProject";
 import ModalThank from "views/components/modal/ModalThank";
+
 const SignInPage = lazy(() => import("views/pages/SignInPage"));
 const UnauthorizePage = lazy(() => import("views/pages/UnauthorizePage"));
 
@@ -28,10 +29,11 @@ const UnauthorizePage = lazy(() => import("views/pages/UnauthorizePage"));
 const AdminDashBoardPage = lazy(() =>
   import("views/pages/Admin/AdminDashBoardPage")
 );
-const ConfigPage = lazy(() =>
-  import("views/pages/Admin/ConfigPage")
-);
+const ConfigPage = lazy(() => import("views/pages/Admin/ConfigPage"));
 const AccountListPage = lazy(() => import("views/pages/Admin/AccountListPage"));
+const AccountDetailPage = lazy(() =>
+  import("views/pages/Admin/AccountDetailPage")
+);
 const CourseDetailPage = lazy(() =>
   import("views/pages/Admin/CourseDetailPage")
 );
@@ -71,7 +73,7 @@ const ManagerDashboardPage = lazy(() =>
 const ManagerReportListPage = lazy(() =>
   import("views/pages/Manager/ManagerReportListPage")
 );
-const TraineeDetailPage = lazy(() =>
+const ManagerRoleTraineeDetailPage = lazy(() =>
   import("views/pages/Manager/TraineeDetailPage")
 );
 const TraineeListPage = lazy(() =>
@@ -139,7 +141,9 @@ const TrainerTrainingPlanPage = lazy(() =>
 const EvaluateExcelPage = lazy(() =>
   import("views/pages/Trainer/EvaluateExcelPage")
 );
-const UserDetailPage = lazy(() => import("views/pages/Trainer/UserDetailPage"));
+const TrainerRoleTraineeDetailPage = lazy(() =>
+  import("views/pages/Trainer/TraineeDetailPage")
+);
 
 // Trainee Page
 const TraineeCourseDetailPage = lazy(() =>
@@ -188,6 +192,10 @@ const router = createBrowserRouter([
           {
             path: "/account-list",
             element: <AccountListPage></AccountListPage>,
+          },
+          {
+            path: "/account-list/:userId",
+            element: <AccountDetailPage></AccountDetailPage>,
           },
           {
             path: "/course-list/:courseId",
@@ -265,7 +273,9 @@ const router = createBrowserRouter([
           },
           {
             path: "/trainee-list/:traineeId",
-            element: <TraineeDetailPage></TraineeDetailPage>,
+            element: (
+              <ManagerRoleTraineeDetailPage></ManagerRoleTraineeDetailPage>
+            ),
           },
           {
             path: "/trainee-list",
@@ -364,8 +374,10 @@ const router = createBrowserRouter([
             element: <TrainerTrainingPlanPage></TrainerTrainingPlanPage>,
           },
           {
-            path: "/user-detail",
-            element: <UserDetailPage></UserDetailPage>,
+            path: "/trainee/:traineeId",
+            element: (
+              <TrainerRoleTraineeDetailPage></TrainerRoleTraineeDetailPage>
+            ),
           },
         ],
       },

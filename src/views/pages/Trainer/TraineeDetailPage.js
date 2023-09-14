@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Divider,
   Link,
@@ -11,85 +11,105 @@ import {
   Card,
   CardContent,
   SvgIcon,
+  Avatar,
+  useTheme,
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
+import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
+import { userPath } from "logic/api/apiUrl";
+import { defaultUserIcon, genderOptions } from "logic/constants/global";
+import { fDate } from "logic/utils/formatTime";
+import { useParams } from "react-router-dom";
 
-const UserDetailPage = () => {
+const TraineeDetailPage = () => {
+  const { traineeId } = useParams();
+  const axiosPrivate = useAxiosPrivate();
+  const [trainee, setTrainee] = useState([]);
+
+  useEffect(() => {
+    async function fetchTraineeDetail() {
+      try {
+        const response = await axiosPrivate.get(
+          userPath.GET_TRAINEE_BY_ID + traineeId
+        );
+        setTrainee(response.data);
+      } catch (error) {}
+    }
+    fetchTraineeDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const userAvatar = trainee?.avatarURL || defaultUserIcon;
+  const theme = useTheme();
+
   return (
     <MainCard>
-      <div className="absolute right-12 mt-4 rounded"></div>
-      <div className="w-full h-[140px] bg-gray-500"></div>
+      <div className="w-full h-[140px] bg-gray-500 rounded"></div>
       <div className="flex flex-col items-center -mt-20">
-        <img
-          src="https://vojislavd.com/ta-template-demo/assets/img/profile.jpg"
-          alt="Profile"
-          className="w-40 border-4 border-white rounded-full"
+        <Avatar
+          src={userAvatar}
+          onError={(e) => {
+            e.target.src = defaultUserIcon;
+          }}
+          sx={{
+            ...theme.typography.mediumAvatar,
+            margin: "8px 0 8px 8px !important",
+            cursor: "pointer",
+          }}
+          className="w-32 h-32 border-4 border-white rounded-full pointer-events-none"
         />
-        <div className="flex items-center space-x-2 mt-2">
-          <Typography variant="h6">Amanda Ross</Typography>
-          <span className="bg-blue-500 rounded-full p-1" title="Verified">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="text-gray-100 h-2.5 w-2.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="4"
-                d="M5 13l4 4L19 7"
-              ></path>
-            </svg>
-          </span>
+        <div className="flex items-center space-x-2">
+          <Typography variant="h3">
+            {trainee.firstName + " " + trainee.lastName}
+          </Typography>
         </div>
-        <Typography className="text-gray-700">
-          Senior Software Engineer at Tailwind CSS
-        </Typography>
-        <Typography className="text-sm text-gray-500">New York, USA</Typography>
       </div>
-      <h4 class="text-xl text-gray-900 font-bold text-left ml-2">
-        Personal Info
+      <h4 className="text-xl text-gray-900 font-bold text-left ml-2 mt-5">
+        Thông tin cá nhân
       </h4>
       <List className="mt-2 text-gray-700">
         <ListItem className="flex border-y py-2">
-          <Typography className="font-bold w-24">Full name:</Typography>
-          <ListItemText primary="Amanda S. Ross" />
-        </ListItem>
-        <Divider />
-        <ListItem className="flex border-b py-2">
-          <Typography className="font-bold w-24">Birthday:</Typography>
-          <ListItemText primary="24 Jul, 1991" />
-        </ListItem>
-        <Divider />
-        <ListItem className="flex border-b py-2">
-          <Typography className="font-bold w-24">Joined:</Typography>
-          <ListItemText primary="10 Jan 2022 (25 days ago)" />
-        </ListItem>
-        <Divider />
-        <ListItem className="flex border-b py-2">
-          <Typography className="font-bold w-24">Mobile:</Typography>
-          <ListItemText primary="(123) 123-1234" />
+          <Typography className="font-bold w-24">Họ và tên:</Typography>
+          <ListItemText primary={trainee.firstName + " " + trainee.lastName} />
         </ListItem>
         <Divider />
         <ListItem className="flex border-b py-2">
           <Typography className="font-bold w-24">Email:</Typography>
-          <ListItemText primary="amandaross@example.com" />
+          <ListItemText primary={trainee.email} />
         </ListItem>
         <Divider />
         <ListItem className="flex border-b py-2">
-          <Typography className="font-bold w-24">Location:</Typography>
-          <ListItemText primary="New York, US" />
+          <Typography className="font-bold w-24">Số ĐT:</Typography>
+          <ListItemText primary={trainee.phoneNumber} />
         </ListItem>
         <Divider />
         <ListItem className="flex border-b py-2">
-          <Typography className="font-bold w-24">Languages:</Typography>
-          <ListItemText primary="English, Spanish" />
+          <Typography className="font-bold w-24">Giới tính:</Typography>
+          <ListItemText
+            primary={
+              genderOptions.find((option) => option.value === trainee.gender)
+                ?.label
+            }
+          />
+        </ListItem>
+        <Divider />
+        <ListItem className="flex border-b py-2">
+          <Typography className="font-bold w-24">Địa chỉ:</Typography>
+          <ListItemText primary={trainee.address} />
+        </ListItem>
+        <Divider />
+        <ListItem className="flex border-b py-2">
+          <Typography className="font-bold w-24">Ngày sinh:</Typography>
+          <ListItemText primary={fDate(trainee.birthday)} />
+        </ListItem>
+        <Divider />
+        <ListItem className="flex border-b py-2">
+          <Typography className="font-bold w-24">Vị trí:</Typography>
+          <ListItemText primary={trainee.positionName} />
         </ListItem>
       </List>
 
-      <Grid container spacing={3} className="mt-4">
+      <Grid container spacing={3} className="mt-2">
         <Grid item xs={12} lg={4}>
           <Card className="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl">
             <CardContent>
@@ -98,7 +118,7 @@ const UserDetailPage = () => {
                   variant="subtitle1"
                   className="font-bold text-indigo-600"
                 >
-                  Total Revenue
+                  Công việc hoàn thành
                 </Typography>
                 <Typography
                   variant="caption"
@@ -126,22 +146,6 @@ const UserDetailPage = () => {
                     >
                       $8,141
                     </Typography>
-                    <div className="flex items-center ml-2 mb-1">
-                      <SvgIcon className="w-5 h-5 text-green-500">
-                        <path
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          fill="none"
-                          d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                        />
-                      </SvgIcon>
-                      <Typography
-                        variant="subtitle2"
-                        className="font-bold text-sm text-gray-500 ml-0.5"
-                      >
-                        3%
-                      </Typography>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -157,7 +161,7 @@ const UserDetailPage = () => {
                   variant="subtitle1"
                   className="font-bold text-sm text-green-600"
                 >
-                  New Orders
+                  Khóa học hoàn thành
                 </Typography>
                 <Typography
                   variant="caption"
@@ -185,22 +189,6 @@ const UserDetailPage = () => {
                     >
                       217
                     </Typography>
-                    <div className="flex items-center ml-2 mb-1">
-                      <SvgIcon className="w-5 h-5 text-green-500">
-                        <path
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          fill="none"
-                          d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                        />
-                      </SvgIcon>
-                      <Typography
-                        variant="subtitle2"
-                        className="font-bold text-sm text-gray-500 ml-0.5"
-                      >
-                        5%
-                      </Typography>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -216,7 +204,7 @@ const UserDetailPage = () => {
                   variant="subtitle1"
                   className="font-bold text-sm text-blue-600"
                 >
-                  New Connections
+                  Kỹ năng nhận thêm
                 </Typography>
                 <Typography
                   variant="caption"
@@ -244,22 +232,6 @@ const UserDetailPage = () => {
                     >
                       54
                     </Typography>
-                    <div className="flex items-center ml-2 mb-1">
-                      <SvgIcon className="w-5 h-5 text-green-500">
-                        <path
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          fill="none"
-                          d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                        />
-                      </SvgIcon>
-                      <Typography
-                        variant="subtitle2"
-                        className="font-bold text-sm text-gray-500 ml-0.5"
-                      >
-                        7%
-                      </Typography>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -268,12 +240,12 @@ const UserDetailPage = () => {
         </Grid>
       </Grid>
 
-      <Paper className="flex-1 bg-white rounded-lg shadow-xl mt-4 p-8">
+      <Paper className="flex-1 bg-white rounded-lg shadow-xl mt-10 px-6 py-3">
         <Typography variant="h4" className="text-xl text-gray-900 font-bold">
-          Activity log
+          Nhật ký công việc
         </Typography>
         <div className="relative px-4">
-          <div className="absolute h-full border border-dashed border-opacity-20 border-secondary"></div>
+          <div className="absolute h-full border border-dashed border-opacity-60 border-secondary"></div>
 
           {/* Timeline item */}
           <div className="flex items-center w-full my-6 -ml-1.5">
@@ -396,4 +368,4 @@ const UserDetailPage = () => {
   );
 };
 
-export default UserDetailPage;
+export default TraineeDetailPage;

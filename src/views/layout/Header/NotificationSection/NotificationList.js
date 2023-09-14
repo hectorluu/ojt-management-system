@@ -19,7 +19,7 @@ import {
   IconCertificate,
   IconCalendarEvent,
   IconBuildingCommunity,
-  IconBellRinging
+  IconBellRinging,
 } from "@tabler/icons";
 import { notiStyle } from "logic/constants/global";
 
@@ -37,7 +37,11 @@ const ListItemWrapper = styled("div")(({ theme }) => ({
 
 // ==============================|| NOTIFICATION LIST ITEM ||============================== //
 
-export default function NotificationList({ notiList = [], isLoading = false, onClickRead = () => { } }) {
+export default function NotificationList({
+  notiList = [],
+  isLoading = false,
+  onClickRead = () => {},
+}) {
   const theme = useTheme();
 
   const chipSX = {
@@ -106,12 +110,16 @@ export default function NotificationList({ notiList = [], isLoading = false, onC
                 <Skeleton variant="circular" width={40} height={40} />
               </ListItemAvatar>
               <ListItemText>
-                <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                <Skeleton variant="text" sx={{ fontSize: "1rem" }} width={40} />
               </ListItemText>
               <ListItemSecondaryAction>
                 <Grid container justifyContent="flex-end">
                   <Grid item xs={12}>
-                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: "1rem" }}
+                      width={40}
+                    />
                   </Grid>
                 </Grid>
               </ListItemSecondaryAction>
@@ -125,10 +133,18 @@ export default function NotificationList({ notiList = [], isLoading = false, onC
               <Grid item xs={12}>
                 <Grid container>
                   <Grid item>
-                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: "1rem" }}
+                      width={40}
+                    />
                   </Grid>
                   <Grid item>
-                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: "1rem" }}
+                      width={40}
+                    />
                   </Grid>
                 </Grid>
               </Grid>
@@ -141,12 +157,16 @@ export default function NotificationList({ notiList = [], isLoading = false, onC
                 <Skeleton variant="circular" width={40} height={40} />
               </ListItemAvatar>
               <ListItemText>
-                <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                <Skeleton variant="text" sx={{ fontSize: "1rem" }} width={40} />
               </ListItemText>
               <ListItemSecondaryAction>
                 <Grid container justifyContent="flex-end">
                   <Grid item xs={12}>
-                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: "1rem" }}
+                      width={40}
+                    />
                   </Grid>
                 </Grid>
               </ListItemSecondaryAction>
@@ -160,27 +180,40 @@ export default function NotificationList({ notiList = [], isLoading = false, onC
               <Grid item xs={12}>
                 <Grid container>
                   <Grid item>
-                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: "1rem" }}
+                      width={40}
+                    />
                   </Grid>
                   <Grid item>
-                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: "1rem" }}
+                      width={40}
+                    />
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </ListItemWrapper>
-          <Divider /><ListItemWrapper>
+          <Divider />
+          <ListItemWrapper>
             <ListItem alignItems="center">
               <ListItemAvatar>
                 <Skeleton variant="circular" width={40} height={40} />
               </ListItemAvatar>
               <ListItemText>
-                <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                <Skeleton variant="text" sx={{ fontSize: "1rem" }} width={40} />
               </ListItemText>
               <ListItemSecondaryAction>
                 <Grid container justifyContent="flex-end">
                   <Grid item xs={12}>
-                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: "1rem" }}
+                      width={40}
+                    />
                   </Grid>
                 </Grid>
               </ListItemSecondaryAction>
@@ -194,10 +227,18 @@ export default function NotificationList({ notiList = [], isLoading = false, onC
               <Grid item xs={12}>
                 <Grid container>
                   <Grid item>
-                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: "1rem" }}
+                      width={40}
+                    />
                   </Grid>
                   <Grid item>
-                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={40} />
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: "1rem" }}
+                      width={40}
+                    />
                   </Grid>
                 </Grid>
               </Grid>
@@ -210,45 +251,50 @@ export default function NotificationList({ notiList = [], isLoading = false, onC
             <ListItemWrapper onClick={(e) => onClickRead(item)}>
               <ListItem alignItems="center">
                 <ListItemAvatar>
-                  <Avatar>
-                    {getIcon(item.type)}
-                  </Avatar>
+                  <Avatar>{getIcon(item.type)}</Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={item.title} />
               </ListItem>
               <Grid container direction="column" className="list-container">
                 <Grid item xs={12} sx={{ pb: 2 }}>
-                  <Typography variant="subtitle2">
-                    {item.message}
-                  </Typography>
+                  <Typography variant="subtitle2">{item.message}</Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Grid container>
-                    {item.isRead ?
+                    {item.isRead ? (
                       <Grid item>
                         <Chip label="Đã đọc" sx={chipErrorSX} />
-                      </Grid> :
+                      </Grid>
+                    ) : (
                       <Grid item>
                         <Chip label="Mới" sx={chipWarningSX} />
-                      </Grid>}
+                      </Grid>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>
             </ListItemWrapper>
             <Divider />
           </span>
-        ))) :
+        ))
+      ) : (
         <>
           <ListItemWrapper>
-            <Grid container direction="column" className="list-container">
+            <Grid
+              container
+              direction="column"
+              className="list-container"
+              alignItems="center"
+            >
               <Grid item xs={12} sx={{ pb: 2 }}>
                 <Typography variant="subtitle2" align="center">
-                  Không có thông báo!!!
+                  Không có thông báo mới.
                 </Typography>
               </Grid>
             </Grid>
           </ListItemWrapper>
-        </>}
+        </>
+      )}
     </List>
   );
-};
+}

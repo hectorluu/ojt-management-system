@@ -123,7 +123,7 @@ const AssignedTraineeListPage = () => {
                         type="button"
                         kind="ghost"
                         onClick={() => {
-                          navigate("/user-detail");
+                          navigate("/trainee/" + item.id);
                         }}
                       >
                         Chi tiết

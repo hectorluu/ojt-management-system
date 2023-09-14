@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import signalRService from "logic/utils/signalRService";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 
 // material-ui
 import { useTheme } from "@mui/material/styles";
@@ -34,30 +34,34 @@ import NotificationList from "./NotificationList";
 import { IconBell } from "@tabler/icons";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { notificationPath } from "logic/api/apiUrl";
-import { notiOptions, notiOptionsVaue, signalRMessage } from "logic/constants/global";
+import {
+  notiOptions,
+  notiOptionsVaue,
+  signalRMessage,
+} from "logic/constants/global";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
-  '& .MuiBadge-badge': {
+  "& .MuiBadge-badge": {
     boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    '&::after': {
-      position: 'absolute',
+    "&::after": {
+      position: "absolute",
       top: 0,
       left: 0,
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%',
-      animation: 'ripple 1.2s infinite ease-in-out',
-      border: '1px solid currentColor',
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
+      animation: "ripple 1.2s infinite ease-in-out",
+      border: "1px solid currentColor",
       content: '""',
     },
   },
-  '@keyframes ripple': {
-    '0%': {
-      transform: 'scale(.8)',
+  "@keyframes ripple": {
+    "0%": {
+      transform: "scale(.8)",
       opacity: 1,
     },
-    '100%': {
-      transform: 'scale(2.4)',
+    "100%": {
+      transform: "scale(2.4)",
       opacity: 0,
     },
   },
@@ -132,7 +136,11 @@ export default function NotificationSection() {
   const fetchNotifications = async () => {
     try {
       setIsLoading(true);
-      const res = await axiosPrivate.get(`${notificationPath.GET_NOTIFICATION_LIST}${value !== notiOptionsVaue.ALL ? "?statusRead=" + value : ""}`);
+      const res = await axiosPrivate.get(
+        `${notificationPath.GET_NOTIFICATION_LIST}${
+          value !== notiOptionsVaue.ALL ? "?statusRead=" + value : ""
+        }`
+      );
       setNotiList(res.data);
       setIsLoading(false);
     } catch (err) {
@@ -174,9 +182,13 @@ export default function NotificationSection() {
       >
         <ButtonBase sx={{ borderRadius: "12px" }}>
           <StyledBadge
-            color={notiList.filter(item => !item.isRead).length > 0 ? "error" : "success"}
+            color={
+              notiList.filter((item) => !item.isRead).length > 0
+                ? "error"
+                : "success"
+            }
             overlap="circular"
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
             variant="dot"
           >
             <Avatar
@@ -251,7 +263,9 @@ export default function NotificationSection() {
                             </Typography>
                             <Chip
                               size="small"
-                              label={notiList.filter(item => !item.isRead).length}
+                              label={
+                                notiList.filter((item) => !item.isRead).length
+                              }
                               sx={{
                                 color: theme.palette.background.default,
                                 bgcolor: theme.palette.warning.dark,
@@ -266,6 +280,7 @@ export default function NotificationSection() {
                             variant="subtitle2"
                             color="primary"
                             onClick={markAllAsRead}
+                            className="ml-1"
                           >
                             Đánh dấu tất cả đã đọc
                           </Typography>
@@ -311,7 +326,8 @@ export default function NotificationSection() {
                         <NotificationList
                           notiList={notiList}
                           isLoading={isLoading}
-                          onClickRead={onClickRead} />
+                          onClickRead={onClickRead}
+                        />
                       </PerfectScrollbar>
                     </Grid>
                   </Grid>
@@ -323,4 +339,4 @@ export default function NotificationSection() {
       </Popper>
     </>
   );
-};
+}
