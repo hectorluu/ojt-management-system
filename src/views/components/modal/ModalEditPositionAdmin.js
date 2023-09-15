@@ -6,19 +6,20 @@ import { positionPath } from "logic/api/apiUrl";
 import { useForm } from "react-hook-form";
 import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
-import { Input } from "views/components/input";
-import { Skeleton } from "@mui/material";
+import { Skeleton, TextField } from "@mui/material";
 
 const ModalEditPositionAdmin = ({
   isOpen,
   onRequestClose,
   positionIdClicked,
   isSubmitLoading,
-  handleUpdatePosition
+  handleUpdatePosition,
+  error
 }) => {
   const axiosPrivate = useAxiosPrivate();
   const [position, setPosition] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [name, setName] = useState("");
 
   const fetchPosition = async () => {
     try {
@@ -44,19 +45,19 @@ const ModalEditPositionAdmin = ({
 
   useEffect(() => {
     if (positionIdClicked) {
-      setValue("name", `${position.name}`);
+      setName(position.name);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [position]);
 
-  const { handleSubmit, control, setValue } = useForm();
+  const { handleSubmit } = useForm();
 
-  const handleEditSkill = async (values) => {
+  const handleEditSkill = async () => {
     handleUpdatePosition({
       id: positionIdClicked,
       status: position.status,
-      ...values,
+      name: name,
     });
     // values, dateOfBirth
   };
@@ -96,11 +97,13 @@ const ModalEditPositionAdmin = ({
             <FormGroup>
               <Label>Tên vị trí (*)</Label>
               {isLoading ? <Skeleton height={60} /> :
-                <Input
-                  control={control}
+                <TextField
+                  error={error?.name ? true : false}
+                  helperText={error?.name}
                   name="name"
-                  autoComplete="off"
-                ></Input>
+                  placeholder="Ex: ReactJS"
+                  onChange={(e) => setName(e.target.value)}
+                  onBlur={(e) => setName(e.target.value)} />
               }
             </FormGroup>
 

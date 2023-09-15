@@ -55,6 +55,7 @@ const PositionListPage = () => {
   const [isEditPositionModalOpen, setIsEditPositionModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+  const [error, setError] = useState({});
 
   useEffect(() => {
     fetchPositions();
@@ -84,12 +85,12 @@ const PositionListPage = () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}`
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}`
       );
       setPosition(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -139,7 +140,8 @@ const PositionListPage = () => {
 
   const handleAddNewPosition = async (values) => {
     const valid = positionValid(values);
-    if (valid) {
+    setError(valid)
+    if (Object.keys(valid).length === 0) {
       try {
         setIsSubmitLoading(true);
         await axiosPrivate.post(positionPath.CREATE_POSITION, values);
@@ -156,7 +158,8 @@ const PositionListPage = () => {
 
   const handleUpdatePosition = async (values) => {
     const valid = positionValid(values);
-    if (valid) {
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
       try {
         setIsSubmitLoading(true);
         await axiosPrivate.put(positionPath.UPDATE_POSITION + values.id, {
@@ -201,12 +204,14 @@ const PositionListPage = () => {
         positionIdClicked={positionModalId}
         isSubmitLoading={isSubmitLoading}
         handleUpdatePosition={handleUpdatePosition}
+        error={error}
       ></ModalEditPositionAdmin>
       <ModalAddPositionAdmin
         isOpen={isAddPositionModalOpen}
         onRequestClose={() => setIsAddPositionModalOpen(false)}
         isSubmitLoading={isSubmitLoading}
         handleAddNewPosition={handleAddNewPosition}
+        error={error}
       ></ModalAddPositionAdmin>
 
       <Popover

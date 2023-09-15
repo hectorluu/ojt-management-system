@@ -1,29 +1,30 @@
 import {
   courseOptions,
   defaultCourseImage,
-  positionOptions,
   skillLevel,
 } from "logic/constants/global";
 import { Fragment, useEffect, useState } from "react";
-import { Input, Textarea } from "views/components/input";
 import ImageUpload from "views/components/image/ImageUpload";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
-import { Dropdown } from "views/components/dropdown";
 import { Button } from "views/components/button";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { coursePath, skillPath } from "logic/api/apiUrl";
+import { coursePath, positionPath, skillPath } from "logic/api/apiUrl";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "logic/config/firebase/firebase";
 import { courseNoti } from "logic/constants/notification";
 import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from "react-router-dom";
+import { Autocomplete, IconButton, Stack, TextField, TextareaAutosize } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { courseValid } from "logic/utils/validateUtils";
 
 const CreateNewCoursePage = () => {
   const axiosPrivate = useAxiosPrivate();
-  const { handleSubmit, control, reset, getValues } = useForm();
+  const { handleSubmit, getValues } = useForm();
   const [coursePosition, setCoursePosition] = useState([
     { positionId: "", isCompulsory: "" },
   ]);
@@ -33,11 +34,20 @@ const CreateNewCoursePage = () => {
   const [skillList, setSkillList] = useState([]);
   const [coursePic, setCoursePic] = useState(null);
   const [filteredSkillList, setFilteredSkillList] = useState([]);
+  const [positionList, setPositionList] = useState([]);
   const [filteredPositionList, setFilteredPositionList] = useState([]);
   const [imageURL, setImageURL] = useState();
+  const [error, setError] = useState({});
+  const [name, setName] = useState("");
+  const [platformName, setPlatformName] = useState("");
+  const [link, setLink] = useState("");
+  const [description, setDescription] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchSkills();
+    fetchPositions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -47,7 +57,7 @@ const CreateNewCoursePage = () => {
   }, [courseSkills]);
 
   useEffect(() => {
-    removePositionItems(coursePosition, positionOptions);
+    removePositionItems(coursePosition, positionList);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coursePosition]);
 
@@ -67,7 +77,7 @@ const CreateNewCoursePage = () => {
 
   const removePositionItems = (rmItems, items) => {
     const filteredItems = items.filter(
-      (item) => !rmItems.some((rmItem) => item.value === rmItem.position)
+      (item) => !rmItems.some((rmItem) => item.id === rmItem.positionId)
     );
     setFilteredPositionList(filteredItems);
   };
@@ -84,54 +94,45 @@ const CreateNewCoursePage = () => {
     }
   };
 
-  const getDropdownLabel = (
-    index,
-    name,
-    options = [{ value: "", label: "" }],
-    defaultValue = ""
-  ) => {
-    const position = coursePosition.slice();
-    const value = position[index][name] || defaultValue;
-    const label = options.find((label) => label.value === value);
-    return label ? label.label : defaultValue;
-  };
-
-  const handleSelectDropdownOption = (index, name, value) => {
-    const newArray = coursePosition.slice();
-    newArray[index][name] = value;
-    setCoursePosition(newArray);
-  };
-
-  const resetValues = () => {
-    reset({});
+  const fetchPositions = async () => {
+    try {
+      const response = await axiosPrivate.get(
+        positionPath.GET_POSITION_LIST +
+        "?PageSize=" +
+        100000 +
+        "&PageIndex=" +
+        1
+      );
+      setPositionList(response.data.data);
+      setFilteredPositionList(response.data.data);
+      console.log("fetchPositions ~ success", response);
+    } catch (error) {
+      console.log("fetchSkills ~ error", error);
+    }
   };
 
   const handleAddNewCourse = async (values) => {
     try {
       await axiosPrivate.post(coursePath.CREATE_COURSE, {
-        ...values,
+        name,
+        platformName,
+        description,
+        link,
+        imageURL,
         coursePosition,
         courseSkills,
-        imageURL,
       });
       toast.success(courseNoti.SUCCESS.CREATE);
-      resetValues();
-      setCoursePosition([{ positionId: "", isCompulsory: "" }]);
-      setCourseSkills([
-        { skillId: "", recommendedLevel: "", afterwardLevel: "" },
-      ]);
-      setCoursePic(null);
+      navigate("/course-list");
     } catch (error) {
       toast.error(error);
     }
   };
 
-
-
   const handleAddPositionField = () => {
     if (
       filteredPositionList.length > 0 &&
-      coursePosition.length < positionOptions.length
+      coursePosition.length < positionList.length
     ) {
       const newField = {
         positionId: "",
@@ -144,34 +145,34 @@ const CreateNewCoursePage = () => {
   };
 
   async function uploadFile() {
-    if (coursePic) {
-      try {
-        const imageRef = ref(storage, "images/courses/" + coursePic.name);
-        await uploadBytes(imageRef, coursePic).then(async (snapshot) => {
-          await getDownloadURL(snapshot.ref).then(async (downloadURL) => {
-            await setImageURL(downloadURL);
-            console.log(imageURL);
-          })
-        });
-      } catch (e) {
-        toast.error(e);
-      }
-    } else {
-      setImageURL(defaultCourseImage);
+    const course = {
+      name,
+      platformName,
+      description,
+      link,
+      coursePosition,
+      courseSkills,
     }
+    const valid = courseValid(course);
+    setError(valid);
+    if(Object.keys(valid).length > 0) {
+      if (coursePic) {
+        try {
+          const imageRef = ref(storage, "images/courses/" + coursePic.name);
+          await uploadBytes(imageRef, coursePic).then(async (snapshot) => {
+            await getDownloadURL(snapshot.ref).then(async (downloadURL) => {
+              await setImageURL(downloadURL);
+              console.log(imageURL);
+            })
+          });
+        } catch (e) {
+          toast.error(e);
+        }
+      } else {
+        setImageURL(defaultCourseImage);
+      }
+    };
   }
-
-  const getSkillDropdownLabel = (
-    index,
-    name,
-    options = [{ value: "", label: "" }],
-    defaultValue = ""
-  ) => {
-    const skills = courseSkills.slice();
-    const value = skills[index][name] || defaultValue;
-    const label = options.find((label) => label.id === value);
-    return label ? label.name : defaultValue;
-  };
 
   const handleAddSkillField = () => {
     if (
@@ -195,16 +196,22 @@ const CreateNewCoursePage = () => {
     setCourseSkills(newArray);
   };
 
-  const getLevelDropdownLabel = (
-    index,
-    name,
-    options = [{ value: "", label: "" }],
-    defaultValue = ""
-  ) => {
-    const levels = courseSkills.slice();
-    const value = levels[index][name] !== undefined ? levels[index][name] : defaultValue;
-    const label = options.find((label) => label.value === value);
-    return label !== undefined ? label.label : defaultValue;
+  const handleSelectDropdownOption = (index, name, value) => {
+    const newArray = coursePosition.slice();
+    newArray[index][name] = value;
+    setCoursePosition(newArray);
+  };
+
+  const handleRemoveSkillField = () => {
+    let temp = courseSkills.slice();
+    temp.pop();
+    setCourseSkills(temp);
+  };
+
+  const handleRemovePositionField = () => {
+    let temp = coursePosition.slice();
+    temp.pop();
+    setCoursePosition(temp);
   };
 
   return (
@@ -218,39 +225,53 @@ const CreateNewCoursePage = () => {
             <FormRow>
               <FormGroup>
                 <Label>Tên khóa học (*)</Label>
-                <Input
-                  control={control}
+                <TextField
+                  error={error?.name ? true : false}
+                  helperText={error?.name}
                   name="name"
                   placeholder="Ex: Object-oriented programming"
-                  autoComplete="off"
-                ></Input>
+                  onChange={(e) => setName(e.target.value)}
+                  onBlur={(e) => setName(e.target.value)} />
               </FormGroup>
               <FormGroup>
                 <Label>Nền tảng (*)</Label>
-                <Input
-                  control={control}
+                <TextField
+                  error={error?.platformName ? true : false}
+                  helperText={error?.platformName}
                   name="platformName"
                   placeholder="Ex: Udemy"
-                  autoComplete="off"
-                ></Input>
+                  onChange={(e) => setPlatformName(e.target.value)}
+                  onBlur={(e) => setPlatformName(e.target.value)} />
               </FormGroup>
             </FormRow>
             <FormGroup>
               <Label>Link (*)</Label>
-              <Input
-                control={control}
+              <TextField
+                error={error?.link ? true : false}
+                helperText={error?.link}
                 name="link"
-                placeholder=""
-                autoComplete="off"
-              ></Input>
+                placeholder="Ex: Udemy"
+                onChange={(e) => setLink(e.target.value)}
+                onBlur={(e) => setLink(e.target.value)} />
             </FormGroup>
             <FormGroup>
               <Label>Mô tả khóa học *</Label>
-              <Textarea
-                name="description"
-                placeholder="Viết mô tả về khóa học...."
-                control={control}
-              ></Textarea>
+              <TextField
+                multiline
+                error={error?.description ? true : false}
+                helperText={error?.description}
+                fullWidth
+                InputProps={{
+                  inputComponent: TextareaAutosize,
+                  inputProps: {
+                    minRows: 5,
+                    maxRows: 8,
+                    placeholder: "Viết mô tả về khóa học....",
+                    onChange: (e) => setDescription(e.target.value),
+                    onKeyDown: (e) => setDescription(e.target.value),
+                  }
+                }}
+              />
             </FormGroup>
             <FormRow>
               <FormGroup>
@@ -276,167 +297,134 @@ const CreateNewCoursePage = () => {
             {/* This is the line to separate between section */}
             <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
             {coursePosition.map((coursePositions, index) => (
-              <FormRow key={index}>
-                <FormGroup>
-                  <Label>Vị trí (*)</Label>
-                  <Dropdown>
-                    <Dropdown.Select
-                      placeholder={getDropdownLabel(
-                        index,
-                        "position",
-                        positionOptions,
-                        "Lựa chọn"
-                      )}
-                    ></Dropdown.Select>
-                    <Dropdown.List>
-                      {filteredPositionList.map((option) => (
-                        <Dropdown.Option
-                          key={option.value}
-                          onClick={() =>
-                            handleSelectDropdownOption(
-                              index,
-                              "positionId",
-                              option.value
-                            )
-                          }
-                        >
-                          <span className="capitalize">{option.label}</span>
-                        </Dropdown.Option>
-                      ))}
-                    </Dropdown.List>
-                  </Dropdown>
-                </FormGroup>
-                <FormGroup>
-                  <Label>Bắt buộc / Không bắt buộc (*)</Label>
-                  <Dropdown>
-                    <Dropdown.Select
-                      placeholder={getDropdownLabel(
-                        index,
-                        "isCompulsory",
-                        courseOptions,
-                        "Lựa chọn"
-                      )}
-                    ></Dropdown.Select>
-                    <Dropdown.List>
-                      {courseOptions.map((option) => (
-                        <Dropdown.Option
-                          key={option.value}
-                          onClick={() =>
-                            handleSelectDropdownOption(
-                              index,
-                              "isCompulsory",
-                              option.value
-                            )
-                          }
-                        >
-                          <span className="capitalize">{option.label}</span>
-                        </Dropdown.Option>
-                      ))}
-                    </Dropdown.List>
-                  </Dropdown>
-                </FormGroup>
-              </FormRow>
+              <div key={index}>
+                <FormRow key={index}>
+                  <FormGroup>
+                    <Label>Vị trí (*)</Label>
+                    <Autocomplete
+                      disablePortal={false}
+                      options={filteredPositionList}
+                      getOptionLabel={(option) => option.name}
+                      renderInput={(params) => <TextField {...params} placeholder="Chọn vị trí"
+                        error={error?.coursePosition?.[index]?.positionId ? true : false} helperText={error?.coursePosition?.[index]?.positionId} />}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          handleSelectDropdownOption(
+                            index,
+                            "positionId",
+                            newValue.id
+                          )
+                        } else {
+                          handleSelectDropdownOption(
+                            index,
+                            "positionId",
+                            ""
+                          )
+                        }
+                      }}
+                      isOptionEqualToValue={(option, value) => option.id === value.id}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label>Bắt buộc / Không bắt buộc (*)</Label>
+                    <Autocomplete
+                      disablePortal={false}
+                      options={courseOptions}
+                      renderInput={(params) => <TextField {...params} placeholder="Lựa chọn"
+                        error={error?.coursePosition?.[index]?.isCompulsory ? true : false} helperText={error?.coursePosition?.[index]?.isCompulsory} />}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          handleSelectDropdownOption(
+                            index,
+                            "isCompulsory",
+                            newValue.value
+                          )
+                        } else {
+                          handleSelectDropdownOption(
+                            index,
+                            "isCompulsory",
+                            ""
+                          )
+                        }
+                      }}
+                    />
+                  </FormGroup>
+                </FormRow>
+              </div>
             ))}
-            <button
-              className="rounded-full"
-              type="button"
-              onClick={() => handleAddPositionField()}
-            >
-              <AddIcon></AddIcon> Thêm vị trí
-            </button>
+            <Stack direction="row" spacing={1} justifyContent="center">
+              <IconButton color="error" aria-label="delete" onClick={() => handleRemovePositionField()}>
+                <DeleteIcon />
+              </IconButton>
+              <IconButton color="primary" aria-label="delete" onClick={() => handleAddPositionField()}>
+                <AddIcon />
+              </IconButton>
+            </Stack>
             <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
             {courseSkills.map((courseSkills, index) => (
               <div key={index}>
                 <FormGroup>
                   <Label>Kỹ năng (*)</Label>
-                  <Dropdown>
-                    <Dropdown.Select
-                      placeholder={getSkillDropdownLabel(
-                        index,
-                        "skillId",
-                        skillList,
-                        "Lựa chọn"
-                      )}
-                    ></Dropdown.Select>
-                    <Dropdown.List>
-                      {filteredSkillList.map((option) => (
-                        <Dropdown.Option
-                          key={option.id}
-                          onClick={() =>
-                            onChangeCourseSkill(index, "skillId", option.id)
-                          }
-                        >
-                          <span className="capitalize">{option.name}</span>
-                        </Dropdown.Option>
-                      ))}
-                    </Dropdown.List>
-                  </Dropdown>
+                  <Autocomplete
+                    disablePortal={false}
+                    options={filteredSkillList}
+                    getOptionLabel={(option) => option.name}
+                    renderInput={(params) => <TextField {...params} placeholder="Chọn kỹ năng"
+                      error={error?.courseSkills?.[index]?.skillId ? true : false} helperText={error?.courseSkills?.[index]?.skillId} />}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        onChangeCourseSkill(index, "skillId", newValue.id);
+                      } else {
+                        onChangeCourseSkill(index, "skillId", "");
+                      }
+                    }}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                  />
                 </FormGroup>
                 <FormRow>
                   <FormGroup>
                     <Label>Trình độ khuyến nghị (*)</Label>
-                    <Dropdown>
-                      <Dropdown.Select
-                        placeholder={getLevelDropdownLabel(
-                          index,
-                          "recommendedLevel",
-                          skillLevel,
-                          "Lựa chọn"
-                        )}
-                      ></Dropdown.Select>
-                      <Dropdown.List>
-                        {skillLevel.map((option) => (
-                          <Dropdown.Option
-                            key={option.value}
-                            onClick={() =>
-                              onChangeCourseSkill(
-                                index,
-                                "recommendedLevel",
-                                option.value
-                              )
-                            }
-                          >
-                            <span className="capitalize">{option.label}</span>
-                          </Dropdown.Option>
-                        ))}
-                      </Dropdown.List>
-                    </Dropdown>
+                    <Autocomplete
+                      disablePortal={false}
+                      options={skillLevel}
+                      renderInput={(params) => <TextField {...params} placeholder="Lựa chọn"
+                        error={error?.courseSkills?.[index]?.recommendedLevel ? true : false} helperText={error?.courseSkills?.[index]?.recommendedLevel} />}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          onChangeCourseSkill(index, "recommendedLevel", newValue.value);
+                        } else {
+                          onChangeCourseSkill(index, "recommendedLevel", "");
+                        }
+                      }}
+                    />
                   </FormGroup>
                   <FormGroup>
                     <Label>Trình độ hoàn thành (*)</Label>
-                    <Dropdown>
-                      <Dropdown.Select
-                        placeholder={getLevelDropdownLabel(
-                          index,
-                          "afterwardLevel",
-                          skillLevel,
-                          "Lựa chọn"
-                        )}
-                      ></Dropdown.Select>
-                      <Dropdown.List>
-                        {skillLevel.map((option) => (
-                          <Dropdown.Option
-                            key={option.value}
-                            onClick={() =>
-                              onChangeCourseSkill(
-                                index,
-                                "afterwardLevel",
-                                option.value
-                              )
-                            }
-                          >
-                            <span className="capitalize">{option.label}</span>
-                          </Dropdown.Option>
-                        ))}
-                      </Dropdown.List>
-                    </Dropdown>
+                    <Autocomplete
+                      disablePortal={false}
+                      options={skillLevel}
+                      renderInput={(params) => <TextField {...params} placeholder="Lựa chọn"
+                        error={error?.courseSkills?.[index]?.afterwardLevel ? true : false} helperText={error?.courseSkills?.[index]?.afterwardLevel} />}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          onChangeCourseSkill(index, "afterwardLevel", newValue.value);
+                        } else {
+                          onChangeCourseSkill(index, "afterwardLevel", "");
+                        }
+                      }}
+                    />
                   </FormGroup>
                 </FormRow>
               </div>
             ))}
-            <button type="button" onClick={() => handleAddSkillField()}>
-              Thêm kỹ năng
-            </button>
+            <Stack direction="row" spacing={1} justifyContent="center">
+              <IconButton color="error" aria-label="delete" onClick={() => handleRemoveSkillField()}>
+                <DeleteIcon />
+              </IconButton>
+              <IconButton color="primary" aria-label="delete" onClick={() => handleAddSkillField()}>
+                <AddIcon />
+              </IconButton>
+            </Stack>
             <div className="mt-5 text-center">
               <Button
                 type="submit"

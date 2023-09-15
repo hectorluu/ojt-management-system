@@ -30,7 +30,7 @@ import { accountValid } from "logic/utils/validateUtils";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, Stack, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 
@@ -61,7 +61,7 @@ const CreateNewAccountPage = () => {
   const [batchId, setBatchId] = useState(0);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState([]);
+  const [error, setError] = useState({});
   const navigate = useNavigate();
 
   const {
@@ -190,7 +190,7 @@ const CreateNewAccountPage = () => {
     };
     const valid = accountValid(account);
     setError(valid);
-    if (valid.length === 0) {
+    if (Object.keys(valid).length === 0) {
       if (avatar) {
         try {
           const imageRef = ref(storage, "images/users/" + avatar.name);
@@ -285,7 +285,7 @@ const CreateNewAccountPage = () => {
 
   const handleRemoveField = (index) => {
     let temp = createSkills.slice();
-    temp.splice(index, 1);
+    temp.pop();
     setCreateSkills(temp);
   };
 
@@ -293,7 +293,6 @@ const CreateNewAccountPage = () => {
     const newArray = createSkills.slice();
     newArray[index][name] = value;
     setCreateSkills(newArray);
-    console.log(createSkills);
   };
 
   return (
@@ -308,8 +307,8 @@ const CreateNewAccountPage = () => {
               <FormGroup>
                 <Label>Họ (*)</Label>
                 <TextField
-                  error={error.lastName ? true : false}
-                  helperText={error.lastName}
+                  error={error?.lastName ? true : false}
+                  helperText={error?.lastName}
                   name="lastName"
                   placeholder="Họ"
                   onChange={(e) => setLastName(e.target.value)}
@@ -318,8 +317,8 @@ const CreateNewAccountPage = () => {
               <FormGroup>
                 <Label>Tên (*)</Label>
                 <TextField
-                  error={error.firstName ? true : false}
-                  helperText={error.firstName}
+                  error={error?.firstName ? true : false}
+                  helperText={error?.firstName}
                   name="firstName"
                   placeholder="Tên"
                   onChange={(e) => setFirstName(e.target.value)}
@@ -328,8 +327,8 @@ const CreateNewAccountPage = () => {
               <FormGroup>
                 <Label>Số điện thoại (*)</Label>
                 <TextField
-                  error={error.phoneNumber ? true : false}
-                  helperText={error.phoneNumber}
+                  error={error?.phoneNumber ? true : false}
+                  helperText={error?.phoneNumber}
                   name="phoneNumber"
                   placeholder="1234567890"
                   onChange={(e) => setPhoneNumber(e.target.value)}
@@ -342,8 +341,8 @@ const CreateNewAccountPage = () => {
               <FormGroup>
                 <Label>Email (*)</Label>
                 <TextField
-                  error={error.email ? true : false}
-                  helperText={error.email}
+                  error={error?.email ? true : false}
+                  helperText={error?.email}
                   name="email"
                   placeholder="admin@gmail.com"
                   onChange={(e) => setEmail(e.target.value)}
@@ -352,8 +351,8 @@ const CreateNewAccountPage = () => {
               <FormGroup>
                 <Label>Địa chỉ (*)</Label>
                 <TextField
-                  error={error.address ? true : false}
-                  helperText={error.address}
+                  error={error?.address ? true : false}
+                  helperText={error?.address}
                   name="address"
                   placeholder="Ex: số 54 Liễu Giai, Phường Cống Vị, Quận Ba Đình, Hà Nội..."
                   onChange={(e) => setAddress(e.target.value)}
@@ -367,7 +366,7 @@ const CreateNewAccountPage = () => {
                   disablePortal={false}
                   id="combo-box-demo"
                   options={genderOptions}
-                  renderInput={(params) => <TextField {...params} placeholder="Chọn giới tính" error={error.gender ? true : false} helperText={error.gender} />}
+                  renderInput={(params) => <TextField {...params} placeholder="Chọn giới tính" error={error?.gender ? true : false} helperText={error?.gender} />}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setGender(newValue.value);
@@ -381,6 +380,14 @@ const CreateNewAccountPage = () => {
                 <Label>Ngày sinh (*)</Label>
                 <DatePicker
                   onChange={(newValue) => setBirthDay(newValue.toDate())}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      variant: 'outlined',
+                      error: error?.birthday ? true : false,
+                      helperText: error?.birthday,
+                    },
+                  }}
                 />
               </FormGroup>
             </FormRow>
@@ -393,7 +400,7 @@ const CreateNewAccountPage = () => {
                   disablePortal={false}
                   id="combo-box-demo"
                   options={roleOptions}
-                  renderInput={(params) => <TextField {...params} placeholder="Chọn chức vụ" error={error.role ? true : false} helperText={error.role} />}
+                  renderInput={(params) => <TextField {...params} placeholder="Chọn chức vụ" error={error?.role ? true : false} helperText={error?.role} />}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       handleSelectRoleDropdownOption(newValue.value);
@@ -412,8 +419,8 @@ const CreateNewAccountPage = () => {
                     <FormGroup>
                       <Label>Mã số nhân viên (*)</Label>
                       <TextField
-                        error={error.rollNumber ? true : false}
-                        helperText={error.rollNumber}
+                        error={error?.rollNumber ? true : false}
+                        helperText={error?.rollNumber}
                         name="rollNumber"
                         placeholder="Ex: KNS1234"
                         onChange={(e) => setRollNumber(e.target.value)}
@@ -426,7 +433,7 @@ const CreateNewAccountPage = () => {
                         id="combo-box-demo"
                         options={positionList}
                         getOptionLabel={(option) => option.name}
-                        renderInput={(params) => <TextField {...params} placeholder="Chọn vị trí" error={error.position ? true : false} helperText={error.position} />}
+                        renderInput={(params) => <TextField {...params} placeholder="Chọn vị trí" error={error?.position ? true : false} helperText={error?.position} />}
                         onChange={(event, newValue) => {
                           if (newValue) {
                             setPosition(newValue.id);
@@ -486,8 +493,8 @@ const CreateNewAccountPage = () => {
                     <FormGroup>
                       <Label>Mã số sinh viên (*)</Label>
                       <TextField
-                        error={error.studentCode ? true : false}
-                        helperText={error.studentCode}
+                        error={error?.studentCode ? true : false}
+                        helperText={error?.studentCode}
                         name="studentCode"
                         placeholder="Ex: SE150056"
                         onChange={(e) => setStudentCode(e.target.value)}
@@ -500,7 +507,7 @@ const CreateNewAccountPage = () => {
                         id="combo-box-demo"
                         options={ojtBatchList}
                         getOptionLabel={(option) => option.name}
-                        renderInput={(params) => <TextField {...params} placeholder="Chọn kì thực tập" error={error.batchId ? true : false} helperText={error.batchId} />}
+                        renderInput={(params) => <TextField {...params} placeholder="Chọn kì thực tập" error={error?.batchId ? true : false} helperText={error?.batchId} />}
                         onChange={(event, newValue) => {
                           if (newValue) {
                             setBatchId(newValue.id);
@@ -523,7 +530,8 @@ const CreateNewAccountPage = () => {
                             id="combo-box-demo"
                             options={filteredSkillList}
                             getOptionLabel={(option) => option.name}
-                            renderInput={(params) => <TextField {...params} placeholder="Chọn kỹ năng" error={error.createSkills[index].skillId ? true : false} helperText={error.createSkills[index].skillId} />}
+                            renderInput={(params) => <TextField {...params} placeholder="Chọn kỹ năng"
+                              error={error?.createSkills?.[index]?.skillId ? true : false} helperText={error?.createSkills?.[index]?.skillId} />}
                             onChange={(event, newValue) => {
                               if (newValue) {
                                 onChangeUserSkill(index, "skillId", newValue.id);
@@ -540,7 +548,8 @@ const CreateNewAccountPage = () => {
                             disablePortal={false}
                             id="combo-box-demo"
                             options={skillLevel}
-                            renderInput={(params) => <TextField {...params} placeholder="Chọn trình độ" type="number" error={error.createSkills[index].initLevel ? true : false} helperText={error.createSkills[index].initLevel} />}
+                            renderInput={(params) => <TextField {...params} placeholder="Chọn trình độ" type="number"
+                              error={error?.createSkills?.[index]?.initLevel ? true : false} helperText={error?.createSkills?.[index]?.initLevel} />}
                             onChange={(event, newValue) => {
                               if (newValue) {
                                 onChangeUserSkill(
@@ -559,14 +568,16 @@ const CreateNewAccountPage = () => {
                           />
                         </FormGroup>
                       </FormRow>
-                      <IconButton color="error" aria-label="delete" onClick={() => handleRemoveField(index)}>
-                        <DeleteIcon />
-                      </IconButton>
                     </div>
                   ))}
-                  <IconButton color="primary" aria-label="delete" onClick={() => handleAddField()}>
-                    <AddIcon />
-                  </IconButton>
+                  <Stack direction="row" spacing={1} justifyContent="center">
+                    <IconButton color="error" aria-label="delete" onClick={() => handleRemoveField()}>
+                      <DeleteIcon />
+                    </IconButton>
+                    <IconButton color="primary" aria-label="delete" onClick={() => handleAddField()}>
+                      <AddIcon />
+                    </IconButton>
+                  </Stack>
                 </>
               )}
             <div className="mt-5 text-center">

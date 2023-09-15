@@ -46,12 +46,20 @@ const TraineeCourseListPage = () => {
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
   useEffect(() => {
-    signalRService.on(signalRMessage.COURSE, (message) => {
+    signalRService.on(signalRMessage.COURSE.CREATED, (message) => {
+      fetchCourses();
+    });
+    signalRService.on(signalRMessage.COURSE.UPDATED, (message) => {
+      fetchCourses();
+    });
+    signalRService.on(signalRMessage.COURSE.DELETED, (message) => {
       fetchCourses();
     });
 
     return () => {
-      signalRService.off(signalRMessage.COURSE);
+      signalRService.off(signalRMessage.COURSE.CREATED);
+      signalRService.off(signalRMessage.COURSE.DELETED);
+      signalRService.off(signalRMessage.COURSE.UPDATED);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -61,16 +69,16 @@ const TraineeCourseListPage = () => {
       setIsLoading(true); // Set loading to true before fetching data
       let response = await axiosPrivate.get(
         coursePath.GET_COURSE_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&filterSkill=" +
-          `${skill === null ? "" : skill}` +
-          "&filterPosition=" +
-          `${position === null ? "" : position}`
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&filterSkill=" +
+        `${skill === null ? "" : skill}` +
+        "&filterPosition=" +
+        `${position === null ? "" : position}`
       );
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -100,12 +108,12 @@ const TraineeCourseListPage = () => {
     try {
       const response = await axiosPrivate.get(
         skillPath.GET_SKILL_LIST +
-          "?PageIndex=" +
-          1 +
-          "&PageSize=" +
-          100000 +
-          "&filterStatus=" +
-          skillStatus.ACTIVE
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        100000 +
+        "&filterStatus=" +
+        skillStatus.ACTIVE
       );
       setSkillList(response.data.data);
     } catch (error) {
@@ -117,12 +125,12 @@ const TraineeCourseListPage = () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-          "?PageIndex=" +
-          1 +
-          "&PageSize=" +
-          100000 +
-          "&filterStatus=" +
-          positionStatus.ACTIVE
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        100000 +
+        "&filterStatus=" +
+        positionStatus.ACTIVE
       );
       setPositionList(response.data.data);
     } catch (error) {

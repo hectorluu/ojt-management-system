@@ -51,8 +51,8 @@ const ModalAddSkillAdmin = ({ isOpen, onRequestClose, handleAddNewSkill, isLoadi
               <FormGroup>
                 <Label>Tên kĩ năng (*)</Label>
                 <TextField
-                  // error={error.rollNumber}
-                  // helperText={error.rollNumber}
+                  error={error?.name?true:false}
+                  helperText={error?.name}
                   name="name"
                   placeholder="Ex: ReactJS"
                   onChange={(e) => setName(e.target.value)}

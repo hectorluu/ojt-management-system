@@ -4,58 +4,69 @@ import LayoutAuthentication from "../layout/LayoutAuthentication";
 import FormGroup from "views/components/common/FormGroup";
 import { useForm } from "react-hook-form";
 import { Label } from "views/components/label";
-import { Input } from "views/components/input";
 import { IconEyeToggle } from "views/components/icons";
 import { Button } from "views/components/button";
 import { useDispatch } from "react-redux";
 import { authLogin } from "logic/store/auth/auth-slice";
 import { loginValid } from "logic/utils/validateUtils";
+import { TextField } from "@mui/material";
 const SignInPage = () => {
-  const { handleSubmit, control } = useForm();
+  const { handleSubmit } = useForm();
   const { value: showPassword, handleToggleValue: handleTogglePassword } =
     useToggleValue();
   const dispatch = useDispatch();
   // const handleSignIn = (values) => {
   //   dispatch(authLogin(values));
   // };
-  const handleSignIn = async (values) => {
+  const handleSignIn = async () => {
     setIsLoading(true); // Set loading state
-    const valid = loginValid(values)
-    if (valid) {
+    const valid = loginValid({ email, password });
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
       // Simulate a delay of 0.5 seconds
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      dispatch(authLogin(values));
+      dispatch(authLogin({ email, password }));
     }
     setIsLoading(false);
   };
 
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState({});
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <LayoutAuthentication heading="KNS OJT Management">
       <form onSubmit={handleSubmit(handleSignIn)}>
         <FormGroup>
           <Label htmlFor="email">Email *</Label>
-          <Input
-            control={control}
+          <TextField
+            error={error.email ? true : false}
+            helperText={error.email}
             name="email"
             placeholder="example@gmail.com"
-          ></Input>
+            onChange={(e) => setEmail(e.target.value)}
+            onBlur={(e) => setEmail(e.target.value)} />
         </FormGroup>
         <FormGroup>
           <Label htmlFor="password">Password *</Label>
-          <Input
-            control={control}
+          <TextField
+            error={error.password ? true : false}
+            helperText={error.password}
             name="password"
-            type={`${showPassword ? "text" : "password"}`}
             placeholder="Enter Password"
-          >
-            <IconEyeToggle
-              open={showPassword}
-              onClick={handleTogglePassword}
-            ></IconEyeToggle>
-          </Input>
+            type={`${showPassword ? "text" : "password"}`}
+            onChange={(e) => setPassword(e.target.value)}
+            onBlur={(e) => setPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <IconEyeToggle
+                  open={showPassword}
+                  onClick={handleTogglePassword}
+                ></IconEyeToggle>
+              ),
+            }} />
         </FormGroup>
         <FormGroup>
           <div className="text-right">
