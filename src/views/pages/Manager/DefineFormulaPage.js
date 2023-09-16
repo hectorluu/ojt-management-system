@@ -1,14 +1,12 @@
 import Gap from "views/components/common/Gap";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
-import { Typography, Paper, Chip, Stack, Card } from "@mui/material";
+import { Typography, Paper, Chip, Stack, Card, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
-import { Input } from "views/components/input";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { formulaPath } from "logic/api/apiUrl";
 import { formulaNoti } from "logic/constants/notification";
@@ -85,6 +83,8 @@ const DefineFormulaPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
   const [keyList, setKeyList] = useState([]);
+  const [error, setError] = useState({});
+  const [name, setName] = useState("");
   const navigate = useNavigate();
 
   const handleCategoryClick = (category) => {
@@ -139,24 +139,19 @@ const DefineFormulaPage = () => {
 
   const handleTextareaKeyDown = (event) => { };
 
-  const { handleSubmit, control, reset, getValues } = useForm();
-
-  const resetValues = () => {
-    reset({});
-  };
+  const { handleSubmit } = useForm();
 
   const handleAddNewFormula = async () => {
     setIsLoadingSubmit(true);
     const formula = {
-      name: getValues("name"),
+      name: name,
       calculation: calculation,
     };
     const valid = formulaValid(formula);
-    if(valid){
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
       try {
         await axiosPrivate.post(formulaPath.CREATE_FORMULA, formula);
-        resetValues();
-        setCalculation("");
         toast.success(formulaNoti.SUCCESS.CREATE);
         setIsLoadingSubmit(false);
         navigate("/list-formula");
@@ -178,16 +173,16 @@ const DefineFormulaPage = () => {
         </div>
 
         <form onSubmit={handleSubmit(handleAddNewFormula)}>
-          <FormRow>
-            <FormGroup className="bg-white">
-              <Label>Tên công thức *</Label>
-              <Input
-                control={control}
-                name="name"
-                placeholder="Nhập tên công thức"
-              ></Input>
-            </FormGroup>
-          </FormRow>
+          <FormGroup className="bg-white">
+            <Label>Tên công thức *</Label>
+            <TextField
+              error={error?.name ? true : false}
+              helperText={error?.name}
+              name="name"
+              placeholder="Nhập tên công thức"
+              onChange={(e) => setName(e.target.value)}
+              onBlur={(e) => setName(e.target.value)} />
+          </FormGroup>
           <div className="flex justify-center"></div>
 
           <div className="flex justify-center">
@@ -206,7 +201,7 @@ const DefineFormulaPage = () => {
                 alignItems="center"
                 spacing={2}
               >
-                {formulaOptions.map((category) => (
+                {formulaOptions?.map((category) => (
                   <LoadingButton
                     key={category.value}
                     component="label"
@@ -235,30 +230,38 @@ const DefineFormulaPage = () => {
               elevation={3}
               className="w-full min-h-fit"
             >
-              {keyList.map((key) => (
+              {keyList.length !== 0 ? (keyList?.map((key) => (
                 <ListItem key={key.key}>
                   <Chip
                     label={key.name}
                     onClick={() => handleChipClick(key)}
                   />
                 </ListItem>
-              ))}
+              ))) : (
+                <p>Không có từ khoá nào</p>
+              )}
             </Paper>
           </div>
-
           <div className="flex justify-center mt-5">
-            <StyledTextarea
-              ref={textareaRef}
-              minRows={5}
-              maxRows={8}
-              placeholder="Điền công thức tính"
-              value={calculation}
-              onChange={handleTextareaChange}
-              onKeyDown={handleTextareaKeyDown}
-              control={control}
+            <TextField
+              multiline
+              error={error?.calculation ? true : false}
+              helperText={error?.calculation}
+              fullWidth
+              InputProps={{
+                inputComponent: StyledTextarea,
+                inputProps: {
+                  minRows: 5,
+                  maxRows: 8,
+                  placeholder: "Điền công thức tính",
+                  value: calculation,
+                  onChange: handleTextareaChange,
+                  onKeyDown: handleTextareaKeyDown,
+                  ref: textareaRef
+                }
+              }}
             />
           </div>
-
           <div className="mt-5 text-center">
             <ButtonC
               type="submit"

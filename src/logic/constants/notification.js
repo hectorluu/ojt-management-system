@@ -50,6 +50,17 @@ export const courseNoti = {
   ERROR: {
     SKILL_OVERFLOW: "Đã đạt giới hạn số kỹ năng của hệ thống!!!",
     POSITION_OVERFLOW: "Đã đạt giới hạn số vị trí của hệ thống!!!",
+    BLANK_NAME: "Tên khoá học không được để trống!!!",
+    BLANK_PLATFORM_NAME: "Tên nền tảng không được để trống!!!",
+    BLANK_DESCRIPTION: "Mô tả không được để trống!!!",
+    BLANK_LINK: "Đường dẫn không được để trống!!!",
+    BLANK_IMG_URL: "Ảnh không được để trống!!!",
+    BLANK_COURSE_POSITION: "Vị trí không được để trống!!!",
+    BLANK_IS_COMPULSORY: "Chọn ràng buộc cho khoá học!!!",
+    BLANK_COURSE_SKILL: "Kỹ năng không được để trống!!!",
+    BLANK_RECOMMEND_LEVEL: "Trình độ không được để trống!!!",
+    BLANK_AFTERWARD_LEVEL: "Trình độ không được để trống!!!",
+    AFTERWARD_LEVEL_TOO_LOW: "Trình độ sau phải cao hơn trình độ trước!!!",
   },
 };
 

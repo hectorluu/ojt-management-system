@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import { Label } from "views/components/label";
-import { Input } from "views/components/input";
 import { Button } from "views/components/button";
 import { useForm } from "react-hook-form";
 import FormGroup from "views/components/common/FormGroup";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { skillPath } from "logic/api/apiUrl";
-import { Skeleton } from "@mui/material";
+import { Skeleton, TextField } from "@mui/material";
 
-const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked, handleUpdateSkill, isSubmitLoading }) => {
+const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked, handleUpdateSkill, isSubmitLoading, error }) => {
   const axiosPrivate = useAxiosPrivate();
   const [skill, setSkill] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [name, setName] = useState("");
 
   const fetchSkill = async () => {
     try {
@@ -38,19 +38,19 @@ const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked, handleU
 
   useEffect(() => {
     if (skillIdClicked) {
-      setValue("name", `${skill.name}`);
+      setName(skill.name);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skill]);
 
-  const { handleSubmit, control, setValue } = useForm();
+  const { handleSubmit } = useForm();
 
-  const handleEditSkill = async (values) => {
+  const handleEditSkill = async () => {
     await handleUpdateSkill({
       id: skillIdClicked,
       status: skill.status,
-      ...values,
+      name: name,
     });
   };
 
@@ -89,11 +89,14 @@ const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked, handleU
             <FormGroup>
               <Label>Tên kĩ năng (*)</Label>
               {isLoading ? <Skeleton height={60} /> :
-                <Input
-                  control={control}
+                <TextField
+                  error={error?.name ? true : false}
+                  helperText={error?.name}
                   name="name"
-                  autoComplete="off"
-                ></Input>
+                  defaultValue={name}
+                  placeholder="Ex: ReactJS"
+                  onChange={(e) => setName(e.target.value)}
+                  onBlur={(e) => setName(e.target.value)} />
               }
 
             </FormGroup>

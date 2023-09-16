@@ -1,72 +1,61 @@
-import { accountNoti, authNoti, configNoti, formulaNoti, positionNoti, skillNoti, templateNoti } from "logic/constants/notification";
+import { accountNoti, authNoti, configNoti, courseNoti, formulaNoti, positionNoti, skillNoti, templateNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
 import { configOptions, configType, emailRegex, phoneRegex, roleExchange } from "logic/constants/global";
 
 export function formulaValid(formula) {
+  let error = {};
   if (!formula.name) {
-    toast.error(formulaNoti.ERROR.BLANK_NAME);
-    return false;
+    error["name"] = formulaNoti.ERROR.BLANK_NAME;
   }
   if (!formula.calculation) {
-    toast.error(formulaNoti.ERROR.BLANK_CALCULATION);
-    return false;
+    error["calculation"] = formulaNoti.ERROR.BLANK_CALCULATION;
   }
-  return true;
+  return error;
 };
 
 export function reportValid(report) {
+  let error = {};
   if (!report.name || report.name === "") {
-    toast.error(templateNoti.ERROR.BLANK_NAME);
-    return false;
+    error["name"] = templateNoti.ERROR.BLANK_NAME;
   };
   if (report.universityId <= 0) {
-    toast.error(templateNoti.ERROR.BLANK_UNIVERSITY);
-    return false;
-  };
-  if (!report.file) {
-    toast.error(templateNoti.ERROR.BLANK_FILE);
-    return false;
+    error["universityId"] = templateNoti.ERROR.BLANK_UNIVERSITY;
   };
   if (!report.startCell || report.startCell === "") {
-    toast.error(templateNoti.ERROR.BLANK_START_CELL);
-    return false;
+    error["startCell"]=templateNoti.ERROR.BLANK_START_CELL;
   };
-  if (report.templateHeaders.some(item => item.name === "" || item.name === undefined || item.name === null)) {
-    toast.error(templateNoti.ERROR.BLANK_HEADER_NAME);
-    return false;
-  };
-  for (let i = 0; i < report.templateHeaders.length; i++) {
-    if (report.templateHeaders[i].isCriteria && (!report.templateHeaders[i].maxPoint || report.templateHeaders[i].maxPoint <= 0 || report.templateHeaders[i].maxPoint === "")) {
-      toast.error(templateNoti.ERROR.BLANK_MAX_POINT);
-      return false;
-    };
-  };
-  return true;
+  // if (report.templateHeaders.some(item => item.name === "" || item.name === undefined || item.name === null)) {
+  //   error(templateNoti.ERROR.BLANK_HEADER_NAME);
+  // };
+  // for (let i = 0; i < report.templateHeaders.length; i++) {
+  //   if (report.templateHeaders[i].isCriteria && (!report.templateHeaders[i].maxPoint || report.templateHeaders[i].maxPoint <= 0 || report.templateHeaders[i].maxPoint === "")) {
+  //     error(templateNoti.ERROR.BLANK_MAX_POINT);
+  //   };
+  // };
+  return error;
 };
 
 export function accountValid(account) {
-  let error = [];
-  if (emailRegex.test(account.email) === false) {
-    error["email"] = accountNoti.ERROR.EMAIL_FORMAT;
-  };
-  if (phoneRegex.test(account.phoneNumber) === false) {
-    error["phoneNumber"] = accountNoti.ERROR.PHONE_FORMAT;
-  };
-  if ((new Date().getFullYear() - account.birthday?.getFullYear() + 1) < 18) {
-    error["birthday"] = accountNoti.ERROR.BIRTHDAY_ERROR;
-  };
+  let error = {};
   if (account.firstName === "" || account.firstName === undefined || account.firstName === null) {
     error["firstName"] = accountNoti.ERROR.BLANK_FIRST_NAME;
-    console.log(error);
   };
   if (account.lastName === "" || account.lastName === undefined || account.lastName === null) {
     error["lastName"] = accountNoti.ERROR.BLANK_LAST_NAME;
   };
   if (account.phoneNumber === "" || account.phoneNumber === undefined || account.phoneNumber === null) {
     error["phoneNumber"] = accountNoti.ERROR.BLANK_PHONE;
+  } else {
+    if (phoneRegex.test(account.phoneNumber) === false) {
+      error["phoneNumber"] = accountNoti.ERROR.PHONE_FORMAT;
+    };
   };
   if (account.email === "" || account.email === undefined || account.email === null) {
     error["email"] = accountNoti.ERROR.BLANK_EMAIL;
+  } else {
+    if (emailRegex.test(account.email) === false) {
+      error["email"] = accountNoti.ERROR.EMAIL_FORMAT;
+    };
   };
   if (account.address === "" || account.address === undefined || account.address === null) {
     error["address"] = accountNoti.ERROR.BLANK_ADDRESS;
@@ -76,6 +65,10 @@ export function accountValid(account) {
   };
   if (!account.birthday) {
     error["birthday"] = accountNoti.ERROR.BLANK_BIRTHDAY;
+  } else {
+    if ((new Date().getFullYear() - account.birthday?.getFullYear() + 1) < 18) {
+      error["birthday"] = accountNoti.ERROR.BIRTHDAY_ERROR;
+    };
   };
   if (!account.role) {
     error["role"] = accountNoti.ERROR.BLANK_ROLE;
@@ -100,25 +93,78 @@ export function accountValid(account) {
         if (!error["createSkills"]) {
           error["createSkills"] = [{ skillId: "", initLevel: "" }];
         } else {
-          error["createSkills"] = [...{ skillId: "", initLevel: "" }];
+          error["createSkills"] = [...error["createSkills"], { skillId: "", initLevel: "" }];
         }
         if (!account.createSkills[i].skillId) {
           error["createSkills"][i]["skillId"] = accountNoti.ERROR.BLANK_SKILL;
         }
-        if (account.createSkills[i].initLevel < 1) {
-          error["createSkills"][i]["initLevel"] = accountNoti.ERROR.INIT_LEVEL_ERROR;
-        }
         if (!account.createSkills[i].initLevel) {
           error["createSkills"][i]["initLevel"] = accountNoti.ERROR.BLANK_INIT_LEVEL;
+        } else {
+          if (account.createSkills[i].initLevel < 1) {
+            error["createSkills"][i]["initLevel"] = accountNoti.ERROR.INIT_LEVEL_ERROR;
+          }
         }
       };
     };
   };
+  console.log(error);
   return error;
 };
 
 export function courseValid(course) {
+  let error = {};
+  if (course.name === "" || course.name === undefined || course.name === null) {
+    error["name"] = courseNoti.ERROR.BLANK_NAME;
+  };
+  if (course.platformName === "" || course.platformName === undefined || course.platformName === null) {
+    error["platformName"] = courseNoti.ERROR.BLANK_PLATFORM_NAME;
+  };
+  if (course.description === "" || course.description === undefined || course.description === null) {
+    error["description"] = courseNoti.ERROR.BLANK_DESCRIPTION;
+  };
+  if (course.link === "" || course.link === undefined || course.link === null) {
+    error["link"] = courseNoti.ERROR.BLANK_LINK;
+  };
+  for (let i = 0; i < course.coursePosition.length; i++) {
+    if (!course.coursePosition[i].positionId || !course.coursePosition[i].isCompulsory) {
+      if (!error["coursePosition"]) {
+        error["coursePosition"] = [{ positionId: "", isCompulsory: "" }];
+      } else {
+        error["coursePosition"] = [...error["coursePosition"], { positionId: "", isCompulsory: "" }];
+      }
+      if (!course.coursePosition[i].positionId) {
+        error["coursePosition"][i]["positionId"] = courseNoti.ERROR.BLANK_COURSE_POSITION;
+      }
+      if (!course.coursePosition[i].isCompulsory) {
+        error["coursePosition"][i]["isCompulsory"] = courseNoti.ERROR.BLANK_IS_COMPULSORY;
+      }
+    };
+  };
+  for (let i = 0; i < course.courseSkills.length; i++) {
+    if (!course.courseSkills[i].skillId || !course.courseSkills[i].recommendedLevel || !course.courseSkills[i].afterwardLevel) {
+      if (!error["courseSkills"]) {
+        error["courseSkills"] = [{ skillId: "", recommendedLevel: "", afterwardLevel: "" }];
+      } else {
+        error["courseSkills"] = [...error["courseSkills"], { skillId: "", recommendedLevel: "", afterwardLevel: "" }];
+      };
+      if (!course.courseSkills[i].skillId) {
+        error["courseSkills"][i]["skillId"] = courseNoti.ERROR.BLANK_COURSE_SKILL;
+      };
+      if (!course.courseSkills[i].recommendedLevel) {
+        error["courseSkills"][i]["recommendedLevel"] = courseNoti.ERROR.BLANK_RECOMMEND_LEVEL;
+      };
+      if (!course.courseSkills[i].afterwardLevel) {
+        error["courseSkills"][i]["afterwardLevel"] = courseNoti.ERROR.BLANK_AFTERWARD_LEVEL;
+      } else {
+        if (course.courseSkills[i].afterwardLevel <= course.courseSkills[i].recommendedLevel) {
+          error["courseSkills"][i]["afterwardLevel"] = courseNoti.ERROR.AFTERWARD_LEVEL_TOO_LOW;
+        };
+      };
+    };
+  };
 
+  return error;
 };
 
 export function ojtBatchValid(ojtBatch) {
@@ -126,19 +172,19 @@ export function ojtBatchValid(ojtBatch) {
 };
 
 export function positionValid(position) {
+  let error = {};
   if (position.name === "" || position.name === undefined || position.name === null) {
-    toast.error(positionNoti.ERROR.BLANK_NAME);
-    return false;
+    error["name"] = positionNoti.ERROR.BLANK_NAME;
   };
-  return true;
+  return error;
 };
 
 export function skillValid(skill) {
+  let error = {};
   if (skill.name === "" || skill.name === undefined || skill.name === null) {
-    toast.error(skillNoti.ERROR.BLANK_NAME);
-    return false;
+    error["name"] = skillNoti.ERROR.BLANK_NAME;
   };
-  return true;
+  return error;
 };
 
 export function universityValid(university) {
@@ -146,19 +192,17 @@ export function universityValid(university) {
 };
 
 export function loginValid(user) {
-  if (!user.email || user.email === "") {
-    toast.error(authNoti.ERROR.BLANK_EMAIL);
-    return false;
-  };
+  let error = {};
   if (emailRegex.test(user.email) === false) {
-    toast.error(authNoti.ERROR.EMAIL_VALID);
-    return false;
+    error["email"] = authNoti.ERROR.EMAIL_VALID;
+  };
+  if (!user.email || user.email === "") {
+    error["email"] = authNoti.ERROR.BLANK_EMAIL;
   };
   if (!user.password || user.password === "") {
-    toast.error(authNoti.ERROR.BLANK_PASSWORD);
-    return false;
+    error["password"] = authNoti.ERROR.BLANK_PASSWORD;
   };
-  return true;
+  return error;
 };
 
 

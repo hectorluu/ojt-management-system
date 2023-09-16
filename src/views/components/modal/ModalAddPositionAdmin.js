@@ -1,17 +1,17 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import FormGroup from "views/components/common/FormGroup";
 import { useForm } from "react-hook-form";
 import { Label } from "views/components/label";
-import { Input } from "views/components/input";
 import { Button } from "views/components/button";
 import ReactModal from "react-modal";
+import { TextField } from "@mui/material";
 
-const ModalAddPositionAdmin = ({ isOpen, onRequestClose, handleAddNewPosition, isSubmitLoading }) => {
-  const { handleSubmit, control, reset } = useForm();
+const ModalAddPositionAdmin = ({ isOpen, onRequestClose, handleAddNewPosition, isSubmitLoading, error }) => {
+  const { handleSubmit } = useForm();
+  const [name, setName] = useState("");
 
-  const handleAdd = async (values) => {
-    await handleAddNewPosition(values);
-    reset();
+  const handleAdd = async () => {
+    await handleAddNewPosition(name);
   };
 
   return (
@@ -49,12 +49,13 @@ const ModalAddPositionAdmin = ({ isOpen, onRequestClose, handleAddNewPosition, i
             <form onSubmit={handleSubmit(handleAdd)}>
               <FormGroup>
                 <Label>Tên vị trí (*)</Label>
-                <Input
-                  control={control}
+                <TextField
+                  error={error?.name ? true : false}
+                  helperText={error?.name}
                   name="name"
-                  placeholder="Ex: Frontend Developer"
-                  autoComplete="off"
-                ></Input>
+                  placeholder="Ex: ReactJS"
+                  onChange={(e) => setName(e.target.value)}
+                  onBlur={(e) => setName(e.target.value)} />
               </FormGroup>
 
               <div className="mt-5 text-center">

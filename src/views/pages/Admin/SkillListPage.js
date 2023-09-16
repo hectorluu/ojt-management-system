@@ -55,6 +55,7 @@ const SkillListPage = () => {
   const [isAddSkillModalOpen, setIsAddSkillModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+  const [error, setError] = useState({});
 
   useEffect(() => {
     fetchSkills();
@@ -84,12 +85,12 @@ const SkillListPage = () => {
     try {
       const response = await axiosPrivate.get(
         skillPath.GET_SKILL_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}`
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}`
       );
       setSkills(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -138,7 +139,8 @@ const SkillListPage = () => {
 
   const handleAddNewSkill = async (values) => {
     const valid = skillValid(values);
-    if(valid){
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
       try {
         setIsSubmitLoading(true);
         await axiosPrivate.post(skillPath.CREATE_SKILL, values);
@@ -155,8 +157,9 @@ const SkillListPage = () => {
 
   const handleUpdateSkill = async (values) => {
     const valid = skillValid(values);
-    if(valid){
-      try{
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
+      try {
         setIsSubmitLoading(true);
         await axiosPrivate.put(skillPath.UPDATE_SKILL + values.id, {
           name: values.name,
@@ -165,7 +168,7 @@ const SkillListPage = () => {
         setIsSubmitLoading(false);
         setIsSkillDetailModalOpen(false);
         toast.success(skillNoti.SUCCESS.UPDATE);
-      }catch(error){
+      } catch (error) {
         setIsSubmitLoading(false);
         toast.error(skillNoti.ERROR.UPDATE);
       }
@@ -200,12 +203,14 @@ const SkillListPage = () => {
         skillIdClicked={skillModalId}
         handleUpdateSkill={handleUpdateSkill}
         isSubmitLoading={isSubmitLoading}
+        error={error}
       ></ModalSkillDetailAdmin>
       <ModalAddSkillAdmin
         isOpen={isAddSkillModalOpen}
         onRequestClose={() => setIsAddSkillModalOpen(false)}
         isLoading={isSubmitLoading}
         handleAddNewSkill={handleAddNewSkill}
+        error={error}
       ></ModalAddSkillAdmin>
 
       <Popover
