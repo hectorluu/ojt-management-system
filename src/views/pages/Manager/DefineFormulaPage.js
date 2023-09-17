@@ -12,7 +12,7 @@ import { formulaPath } from "logic/api/apiUrl";
 import { formulaNoti } from "logic/constants/notification";
 import { Button as ButtonC } from "views/components/button";
 import { formulaOptions } from "logic/constants/global";
-import LoadingButton from '@mui/lab/LoadingButton';
+import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
 import { formulaValid } from "logic/utils/validateUtils";
 
@@ -52,8 +52,9 @@ const DefineFormulaPage = () => {
     color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
     background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
     border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
-    box-shadow: 0px 2px 2px ${theme.palette.mode === "dark" ? grey[900] : grey[50]
-      };
+    box-shadow: 0px 2px 2px ${
+      theme.palette.mode === "dark" ? grey[900] : grey[50]
+    };
   
     &:hover {
       border-color: ${blue[400]};
@@ -61,7 +62,8 @@ const DefineFormulaPage = () => {
   
     &:focus {
       border-color: ${blue[400]};
-      box-shadow: 0 0 0 3px ${theme.palette.mode === "dark" ? blue[500] : blue[200]
+      box-shadow: 0 0 0 3px ${
+        theme.palette.mode === "dark" ? blue[500] : blue[200]
       };
     }
   
@@ -92,9 +94,7 @@ const DefineFormulaPage = () => {
   };
 
   const handleChipClick = (key) => {
-    setCalculation(
-      (prevValue) => prevValue + `(${key.key})`
-    );
+    setCalculation((prevValue) => prevValue + `(${key.key})`);
   };
 
   const textareaRef = useRef(null);
@@ -104,8 +104,8 @@ const DefineFormulaPage = () => {
       setIsLoading(true);
       let response = await axiosPrivate.get(
         formulaPath.GET_KEY_LIST +
-        "?category=" +
-        `${selectedCategory === null ? "" : selectedCategory}`
+          "?category=" +
+          `${selectedCategory === null ? "" : selectedCategory}`
       );
       setKeyList(response.data);
     } catch (error) {
@@ -137,7 +137,7 @@ const DefineFormulaPage = () => {
     setCalculation(newValue);
   };
 
-  const handleTextareaKeyDown = (event) => { };
+  const handleTextareaKeyDown = (event) => {};
 
   const { handleSubmit } = useForm();
 
@@ -159,7 +159,7 @@ const DefineFormulaPage = () => {
         setIsLoadingSubmit(false);
         toast.error(error);
       }
-    };
+    }
     setIsLoadingSubmit(false);
   };
 
@@ -181,7 +181,8 @@ const DefineFormulaPage = () => {
               name="name"
               placeholder="Nhập tên công thức"
               onChange={(e) => setName(e.target.value)}
-              onBlur={(e) => setName(e.target.value)} />
+              onBlur={(e) => setName(e.target.value)}
+            />
           </FormGroup>
           <div className="flex justify-center"></div>
 
@@ -205,9 +206,15 @@ const DefineFormulaPage = () => {
                   <LoadingButton
                     key={category.value}
                     component="label"
-                    variant={selectedCategory === category.value ? "contained" : "outlined"}
+                    variant={
+                      selectedCategory === category.value
+                        ? "contained"
+                        : "outlined"
+                    }
                     onClick={() => handleCategoryClick(category)}
-                    loading={selectedCategory === category.value ? isLoading : false}
+                    loading={
+                      selectedCategory === category.value ? isLoading : false
+                    }
                   >
                     {category.label}
                   </LoadingButton>
@@ -230,14 +237,16 @@ const DefineFormulaPage = () => {
               elevation={3}
               className="w-full min-h-fit"
             >
-              {keyList.length !== 0 ? (keyList?.map((key) => (
-                <ListItem key={key.key}>
-                  <Chip
-                    label={key.name}
-                    onClick={() => handleChipClick(key)}
-                  />
-                </ListItem>
-              ))) : (
+              {keyList.length !== 0 ? (
+                keyList?.map((key) => (
+                  <ListItem key={key.key}>
+                    <Chip
+                      label={key.name}
+                      onClick={() => handleChipClick(key)}
+                    />
+                  </ListItem>
+                ))
+              ) : (
                 <p>Không có từ khoá nào</p>
               )}
             </Paper>
@@ -257,8 +266,8 @@ const DefineFormulaPage = () => {
                   value: calculation,
                   onChange: handleTextareaChange,
                   onKeyDown: handleTextareaKeyDown,
-                  ref: textareaRef
-                }
+                  ref: textareaRef,
+                },
               }}
             />
           </div>

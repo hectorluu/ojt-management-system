@@ -1,4 +1,3 @@
-import Gap from "views/components/common/Gap";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
 import {
@@ -26,6 +25,7 @@ import useOnChange from "logic/hooks/useOnChange";
 import Chip from "views/components/chip/Chip";
 import MainCard from "views/components/cards/MainCard";
 import SearchIcon from "@mui/icons-material/Search";
+import StyledTableCell from "views/modules/table/StyledTableCell";
 
 const TraineeTaskListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -84,24 +84,24 @@ const TraineeTaskListPage = () => {
           onChange={setSearchTerm}
         />
       </Card>
-      <Gap></Gap>
-      <TableContainer>
+
+      <TableContainer sx={{ width: 1, mt: 2, mb: -2, borderRadius: 4 }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell align="left" width={"30%"}>
+              <StyledTableCell align="left" width={"30%"}>
                 Tên công việc
-              </TableCell>
-              <TableCell align="left" width={"20%"}>
+              </StyledTableCell>
+              <StyledTableCell align="left" width={"20%"}>
                 Ngày giao việc
-              </TableCell>
-              <TableCell align="center" width={"20%"}>
+              </StyledTableCell>
+              <StyledTableCell align="center" width={"20%"}>
                 Hạn hoàn thành
-              </TableCell>
-              <TableCell align="center" width={"20%"}>
+              </StyledTableCell>
+              <StyledTableCell align="center" width={"20%"}>
                 Trạng thái
-              </TableCell>
-              <TableCell align="right" width={"10%"}></TableCell>
+              </StyledTableCell>
+              <StyledTableCell align="right" width={"10%"}></StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>

@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import CachedIcon from "@mui/icons-material/Cached";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {
   Button,
@@ -113,22 +112,7 @@ export const OverviewSales = (props) => {
 
   return (
     <Card sx={sx}>
-      <CardHeader
-        action={
-          <Button
-            color="inherit"
-            size="small"
-            startIcon={
-              <SvgIcon fontSize="small">
-                <CachedIcon />
-              </SvgIcon>
-            }
-          >
-            Sync
-          </Button>
-        }
-        title="Sales"
-      />
+      <CardHeader title="Sales" />
       <CardContent>
         <Chart
           height={350}

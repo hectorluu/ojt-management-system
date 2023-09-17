@@ -38,12 +38,15 @@ export const universityPath = {
 
 export const trainingPlanPath = {
   GET_TRAINING_PLAN_LIST: "/training-plan",
-  GET_TRAINING_PLAN: "",
+  GET_TRAINING_PLAN_OF_TRAINER: "/training-plan/owner",
+  CREATE_NEW_TRAINING_PLAN: "/training-plan",
+  ADD_TRAINING_PLAN_DETAIL: "/training-plan/",
 };
 
 export const userPath = {
   GET_USER_LIST: "/user",
   GET_USER: "/user/",
+  GET_PERSONAL_USER: "/personal-user",
   CREATE_USER: "/user",
   UPADTE_USER: "",
   GET_TRAINEE_LIST: "/user/trainee",
@@ -51,6 +54,10 @@ export const userPath = {
   GET_TRAINER_BY_ID: "/user/trainer/",
   GET_TRAINEE_BY_ID: "/user/trainee/",
   GET_TRAINEE_LIST_BY_TRAINER: "/user/manager/trainee-list/",
+};
+
+export const attendancePath = {
+  GET_ATTENDANCE_FILE: "/attendance/data-of-file-attendance",
 };
 
 export const skillPath = {
