@@ -9,7 +9,8 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import DvrIcon from "@mui/icons-material/Dvr";
 import SensorOccupiedIcon from "@mui/icons-material/SensorOccupied";
 import KeyboardIcon from "@mui/icons-material/Keyboard";
-import SettingsIcon from '@mui/icons-material/Settings';
+import SettingsIcon from "@mui/icons-material/Settings";
+import SchoolIcon from "@mui/icons-material/School";
 
 //items
 const iconsDaskboard = { IconDashboard };
@@ -35,6 +36,7 @@ const iconsPages = {
   SensorOccupiedIcon,
   KeyboardIcon,
   SettingsIcon,
+  SchoolIcon,
 };
 
 const pages = {
@@ -72,6 +74,14 @@ const pages = {
       type: "item",
       url: "/position-list",
       icon: iconsPages.KeyboardIcon,
+      breadcrumbs: false,
+    },
+    {
+      id: "university-list",
+      title: "Trường đại học",
+      type: "item",
+      url: "/university-list",
+      icon: iconsPages.SchoolIcon,
       breadcrumbs: false,
     },
     {

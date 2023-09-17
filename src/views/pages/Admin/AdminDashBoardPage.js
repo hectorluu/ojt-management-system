@@ -2,39 +2,35 @@ import Gap from "views/components/common/Gap";
 import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import CampaignFeature from "views/modules/campaign/CampaignFeature";
-import CampaignGrid from "views/modules/campaign/CampaignGrid";
-import CampaignItem from "views/modules/campaign/CampaignItem";
 import { Fragment } from "react";
 import { useEffect } from "react";
-import { v4 } from "uuid";
+import { Box, Container, Unstable_Grid2 as Grid } from "@mui/material";
+import { OverviewUniversities } from "views/components/chart/OverviewUniversities";
 
 const AdminDashBoardPage = () => {
   const axiosPrivate = useAxiosPrivate();
-  useEffect(() => {
-    async function fetchCampaigns() {
-      try {
-        const response = await axiosPrivate.get("/api/campaigns");
-        console.log("fetchCampaigns ~ response", response);
-      } catch (error) {
-        console.log("fetchCampaigns ~ error", error);
-      }
-    }
-    fetchCampaigns();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
   return (
     <Fragment>
-      <Heading number={2}>Affiliated Universities </Heading>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 1,
+        }}
+      >
+        <Container maxWidth="xl">
+          <Grid container spacing={3}>
+            <Grid xs={12} lg={12}>
+              <OverviewUniversities sx={{ height: "100%" }} />
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
       <CampaignFeature></CampaignFeature>
       <Gap></Gap>
       <Heading number={10}>Current Available Courses </Heading>
-      <CampaignGrid>
-        {Array(4)
-          .fill(0)
-          .map((item) => (
-            <CampaignItem key={v4()}></CampaignItem>
-          ))}
-      </CampaignGrid>
+
       <Gap></Gap>
     </Fragment>
   );

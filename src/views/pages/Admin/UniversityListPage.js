@@ -1,16 +1,30 @@
 import Heading from "views/components/common/Heading";
 import { Fragment, useEffect, useState } from "react";
-import { Button } from "views/components/button";
 import { universityPath } from "logic/api/apiUrl";
-import { defaultPageIndex, defaultPageSize, signalRMessage } from "logic/constants/global";
+import {
+  defaultPageIndex,
+  defaultPageSize,
+  signalRMessage,
+} from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { defaultUniversityImage } from "logic/constants/global";
-import { Skeleton, TablePagination } from "@mui/material";
+import {
+  Button,
+  Card,
+  InputAdornment,
+  OutlinedInput,
+  Skeleton,
+  SvgIcon,
+  TablePagination,
+} from "@mui/material";
 import Gap from "views/components/common/Gap";
 import SearchBar from "views/modules/SearchBar";
 import useOnChange from "logic/hooks/useOnChange";
 import signalRService from "logic/utils/signalRService";
+import MainCard from "views/components/cards/MainCard";
+import SearchIcon from "@mui/icons-material/Search";
+import AddIcon from "@mui/icons-material/Add";
 
 const UniversityListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -27,12 +41,12 @@ const UniversityListPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         universityPath.GET_UNIVERSITY_LIST +
-        "?PageSize=" +
-        rowsPerPage +
-        "&PageIndex=" +
-        page +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}`
+          "?PageSize=" +
+          rowsPerPage +
+          "&PageIndex=" +
+          page +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}`
       );
       setUniversities(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -77,27 +91,42 @@ const UniversityListPage = () => {
   };
 
   return (
-    <Fragment>
-      <div className="flex flex-wrap items-center justify-between">
-        <div className="flex items-center justify-center">
-          <Heading className="text-[2.25rem] font-bold pt-6">
-            Quản lý trường đại học
-          </Heading>
-        </div>
+    <MainCard
+      title={`Danh sách trường đại học`}
+      secondary={
         <Button
-          className="px-7"
-          type="button"
-          href="/create-new-university"
-          kind="secondary"
+          startIcon={
+            <SvgIcon fontSize="small">
+              <AddIcon />
+            </SvgIcon>
+          }
+          component={Link}
+          to="/create-new-university"
+          variant="contained"
+          size="medium"
+          sx={{ borderRadius: "10px" }}
         >
-          Thêm trường đại học mới
+          Thêm mới
         </Button>
-      </div>
-      <div className="flex flex-wrap items-start gap-5 mt-5">
-        <div className=" max-w-[600px] w-full">
-          <SearchBar onChangeSearch={setSearchTerm}></SearchBar>
-        </div>
-      </div>
+      }
+    >
+      {/*Custom search bar*/}
+      <Card className="w-3/5">
+        <OutlinedInput
+          defaultValue=""
+          fullWidth
+          placeholder="Tìm kiếm ..."
+          startAdornment={
+            <InputAdornment position="start">
+              <SvgIcon color="action" fontSize="small">
+                <SearchIcon />
+              </SvgIcon>
+            </InputAdornment>
+          }
+          sx={{ maxWidth: 550 }}
+          onChange={setSearchTerm}
+        />
+      </Card>
       <Gap />
       <div className="pt-[66px]">
         <div className="w-full max-w-[1000px] mx-auto text-center">
@@ -105,34 +134,38 @@ const UniversityListPage = () => {
             {isLoading ? ( // Render skeleton loading when loading is true
               // Use the animate-pulse class for skeleton effect
               <>
-                <div
-                  className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96"
-                >
-                  <Skeleton className="mb-5 w-full h-full max-h-40 object-contain" height={300} />
+                <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
+                  <Skeleton
+                    className="mb-5 w-full h-full max-h-40 object-contain"
+                    height={300}
+                  />
                   <Skeleton className="w-full" />
                   <Skeleton className="w-full" />
                   <Skeleton className="w-full" />
                 </div>
-                <div
-                  className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96"
-                >
-                  <Skeleton className="mb-5 w-full h-full max-h-40 object-contain" height={300} />
+                <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
+                  <Skeleton
+                    className="mb-5 w-full h-full max-h-40 object-contain"
+                    height={300}
+                  />
                   <Skeleton className="w-full" />
                   <Skeleton className="w-full" />
                   <Skeleton className="w-full" />
                 </div>
-                <div
-                  className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96"
-                >
-                  <Skeleton className="mb-5 w-full h-full max-h-40 object-contain" height={300} />
+                <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
+                  <Skeleton
+                    className="mb-5 w-full h-full max-h-40 object-contain"
+                    height={300}
+                  />
                   <Skeleton className="w-full" />
                   <Skeleton className="w-full" />
                   <Skeleton className="w-full" />
                 </div>
-                <div
-                  className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96"
-                >
-                  <Skeleton className="mb-5 w-full h-full max-h-40 object-contain" height={300} />
+                <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
+                  <Skeleton
+                    className="mb-5 w-full h-full max-h-40 object-contain"
+                    height={300}
+                  />
                   <Skeleton className="w-full" />
                   <Skeleton className="w-full" />
                   <Skeleton className="w-full" />
@@ -141,7 +174,7 @@ const UniversityListPage = () => {
             ) : universities.length !== 0 ? (
               universities.map((university) => (
                 <div
-                  className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96"
+                  className="bg-white shadow-1 flex flex-col justify-center items-center px-6 pb-6 rounded-2xl w-full h-96"
                   key={university.id}
                 >
                   <img
@@ -169,9 +202,10 @@ const UniversityListPage = () => {
                     Chọn
                   </Button>
                 </div>
-              ))) :
+              ))
+            ) : (
               <>Không có trường đại học nào được tìm thấy.</>
-            }
+            )}
           </div>
           <TablePagination
             labelRowsPerPage="Số dòng"
@@ -181,11 +215,13 @@ const UniversityListPage = () => {
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+            }
           />
         </div>
       </div>
-    </Fragment>
+    </MainCard>
   );
 };
 

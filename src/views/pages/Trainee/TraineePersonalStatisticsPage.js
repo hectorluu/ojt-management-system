@@ -1,7 +1,6 @@
 import { Box, Container, Grid } from "@mui/material";
 import React from "react";
 import { OverviewBudget } from "views/components/chart/OverviewBudget";
-// import { OverviewSales } from "views/components/chart/OverviewSales";
 import { OverviewTasksProgress } from "views/components/chart/OverviewTasksProgress";
 import { OverviewTotalCustomers } from "views/components/chart/OverviewTotalCustomers";
 import { OverviewTotalProfit } from "views/components/chart/OverviewTotalProfit";

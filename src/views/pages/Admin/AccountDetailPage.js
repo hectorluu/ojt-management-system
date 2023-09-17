@@ -29,7 +29,6 @@ const AccountDetailPage = () => {
   useEffect(() => {
     async function fetchUserDetail() {
       try {
-        console.log(userId);
         const response = await axiosPrivate.get(userPath.GET_USER + userId);
         setUser(response.data);
       } catch (error) {}
@@ -68,7 +67,7 @@ const AccountDetailPage = () => {
 
   return (
     <MainCard>
-      <div className="relative w-full h-[140px] bg-gray-500 rounded">
+      <div className="relative w-full h-[100px] bg-gray-500 rounded">
         {isEditing === false && (
           <Button
             variant="outlined"

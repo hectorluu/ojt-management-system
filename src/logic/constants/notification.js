@@ -23,6 +23,8 @@ export const authNoti = {
 export const accountNoti = {
   SUCCESS: {
     CREATE: "Tạo tài khoản thành công!!!",
+    UPDATE: "Cập nhật tài khoản thành công!!!",
+    UPDATE_PASSWORD: "Cập nhật mật khẩu thành công!!!",
   },
 
   ERROR: {
@@ -97,12 +99,27 @@ export const templateNoti = {
   },
 };
 
+export const trainingPlanNoti = {
+  SUCCESS: {
+    CREATE: "Thành công tạo kế hoạch đào tạo!!!",
+    DELETE: "Thành công xóa kế hoạch đào tạo!!!",
+    ACTIVE: "Thành công kích hoạt kế hoạch đào tạo!!!",
+  },
+
+  ERROR: {
+    BLANK_NAME: "Tên kế hoạch đào tạo không được để trống!!!",
+    BLANK_DESCRIPTION: "Mô tả không được để trống!!!",
+    BLANK_STARTDAY: "Ngày bắt đầu không được để trống!!!",
+    BLANK_ENDDAY: "Ngày kết thúc không được để trống!!!",
+  },
+};
+
 export const formulaNoti = {
   SUCCESS: {
     CREATE: "Thành công tạo công thức tính!!!",
     UPDATE: "Thành công cập nhật công thức tính!!!",
     DELETE: "Thành công xóa công thức tính!!!",
-    ACTIVE: "Thành công kích hoạt công thức tính!!!"
+    ACTIVE: "Thành công kích hoạt công thức tính!!!",
   },
 
   ERROR: {
@@ -143,9 +160,7 @@ export const reportNoti = {
 };
 
 export const generalNoti = {
-  SUCCESS: {
-
-  },
+  SUCCESS: {},
 
   ERROR: {
     SERVER_ERROR: "Lỗi hệ thống!!!",
@@ -153,12 +168,12 @@ export const generalNoti = {
 };
 
 export const skillNoti = {
-  SUCCESS:{
+  SUCCESS: {
     CREATE: "Thành công tạo kỹ năng mới!!!",
     UPDATE: "Thành công cập nhật kỹ năng!!!",
   },
 
-  ERROR:{
+  ERROR: {
     CREATE: "Không tạo được kỹ năng mới!!!",
     UPDATE: "Không cập nhật được kỹ năng!!!",
     BLANK_NAME: "Tên kỹ năng không được để trống!!!",
