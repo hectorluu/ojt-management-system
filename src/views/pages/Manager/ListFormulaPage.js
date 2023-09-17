@@ -14,9 +14,14 @@ import {
   Card,
   OutlinedInput,
   InputAdornment,
+  Popover,
+  MenuItem,
+  IconButton,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import StyledTableCell from "views/modules/table/StyledTableCell";
 import SearchIcon from "@mui/icons-material/Search";
 import {
@@ -32,6 +37,10 @@ import Chip from "views/components/chip/Chip";
 import SubCard from "views/components/cards/SubCard";
 import { formulaNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
+import { useTheme } from "@emotion/react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 
 const ListFormulaPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -41,23 +50,46 @@ const ListFormulaPage = () => {
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isLoading, setIsLoading] = useState(true);
   const [formulaList, setFormulaList] = useState([]);
+  // Popover
+  const [open, setOpen] = useState(null); // use for AnchorEl
+  const [selectedItem, setSelectedItem] = useState({}); // use for data of row selected
+  const [status, setStatus] = useState("");
+
+  const handleOpenMenu = (event, item) => {
+    setOpen(event.currentTarget);
+    setSelectedItem(item);
+  };
+
+  const handleCloseMenu = () => {
+    setOpen(null);
+  };
+
+  const theme = useTheme();
+  const navigate = useNavigate();
+
+  const handleClickFormulaDetail = (formulaId) => {
+    navigate("/formula-detail/" + formulaId);
+    setOpen(null);
+  };
 
   useEffect(() => {
     fetchFormulas();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, rowsPerPage, page]);
+  }, [searchTerm, rowsPerPage, page, status]);
 
   async function fetchFormulas() {
     try {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         formulaPath.GET_FORMULA_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}`
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&filterStatus=" +
+        status
       );
       setFormulaList(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -77,13 +109,14 @@ const ListFormulaPage = () => {
     setPage(1);
   };
 
-  const onClickDelete = async (id) => {
+  const onClickDelete = async (item) => {
     try {
       setIsLoading(true);
-      await axiosPrivate.delete(formulaPath.DELETE_FORMULA + id);
+      await axiosPrivate.delete(formulaPath.DELETE_FORMULA + item.id);
       fetchFormulas();
-      toast.success(formulaNoti.SUCCESS.CREATE);
+      toast.success(formulaNoti.SUCCESS.DELETE);
       setIsLoading(false);
+      setOpen(null);
       // setPage(response.data.pageIndex);
     } catch (error) {
       console.log("fetchSkill ~ error", error);
@@ -102,6 +135,7 @@ const ListFormulaPage = () => {
       fetchFormulas();
       toast.success(formulaNoti.SUCCESS.ACTIVE);
       setIsLoading(false);
+      setOpen(null);
     } catch (error) {
       console.log("Active error", error);
       setIsLoading(false);
@@ -128,6 +162,42 @@ const ListFormulaPage = () => {
         </Button>
       }
     >
+      <Popover
+        open={Boolean(open)}
+        anchorEl={open}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        PaperProps={{
+          sx: {
+            p: 1,
+            width: 120,
+            "& .MuiMenuItem-root": {
+              px: 1,
+              typography: "body2",
+              borderRadius: 0.75,
+            },
+          },
+        }}
+      >
+        {selectedItem.status === 2 ? (
+          <>
+            <MenuItem onClick={() => handleClickFormulaDetail(selectedItem)}>
+              <ModeEditOutlineIcon sx={{ mr: 2 }} />
+              Sửa
+            </MenuItem>
+            <MenuItem onClick={() => onClickDelete(selectedItem)}>
+              <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
+              <span style={{ color: theme.palette.error.main }}>Xóa</span>
+            </MenuItem>
+          </>
+        ) : (
+          <MenuItem onClick={() => onClickActive(selectedItem)}>
+            <ToggleOnIcon sx={{ mr: 2, color: theme.palette.success.main }} />
+            Kích hoạt
+          </MenuItem>
+        )}
+      </Popover>
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           {/*Custom search bar*/}
@@ -147,16 +217,30 @@ const ListFormulaPage = () => {
               onChange={setSearchTerm}
             />
           </Card>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              options={formulaStatusOptions}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Trạng thái" />}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setStatus(newValue.value);
+                } else {
+                  setStatus("");
+                }
+              }}
+            />
+          </div>
         </div>
 
         <TableContainer sx={{ width: 1, mt: 2, mb: -2, borderRadius: 4 }}>
           <Table>
             <TableHead>
               <TableRow>
-                <StyledTableCell width={"30%"}>Công thức</StyledTableCell>
+                <StyledTableCell width={"50%"}>Công thức</StyledTableCell>
                 <StyledTableCell align="center">Trạng thái</StyledTableCell>
                 <StyledTableCell align="right" width={"5%"}></StyledTableCell>
-                <StyledTableCell align="right" width={"15%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -226,71 +310,12 @@ const ListFormulaPage = () => {
                       </Chip>
                     </TableCell>
                     <TableCell align="right" width={"5%"}>
-                      <Button
-                        className=""
-                        type="button"
-                        kind="ghost"
-                        onClick={() => console.log("edit")}
+                      <IconButton
+                        size="large"
+                        onClick={(event) => handleOpenMenu(event, item)}
                       >
-                        <ModeEditOutlineIcon></ModeEditOutlineIcon>
-                      </Button>
-                    </TableCell>
-                    <TableCell align="center" width={"15%"}>
-                      {item.status === 2 ? (
-                        <Button
-                          variant="contained"
-                          component="label"
-                          color="error"
-                          onClick={() => onClickDelete(item.id)}
-                        >
-                          Vô hiệu
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="contained"
-                          component="label"
-                          color="success"
-                          onClick={() => onClickActive(item)}
-                        >
-                          Kích hoạt
-                        </Button>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : formulaList.length !== 0 ? (
-                formulaList.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell width={"30%"}>{item.name}</TableCell>
-                    <TableCell align="center">
-                      <Chip
-                        color={
-                          item.status === 1 || item.status === 3
-                            ? "error"
-                            : "success"
-                        }
-                      >
-                        {
-                          formulaStatusOptions.find(
-                            (label) => label.value === item.status
-                          ).label
-                        }
-                      </Chip>
-                    </TableCell>
-                    <TableCell align="right" width={"5%"}>
-                      <Button
-                        className=""
-                        type="button"
-                        kind="ghost"
-                        onClick={() => console.log("edit")}
-                      >
-                        <ModeEditOutlineIcon></ModeEditOutlineIcon>
-                      </Button>
-                    </TableCell>
-                    <TableCell align="right" width={"5%"}>
-                      <Button className="bg-red-500 text-white" type="button">
-                        Xóa
-                      </Button>
+                        <MoreVertIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))

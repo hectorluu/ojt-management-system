@@ -8,7 +8,7 @@ const headingStyle = {
   textOverflow: 'ellipsis'
 };
 
-const CourseCategory = ({ text = "BE", className = "text-xs", link }) => {
+const CertificateCategory = ({ text = "BE", className = "text-xs", link }) => {
   return (
     <span
       className={classNames(
@@ -23,4 +23,4 @@ const CourseCategory = ({ text = "BE", className = "text-xs", link }) => {
   );
 };
 
-export default CourseCategory;
+export default CertificateCategory;

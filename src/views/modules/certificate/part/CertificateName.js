@@ -7,8 +7,8 @@ const headingStyle = {
   textOverflow: 'ellipsis'
 };
 
-const CourseName = ({ children, className = "mb-1 font-semibold" }) => {
+const CertificateName = ({ children, className = "mb-1 font-semibold" }) => {
   return <h3 className={classNames("text-text1", className)} style={headingStyle}>{children}</h3>;
 };
 
-export default CourseName;
+export default CertificateName;

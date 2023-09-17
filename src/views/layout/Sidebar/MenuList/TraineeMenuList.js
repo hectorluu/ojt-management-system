@@ -9,6 +9,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import DvrIcon from "@mui/icons-material/Dvr";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 
 //items
 const iconsDaskboard = { IconDashboard };
@@ -33,6 +34,7 @@ const iconsPages = {
   CalendarMonthIcon,
   DvrIcon,
   AnalyticsIcon,
+  WorkspacePremiumIcon
 };
 
 const pages = {
@@ -57,12 +59,28 @@ const pages = {
       breadcrumbs: false,
     },
     {
-      id: "trainee-course-list",
-      title: "Khóa học",
-      type: "item",
-      url: "/trainee-course-list",
+      id: "course",
+      title: "Khoá Học",
+      type: "collapse",
       icon: iconsPages.DvrIcon,
-      breadcrumbs: false,
+      children: [
+        {
+          id: "trainee-course-list",
+          title: "Khóa học",
+          type: "item",
+          url: "/trainee-course-list",
+          icon: iconsPages.DvrIcon,
+          breadcrumbs: false,
+        },
+        {
+          id: "trainee-certificacte_list",
+          title: "Chứng chỉ",
+          type: "item",
+          url: "/trainee-certificate",
+          icon: iconsPages.WorkspacePremiumIcon,
+          breadcrumbs: false,
+        },
+      ],
     },
     {
       id: "/trainee-personal-statistics",

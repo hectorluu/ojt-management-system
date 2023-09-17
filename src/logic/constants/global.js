@@ -17,6 +17,8 @@ export const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 export const phoneRegex = /^[0-9]{10}$/;
 
+export const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\w\s]|[_])).{8,}$/;
+
 export const genderOptions = [
   { value: 1, label: "Nam" },
   { value: 2, label: "Nữ" },
@@ -91,7 +93,11 @@ export const positionStatusOptions = [
 ];
 
 export const formulaStatusOptions = [
-  { value: 1, label: "Đã xóa" },
+  { value: 2, label: "Đang sử dụng" },
+  { value: 3, label: "Không sử dụng" },
+];
+
+export const templateStatusOptions = [
   { value: 2, label: "Đang sử dụng" },
   { value: 3, label: "Không sử dụng" },
 ];
@@ -260,3 +266,16 @@ export const signalRMessage = {
 
   },
 };
+
+export const certificateStatus = {
+  DELETED: 1,
+  PENDING: 2,
+  NOT_SUBMIT: 3,
+  APPROVED: 4,
+  DENY: 5,
+};
+
+export const traineeCourseOptions = [
+  { value: 1, label: "Khuyến nghị" },
+  { value: 2, label: "Tất cả" },
+];

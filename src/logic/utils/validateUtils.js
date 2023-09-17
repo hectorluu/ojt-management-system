@@ -1,6 +1,6 @@
 import { accountNoti, authNoti, configNoti, courseNoti, formulaNoti, positionNoti, skillNoti, templateNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
-import { configOptions, configType, emailRegex, phoneRegex, roleExchange } from "logic/constants/global";
+import { configOptions, configType, emailRegex, passwordRegex, phoneRegex, roleExchange } from "logic/constants/global";
 
 export function formulaValid(formula) {
   let error = {};
@@ -22,16 +22,40 @@ export function reportValid(report) {
     error["universityId"] = templateNoti.ERROR.BLANK_UNIVERSITY;
   };
   if (!report.startCell || report.startCell === "") {
-    error["startCell"]=templateNoti.ERROR.BLANK_START_CELL;
+    error["startCell"] = templateNoti.ERROR.BLANK_START_CELL;
   };
-  // if (report.templateHeaders.some(item => item.name === "" || item.name === undefined || item.name === null)) {
-  //   error(templateNoti.ERROR.BLANK_HEADER_NAME);
-  // };
-  // for (let i = 0; i < report.templateHeaders.length; i++) {
-  //   if (report.templateHeaders[i].isCriteria && (!report.templateHeaders[i].maxPoint || report.templateHeaders[i].maxPoint <= 0 || report.templateHeaders[i].maxPoint === "")) {
-  //     error(templateNoti.ERROR.BLANK_MAX_POINT);
-  //   };
-  // };
+  for (let i = 0; i < report.templateHeaders.length; i++) {
+    if (report.templateHeaders[i].isCriteria) {
+      if (!report.templateHeaders[i].name || !report.templateHeaders[i].totalPoint) {
+        if (!error["templateHeaders"]) {
+          error["templateHeaders"] = [{ name: "", totalPoint: "" }];
+        } else {
+          error["templateHeaders"] = [...error["templateHeaders"], { name: "", totalPoint: "" }];
+        }
+        if (!report.templateHeaders[i].name) {
+          error["templateHeaders"][i]["name"] = templateNoti.ERROR.BLANK_HEADER_NAME;
+        }
+        if (!report.templateHeaders[i].totalPoint) {
+          error["templateHeaders"][i]["totalPoint"] = templateNoti.ERROR.BLANK_MAX_POINT;
+        } else {
+          if (report.templateHeaders[i].totalPoint < 1) {
+            error["templateHeaders"][i]["totalPoint"] = templateNoti.ERROR.MAX_POINT_TOO_LOW;
+          }
+        }
+      };
+    } else {
+      if (!report.templateHeaders[i].name || !report.templateHeaders[i].totalPoint) {
+        if (!error["templateHeaders"]) {
+          error["templateHeaders"] = [{ name: "", totalPoint: "" }];
+        } else {
+          error["templateHeaders"] = [...error["templateHeaders"], { name: "", totalPoint: "" }];
+        }
+        if (!report.templateHeaders[i].name) {
+          error["templateHeaders"][i]["name"] = templateNoti.ERROR.BLANK_HEADER_NAME;
+        }
+      };
+    }
+  };
   return error;
 };
 
@@ -230,4 +254,27 @@ export function configValid(configs) {
     }
   }
   return true;
+}
+
+export function resetPasswordValid(email) {
+  let error = "";
+  if (email === "" || email === undefined || email === null) {
+    error = authNoti.ERROR.BLANK_EMAIL;
+  };
+  return error;
+}
+
+export function changePasswordWithCodeValid(request) {
+  let error = {};
+  if (request.code === "" || request.code === undefined || request.code === null) {
+    error["code"] = authNoti.ERROR.BLANK_CODE;
+  };
+  if (request.password === "" || request.password === undefined || request.password === null) {
+    error["password"] = authNoti.ERROR.BLANK_PASSWORD;
+  } else {
+    if (!passwordRegex.test(request.password)) {
+      error["password"] = authNoti.ERROR.PASSWORD_FORMAT;
+    };
+  };
+  return error;
 }

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-function Luckysheet(data = []) {
+function Luckysheet({ data = [] }) {
 
   useEffect(() => {
     const luckysheet = window.luckysheet;
@@ -52,13 +52,12 @@ function Luckysheet(data = []) {
         }
       },
     };
-    if (data.data.length > 0) {
+    if (data.length > 0) {
       options = {
         ...options,
-        data: data.data,
+        data: data,
       }
     }
-    console.log(options);
     luckysheet.create(options);
   }, [data]);
 

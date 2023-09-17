@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Card, SvgIcon, Button, OutlinedInput, InputAdornment, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, Skeleton, TablePagination } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Card, SvgIcon, Button, OutlinedInput, InputAdornment, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, Skeleton, TablePagination, Autocomplete, TextField, Popover, MenuItem, IconButton } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { templatePath } from "logic/api/apiUrl";
@@ -9,40 +9,52 @@ import AddIcon from "@mui/icons-material/Add";
 import SubCard from "views/components/cards/SubCard";
 import { GridSearchIcon } from "@mui/x-data-grid";
 import StyledTableCell from "views/modules/table/StyledTableCell";
-import { LoadingButton } from "@mui/lab";
-import { defaultPageIndex, defaultPageSize } from "logic/constants/global";
+import { defaultPageIndex, defaultPageSize, templateStatusOptions } from "logic/constants/global";
+import Chip from "views/components/chip/Chip";
+import useOnChange from "logic/hooks/useOnChange";
+import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import { useTheme } from "@emotion/react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const ListTemplatePage = () => {
   const [templateList, setTemplateList] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isLoading, setIsLoading] = useState(true);
   const [totalItem, setTotalItem] = useState(0);
   const [page, setPage] = useState(defaultPageIndex);
   const [rowsPerPage, setRowsPerPage] = useState(defaultPageSize);
+  const [status, setStatus] = useState("");
   const axiosPrivate = useAxiosPrivate();
+  // Popover
+  const [open, setOpen] = useState(null); // use for AnchorEl
+  const [idSeclected, setIdSeclected] = useState(0);
+
+  const handleOpenMenu = (event, id) => {
+    setOpen(event.currentTarget);
+    setIdSeclected(id);
+  };
+
+  const handleCloseMenu = () => {
+    setOpen(null);
+  };
+
+  const theme = useTheme();
+  const navigate = useNavigate();
+
+  const handleClickTemplateDetail = (templateId) => {
+    navigate("/template-detail/" + templateId);
+    setOpen(null);
+  };
+
+  const handleClickDeleteModal = (userModalId) => {
+    setOpen(null);
+  };
 
   useEffect(() => {
-    async function fetchTemplates() {
-      try {
-        setIsLoading(true); // Set loading to true before fetching data
-        const response = await axiosPrivate.get(templatePath.GET_TEMPLATE_LIST +
-          "?PageSize=" +
-          rowsPerPage +
-          "&PageIndex=" +
-          page +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}`);
-        setTemplateList(response.data.data);
-        setTotalItem(response.data.totalItem);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
-    }
     fetchTemplates();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchTerm, page, rowsPerPage, status]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -53,9 +65,30 @@ const ListTemplatePage = () => {
     setPage(0);
   };
 
+  async function fetchTemplates() {
+    try {
+      setIsLoading(true); // Set loading to true before fetching data
+      const response = await axiosPrivate.get(templatePath.GET_TEMPLATE_LIST +
+        "?PageSize=" +
+        rowsPerPage +
+        "&PageIndex=" +
+        page +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&filterStatus=" +
+        status);
+      setTemplateList(response.data.data);
+      setTotalItem(response.data.totalItem);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  }
+
   return (
     <MainCard
-      title={`Danh sách mẫu báo cáo (${templateList.length})`}
+      title={`Danh sách mẫu báo cáo`}
       secondary={
         <Button
           startIcon={
@@ -73,6 +106,34 @@ const ListTemplatePage = () => {
         </Button>
       }
     >
+      <Popover
+        open={Boolean(open)}
+        anchorEl={open}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        PaperProps={{
+          sx: {
+            p: 1,
+            width: 120,
+            "& .MuiMenuItem-root": {
+              px: 1,
+              typography: "body2",
+              borderRadius: 0.75,
+            },
+          },
+        }}
+      >
+        <MenuItem onClick={() => handleClickTemplateDetail(idSeclected)}>
+          <ModeEditOutlineIcon sx={{ mr: 2 }} />
+          Sửa
+        </MenuItem>
+
+        <MenuItem onClick={() => handleClickDeleteModal(idSeclected)}>
+          <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
+          <span style={{ color: theme.palette.error.main }}>Xóa</span>
+        </MenuItem>
+      </Popover>
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           {/*Custom search bar*/}
@@ -92,21 +153,36 @@ const ListTemplatePage = () => {
               onChange={setSearchTerm}
             />
           </Card>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              options={templateStatusOptions}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Trạng thái" />}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setStatus(newValue.value);
+                } else {
+                  setStatus("");
+                }
+              }}
+            />
+          </div>
         </div>
         <TableContainer sx={{ width: 1, mt: 2, mb: -2, borderRadius: 4 }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <StyledTableCell align="left" width={"15%"}>
+                <StyledTableCell align="left" width={"40%"}>
                   Mẫu đánh giá
                 </StyledTableCell>
-                <StyledTableCell align="left" width={"25%"}>
+                <StyledTableCell align="left" width={"40%"}>
                   Trường
                 </StyledTableCell>
                 <StyledTableCell align="center" width={"15%"}>
                   Trạng thái
                 </StyledTableCell>
-                <StyledTableCell align="right" width={"20%"}></StyledTableCell>
+                <StyledTableCell align="right" width={"5%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -174,28 +250,22 @@ const ListTemplatePage = () => {
                     <TableCell align="left">
                       {item.universityName}
                     </TableCell>
-                    <TableCell align="left">
-                      {item.startTime + " - " + item.endTime}
-                    </TableCell>
                     <TableCell align="center">
-                      {/* <Chip color={item.status === reportStatus.CANNOT ? "error" : "success"}>
+                      <Chip color={item.status === 3 ? "error" : "success"}>
                         {
-                          reportStatusOptions.find(
+                          templateStatusOptions.find(
                             (label) => label.value === item.status
                           ).label
                         }
-                      </Chip> */}
+                      </Chip>
                     </TableCell>
                     <TableCell align="right">
-                      {/* <LoadingButton
-                        component="label"
-                        variant="contained"
-                        onClick={() => onClickExport(item)}
-                        loading={exportLoading}
-                        startIcon={item.status === reportStatus.CAN ? <FileOpenIcon /> : <EditNotificationsIcon />}
+                      <IconButton
+                        size="large"
+                        onClick={(event) => handleOpenMenu(event, item.id)}
                       >
-                        {item.status === reportStatus.CAN ? "Xuất báo cáo" : "Nhắc nhở"}
-                      </LoadingButton> */}
+                        <MoreVertIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))
@@ -220,35 +290,6 @@ const ListTemplatePage = () => {
           />
         </TableContainer>
       </SubCard>
-      {/* {template.map((item) => (
-        <Card
-          sx={{ display: "flex" }}
-          className="rounded-2xl border-0 py-3 pb-1"
-          key={item.id}
-        >
-          <div className="flex items-center space-x-96 gap-x-6 ml-5 w-full">
-            <div className="flex-1">
-              <h1 className="text-[22px] font-semibold mb-2">{item.name}</h1>
-              <p className="mb-2 text-sm text-text2">
-                Tên trường đại học: {item.universityName}
-              </p>
-              <p className="mb-2 text-sm text-text2">
-                URL: <Link underline="always">{item.url}</Link>
-              </p>
-            </div>
-            <div className="flex items-center justify-center text-white rounded-full w-fit bg-opacity-60">
-              <Button
-                className="px-7 hover:shadow-xl transition duration-500 ease-in-out mr-5"
-                type="button"
-                kind="secondary"
-                variant="outlined"
-              >
-                Chọn
-              </Button>
-            </div>
-          </div>
-        </Card>
-      ))} */}
     </MainCard>
   );
 };

@@ -28,10 +28,10 @@ export class ExcelUtility {
                 console.log(req.response);
                 LuckyExcel.transformExcelToLucky(req.response,
                     function (exportJson, luckysheetfile) {
-                        console.log("exportJson", exportJson);
+                        resolve(exportJson);
                     },
                     function (error) {
-                        console.log(error);
+                        reject(error);
                     }
                 )
             };

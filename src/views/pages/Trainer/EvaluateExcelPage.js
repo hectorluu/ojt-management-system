@@ -72,7 +72,7 @@ const EvaluateExcelPage = () => {
           editable: false,
           align: "left",
           headerAlign: "left",
-          flex: 0.15,
+          // flex: 0.15,
         },
         {
           id: "lastName",
@@ -82,7 +82,7 @@ const EvaluateExcelPage = () => {
           editable: false,
           align: 'left',
           headerAlign: 'left',
-          flex: 0.15,
+          // flex: 0.15,
         },
         {
           id: "rollNumber",
@@ -92,7 +92,7 @@ const EvaluateExcelPage = () => {
           editable: false,
           align: 'left',
           headerAlign: 'left',
-          flex: 0.1,
+          // flex: 0.1,
         },
       ];
       for (const item of response.data) {
@@ -104,7 +104,7 @@ const EvaluateExcelPage = () => {
           editable: true,
           align: 'left',
           headerAlign: 'left',
-          flex: 0.1,
+          // flex: 0.1,
           renderEditCell: (params) => (
             <GridEditInputCell
               {...params}

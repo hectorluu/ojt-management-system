@@ -1,6 +1,6 @@
 export const authPath = {
   LOGIN: "/authen/login",
-  RESET_PASSWORD_CODE: "/authen/reset-password-code",
+  RESET_PASSWORD_CODE: "/authen/reset-password-code/",
   VERIFY_RESET_CODE: "/authen/verify-reset-code",
   RESET_PASSWORD: "/authen/reset-password",
 };
@@ -81,10 +81,12 @@ export const templatePath = {
   CREATE_TEMPLATE: "/template",
   GET_TEMPLATE_HEADER: "/template/template-header/criteriaheader",
   GET_TEMPLATE_LIST: "/template",
+  GET_TEMPLATE_DETAIL: "/template/"
 };
 
 export const formulaPath = {
   GET_FORMULA_LIST: "/formula",
+  GET_FORMULA_DETAIL: "/formula/",
   CREATE_FORMULA: "/formula",
   GET_KEY_LIST: "/formula/data-operand",
   DELETE_FORMULA: "/formula/",
@@ -113,6 +115,11 @@ export const reportPath = {
 export const configPath = {
   GET_CONFIG_LIST: "/config",
   UPDATE_CONFIG: "/config",
+};
+
+export const certificatePath = {
+  GET_CERTIFICATE_LIST: "/certificate",
+  SUBMIT_CERTIFICATE: "/certificate/submition-certificate",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

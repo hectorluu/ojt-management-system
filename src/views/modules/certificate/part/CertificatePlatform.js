@@ -8,7 +8,7 @@ const headingStyle = {
   textOverflow: 'ellipsis'
 };
 
-const CoursePlatform = ({ text = "Coursera", className = "text-xs" }) => {
+const CertificatePlatform = ({ text = "Coursera", className = "text-xs" }) => {
   return (
     <span
       className={classNames(
@@ -23,4 +23,4 @@ const CoursePlatform = ({ text = "Coursera", className = "text-xs" }) => {
   );
 };
 
-export default CoursePlatform;
+export default CertificatePlatform;

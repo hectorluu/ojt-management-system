@@ -1,6 +1,9 @@
 export const authNoti = {
   SUCCESS: {
     LOGIN: "Đăng nhập thành công!!!",
+    RESET_CODE: "Gửi mã qua email thành công!!!",
+    RESET_PASSWORD: "Đổi mật khẩu thành công!!!",
+    CHANGE_PASSWORD: "Đổi mật khẩu thành công!!!",
   },
 
   ERROR: {
@@ -9,7 +12,11 @@ export const authNoti = {
     PASSWORD_VALID: "Mật khẩu không hợp lệ!!!",
     BLANK_EMAIL: "Email không được để trống!!!",
     BLANK_PASSWORD: "Mật khẩu không được để trống!!!",
+    PASSWORD_FORMAT: "Mật khẩu phải chứa ít nhất 8 ký tự, 1 in hoa, 1 in thường, 1 chữ số và 1 ký tự đặc biệt!!!",
     WRONG_EMAIL_PASSWORD: "Email hoặc mật khẩu không đúng!!!",
+    BLANK_CODE: "Mã xác thực không được để trống!!!",
+    RESET_CODE: "Không thể gửi mã qua email!!!",
+    WRONG_CODE: "Mã xác thực không đúng!!!",
   },
 };
 
@@ -86,12 +93,14 @@ export const templateNoti = {
     BLANK_START_CELL: "Ô bắt đầu không được để trống!!!",
     BLANK_HEADER_NAME: "Tên cột không được để trống!!!",
     BLANK_MAX_POINT: "Điểm tối đa không được để trống!!!",
+    MAX_POINT_TOO_LOW: "Điểm tối đa quá thấp!!!",
   },
 };
 
 export const formulaNoti = {
   SUCCESS: {
     CREATE: "Thành công tạo công thức tính!!!",
+    UPDATE: "Thành công cập nhật công thức tính!!!",
     DELETE: "Thành công xóa công thức tính!!!",
     ACTIVE: "Thành công kích hoạt công thức tính!!!"
   },

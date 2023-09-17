@@ -14,17 +14,18 @@ import { toast } from "react-toastify";
 import { Button } from "views/components/button";
 import Gap from "views/components/common/Gap";
 import { templateNoti } from "logic/constants/notification";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Luckysheet from "views/components/Luckysheet/Luckysheet";
 import { reportValid } from "logic/utils/validateUtils";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { Autocomplete, Stack, TextField } from "@mui/material";
+import { Autocomplete, Skeleton, Stack, TextField } from "@mui/material";
 
 
 
-function DefineNewReportPage() {
+function TemplateDetailPage() {
+  const { templateId } = useParams();
   const axiosPrivate = useAxiosPrivate();
   const [universityList, setUniversityList] = useState([]);
   const [file, setFile] = useState(null);
@@ -35,10 +36,12 @@ function DefineNewReportPage() {
   const [notCriteriaList, setNotCriteriaList] = useState(notCriteriaOptions);
   const [formulaList, setFormulaList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetchingLoading, setIsFetchingLoading] = useState(false);
   const [data, setData] = useState([]);
   const [error, setError] = useState({});
   const [name, setName] = useState("");
   const [startCell, setStartCell] = useState("");
+  const [newUrl, setNewUrl] = useState("");
   const navigate = useNavigate();
 
 
@@ -57,19 +60,24 @@ function DefineNewReportPage() {
   };
 
   useEffect(() => {
-    // const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2FFile%20danh%20gia%20danh%20sach%20sv%20BKU.xlsx?alt=media&token=d2a90118-f684-4f4b-ba12-ba79c9f11067";
-    // ExcelUtility.loadFromUrl(url).then((w) => {
-    // });
-    fetchUniversities();
+    const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2FFile%20danh%20gia%20danh%20sach%20sv%20BKU.xlsx?alt=media&token=c7f588f6-9ea3-421a-b649-64d794d944cf";
+    ExcelUtility.loadFromUrl(url).then((w) => {
+      setData(w.sheets);
+    },
+      (e) => {
+        console.error("Workbook Load Error");
+      }
+    );
+    console.log(templateId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (url) {
-      handleAddNewTemplate();
+    if (newUrl) {
+      handleUpdateTemplate();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url]);
+  }, [newUrl]);
 
   useEffect(() => {
 
@@ -83,6 +91,8 @@ function DefineNewReportPage() {
     notCriteria.unshift(...nothing);
     setNotCriteriaList(notCriteria);
     fetchFormulars();
+    fetchUniversities();
+    fetchTemplateDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -122,6 +132,25 @@ function DefineNewReportPage() {
     }
   };
 
+  const fetchTemplateDetail = async () => {
+    try {
+      setIsFetchingLoading(true);
+      const response = await axiosPrivate.get(
+        templatePath.GET_TEMPLATE_DETAIL + templateId
+      );
+      setName(response.data.name);
+      setStartCell(response.data.startCell);
+      setUniversityId(response.data.universityId);
+      setUrl(response.data.url);
+      setTemplateHeaders(response.data.templateHeaders);
+      setIsFetchingLoading(false);
+      console.log("fetchFormula ~ success", response);
+    } catch (error) {
+      console.log("fetchFormula ~ error", error);
+      setIsFetchingLoading(false);
+    }
+  };
+
   const handleAddField = () => {
     const newField = {
       name: "",
@@ -149,17 +178,17 @@ function DefineNewReportPage() {
         });
       } catch (e) {
         setIsLoading(false);
-        setUrl("");
+        setNewUrl("");
         toast.error(e);
       }
     } else {
       setIsLoading(false);
-      setUrl("");
+      setNewUrl("");
       toast.error(templateNoti.ERROR.BLANK_FILE);
     }
   };
 
-  const handleAddNewTemplate = async () => {
+  const handleUpdateTemplate = async () => {
     try {
       await axiosPrivate.post(templatePath.CREATE_TEMPLATE, {
         name,
@@ -220,36 +249,47 @@ function DefineNewReportPage() {
       <div className="bg-white rounded-xl py-10 px-[66px]">
         <div className="text-center">
           <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
-            Tạo phiếu đánh giá mới
+            Chỉnh sửa phiếu đánh giá
           </h1>
+
           <form onSubmit={handleSubmit(onClickSubmit)}>
             <FormGroup>
               <Label>Tên phiếu đánh giá (*)</Label>
-              <TextField
-                error={error?.name ? true : false}
-                helperText={error?.name}
-                name="name"
-                placeholder="Ex: Phiếu đánh giá thực tập sinh"
-                onChange={(e) => setName(e.target.value)}
-                onBlur={(e) => setName(e.target.value)} />
+              {isFetchingLoading ? (
+                <Skeleton height={70} />
+              ) : (
+                <TextField
+                  value={name}
+                  error={error?.name ? true : false}
+                  helperText={error?.name}
+                  name="name"
+                  placeholder="Ex: Phiếu đánh giá thực tập sinh"
+                  onChange={(e) => setName(e.target.value)}
+                  onBlur={(e) => setName(e.target.value)} />)}
+
             </FormGroup>
             <FormGroup>
               <Label>Tên trường (*)</Label>
-              <Autocomplete
-                disablePortal={false}
-                options={universityList}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => <TextField {...params} placeholder="Chọn trường đại học"
-                  error={error?.universityId ? true : false} helperText={error?.universityId} />}
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    setUniversityId(newValue.id);
-                  } else {
-                    setUniversityId("");
-                  }
-                }}
-                isOptionEqualToValue={(option, value) => option.id === value.id}
-              />
+              {isFetchingLoading ? (
+                <Skeleton height={70} />
+              ) : (
+                <Autocomplete
+                  value={universityList.find((label) => label.id === universityId) || { id: 0, name: "Chọn trường đại học" }}
+                  disablePortal={false}
+                  options={universityList}
+                  getOptionLabel={(option) => option.name}
+                  renderInput={(params) => <TextField {...params} placeholder="Chọn trường đại học"
+                    error={error?.universityId ? true : false} helperText={error?.universityId} />}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setUniversityId(newValue.id);
+                      console.log(universityId);
+                    } else {
+                      setUniversityId("");
+                    }
+                  }}
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                />)}
             </FormGroup>
             <FormGroup>
               <Label>Tệp đánh giá (*) (.xlsx)</Label>
@@ -260,13 +300,17 @@ function DefineNewReportPage() {
             <FormRow>
               <FormGroup>
                 <Label>Ô bắt đầu dữ liệu</Label>
-                <TextField
-                  error={error?.startCell ? true : false}
-                  helperText={error?.startCell}
-                  name="startCell"
-                  placeholder="Ex: ABZ12"
-                  onChange={(e) => setStartCell(e.target.value)}
-                  onBlur={(e) => setStartCell(e.target.value)} />
+                {isFetchingLoading ? (
+                  <Skeleton height={70} />
+                ) : (
+                  <TextField
+                    value={startCell}
+                    error={error?.startCell ? true : false}
+                    helperText={error?.startCell}
+                    name="startCell"
+                    placeholder="Ex: ABZ12"
+                    onChange={(e) => setStartCell(e.target.value)}
+                    onBlur={(e) => setStartCell(e.target.value)} />)}
               </FormGroup>
             </FormRow>
             {templateHeaders.map((header, index) => (
@@ -276,6 +320,7 @@ function DefineNewReportPage() {
                   <FormGroup>
                     <Label>Tên cột(*)</Label>
                     <TextField
+                      value={templateHeaders?.[index]?.name}
                       error={error?.templateHeaders?.[index]?.name ? true : false}
                       helperText={error?.templateHeaders?.[index]?.name}
                       name="name"
@@ -287,6 +332,7 @@ function DefineNewReportPage() {
                     <Label>Tiêu chí hệ thống</Label>
                     {header.isCriteria ? (
                       <Autocomplete
+                        value={formulaList.find((label) => label.id === templateHeaders?.[index]?.formulaId) || { id: 0, name: "Lựa chọn" }}
                         disablePortal={false}
                         options={formulaList}
                         getOptionLabel={(option) => option.name || ""}
@@ -302,6 +348,7 @@ function DefineNewReportPage() {
                       />
                     ) : (
                       <Autocomplete
+                        value={notCriteriaList.find((label) => label.value === templateHeaders?.[index]?.matchedAttribute) || { value: "", label: "Lựa chọn" }}
                         disablePortal={false}
                         options={notCriteriaList}
                         getOptionLabel={(option) => option.label || ""}
@@ -321,6 +368,7 @@ function DefineNewReportPage() {
                   <FormGroup>
                     <Label>Tiêu chí đánh giá (*)</Label>
                     <Autocomplete
+                      value={isCriteriaOptions.find((label) => label.value === templateHeaders?.[index]?.isCriteria) || { value: "", label: "Lựa chọn" }}
                       disablePortal={false}
                       options={isCriteriaOptions}
                       renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
@@ -337,6 +385,7 @@ function DefineNewReportPage() {
                     <FormGroup>
                       <Label>Điểm tối đa(*)</Label>
                       <TextField
+                        value={templateHeaders?.[index]?.totalPoint}
                         error={error?.templateHeaders?.[index]?.totalPoint ? true : false}
                         helperText={error?.templateHeaders?.[index]?.totalPoint}
                         type="number"
@@ -368,7 +417,7 @@ function DefineNewReportPage() {
                 className="px-20 mx-auto text-white bg-primary"
                 isLoading={isLoading}
               >
-                Tạo
+                Chỉnh sửa
               </Button>
             </div>
           </form>
@@ -376,10 +425,10 @@ function DefineNewReportPage() {
       </div>
       <Gap></Gap>
       {data.length > 0 ?
-        <Luckysheet data={data} />
+        < Luckysheet data={data} />
         : null}
     </Fragment >
   );
 }
 
-export default DefineNewReportPage;
+export default TemplateDetailPage;

@@ -17,13 +17,10 @@ import LayoutManager from "views/layout/LayoutManager";
 import LayoutTrainee from "views/layout/LayoutTrainee";
 import LayoutTrainer from "views/layout/LayoutTrainer";
 import { permissions } from "logic/constants/permissions";
-import StartCampaignPage from "views/pages/StartCampaignPage";
-import CampaignPage from "views/pages/CampaignPage";
-import ModalBackProject from "views/components/modal/ModalBackProject";
-import ModalThank from "views/components/modal/ModalThank";
 
 const SignInPage = lazy(() => import("views/pages/SignInPage"));
 const UnauthorizePage = lazy(() => import("views/pages/UnauthorizePage"));
+const ResetPasswordPage = lazy(() => import("views/pages/ResetPasswordPage"));
 
 // Admin Page
 const AdminDashBoardPage = lazy(() =>
@@ -106,6 +103,11 @@ const ListFormulaPage = lazy(() =>
 const ListTemplatePage = lazy(() =>
   import("views/pages/Manager/ListTemplatePage")
 );
+const FormulaDetailPage = lazy(() =>
+  import("views/pages/Manager/FormulaDetailPage")
+);
+const TemplateDetailPage = lazy(() =>
+  import("views/pages/Manager/TemplateDetailPage"));
 
 // Trainer Page
 const AssignedTraineeListPage = lazy(() =>
@@ -167,6 +169,8 @@ const TraineeTaskListPage = lazy(() =>
 const TraineeTrainingPlanPage = lazy(() =>
   import("views/pages/Trainee/TraineeTrainingPlanPage")
 );
+const TraineeCertificateSubmitPage = lazy(() =>
+  import("views/pages/Trainee/TraineeCertificateSubmitPage"));
 
 const container = document.getElementById("root");
 
@@ -313,6 +317,14 @@ const router = createBrowserRouter([
             path: "/list-template",
             element: <ListTemplatePage></ListTemplatePage>,
           },
+          {
+            path: "/formula-detail/:formulaId",
+            element: <FormulaDetailPage></FormulaDetailPage>,
+          },
+          {
+            path: "/template-detail/:templateId",
+            element: <TemplateDetailPage></TemplateDetailPage>,
+          },
         ],
       },
     ],
@@ -423,6 +435,10 @@ const router = createBrowserRouter([
             path: "/trainee-training-plan",
             element: <TraineeTrainingPlanPage></TraineeTrainingPlanPage>,
           },
+          {
+            path: "/trainee-certificate",
+            element: <TraineeCertificateSubmitPage></TraineeCertificateSubmitPage>,
+          },
         ],
       },
     ],
@@ -436,20 +452,8 @@ const router = createBrowserRouter([
     element: <UnauthorizePage></UnauthorizePage>,
   },
   {
-    path: "/start-campaign",
-    element: <StartCampaignPage></StartCampaignPage>,
-  },
-  {
-    path: "/campaign-page",
-    element: <CampaignPage></CampaignPage>,
-  },
-  {
-    path: "modal-back-project",
-    element: <ModalBackProject></ModalBackProject>,
-  },
-  {
-    path: "modal-thank",
-    element: <ModalThank></ModalThank>,
+    path: "/reset-password",
+    element: <ResetPasswordPage></ResetPasswordPage>,
   },
 ]);
 
