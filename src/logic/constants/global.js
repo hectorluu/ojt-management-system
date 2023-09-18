@@ -17,9 +17,11 @@ export const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 export const phoneRegex = /^[0-9]{10}$/;
 
-export const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\w\s]|[_])).{8,}$/;
+export const passwordRegex =
+  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\w\s]|[_])).{8,}$/;
 
-export const urlRegex = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+export const urlRegex =
+  /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
 export const genderOptions = [
   { value: 1, label: "Nam" },
@@ -139,6 +141,11 @@ export const skillStatus = {
   INACTIVE: 3,
 };
 
+export const courseStatus = {
+  ACTIVE: 2,
+  INACTIVE: 3,
+};
+
 export const positionStatus = {
   DELETED: 1,
   ACTIVE: 2,
@@ -190,8 +197,16 @@ export const formulaOptions = [
 ];
 
 export const configOptions = [
-  { value: "Total Working Days Per Month", label: "Số ngày làm việc trong tháng:", maxValue: 31 },
-  { value: "Work Hours Required", label: "Số giờ làm việc trong ngày:", maxValue: 24 },
+  {
+    value: "Total Working Days Per Month",
+    label: "Số ngày làm việc trong tháng:",
+    maxValue: 31,
+  },
+  {
+    value: "Work Hours Required",
+    label: "Số giờ làm việc trong ngày:",
+    maxValue: 24,
+  },
 ];
 
 export const notiOptions = [
@@ -238,14 +253,17 @@ export const signalRMessage = {
     DELETE: "Training Plan Deleted",
     DETAIL_DELETE: "Detail of training plan Deleted",
     ASSIGN: "Training plan assigned to trainee",
-    PROCESS: "Training plan has been process. Please reload get training plan and get notification for user.",
+    PROCESS:
+      "Training plan has been process. Please reload get training plan and get notification for user.",
   },
   TASK: {
-    UPDATE_FINISH: "Trainee has checked finish a Task on Trello. Please process it.",
+    UPDATE_FINISH:
+      "Trainee has checked finish a Task on Trello. Please process it.",
     UPDATE_PROCESS: "Update Task Processing for Trainer",
   },
   CERTIFICATE: {
-    PROCESS_CERTIFICATE: "Trainer process Trainee certificate. Trainee reload notificattion and get certificate.",
+    PROCESS_CERTIFICATE:
+      "Trainer process Trainee certificate. Trainee reload notificattion and get certificate.",
     UPDATE_PROCESS: "Update Task Processing for Trainer",
   },
   NOTIFICATION: {
@@ -272,9 +290,7 @@ export const signalRMessage = {
     UPDATED: "New Position Updated",
     DELETED: "New Position Deleted",
   },
-  OJTBATCH: {
-
-  },
+  OJTBATCH: {},
 };
 
 export const certificateStatus = {
