@@ -74,13 +74,13 @@ const ProfileSection = () => {
   const userAvatar = user?.avatarURL || defaultUserIcon;
 
   const handleClickProfileTrainer = () => {
-    navigate("/trainer-profile");
     setOpen(false);
+    navigate("/trainer-profile");
   };
 
   const handleClickProfileTrainee = () => {
-    navigate("/trainee-profile");
     setOpen(false);
+    navigate("/trainee-profile");
   };
 
   return (

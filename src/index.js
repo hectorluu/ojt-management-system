@@ -410,7 +410,7 @@ const router = createBrowserRouter([
             element: <TraineeDashboardPage></TraineeDashboardPage>,
           },
           {
-            path: "/trainee-course-detail",
+            path: "/trainee-course-detail/:courseId",
             element: <TraineeCourseDetailPage></TraineeCourseDetailPage>,
           },
           {

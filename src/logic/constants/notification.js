@@ -18,6 +18,7 @@ export const authNoti = {
     BLANK_CODE: "Mã xác thực không được để trống!!!",
     RESET_CODE: "Không thể gửi mã qua email!!!",
     WRONG_CODE: "Mã xác thực không đúng!!!",
+    COMFIRM_NOT_MATCH: "Mật khẩu không khớp!!!",
   },
 };
 
@@ -26,6 +27,7 @@ export const accountNoti = {
     CREATE: "Tạo tài khoản thành công!!!",
     UPDATE: "Cập nhật tài khoản thành công!!!",
     UPDATE_PASSWORD: "Cập nhật mật khẩu thành công!!!",
+    UPDATE_PROFILE: "Cập nhật thông tin thành công!!!",
   },
 
   ERROR: {
@@ -146,7 +148,12 @@ export const universityNoti = {
   },
 
   ERROR: {
-    POINT_ERROR: "Thông tin đợt thực tập chưa phù hợp!!!",
+    OJT_BATCH_ERROR: "Thông tin đợt thực tập chưa phù hợp!!!",
+    BLANK_NAME: "Tên trường đại học không được để trống!!!",
+    BLANK_CODE: "Mã trường đại học không được để trống!!!",
+    BLANK_ADDRESS: "Địa chỉ không được để trống!!!",
+    BLANK_JOIN_DATE: "Ngày liên kết không được để trống!!!",
+    ERROR_JOIN_DATE: "Ngày liên kết không hợp lệ!!!",
   },
 };
 
@@ -205,5 +212,15 @@ export const configNoti = {
     BLANK_HOUR_PER_DAY: "Số giờ không được để trống!!!",
     MAX_DAY: "Số ngày không phù hợp!!!",
     MAX_HOUR: "Số giờ không phù hợp!!!",
+  },
+};
+
+export const certificateNoti = {
+  SUCCESS: {
+    SUBMIT: "Thành công nộp chứng chỉ!!!",
+  },
+  ERROR:{
+    BLANK_LINK: "Đường dẫn không được để trống!!!",
+    LINK_FORMAT: "Đường dẫn không hợp lệ!!!",
   },
 };

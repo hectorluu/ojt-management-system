@@ -19,6 +19,8 @@ export const phoneRegex = /^[0-9]{10}$/;
 
 export const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\w\s]|[_])).{8,}$/;
 
+export const urlRegex = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+
 export const genderOptions = [
   { value: 1, label: "Nam" },
   { value: 2, label: "Nữ" },
@@ -122,6 +124,14 @@ export const statusColor = {
   ACTIVE: "bg-green-500",
   INACTIVE: "bg-yellow-500",
 };
+
+export const certificateStatusColor = [
+  { value: 1, label: "Đã xóa", color: "bg-gray-500" },
+  { value: 2, label: "Đang chờ", color: "bg-yellow-500" },
+  { value: 3, label: "Chưa nộp", color: "bg-orange-500" },
+  { value: 4, label: "Đã chấp thuận", color: "bg-green-500" },
+  { value: 5, label: "Không chấp thuận", color: "bg-red-500" },
+];
 
 export const skillStatus = {
   DELETED: 1,

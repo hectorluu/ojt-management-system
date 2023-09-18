@@ -1,21 +1,21 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
-import { certificatePath, positionPath, skillPath } from "logic/api/apiUrl";
+import { certificatePath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
   defaultPageIndex,
   signalRMessage,
-  positionStatus,
-  skillStatus,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
-import useOnChange from "logic/hooks/useOnChange";
 import signalRService from "logic/utils/signalRService";
 import MainCard from "views/components/cards/MainCard";
 import SubCard from "views/components/cards/SubCard";
 import CertificateGrid from "views/modules/certificate/Certificategrid";
 import CertificateCardDisplay from "views/modules/certificate/CertificateCardDisplay";
 import CertificateSkeleton from "views/modules/certificate/CertificateCardSkeleton";
+import { toast } from "react-toastify";
+import { certificateNoti } from "logic/constants/notification";
+import { submitCertValid } from "logic/utils/validateUtils";
 
 const TraineeCertificateSubmitPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -23,6 +23,7 @@ const TraineeCertificateSubmitPage = () => {
   const [totalItem, setTotalItem] = useState(0);
   const axiosPrivate = useAxiosPrivate();
   const [certificates, setCertificates] = useState([]);
+  const [error, setError] = useState("");
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
   const [isSubmitLoading, setIsSubmitLoading] = useState(false); // New loading state
@@ -79,24 +80,38 @@ const TraineeCertificateSubmitPage = () => {
     setPage(1);
   };
 
-  const onSubmitCertificate = async (courseId, link) => {
-    try {
-      setIsSubmitLoading(true);
-      let response = await axiosPrivate.post(
-        certificatePath.SUBMIT_CERTIFICATE,
-        {
-          courseId: courseId,
-          link: link,
+  const onSubmitCertificate = async (courseId, status, link) => {
+    setIsSubmitLoading(true);
+    const valid = submitCertValid(link);
+    setError(valid);
+    if (valid === "") {
+      try {
+        if (status === 3) {
+          await axiosPrivate.put(
+            certificatePath.SUBMIT_CERTIFICATE,
+            {
+              courseId: courseId,
+              link: link,
+            }
+          );
+        } else {
+          await axiosPrivate.put(
+            certificatePath.RE_SUBMIT_CERTIFICATE,
+            {
+              courseId: courseId,
+              link: link,
+            }
+          );
         }
-      );
-      if (response.status === 200) {
+        toast.success(certificateNoti.SUCCESS.SUBMIT);
+        setIsSubmitLoading(false);
         fetchCertificate();
+      } catch (error) {
+        console.log("onSubmitCertificate ~ error", error);
+        setIsSubmitLoading(false);
       }
-    } catch (error) {
-      console.log("onSubmitCertificate ~ error", error);
-    } finally {
-      setIsSubmitLoading(false);
     }
+    setIsSubmitLoading(false);
   };
 
 
@@ -106,7 +121,6 @@ const TraineeCertificateSubmitPage = () => {
     >
       <SubCard>
         <CertificateGrid type="secondary">
-          <CertificateCardDisplay />
           {isLoading ? ( // Render skeleton loading when loading is true
             // Use the animate-pulse class for skeleton effect
             <>
@@ -115,8 +129,8 @@ const TraineeCertificateSubmitPage = () => {
               <CertificateSkeleton />
             </>
           ) : certificates.length !== 0 ? (
-            certificates.map((item) => (
-              <CertificateCardDisplay certificate={item} key={item.id} onClickSubmit={onSubmitCertificate} isLoading={isSubmitLoading} />
+            certificates.map((item, index) => (
+              <CertificateCardDisplay certificate={item} key={index} onClickSubmit={onSubmitCertificate} isLoading={isSubmitLoading} error={error} />
             ))
           ) : (
             <>Không có chứng chỉ nào được tìm thấy.</>
