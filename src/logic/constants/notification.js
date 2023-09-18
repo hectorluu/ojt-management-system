@@ -12,7 +12,8 @@ export const authNoti = {
     PASSWORD_VALID: "Mật khẩu không hợp lệ!!!",
     BLANK_EMAIL: "Email không được để trống!!!",
     BLANK_PASSWORD: "Mật khẩu không được để trống!!!",
-    PASSWORD_FORMAT: "Mật khẩu phải chứa ít nhất 8 ký tự, 1 in hoa, 1 in thường, 1 chữ số và 1 ký tự đặc biệt!!!",
+    PASSWORD_FORMAT:
+      "Mật khẩu phải chứa ít nhất 8 ký tự, 1 in hoa, 1 in thường, 1 chữ số và 1 ký tự đặc biệt!!!",
     WRONG_EMAIL_PASSWORD: "Email hoặc mật khẩu không đúng!!!",
     BLANK_CODE: "Mã xác thực không được để trống!!!",
     RESET_CODE: "Không thể gửi mã qua email!!!",
@@ -111,6 +112,7 @@ export const trainingPlanNoti = {
     BLANK_DESCRIPTION: "Mô tả không được để trống!!!",
     BLANK_STARTDAY: "Ngày bắt đầu không được để trống!!!",
     BLANK_ENDDAY: "Ngày kết thúc không được để trống!!!",
+    ITEMS_OVERFLOW: "Đã đạt giới hạn số mục của hệ thống!!!",
   },
 };
 

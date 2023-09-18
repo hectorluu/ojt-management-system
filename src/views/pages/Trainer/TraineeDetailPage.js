@@ -44,7 +44,7 @@ const TraineeDetailPage = () => {
 
   return (
     <MainCard>
-      <div className="w-full h-[140px] bg-gray-500 rounded"></div>
+      <div className="w-full h-[100px] bg-gray-500 rounded"></div>
       <div className="flex flex-col items-center -mt-20">
         <Avatar
           src={userAvatar}

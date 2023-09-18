@@ -10,19 +10,29 @@ import {
   TimelineConnector,
 } from "@mui/lab";
 // utils
-import { fDateTime } from "logic/utils/formatTime";
+import { fDate } from "logic/utils/formatTime";
 // ----------------------------------------------------------------------
 
-AppOrderTimeline.propTypes = {
+TrainingPlanTimeline.propTypes = {
   title: PropTypes.string,
   subheader: PropTypes.string,
   list: PropTypes.array.isRequired,
 };
 
-export default function AppOrderTimeline({ title, subheader, list, ...other }) {
+export default function TrainingPlanTimeline({
+  title,
+  subheader,
+  list,
+  ...other
+}) {
+  if (!list || !Array.isArray(list)) {
+    // Handle the case where 'list' is not provided or not an array
+    return null; // Or you can return some default content or error message
+  }
+
   return (
     <Card {...other}>
-      <CardHeader title={title} subheader={subheader} />
+      <CardHeader title={title} subheader={subheader} sx={{ mb: -3, mt: 2 }} />
 
       <CardContent
         sx={{
@@ -34,7 +44,7 @@ export default function AppOrderTimeline({ title, subheader, list, ...other }) {
         <Timeline>
           {list.map((item, index) => (
             <OrderItem
-              key={item.id}
+              key={index}
               item={item}
               isLast={index === list.length - 1}
             />
@@ -50,34 +60,35 @@ export default function AppOrderTimeline({ title, subheader, list, ...other }) {
 OrderItem.propTypes = {
   isLast: PropTypes.bool,
   item: PropTypes.shape({
-    time: PropTypes.instanceOf(Date),
+    startDay: PropTypes.instanceOf(Date),
+    endDay: PropTypes.instanceOf(Date),
     title: PropTypes.string,
     type: PropTypes.string,
   }),
 };
 
 function OrderItem({ item, isLast }) {
-  const { type, title, time } = item;
+  const { title, description, startDay, endDay } = item;
   return (
-    <TimelineItem>
+    <TimelineItem className="mb-4">
       <TimelineSeparator>
         <TimelineDot
-          color={
-            (type === "order1" && "primary") ||
-            (type === "order2" && "success") ||
-            (type === "order3" && "info") ||
-            (type === "order4" && "warning") ||
-            "error"
-          }
+          color={"primary" || "success" || "info" || "warning" || "error"}
         />
         {isLast ? null : <TimelineConnector />}
       </TimelineSeparator>
 
       <TimelineContent>
-        <Typography variant="subtitle2">{title}</Typography>
+        <Typography variant="subtitle2">
+          <span className="font-bold">{title}</span>
+        </Typography>
 
+        <Typography variant="caption" sx={{ color: "text.primary" }}>
+          {description}
+        </Typography>
+        <br />
         <Typography variant="caption" sx={{ color: "text.secondary" }}>
-          {fDateTime(time)}
+          {fDate(startDay)} - {fDate(endDay)}
         </Typography>
       </TimelineContent>
     </TimelineItem>

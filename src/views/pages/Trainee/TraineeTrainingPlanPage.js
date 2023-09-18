@@ -5,7 +5,7 @@ import { Box, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import MainCard from "views/components/cards/MainCard";
 import SubCard from "views/components/cards/SubCard";
-import AppOrderTimeline from "views/components/timeline/AppOrderTimeline";
+import TrainingPlanTimeline from "views/components/timeline/TrainingPlanTimeline";
 
 const TraineeTrainingPlanPage = () => {
   const MONTH_NAMES = [
@@ -151,7 +151,7 @@ const TraineeTrainingPlanPage = () => {
       {/*Training plan*/}
 
       <SubCard>
-        <AppOrderTimeline
+        <TrainingPlanTimeline
           title="Training Plan Timeline"
           list={[...Array(5)].map((_, index) => ({
             id: faker.datatype.uuid(),
@@ -163,7 +163,8 @@ const TraineeTrainingPlanPage = () => {
               "New order placed #XF-2346",
             ][index],
             type: `order${index + 1}`,
-            time: faker.date.past(),
+            startDay: faker.date.past(),
+            endDay: faker.date.past(),
           }))}
         />
       </SubCard>

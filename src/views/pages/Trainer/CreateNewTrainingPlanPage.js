@@ -1,33 +1,120 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
-import { Button } from "views/components/button";
 import {
-  Autocomplete,
+  Box,
+  Button,
+  Drawer,
   IconButton,
   Stack,
   TextField,
-  TextareaAutosize,
+  Typography,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
+
 import { trainingPlanPath } from "logic/api/apiUrl";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { trainingPlanNoti } from "logic/constants/notification";
-import { useNavigate } from "react-router-dom";
+import { Form, Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import TrainingPlanTimeline from "views/components/timeline/TrainingPlanTimeline";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import PerfectScrollbar from "react-perfect-scrollbar";
 
 const CreateNewTrainingPlanPage = () => {
   const { handleSubmit, getValues } = useForm();
+
   const [error, setError] = useState({});
   const [trainingPlanName, setTrainingPlanName] = useState("");
+  const [trainingPlanDetailName, setTrainingPlanDetailName] = useState("");
+  const [trainingPlanDetailDescription, setTrainingPlanDetailDescription] =
+    useState("");
+  const [startDay, setStartDay] = useState(new Date());
+  const [endDay, setEndDay] = useState(new Date());
 
-  const trainingPlanIdCreated = useState(0);
+  const [createTrainingPlanDetails, setCreateTrainingPlanDetails] = useState([
+    { name: "", description: "", startDay: new Date(), endDay: new Date() },
+  ]);
+
+  const [drawerState, setDrawerState] = useState(false);
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setDrawerState({ ...drawerState, [anchor]: open });
+  };
+
+  const fakeData = [
+    {
+      name: "Training Plan 1",
+      description: "This is the first training plan.",
+      startTime: "2023-06-22 08:30:00.1234567",
+      endTime: "2023-06-22 10:30:00.9876543",
+    },
+    {
+      name: "Training Plan 2",
+      description: "Another training plan for testing.",
+      startTime: "2023-06-23 14:00:00.2345678",
+      endTime: "2023-06-23 15:30:00.8765432",
+    },
+    {
+      name: "Training Plan 3",
+      description: "A third training plan example.",
+      startTime: "2023-06-24 09:15:00.3456789",
+      endTime: "2023-06-24 11:45:00.7654321",
+    },
+    {
+      name: "Training Plan 4",
+      description: "Yet another training plan detail.",
+      startTime: "2023-06-25 13:30:00.4567890",
+      endTime: "2023-06-25 14:45:00.6543210",
+    },
+    {
+      name: "Training Plan 5",
+      description: "The fifth training plan entry.",
+      startTime: "2023-06-26 16:00:00.5678901",
+      endTime: "2023-06-26 17:30:00.5432109",
+    },
+    {
+      name: "Training Plan 1",
+      description: "This is the first training plan.",
+      startTime: "2023-06-22 08:30:00.1234567",
+      endTime: "2023-06-22 10:30:00.9876543",
+    },
+    {
+      name: "Training Plan 2",
+      description: "Another training plan for testing.",
+      startTime: "2023-06-23 14:00:00.2345678",
+      endTime: "2023-06-23 15:30:00.8765432",
+    },
+    {
+      name: "Training Plan 3",
+      description: "A third training plan example.",
+      startTime: "2023-06-24 09:15:00.3456789",
+      endTime: "2023-06-24 11:45:00.7654321",
+    },
+    {
+      name: "Training Plan 4",
+      description: "Yet another training plan detail.",
+      startTime: "2023-06-25 13:30:00.4567890",
+      endTime: "2023-06-25 14:45:00.6543210",
+    },
+    {
+      name: "Training Plan 5",
+      description: "The fifth training plan entry.",
+      startTime: "2023-06-26 16:00:00.5678901",
+      endTime: "2023-06-26 17:30:00.5432109",
+    },
+  ];
+
   const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
 
   const handleAddNewTrainingPlan = async (values) => {
     try {
@@ -35,33 +122,28 @@ const CreateNewTrainingPlanPage = () => {
         trainingPlanName,
       });
       toast.success(trainingPlanNoti.SUCCESS.CREATE);
-
-      navigate("/create-training-plan-detail/" + trainingPlanIdCreated);
     } catch (error) {
       toast.error(error);
     }
   };
 
-  // const handleAddField = () => {
-  //   if (
-  //     filteredSkillList.length > 0 &&
-  //     createSkills.length < skillList.length
-  //   ) {
-  //     const newField = {
-  //       skillId: "",
-  //       initLevel: "",
-  //     };
-  //     setCreateSkills([...createSkills, newField]);
-  //   } else {
-  //     toast.error(accountNoti.ERROR.SKILL_OVERFLOW);
-  //   }
-  // };
+  const [trainingPlanDetailList, setTrainingPlanDetailList] = useState([]);
 
-  // const handleRemoveField = (index) => {
-  //   let temp = createSkills.slice();
-  //   temp.pop();
-  //   setCreateSkills(temp);
-  // };
+  const handleAddField = () => {
+    const newField = {
+      name: "",
+      description: "",
+      startDay: new Date(),
+      endDay: new Date(),
+    };
+    setCreateTrainingPlanDetails([...createTrainingPlanDetails, newField]);
+  };
+
+  const handleRemoveField = (index) => {
+    let temp = createTrainingPlanDetails.slice();
+    temp.pop();
+    setCreateTrainingPlanDetails(temp);
+  };
 
   return (
     <Fragment>
@@ -82,72 +164,133 @@ const CreateNewTrainingPlanPage = () => {
                 onBlur={(e) => setTrainingPlanName(e.target.value)}
               />
             </FormGroup>
+
             {/* This is the line to separate between section */}
             <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
+            <h2 className="py-4 px-14bg-opacity-5 rounded-xl font-bold text-[23px] inline-block">
+              Chi tiết
+            </h2>
 
-            {/* {createSkills.map((userSkill, index) => (
+            {/*Drawer Preview Training Plan */}
+            <div className="flex justify-end mb-12">
+              <Button
+                component={Link}
+                variant="contained"
+                size="large"
+                sx={{ borderRadius: "10px" }}
+                onClick={toggleDrawer("right", true)}
+              >
+                Preview kế hoạch đang tạo
+              </Button>
+            </div>
+
+            <Drawer
+              anchor={"right"}
+              open={drawerState["right"]}
+              onClose={toggleDrawer("right", false)}
+            >
+              <Box
+                sx={{ width: "27rem" }}
+                role="presentation"
+                onClick={toggleDrawer("right", false)}
+                onKeyDown={toggleDrawer("right", false)}
+              >
+                <PerfectScrollbar
+                  component="div"
+                  style={{
+                    height: "calc(100vh)",
+                    paddingLeft: "16px",
+                    paddingRight: "16px",
+                  }}
+                >
+                  <TrainingPlanTimeline
+                    title={
+                      <span className="font-bold">
+                        {trainingPlanName || "Kế hoạch đào tạo chưa có tên"}
+                      </span>
+                    }
+                    list={fakeData.map((item, index) => ({
+                      title: item.name,
+                      description: item.description,
+                      startDay: item.startTime,
+                      endDay: item.endTime,
+                    }))}
+                  />
+                </PerfectScrollbar>
+              </Box>
+            </Drawer>
+
+            {createTrainingPlanDetails.map((trainingPlanDetails, index) => (
               <div key={index}>
+                <Typography
+                  variant="h3"
+                  fontWeight="bold"
+                  textAlign="left"
+                  className="mb-4"
+                >
+                  Công việc {index + 1}
+                </Typography>
+                <FormGroup>
+                  <Label>Nhiệm vụ (*)</Label>
+                  <TextField
+                    className="w-3/5"
+                    error={error?.trainingPlanDetailName ? true : false}
+                    helperText={error?.trainingPlanDetailName}
+                    name="trainingplandetailname"
+                    placeholder="Ex: Làm việc với đào tạo viên"
+                    onChange={(e) => setTrainingPlanDetailName(e.target.value)}
+                    onBlur={(e) => setTrainingPlanDetailName(e.target.value)}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label>Mô tả về nhiệm vụ (ngắn gọn) (*)</Label>
+                  <TextField
+                    className="w-3/5"
+                    error={error?.trainingPlanDetailDescription ? true : false}
+                    helperText={error?.trainingPlanDetailDescription}
+                    name="trainingplandetaildescription"
+                    placeholder="Ex: Chuẩn bị sẵn sàng môi trường làm việc"
+                    onChange={(e) =>
+                      setTrainingPlanDetailDescription(e.target.value)
+                    }
+                    onBlur={(e) =>
+                      setTrainingPlanDetailDescription(e.target.value)
+                    }
+                  />
+                </FormGroup>
                 <FormRow>
                   <FormGroup>
-                    <Label>Kỹ năng (*)</Label>
-                    <Autocomplete
-                      disablePortal={false}
-                      id="combo-box-demo"
-                      options={filteredSkillList}
-                      getOptionLabel={(option) => option.name}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          placeholder="Chọn kỹ năng"
-                          error={
-                            error?.createSkills?.[index]?.skillId ? true : false
-                          }
-                          helperText={error?.createSkills?.[index]?.skillId}
-                        />
-                      )}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          onChangeUserSkill(index, "skillId", newValue.id);
-                        } else {
-                          onChangeUserSkill(index, "skillId", "");
-                        }
+                    <Label>Ngày bắt đầu (*)</Label>
+                    <DatePicker
+                      onChange={(newValue) => setStartDay(newValue.toDate())}
+                      slotProps={{
+                        textField: {
+                          fullWidth: true,
+                          variant: "outlined",
+                          error: error?.startDay ? true : false,
+                          helperText: error?.startDay,
+                        },
                       }}
-                      isOptionEqualToValue={(option, value) =>
-                        option.id === value.id
-                      }
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label>Trình độ (*)</Label>
-                    <Autocomplete
-                      disablePortal={false}
-                      id="combo-box-demo"
-                      options={skillLevel}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          placeholder="Chọn trình độ"
-                          type="number"
-                          error={
-                            error?.createSkills?.[index]?.initLevel
-                              ? true
-                              : false
-                          }
-                          helperText={error?.createSkills?.[index]?.initLevel}
-                        />
-                      )}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          onChangeUserSkill(index, "initLevel", newValue.value);
-                        } else {
-                          onChangeUserSkill(index, "initLevel", "");
-                        }
+                    <Label>Ngày kết thúc (*)</Label>
+                    <DatePicker
+                      onChange={(newValue) => setEndDay(newValue.toDate())}
+                      slotProps={{
+                        textField: {
+                          fullWidth: true,
+                          variant: "outlined",
+                          error: error?.endDay ? true : false,
+                          helperText: error?.endDay,
+                        },
                       }}
                     />
                   </FormGroup>
                 </FormRow>
               </div>
             ))}
+
             <Stack direction="row" spacing={1} justifyContent="center">
               <IconButton
                 color="error"
@@ -163,12 +306,13 @@ const CreateNewTrainingPlanPage = () => {
               >
                 <AddIcon />
               </IconButton>
-            </Stack> */}
+            </Stack>
 
-            <div className="mt-5 text-center">
+            <div className="mt-10 text-center">
               <Button
-                type="submit"
-                className="px-10 mx-auto text-white bg-primary"
+                component="label"
+                variant="contained"
+                className="px-10 mx-auto"
               >
                 Thêm mới{" "}
               </Button>
