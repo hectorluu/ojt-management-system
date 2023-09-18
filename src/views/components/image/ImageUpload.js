@@ -1,10 +1,12 @@
 import React from "react";
 
-const ImageUpload = ({ onChange = () => {} }) => {
+const ImageUpload = ({ onChange = () => { } }) => {
   return (
     <label className="w-full h-[200px] border border-gray-200 border-dashed rounded-xl cursor-pointer flex items-center justify-center">
       <input
+        id="image-updload"
         type="file"
+        accept="image/*"
         onChange={(e) => onChange(e.target.files[0])}
         className="hidden"
       />

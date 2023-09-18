@@ -25,6 +25,7 @@ export const accountNoti = {
     CREATE: "Tạo tài khoản thành công!!!",
     UPDATE: "Cập nhật tài khoản thành công!!!",
     UPDATE_PASSWORD: "Cập nhật mật khẩu thành công!!!",
+    UPDATE_PROFILE: "Cập nhật thông tin thành công!!!",
   },
 
   ERROR: {
@@ -203,5 +204,15 @@ export const configNoti = {
     BLANK_HOUR_PER_DAY: "Số giờ không được để trống!!!",
     MAX_DAY: "Số ngày không phù hợp!!!",
     MAX_HOUR: "Số giờ không phù hợp!!!",
+  },
+};
+
+export const certificateNoti = {
+  SUCCESS: {
+    SUBMIT: "Thành công nộp chứng chỉ!!!",
+  },
+  ERROR:{
+    BLANK_LINK: "Đường dẫn không được để trống!!!",
+    LINK_FORMAT: "Đường dẫn không hợp lệ!!!",
   },
 };

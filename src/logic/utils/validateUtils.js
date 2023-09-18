@@ -1,6 +1,6 @@
-import { accountNoti, authNoti, configNoti, courseNoti, formulaNoti, positionNoti, skillNoti, templateNoti } from "logic/constants/notification";
+import { accountNoti, authNoti, certificateNoti, configNoti, courseNoti, formulaNoti, positionNoti, skillNoti, templateNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
-import { configOptions, configType, emailRegex, passwordRegex, phoneRegex, roleExchange } from "logic/constants/global";
+import { configOptions, configType, emailRegex, passwordRegex, phoneRegex, roleExchange, urlRegex } from "logic/constants/global";
 
 export function formulaValid(formula) {
   let error = {};
@@ -278,3 +278,50 @@ export function changePasswordWithCodeValid(request) {
   };
   return error;
 }
+
+export function submitCertValid(link) {
+  let error = "";
+  if (link === "" || link === null || link === undefined) {
+    error = certificateNoti.ERROR.BLANK_LINK;
+  } else {
+    if (!urlRegex.test(link)) {
+      error = certificateNoti.ERROR.LINK_FORMAT;
+    };
+  }
+  return error;
+};
+
+export function profileValid(profile, role) {
+  let error = {};
+  if (role === roleExchange.TRAINEE) {
+
+  } else {
+    if (profile.firstName === "" || profile.firstName === undefined || profile.firstName === null) {
+      error["firstName"] = accountNoti.ERROR.BLANK_FIRST_NAME;
+    };
+    if (profile.lastName === "" || profile.lastName === undefined || profile.lastName === null) {
+      error["lastName"] = accountNoti.ERROR.BLANK_LAST_NAME;
+    };
+    if (profile.birthday === "" || profile.birthday === undefined || profile.birthday === null) {
+      error["birthday"] = accountNoti.ERROR.BLANK_BIRTHDAY;
+    } else {
+      if ((new Date().getFullYear() - profile.birthday?.getFullYear() + 1) < 18) {
+        error["birthday"] = accountNoti.ERROR.BIRTHDAY_ERROR;
+      };
+    };
+    if (profile.phoneNumber === "" || profile.phoneNumber === undefined || profile.phoneNumber === null) {
+      error["phoneNumber"] = accountNoti.ERROR.BLANK_PHONE;
+    } else {
+      if (phoneRegex.test(profile.phoneNumber) === false) {
+        error["phoneNumber"] = accountNoti.ERROR.PHONE_FORMAT;
+      };
+    };
+    if (profile.gender === "" || profile.gender === undefined || profile.gender === null) {
+      error["gender"] = accountNoti.ERROR.BLANK_GENDER;
+    };
+    if (profile.address === "" || profile.address === undefined || profile.address === null) {
+      error["address"] = accountNoti.ERROR.BLANK_ADDRESS;
+    };
+  }
+  return error;
+};

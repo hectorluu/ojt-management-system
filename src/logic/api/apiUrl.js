@@ -47,6 +47,7 @@ export const userPath = {
   GET_USER_LIST: "/user",
   GET_USER: "/user/",
   GET_PERSONAL_USER: "/personal-user",
+  UPDATE_PROFILE: "/personal-user",
   CREATE_USER: "/user",
   UPADTE_USER: "",
   GET_TRAINEE_LIST: "/user/trainee",
@@ -127,6 +128,7 @@ export const configPath = {
 export const certificatePath = {
   GET_CERTIFICATE_LIST: "/certificate",
   SUBMIT_CERTIFICATE: "/certificate/submition-certificate",
+  RE_SUBMIT_CERTIFICATE: "/certificate/resubmition-certificate",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;
