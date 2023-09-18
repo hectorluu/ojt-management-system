@@ -165,7 +165,13 @@ const TrainerProfilePage = () => {
               </Button>
             </div>
           </div>
-          <CardHeader title="Thông tin cá nhân" />
+          <CardHeader
+            title={
+              <h4 className="text-xl text-gray-900 font-bold text-left">
+                Thông tin cá nhân
+              </h4>
+            }
+          ></CardHeader>
           <CardContent sx={{ pt: 0 }}>
             <FormRow>
               <FormGroup>
@@ -202,6 +208,7 @@ const TrainerProfilePage = () => {
                   InputProps={{
                     readOnly: true,
                   }}
+                  className="pointer-events-none"
                 />
               </FormGroup>
               <FormGroup>
@@ -235,10 +242,14 @@ const TrainerProfilePage = () => {
               <FormGroup>
                 <Label>Giới tính (*)</Label>
                 <Autocomplete
+                  value={
+                    genderOptions.find(
+                      (label) => label.value === user.gender
+                    ) || { value: 0, label: "Chọn giới tính" }
+                  }
                   disablePortal={false}
                   id="combo-box-demo"
                   options={genderOptions}
-                  value={user.gender}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -285,6 +296,7 @@ const TrainerProfilePage = () => {
                   InputProps={{
                     readOnly: true,
                   }}
+                  className="pointer-events-none"
                 />
               </FormGroup>
               <FormGroup>
@@ -295,6 +307,7 @@ const TrainerProfilePage = () => {
                   InputProps={{
                     readOnly: true,
                   }}
+                  className="pointer-events-none"
                 />
               </FormGroup>
             </FormRow>
@@ -310,7 +323,14 @@ const TrainerProfilePage = () => {
       <Divider />
       <form onSubmit={handleNewPasswordSubmit}>
         <Card>
-          <CardHeader sx={{ mb: -2 }} title="Đổi mật khẩu" />
+          <CardHeader
+            sx={{ mb: -2 }}
+            title={
+              <h4 className="text-xl text-gray-900 font-bold text-left">
+                Đổi mật khẩu
+              </h4>
+            }
+          />
           <CardContent>
             <FormRow>
               <FormGroup>
