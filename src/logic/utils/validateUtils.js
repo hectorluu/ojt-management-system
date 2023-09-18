@@ -1,4 +1,4 @@
-import { accountNoti, authNoti, certificateNoti, configNoti, courseNoti, formulaNoti, positionNoti, skillNoti, templateNoti } from "logic/constants/notification";
+import { accountNoti, authNoti, certificateNoti, configNoti, courseNoti, formulaNoti, positionNoti, skillNoti, templateNoti, universityNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
 import { configOptions, configType, emailRegex, passwordRegex, phoneRegex, roleExchange, urlRegex } from "logic/constants/global";
 
@@ -212,7 +212,24 @@ export function skillValid(skill) {
 };
 
 export function universityValid(university) {
-
+  let error = {};
+  if (university.name === "" || university.name === undefined || university.name === null) {
+    error["name"] = universityNoti.ERROR.BLANK_NAME;
+  };
+  if (university.universityCode === "" || university.universityCode === undefined || university.universityCode === null) {
+    error["universityCode"] = universityNoti.ERROR.BLANK_CODE;
+  };
+  if (university.address === "" || university.address === undefined || university.address === null) {
+    error["address"] = universityNoti.ERROR.BLANK_ADDRESS;
+  };
+  if (!university.joinDate) {
+    error["joinDate"] = universityNoti.ERROR.BLANK_JOIN_DATE;
+  } else {
+    if (university.joinDate > new Date()) {
+      error["joinDate"] = universityNoti.ERROR.ERROR_JOIN_DATE;
+    };
+  };
+  return error;
 };
 
 export function loginValid(user) {
@@ -325,3 +342,25 @@ export function profileValid(profile, role) {
   }
   return error;
 };
+
+export function changePasswordValid(object) {
+  let error = {};
+  if (object.password === null || object.password === undefined || object.password === "") {
+    error["password"] = authNoti.ERROR.BLANK_PASSWORD;
+  };
+  if (object.newPassword === null || object.newPassword === undefined || object.newPassword === "") {
+    error["newPassword"] = authNoti.ERROR.BLANK_PASSWORD;
+  } else {
+    if (!passwordRegex.test(object.newPassword)) {
+      error["newPassword"] = authNoti.ERROR.PASSWORD_FORMAT;
+    };
+  };
+  if (object.confirm === null || object.confirm === undefined || object.confirm === "") {
+    error["confirm"] = authNoti.ERROR.BLANK_PASSWORD;
+  } else {
+    if (object.newPassword !== object.confirm) {
+      error["confirm"] = authNoti.ERROR.COMFIRM_NOT_MATCH;
+    };
+  };
+  return error;
+}

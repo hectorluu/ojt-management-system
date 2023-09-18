@@ -48,6 +48,7 @@ export const userPath = {
   GET_USER: "/user/",
   GET_PERSONAL_USER: "/personal-user",
   UPDATE_PROFILE: "/personal-user",
+  CHANGE_PASSWORD: "/personal-user/password",
   CREATE_USER: "/user",
   UPADTE_USER: "",
   GET_TRAINEE_LIST: "/user/trainee",

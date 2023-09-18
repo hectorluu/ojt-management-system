@@ -24,7 +24,7 @@ import { courseValid } from "logic/utils/validateUtils";
 
 const CreateNewCoursePage = () => {
   const axiosPrivate = useAxiosPrivate();
-  const { handleSubmit, getValues } = useForm();
+  const { handleSubmit } = useForm();
   const [coursePosition, setCoursePosition] = useState([
     { positionId: "", isCompulsory: "" },
   ]);
@@ -63,7 +63,7 @@ const CreateNewCoursePage = () => {
 
   useEffect(() => {
     if (imageURL) {
-      handleAddNewCourse(getValues());
+      handleAddNewCourse();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageURL]);
@@ -111,7 +111,7 @@ const CreateNewCoursePage = () => {
     }
   };
 
-  const handleAddNewCourse = async (values) => {
+  const handleAddNewCourse = async () => {
     try {
       await axiosPrivate.post(coursePath.CREATE_COURSE, {
         name,

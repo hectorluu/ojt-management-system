@@ -17,6 +17,7 @@ export const authNoti = {
     BLANK_CODE: "Mã xác thực không được để trống!!!",
     RESET_CODE: "Không thể gửi mã qua email!!!",
     WRONG_CODE: "Mã xác thực không đúng!!!",
+    COMFIRM_NOT_MATCH: "Mật khẩu không khớp!!!",
   },
 };
 
@@ -145,7 +146,12 @@ export const universityNoti = {
   },
 
   ERROR: {
-    POINT_ERROR: "Thông tin đợt thực tập chưa phù hợp!!!",
+    OJT_BATCH_ERROR: "Thông tin đợt thực tập chưa phù hợp!!!",
+    BLANK_NAME: "Tên trường đại học không được để trống!!!",
+    BLANK_CODE: "Mã trường đại học không được để trống!!!",
+    BLANK_ADDRESS: "Địa chỉ không được để trống!!!",
+    BLANK_JOIN_DATE: "Ngày liên kết không được để trống!!!",
+    ERROR_JOIN_DATE: "Ngày liên kết không hợp lệ!!!",
   },
 };
 

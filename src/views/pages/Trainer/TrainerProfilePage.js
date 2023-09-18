@@ -11,7 +11,6 @@ import {
   useTheme,
   Typography,
   Autocomplete,
-  Skeleton,
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
 import { Label } from "views/components/label";
@@ -22,13 +21,16 @@ import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
 import { accountNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
-import { profileValid } from "logic/utils/validateUtils";
+import { changePasswordValid, profileValid } from "logic/utils/validateUtils";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "logic/config/firebase/firebase";
 import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import { DatePicker } from "@mui/x-date-pickers";
 import ProfileSkeleton from "views/modules/account/ProfileSkeleton";
+import { logOut } from "logic/utils/auth";
+import { useDispatch } from "react-redux";
+import { authUpdateUser } from "logic/store/auth/auth-slice";
 
 const TrainerProfilePage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -52,6 +54,7 @@ const TrainerProfilePage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const moment = require('moment');
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchUserDetail();
@@ -142,15 +145,31 @@ const TrainerProfilePage = () => {
     setIsLoading(false);
   }
 
-  const handleNewPasswordSubmit = async (values) => {
-    try {
-      toast.success(accountNoti.SUCCESS.UPDATE_PASSWORD);
-      setIsLoading(false);
-    } catch (error) {
-      console.log("error", error);
-      toast.error(error);
-      setIsLoading(false);
-    }
+  const handleNewPasswordSubmit = async () => {
+    const request = {
+      password,
+      newPassword,
+      confirm,
+    };
+    const valid = changePasswordValid(request);
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
+      try {
+        await axiosPrivate.put(userPath.CHANGE_PASSWORD, {
+          oldPassword: password,
+          newPassord: newPassword,
+        });
+        toast.success(accountNoti.SUCCESS.UPDATE_PASSWORD);
+        logOut();
+        dispatch(authUpdateUser({}));
+        setIsLoading(false);
+      } catch (error) {
+        console.log("error", error);
+        toast.error(error.response.data);
+        setIsLoading(false);
+      }
+    };
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -363,8 +382,8 @@ const TrainerProfilePage = () => {
             <CardContent>
               <FormRow>
                 <FormGroup>
-                  <Label>Mật khẩu hiện tại (*)</Label>
                   <TextField
+                    type="password"
                     error={error?.password ? true : false}
                     helperText={error?.password}
                     name="password"
@@ -378,6 +397,7 @@ const TrainerProfilePage = () => {
                 <FormGroup>
                   <Label>Mật khẩu mới (*)</Label>
                   <TextField
+                    type="password"
                     error={error?.newPassword ? true : false}
                     helperText={error?.newPassword}
                     name="newPassword"
@@ -391,8 +411,9 @@ const TrainerProfilePage = () => {
                 <FormGroup>
                   <Label>Nhập lại mật khẩu mới (*)</Label>
                   <TextField
-                    error={error?.newPassword ? true : false}
-                    helperText={error?.newPassword}
+                    type="password"
+                    error={error?.confirm ? true : false}
+                    helperText={error?.confirm}
                     name="confirm"
                     placeholder="Nhập lại mật khẩu..."
                     onChange={(e) => setConfirm(e.target.value)}
@@ -407,7 +428,7 @@ const TrainerProfilePage = () => {
                 variant="contained"
                 component={"label"}
                 loading={isLoading}
-                onClick={console.log("click")}>
+                onClick={() => handleNewPasswordSubmit()}>
                 Cập nhật
               </LoadingButton>
             </CardActions>
