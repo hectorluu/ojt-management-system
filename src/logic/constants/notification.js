@@ -138,7 +138,12 @@ export const ojtBatchNoti = {
   },
 
   ERROR: {
-    POINT_ERROR: "Thông tin đợt thực tập chưa phù hợp!!!",
+    BLANK_NAME: "Tên đợt thực tập không được để trống!!!",
+    BLANK_TEMPLATE: "Phải chọn 1 mẫu đánh giá!!!",
+    BLANK_START_DATE: "Ngày bắt đầu không được để trống!!!",
+    BLANK_END_DATE: "Ngày kết thúc không được để trống!!!",
+    END_DATE_ERROR: "Ngày kết thúc phải sau ngày bắt đầu!!!",
+    END_DATE_PAST: "Ngày kết thúc phải sau ngày hiện tại!!!",
   },
 };
 
@@ -173,6 +178,7 @@ export const generalNoti = {
 
   ERROR: {
     SERVER_ERROR: "Lỗi hệ thống!!!",
+    UPLOAD_FAIL: "Tải tệp lên không thành công!!!",
   },
 };
 

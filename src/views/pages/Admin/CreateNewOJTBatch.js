@@ -1,82 +1,79 @@
 import { Fragment, useEffect, useState } from "react";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
-import DatePicker from "react-date-picker";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Label } from "views/components/label";
-import { Input } from "views/components/input";
-import { Dropdown } from "views/components/dropdown";
 import { Button } from "views/components/button";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { ojtBatchPath, universityPath } from "logic/api/apiUrl";
+import { ojtBatchPath, templatePath } from "logic/api/apiUrl";
 import { ojtBatchNoti } from "logic/constants/notification";
+import { useNavigate, useParams } from "react-router-dom";
+import { Autocomplete, TextField } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import { ojtBatchValid } from "logic/utils/validateUtils";
 
 const CreateNewOJTBatch = () => {
-  const [startday, setStartDay] = useState(new Date());
-  const [endday, setEndDay] = useState(new Date());
+  const { universityId } = useParams();
+  const [name, setName] = useState("");
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
+  const [templateId, setTemplateId] = useState("");
+  const [error, setError] = useState({});
+  const [templateList, setTemplateList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const axiosPrivate = useAxiosPrivate();
-
-  const [universityId, setUniversityId] = useState(0);
-  const [universityList, setUniversityList] = useState([]);
-
-  const { handleSubmit, control, reset, watch } = useForm();
+  const { handleSubmit } = useForm();
+  const navigate = useNavigate();
+  const moment = require("moment");
 
   useEffect(() => {
-    fetchUniversities();
-
+    if (!universityId) {
+      navigate("/admin-dashboard");
+    };
+    fetchTemplateList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchUniversities = async () => {
+  const fetchTemplateList = async () => {
     try {
-      const response = await axiosPrivate.get(
-        universityPath.GET_UNIVERSITY_LIST
-      );
-      setUniversityList(response.data.data);
-      console.log("fetchUniversities ~ success", response);
+      const response = await axiosPrivate.get(templatePath.GET_TEMPLATE_UNIVERSITY + universityId);
+      setTemplateList(response.data);
     } catch (error) {
-      console.log("fetchUniversities ~ error", error);
-    }
-  };
-
-  const getDropdownLabel = (
-    name,
-    options = [{ value: "", label: "" }],
-    defaultValue = ""
-  ) => {
-    const value = watch(name) || defaultValue;
-    const label = options.find((label) => label.value === value);
-    return label ? label.label : defaultValue;
-  };
-
-  const resetValues = () => {
-    reset({});
+      console.log("fetchTemplateList ~ error", error);
+    };
   };
 
   const handleAddNewOJTBatch = async (values) => {
-    try {
-      await axiosPrivate.post(ojtBatchPath.CREATE_OJT_BATCH, {
-        ...values,
-      });
-
-      console.log(values);
-      toast.success(ojtBatchNoti.SUCCESS.CREATE);
-      resetValues();
-    } catch (error) {
-      console.log("error", error);
-      toast.error(error);
-    }
-  };
-
-  const getApiDropdownLabel = (
-    value,
-    options = [{ id: "", name: "" }],
-    defaultValue = ""
-  ) => {
-    const label = options.find((label) => label.id === value);
-    return label ? label.name : defaultValue;
+    setIsLoading(true);
+    const batch = {
+      name,
+      startTime,
+      endTime,
+      templateId,
+    };
+    const valid = ojtBatchValid(batch);
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
+      try {
+        await axiosPrivate.post(ojtBatchPath.CREATE_OJT_BATCH, {
+          name,
+          startTime,
+          endTime,
+          templateId,
+          universityId,
+        });
+        toast.success(ojtBatchNoti.SUCCESS.CREATE);
+        setIsLoading(false);
+        navigate(`/batch-list/${universityId}`);
+      } catch (error) {
+        console.log("error", error);
+        toast.error(error);
+        setIsLoading(false);
+      }
+    };
+    setIsLoading(false);
   };
 
   return (
@@ -86,61 +83,66 @@ const CreateNewOJTBatch = () => {
           <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
             Tạo đợt thực tập mới
           </h1>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(handleAddNewOJTBatch)}>
             <FormRow>
               <FormGroup>
                 <Label>Tên đợt thực tập (*)</Label>
-                <Input
-                  control={control}
-                  name="ojtbatchname"
-                  placeholder="Ex: Đợt thực tập quý 3 năm 2021 trường Đại học Bách Khoa Hà Nội"
-                  autoComplete="off"
-                ></Input>
+                <TextField
+                  error={error?.name ? true : false}
+                  helperText={error?.name}
+                  name="name"
+                  placeholder="Ex: Đợt 1"
+                  onChange={(e) => setName(e.target.value)}
+                  onBlur={(e) => setName(e.target.value)} />
               </FormGroup>
-            </FormRow>
-            <FormRow>
               <FormGroup>
-                <Label>Tên trường đại học(*)</Label>
-                <Dropdown>
-                  <Dropdown.Select
-                    placeholder={getApiDropdownLabel(
-                      universityId,
-                      universityList,
-                      "Chọn trường đại học"
-                    )}
-                  ></Dropdown.Select>
-                  <Dropdown.List>
-                    {universityList.map((university) => (
-                      <Dropdown.Option
-                        key={university.id}
-                        onClick={() => setUniversityId(university.id)}
-                      >
-                        <span className="capitalize">{university.name}</span>
-                      </Dropdown.Option>
-                    ))}
-                  </Dropdown.List>
-                </Dropdown>
+                <Label>Mẫu đánh giá(*)</Label>
+                <Autocomplete
+                  disablePortal={false}
+                  id="combo-box-demo"
+                  options={templateList}
+                  getOptionLabel={(option) => option.name}
+                  renderInput={(params) => <TextField {...params} placeholder="Chọn mẫu đánh giá" error={error?.templateId ? true : false} helperText={error?.templateId} />}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setTemplateId(newValue.id);
+                    } else {
+                      setTemplateId("");
+                    }
+                  }}
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                />
               </FormGroup>
             </FormRow>
             <FormRow>
               <FormGroup>
                 <Label>Ngày bắt đầu (*)</Label>
                 <DatePicker
-                  name=""
-                  onChange={setStartDay}
-                  value={startday}
-                  format="dd-MM-yyyy"
-                  autoComplete="off"
+                  value={moment(startTime)}
+                  onChange={(newValue) => setStartTime(newValue.toDate())}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      variant: 'outlined',
+                      error: error?.startTime ? true : false,
+                      helperText: error?.startTime,
+                    },
+                  }}
                 />
               </FormGroup>
               <FormGroup>
                 <Label>Ngày kết thúc (*)</Label>
                 <DatePicker
-                  name=""
-                  onChange={setEndDay}
-                  value={endday}
-                  format="dd-MM-yyyy"
-                  autoComplete="off"
+                  value={moment(endTime)}
+                  onChange={(newValue) => setEndTime(newValue.toDate())}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      variant: 'outlined',
+                      error: error?.endTime ? true : false,
+                      helperText: error?.endTime,
+                    },
+                  }}
                 />
               </FormGroup>
             </FormRow>
@@ -149,6 +151,7 @@ const CreateNewOJTBatch = () => {
               <Button
                 type="submit"
                 className="px-10 mx-auto text-white bg-primary"
+                isLoading={isLoading}
               >
                 Tạo mới{" "}
               </Button>

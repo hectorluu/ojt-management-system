@@ -1,4 +1,4 @@
-import { accountNoti, authNoti, certificateNoti, configNoti, courseNoti, formulaNoti, positionNoti, skillNoti, templateNoti, universityNoti } from "logic/constants/notification";
+import { accountNoti, authNoti, certificateNoti, configNoti, courseNoti, formulaNoti, ojtBatchNoti, positionNoti, skillNoti, templateNoti, universityNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
 import { configOptions, configType, emailRegex, passwordRegex, phoneRegex, roleExchange, urlRegex } from "logic/constants/global";
 
@@ -192,7 +192,27 @@ export function courseValid(course) {
 };
 
 export function ojtBatchValid(ojtBatch) {
-
+  let error = {};
+  if (ojtBatch.name === "" || ojtBatch.name === undefined || ojtBatch.name === null) {
+    error["name"] = ojtBatchNoti.ERROR.BLANK_NAME;
+  };
+  if (ojtBatch.templateId === "" || ojtBatch.templateId === undefined || ojtBatch.templateId === null) {
+    error["templateId"] = ojtBatchNoti.ERROR.BLANK_TEMPLATE;
+  };
+  if (!ojtBatch.startTime) {
+    error["startTime"] = ojtBatchNoti.ERROR.BLANK_START_TIME;
+  };
+  if (!ojtBatch.endTime) {
+    error["endTime"] = ojtBatchNoti.ERROR.BLANK_END_TIME;
+  } else {
+    if (ojtBatch.startTime > ojtBatch.endTime) {
+      error["endTime"] = ojtBatchNoti.ERROR.END_DATE_ERROR;
+    };
+    if (ojtBatch.endTime < new Date()) {
+      error["endTime"] = ojtBatchNoti.ERROR.END_DATE_PAST;
+    }
+  };
+  return error;
 };
 
 export function positionValid(position) {
