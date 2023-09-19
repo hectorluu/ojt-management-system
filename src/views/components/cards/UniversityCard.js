@@ -12,7 +12,6 @@ import {
   Typography,
 } from "@mui/material";
 import { defaultUniversityImage } from "logic/constants/global";
-import { fDate } from "logic/utils/formatTime";
 import { useNavigate } from "react-router-dom";
 
 export const UniversityCard = (props) => {
@@ -72,7 +71,7 @@ export const UniversityCard = (props) => {
             <AccessTimeIcon />
           </SvgIcon>
           <Typography color="text.secondary" display="inline" variant="body2">
-            Ngày liên kết: {fDate(university.joinDate)}
+            Ngày liên kết: {university.joinDate}
           </Typography>
         </Stack>
         <Stack alignItems="center" direction="row" spacing={1}>

@@ -135,6 +135,7 @@ export const formulaNoti = {
 export const ojtBatchNoti = {
   SUCCESS: {
     CREATE: "Thành công tạo đợt thực tập mới!!!",
+    UPDATE: "Thành công cập nhật đợt thực tập!!!",
   },
 
   ERROR: {
@@ -150,6 +151,7 @@ export const ojtBatchNoti = {
 export const universityNoti = {
   SUCCESS: {
     CREATE: "Thành công tạo trường đại học mới!!!",
+    UPDATE: "Thành công cập nhật trường đại học!!!",
   },
 
   ERROR: {
