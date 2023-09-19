@@ -10,11 +10,9 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import PeopleIcon from "@mui/icons-material/People";
 import ApprovalIcon from "@mui/icons-material/Approval";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import SummarizeIcon from "@mui/icons-material/Summarize";
 import GradingIcon from "@mui/icons-material/Grading";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import SendIcon from "@mui/icons-material/Send";
-import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 //items
 const iconsDaskboard = { IconDashboard };
@@ -40,11 +38,9 @@ const iconsPages = {
   PeopleIcon,
   ApprovalIcon,
   CalendarMonthIcon,
-  SummarizeIcon,
   GradingIcon,
   AnalyticsIcon,
   SendIcon,
-  AutoStoriesIcon,
 };
 
 const pages = {
@@ -90,14 +86,6 @@ const pages = {
           icon: iconsPages.SendIcon,
           breadcrumbs: false,
         },
-        {
-          id: "assign-compulsory-course",
-          title: "Phân khóa học",
-          type: "item",
-          url: "/assign-compulsory-course",
-          icon: iconsPages.AutoStoriesIcon,
-          breadcrumbs: false,
-        },
       ],
     },
     {
@@ -106,14 +94,6 @@ const pages = {
       type: "item",
       url: "/trainer-training-plan",
       icon: iconsPages.CalendarMonthIcon,
-      breadcrumbs: false,
-    },
-    {
-      id: "trainer-report-list",
-      title: "Báo cáo",
-      type: "item",
-      url: "/trainer-report-list",
-      icon: iconsPages.SummarizeIcon,
       breadcrumbs: false,
     },
     {

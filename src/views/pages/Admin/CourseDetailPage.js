@@ -38,7 +38,7 @@ const CourseDetailPage = () => {
   return (
     <Fragment>
       <Heading>Chi tiết khóa học {courseId}</Heading>
-      <Card sx={{ display: "flex" }}>
+      <Card sx={{ display: "flex", pointerEvents: "none" }}>
         <CardActionArea sx={{ display: "flex" }}>
           <div className="flex items-center gap-x-[30px] w-full">
             <CourseImage className="h-[266px] flex-1"></CourseImage>

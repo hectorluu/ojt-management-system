@@ -129,9 +129,6 @@ const OJTEvaluationPage = lazy(() =>
 const OJTStatisticsPage = lazy(() =>
   import("views/pages/Trainer/OJTStatisticsPage")
 );
-const TrainerReportListPage = lazy(() =>
-  import("views/pages/Trainer/TrainerReportListPage")
-);
 const TrainerDashboardPage = lazy(() =>
   import("views/pages/Trainer/TrainerDashboardPage")
 );
@@ -149,9 +146,6 @@ const TrainerRoleTraineeDetailPage = lazy(() =>
 );
 const AssignTrainingPlanPage = lazy(() =>
   import("views/pages/Trainer/AssignTrainingPlanPage")
-);
-const AssignCompulsoryCoursePage = lazy(() =>
-  import("views/pages/Trainer/AssignCompulsoryCoursePage")
 );
 
 // Trainee Page
@@ -386,10 +380,6 @@ const router = createBrowserRouter([
             element: <TrainerProfilePage></TrainerProfilePage>,
           },
           {
-            path: "/trainer-report-list",
-            element: <TrainerReportListPage></TrainerReportListPage>,
-          },
-          {
             path: "/trainer-training-plan",
             element: <TrainerTrainingPlanPage></TrainerTrainingPlanPage>,
           },
@@ -402,10 +392,6 @@ const router = createBrowserRouter([
           {
             path: "/assign-training-plan",
             element: <AssignTrainingPlanPage></AssignTrainingPlanPage>,
-          },
-          {
-            path: "/assign-compulsory-course",
-            element: <AssignCompulsoryCoursePage></AssignCompulsoryCoursePage>,
           },
         ],
       },

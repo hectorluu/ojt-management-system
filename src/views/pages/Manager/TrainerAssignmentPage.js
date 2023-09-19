@@ -222,7 +222,7 @@ const TrainerAssignmentPage = () => {
                   </Dropdown.List>
                 </Dropdown>
                 <SubCard sx={{ minHeight: "200px" }}>
-                  <h4 class="text-xl text-gray-900 font-bold text-left ml-2">
+                  <h4 className="text-xl text-gray-900 font-bold text-left ml-2">
                     Thông tin đào tạo viên
                   </h4>
                   {Object.keys(currentTrainer).length !== 0 && (

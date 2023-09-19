@@ -28,7 +28,7 @@ export const UniversityCard = (props) => {
         borderStyle: "solid",
         borderWidth: "2px",
       }}
-      className="hover:shadow-xl transition duration-300 ease-in-out"
+      className="hover:shadow-xl transition duration-300 ease-in-out border-slate-500	"
       onClick={() => navigate("/university/" + university.id)}
     >
       <CardContent>
