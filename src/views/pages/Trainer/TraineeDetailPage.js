@@ -241,7 +241,10 @@ const TraineeDetailPage = () => {
       </Grid>
 
       <Paper className="flex-1 bg-white rounded-lg shadow-xl mt-10 px-6 py-3">
-        <Typography variant="h4" className="text-xl text-gray-900 font-bold">
+        <Typography
+          variant="h4"
+          className="text-xl text-gray-900 font-bold mt-2"
+        >
           Nhật ký công việc
         </Typography>
         <div className="relative px-4">
