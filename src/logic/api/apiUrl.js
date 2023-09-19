@@ -90,7 +90,8 @@ export const templatePath = {
   CREATE_TEMPLATE: "/template",
   GET_TEMPLATE_HEADER: "/template/template-header/criteriaheader",
   GET_TEMPLATE_LIST: "/template",
-  GET_TEMPLATE_DETAIL: "/template/"
+  GET_TEMPLATE_DETAIL: "/template/",
+  GET_TEMPLATE_UNIVERSITY: "/template/list-active-template-by-university/"
 };
 
 export const formulaPath = {

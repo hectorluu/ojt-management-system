@@ -1,4 +1,3 @@
-import Heading from "views/components/common/Heading";
 import { Fragment, useEffect, useState } from "react";
 import { universityPath } from "logic/api/apiUrl";
 import {
@@ -19,12 +18,12 @@ import {
   TablePagination,
 } from "@mui/material";
 import Gap from "views/components/common/Gap";
-import SearchBar from "views/modules/SearchBar";
 import useOnChange from "logic/hooks/useOnChange";
 import signalRService from "logic/utils/signalRService";
 import MainCard from "views/components/cards/MainCard";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
+import SubCard from "views/components/cards/SubCard";
 
 const UniversityListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -41,12 +40,12 @@ const UniversityListPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         universityPath.GET_UNIVERSITY_LIST +
-          "?PageSize=" +
-          rowsPerPage +
-          "&PageIndex=" +
-          page +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}`
+        "?PageSize=" +
+        rowsPerPage +
+        "&PageIndex=" +
+        page +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}`
       );
       setUniversities(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -110,117 +109,119 @@ const UniversityListPage = () => {
         </Button>
       }
     >
-      {/*Custom search bar*/}
-      <Card className="w-3/5">
-        <OutlinedInput
-          defaultValue=""
-          fullWidth
-          placeholder="Tìm kiếm ..."
-          startAdornment={
-            <InputAdornment position="start">
-              <SvgIcon color="action" fontSize="small">
-                <SearchIcon />
-              </SvgIcon>
-            </InputAdornment>
-          }
-          sx={{ maxWidth: 550 }}
-          onChange={setSearchTerm}
-        />
-      </Card>
-      <Gap />
-      <div className="pt-[66px]">
-        <div className="w-full max-w-[1000px] mx-auto text-center">
-          <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] space-x-10">
-            {isLoading ? ( // Render skeleton loading when loading is true
-              // Use the animate-pulse class for skeleton effect
-              <>
-                <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
-                  <Skeleton
-                    className="mb-5 w-full h-full max-h-40 object-contain"
-                    height={300}
-                  />
-                  <Skeleton className="w-full" />
-                  <Skeleton className="w-full" />
-                  <Skeleton className="w-full" />
-                </div>
-                <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
-                  <Skeleton
-                    className="mb-5 w-full h-full max-h-40 object-contain"
-                    height={300}
-                  />
-                  <Skeleton className="w-full" />
-                  <Skeleton className="w-full" />
-                  <Skeleton className="w-full" />
-                </div>
-                <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
-                  <Skeleton
-                    className="mb-5 w-full h-full max-h-40 object-contain"
-                    height={300}
-                  />
-                  <Skeleton className="w-full" />
-                  <Skeleton className="w-full" />
-                  <Skeleton className="w-full" />
-                </div>
-                <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
-                  <Skeleton
-                    className="mb-5 w-full h-full max-h-40 object-contain"
-                    height={300}
-                  />
-                  <Skeleton className="w-full" />
-                  <Skeleton className="w-full" />
-                  <Skeleton className="w-full" />
-                </div>
-              </>
-            ) : universities.length !== 0 ? (
-              universities.map((university) => (
-                <div
-                  className="bg-white shadow-1 flex flex-col justify-center items-center px-6 pb-6 rounded-2xl w-full h-96"
-                  key={university.id}
-                >
-                  <img
-                    src={university.imgURL}
-                    alt=""
-                    className="mb-5 w-full h-full max-h-40 object-contain"
-                    onError={(e) => {
-                      e.target.src = defaultUniversityImage;
-                    }}
-                  />
-                  <div className="max-h-1/2 mt-2">
-                    <h1 className="decoration-solid font-medium text-2xl">
-                      {university.name}
-                    </h1>
-                    <p className="mb-6 mt-3 text-sm text-text3">
-                      {university.address}
-                    </p>
-                  </div>
-                  <Button
-                    className="w-full bg-opacity-20 text-secondary bg-violet-500 hover:bg-violet-300"
-                    onClick={() => {
-                      navigate("/batch-list/" + university.id);
-                    }}
-                  >
-                    Chọn
-                  </Button>
-                </div>
-              ))
-            ) : (
-              <>Không có trường đại học nào được tìm thấy.</>
-            )}
-          </div>
-          <TablePagination
-            labelRowsPerPage="Số dòng"
-            component="div"
-            count={totalItem}
-            page={page - 1}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            labelDisplayedRows={({ from, to, count }) =>
-              `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+      <SubCard>
+        {/*Custom search bar*/}
+        <Card className="w-3/5">
+          <OutlinedInput
+            defaultValue=""
+            fullWidth
+            placeholder="Tìm kiếm ..."
+            startAdornment={
+              <InputAdornment position="start">
+                <SvgIcon color="action" fontSize="small">
+                  <SearchIcon />
+                </SvgIcon>
+              </InputAdornment>
             }
+            sx={{ maxWidth: 550 }}
+            onChange={setSearchTerm}
           />
+        </Card>
+        <Gap />
+        <div className="pt-[66px]">
+          <div className="w-full max-w-[1000px] mx-auto text-center">
+            <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] space-x-10">
+              {isLoading ? ( // Render skeleton loading when loading is true
+                // Use the animate-pulse class for skeleton effect
+                <>
+                  <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
+                    <Skeleton
+                      className="mb-5 w-full h-full max-h-40 object-contain"
+                      height={300}
+                    />
+                    <Skeleton className="w-full" />
+                    <Skeleton className="w-full" />
+                    <Skeleton className="w-full" />
+                  </div>
+                  <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
+                    <Skeleton
+                      className="mb-5 w-full h-full max-h-40 object-contain"
+                      height={300}
+                    />
+                    <Skeleton className="w-full" />
+                    <Skeleton className="w-full" />
+                    <Skeleton className="w-full" />
+                  </div>
+                  <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
+                    <Skeleton
+                      className="mb-5 w-full h-full max-h-40 object-contain"
+                      height={300}
+                    />
+                    <Skeleton className="w-full" />
+                    <Skeleton className="w-full" />
+                    <Skeleton className="w-full" />
+                  </div>
+                  <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
+                    <Skeleton
+                      className="mb-5 w-full h-full max-h-40 object-contain"
+                      height={300}
+                    />
+                    <Skeleton className="w-full" />
+                    <Skeleton className="w-full" />
+                    <Skeleton className="w-full" />
+                  </div>
+                </>
+              ) : universities.length !== 0 ? (
+                universities.map((university) => (
+                  <div
+                    className="bg-white shadow-1 flex flex-col justify-center items-center px-6 pb-6 rounded-2xl w-full h-96"
+                    key={university.id}
+                  >
+                    <img
+                      src={university.imgURL}
+                      alt=""
+                      className="mb-5 w-full h-full max-h-40 object-contain"
+                      onError={(e) => {
+                        e.target.src = defaultUniversityImage;
+                      }}
+                    />
+                    <div className="max-h-1/2 mt-2">
+                      <h1 className="decoration-solid font-medium text-2xl">
+                        {university.name}
+                      </h1>
+                      <p className="mb-6 mt-3 text-sm text-text3">
+                        {university.address}
+                      </p>
+                    </div>
+                    <Button
+                      className="w-full bg-opacity-20 text-secondary bg-violet-500 hover:bg-violet-300"
+                      onClick={() => {
+                        navigate("/university/" + university.id);
+                      }}
+                    >
+                      Chọn
+                    </Button>
+                  </div>
+                ))
+              ) : (
+                <>Không có trường đại học nào được tìm thấy.</>
+              )}
+            </div>
+            <TablePagination
+              labelRowsPerPage="Số dòng"
+              component="div"
+              count={totalItem}
+              page={page - 1}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              labelDisplayedRows={({ from, to, count }) =>
+                `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+              }
+            />
+          </div>
         </div>
-      </div>
+      </SubCard>
     </MainCard>
   );
 };

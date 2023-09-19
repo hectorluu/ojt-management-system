@@ -222,7 +222,7 @@ const router = createBrowserRouter([
             element: <CreateNewUniversityPage></CreateNewUniversityPage>,
           },
           {
-            path: "/create-new-ojt-batch",
+            path: "/create-new-ojt-batch/:universityId",
             element: <CreateNewOJTBatch></CreateNewOJTBatch>,
           },
           {
@@ -238,7 +238,7 @@ const router = createBrowserRouter([
             element: <UniversityListPage></UniversityListPage>,
           },
           {
-            path: "/batch-list/:batchId",
+            path: "/university/:universityId",
             element: <OJTBatchListPage></OJTBatchListPage>,
           },
           {

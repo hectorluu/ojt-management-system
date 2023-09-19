@@ -60,7 +60,8 @@ const SignInPage = () => {
     setIsLoading(true);
     const valid = changePasswordWithCodeValid({ code, password });
     setSubmitError(valid);
-    if (valid === "") {
+    if (Object.keys(valid).length === 0) {
+      console.log("here");
       try {
         await axios.post(authPath.VERIFY_RESET_CODE, { resetCode: code });
         await axios.put(authPath.RESET_PASSWORD, { resetCode: code, newPassword: password });
