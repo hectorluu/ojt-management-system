@@ -28,12 +28,15 @@ export const ojtBatchPath = {
   GET_TRAINER_BATCHES: "/ojtbatch/status-grade-batches-trainer",
   CREATE_OJT_BATCH: "/ojtbatch",
   GET_BATCH_EXPORT_STATUS: "/ojtbatch/export-status-batches",
+  GET_BATCH_DETAIL: "/ojtbatch/",
+  UPDATE_BATCH: "/ojtbatch/",
 };
 
 export const universityPath = {
   GET_UNIVERSITY_LIST: "/university",
   GET_UNIVERSITY: "/university/",
   CREATE_UNIVERSITY: "/university",
+  UPDATE_UNIVERSITY: "/university/",
 };
 
 export const trainingPlanPath = {

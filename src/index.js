@@ -51,15 +51,11 @@ const SkillListPage = lazy(() => import("views/pages/Admin/SkillListPage"));
 const PositionListPage = lazy(() =>
   import("views/pages/Admin/PositionListPage")
 );
-
-// const UniversityDetailPage = lazy(() =>
-//   import("views/pages/Admin/UniversityDetailPage")
-// );
 const UniversityListPage = lazy(() =>
   import("views/pages/Admin/UniversityListPage")
 );
-const OJTBatchListPage = lazy(() =>
-  import("views/pages/Admin/OJTBatchListPage")
+const UniversityDetailPage = lazy(() =>
+  import("views/pages/Admin/UniversityDetailPage")
 );
 
 // Manager Page
@@ -247,7 +243,7 @@ const router = createBrowserRouter([
           },
           {
             path: "/university/:universityId",
-            element: <OJTBatchListPage></OJTBatchListPage>,
+            element: <UniversityDetailPage></UniversityDetailPage>,
           },
           {
             path: "/config",

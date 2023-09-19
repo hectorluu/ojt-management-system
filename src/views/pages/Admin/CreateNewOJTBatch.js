@@ -66,7 +66,7 @@ const CreateNewOJTBatch = () => {
         });
         toast.success(ojtBatchNoti.SUCCESS.CREATE);
         setIsLoading(false);
-        navigate(`/batch-list/${universityId}`);
+        navigate(`/university/${universityId}`);
       } catch (error) {
         console.log("error", error);
         toast.error(error);
