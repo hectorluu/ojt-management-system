@@ -79,52 +79,48 @@ const EarningCard = ({ isLoading }) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid container alignItems="center">
-                <Grid item>
-                  <Grid container alignItems="center">
-                    <Grid item>
-                      <Typography
-                        sx={{
-                          fontSize: "2.125rem",
-                          fontWeight: 500,
-                          mr: 1,
-                          mt: 1.75,
-                          mb: 0.75,
-                        }}
-                      >
-                        $500.00
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Avatar
-                        sx={{
-                          cursor: "pointer",
-                          ...theme.typography.smallAvatar,
-                          backgroundColor: theme.palette.secondary[200],
-                          color: theme.palette.secondary.dark,
-                        }}
-                      >
-                        <ArrowUpwardIcon
-                          fontSize="inherit"
-                          sx={{ transform: "rotate3d(1, 1, 1, 45deg)" }}
-                        />
-                      </Avatar>
-                    </Grid>
+              <Grid item>
+                <Grid container alignItems="center">
+                  <Grid item>
+                    <Typography
+                      sx={{
+                        fontSize: "2.125rem",
+                        fontWeight: 500,
+                        mr: 1,
+                        mt: 1.75,
+                        mb: 0.75,
+                      }}
+                    >
+                      $500.00
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Avatar
+                      sx={{
+                        cursor: "pointer",
+                        ...theme.typography.smallAvatar,
+                        backgroundColor: theme.palette.secondary[200],
+                        color: theme.palette.secondary.dark,
+                      }}
+                    >
+                      <ArrowUpwardIcon
+                        fontSize="inherit"
+                        sx={{ transform: "rotate3d(1, 1, 1, 45deg)" }}
+                      />
+                    </Avatar>
                   </Grid>
                 </Grid>
-                <Grid item>
-                  <Typography
-                    sx={{
-                      fontSize: "1.25rem",
-                      fontWeight: 1000,
-                      color: theme.palette.secondary[100],
-                      textAlign: "right",
-                      ml: 2,
-                    }}
-                  >
-                    Total Earning
-                  </Typography>
-                </Grid>
+              </Grid>
+              <Grid item sx={{ mb: 1.25 }}>
+                <Typography
+                  sx={{
+                    fontSize: "1rem",
+                    fontWeight: 500,
+                    color: theme.palette.secondary[100],
+                  }}
+                >
+                  Total Earning
+                </Typography>
               </Grid>
             </Grid>
           </Box>
