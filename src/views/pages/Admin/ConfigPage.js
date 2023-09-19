@@ -73,7 +73,12 @@ const ConfigPage = () => {
     setIsSubmitLoading(true);
     const valid = configValid(configs);
     if(valid){
-
+      try {
+        await axiosPrivate.put(configPath.UPDATE_CONFIG, configs);
+        fetchConfigs();
+      } catch (error) {
+        console.log("onSave ~ error", error);
+      }
     };
     setIsSubmitLoading(false);
   };
