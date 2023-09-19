@@ -13,9 +13,11 @@ import {
 } from "@mui/material";
 import { defaultUniversityImage } from "logic/constants/global";
 import { fDate } from "logic/utils/formatTime";
+import { useNavigate } from "react-router-dom";
 
 export const UniversityCard = (props) => {
   const { university } = props;
+  const navigate = useNavigate();
   return (
     <Card
       sx={{
@@ -26,6 +28,8 @@ export const UniversityCard = (props) => {
         borderStyle: "solid",
         borderWidth: "2px",
       }}
+      className="hover:shadow-xl transition duration-300 ease-in-out"
+      onClick={() => navigate("/university/" + university.id)}
     >
       <CardContent>
         <Box
@@ -44,7 +48,7 @@ export const UniversityCard = (props) => {
               cursor: "pointer",
             }}
             variant="square"
-            className="w-fit h-[200px] border-4 border-white pointer-events-none"
+            className="w-fit h-[150px] border-4 border-white"
           />
         </Box>
         <Typography align="center" gutterBottom variant="h5">

@@ -18,7 +18,14 @@ import {
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
 import { Label } from "views/components/label";
-import { defaultPageIndex, defaultPageSize, defaultUniversityImage, defaultUserIcon, genderOptions, roleExchange } from "logic/constants/global";
+import {
+  defaultPageIndex,
+  defaultPageSize,
+  defaultUniversityImage,
+  defaultUserIcon,
+  genderOptions,
+  roleExchange,
+} from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { ojtBatchPath, universityPath, userPath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";
@@ -94,7 +101,9 @@ const OJTBatchListPage = () => {
   const fetchUniversityDetail = async () => {
     try {
       setIsFetchingLoading(true);
-      const response = await axiosPrivate.get(universityPath.GET_UNIVERSITY + universityId);
+      const response = await axiosPrivate.get(
+        universityPath.GET_UNIVERSITY + universityId
+      );
       setName(response.data.name);
       setAddress(response.data.address);
       setUrl(response.data.imgURL);
@@ -111,7 +120,7 @@ const OJTBatchListPage = () => {
   useEffect(() => {
     if (!universityId) {
       navigate("/admin-dashboard");
-    };
+    }
     fetchOJTBatchs();
     fetchUniversityDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -134,9 +143,7 @@ const OJTBatchListPage = () => {
   async function uploadFile() {
     setIsLoading(true);
     const joinDateConvert = new Date(joinDate);
-    const university = {
-
-    };
+    const university = {};
     // const valid = profileValid(profile, roleExchange.TRAINER);
     const valid = {};
     setError(valid);
@@ -157,11 +164,12 @@ const OJTBatchListPage = () => {
       }
     }
     setIsLoading(false);
-  };
+  }
 
   const theme = useTheme();
   return (
-    <MainCard title="Hồ sơ"
+    <MainCard
+      title="Hồ sơ"
       secondary={
         <Button
           startIcon={
@@ -179,164 +187,166 @@ const OJTBatchListPage = () => {
         </Button>
       }
     >
-      {
-        isFetchingLoading ? (
-          <ProfileSkeleton />
-        ) : (
-          <>
-            <Card>
-              <div className="relative w-full h-[100px] bg-gray-500 rounded"></div>
-              <div className="flex flex-col items-center -mt-20">
-                <Avatar
-                  src={url}
-                  onError={(e) => {
-                    e.target.src = defaultUniversityImage;
-                  }}
-                  sx={{
-                    ...theme.typography.mediumAvatar,
-                    margin: "8px 0 8px 8px !important",
-                    cursor: "pointer",
-                  }}
-                  className="w-32 h-32 border-4 border-white rounded-full pointer-events-none"
-                />
-                <div className="flex items-center space-x-2">
-                  <Typography variant="h3">
-                    {firstName + " " + lastName}
-                  </Typography>
-                </div>
-
-                <div className="flex justify-center items-center mt-2">
-                  <input
-                    id="image-updload"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => onImageChange(e.target.files[0])}
-                    className="hidden"
-                  />
-                  <Button
-                    variant="outlined"
-                    className="mt-1 p-2 rounded-lg bg-white"
-                    onClick={() => document.getElementById("image-updload").click()}
-                  >
-                    <span className="mx-auto">Chọn ảnh</span>
-                  </Button>
-                </div>
+      {isFetchingLoading ? (
+        <ProfileSkeleton />
+      ) : (
+        <>
+          <Card>
+            <div className="relative w-full h-[100px] bg-gray-500 rounded"></div>
+            <div className="flex flex-col items-center -mt-20">
+              <Avatar
+                src={url}
+                onError={(e) => {
+                  e.target.src = defaultUniversityImage;
+                }}
+                sx={{
+                  ...theme.typography.mediumAvatar,
+                  margin: "8px 0 8px 8px !important",
+                  cursor: "pointer",
+                }}
+                className="w-32 h-32 border-4 border-white rounded-full pointer-events-none"
+              />
+              <div className="flex items-center space-x-2">
+                <Typography variant="h3">
+                  {firstName + " " + lastName}
+                </Typography>
               </div>
-              <CardHeader title="Thông tin" />
-              <CardContent sx={{ pt: 0 }}>
-                <FormGroup>
-                  <Label>Tên Trường (*)</Label>
-                  <TextField
-                    error={error?.name ? true : false}
-                    helperText={error?.name}
-                    name="name"
-                    placeholder="ex: FPT University"
-                    onChange={(e) => setName(e.target.value)}
-                    onBlur={(e) => setName(e.target.value)}
-                    value={name}
-                  />
-                </FormGroup>
-                <FormRow>
-                  <FormGroup>
-                    <Label>Mã (*)</Label>
-                    <TextField
-                      error={error?.universityCode ? true : false}
-                      helperText={error?.universityCode}
-                      name="universityCode"
-                      placeholder="Ex: FPTU"
-                      onChange={(e) => setUniversityCode(e.target.value)}
-                      onBlur={(e) => setUniversityCode(e.target.value)}
-                      value={universityCode}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label>Ngày tham gia (*)</Label>
-                    <DatePicker
-                      value={moment(joinDate)}
-                      onChange={(newValue) => setJoinDate(newValue.toDate())}
-                      slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          variant: "outlined",
-                          error: error?.joinDate ? true : false,
-                          helperText: error?.joinDate,
-                        },
-                      }}
-                    />
-                  </FormGroup>
-                </FormRow>
-                <FormGroup>
-                  <Label>Địa chỉ (*)</Label>
-                  <TextField
-                    error={error?.address ? true : false}
-                    helperText={error?.address}
-                    name="address"
-                    placeholder="Ex: HCM city"
-                    onChange={(e) => setAddress(e.target.value)}
-                    onBlur={(e) => setAddress(e.target.value)}
-                    value={address}
-                  />
-                </FormGroup>
-              </CardContent>
 
-              <CardActions sx={{ justifyContent: "flex-end", mt: -4 }}>
-                <LoadingButton
-                  variant="contained"
-                  component={"label"}
-                  onClick={() => uploadFile()}
-                  loading={isLoading}
-                >
-                  Cập nhật
-                </LoadingButton>
-              </CardActions>
-            </Card>
-            <Divider />
-            <Card>
-              <SubCard>
-                {ojtBatch.map((item) => (
-                  <Card
-                    sx={{ display: "flex" }}
-                    className="rounded-2xl border-0 py-3 pb-1"
-                    key={item.id}
-                  >
-                    <div className="flex items-center space-x-96 gap-x-6 ml-5 w-full">
-                      <div className="flex-1">
-                        <h1 className="text-[22px] font-semibold mb-2">{item.name}</h1>
-                        <p className="mb-2 text-sm text-text2">University</p>
-                        <p className="mb-2 text-sm text-text2">
-                          Thời gian thực tập: {item.startTime} - {item.endTime}
-                        </p>
-                      </div>
-                      <div className="flex items-center justify-center text-white rounded-full w-fit bg-opacity-60">
-                        <Button
-                          className="px-7 hover:shadow-xl transition duration-500 ease-in-out mr-5"
-                          type="button"
-                          kind="secondary"
-                        >
-                          Chọn
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-                <TablePagination
-                  labelRowsPerPage="Số dòng"
-                  component="div"
-                  count={totalItem}
-                  page={page - 1}
-                  onPageChange={handleChangePage}
-                  rowsPerPage={rowsPerPage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  labelDisplayedRows={({ from, to, count }) =>
-                    `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
-                  }
+              <div className="flex justify-center items-center mt-2">
+                <input
+                  id="image-updload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => onImageChange(e.target.files[0])}
+                  className="hidden"
                 />
-              </SubCard>
-            </Card>
-          </>
-        )
-      }
-    </MainCard >
+                <Button
+                  variant="outlined"
+                  className="mt-1 p-2 rounded-lg bg-white"
+                  onClick={() =>
+                    document.getElementById("image-updload").click()
+                  }
+                >
+                  <span className="mx-auto">Chọn ảnh</span>
+                </Button>
+              </div>
+            </div>
+            <CardHeader title="Thông tin" />
+            <CardContent sx={{ pt: 0 }}>
+              <FormGroup>
+                <Label>Tên Trường (*)</Label>
+                <TextField
+                  error={error?.name ? true : false}
+                  helperText={error?.name}
+                  name="name"
+                  placeholder="ex: FPT University"
+                  onChange={(e) => setName(e.target.value)}
+                  onBlur={(e) => setName(e.target.value)}
+                  value={name}
+                />
+              </FormGroup>
+              <FormRow>
+                <FormGroup>
+                  <Label>Mã (*)</Label>
+                  <TextField
+                    error={error?.universityCode ? true : false}
+                    helperText={error?.universityCode}
+                    name="universityCode"
+                    placeholder="Ex: FPTU"
+                    onChange={(e) => setUniversityCode(e.target.value)}
+                    onBlur={(e) => setUniversityCode(e.target.value)}
+                    value={universityCode}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label>Ngày tham gia (*)</Label>
+                  <DatePicker
+                    value={moment(joinDate)}
+                    onChange={(newValue) => setJoinDate(newValue.toDate())}
+                    slotProps={{
+                      textField: {
+                        fullWidth: true,
+                        variant: "outlined",
+                        error: error?.joinDate ? true : false,
+                        helperText: error?.joinDate,
+                      },
+                    }}
+                  />
+                </FormGroup>
+              </FormRow>
+              <FormGroup>
+                <Label>Địa chỉ (*)</Label>
+                <TextField
+                  error={error?.address ? true : false}
+                  helperText={error?.address}
+                  name="address"
+                  placeholder="Ex: HCM city"
+                  onChange={(e) => setAddress(e.target.value)}
+                  onBlur={(e) => setAddress(e.target.value)}
+                  value={address}
+                />
+              </FormGroup>
+            </CardContent>
+
+            <CardActions sx={{ justifyContent: "flex-end", mt: -4 }}>
+              <LoadingButton
+                variant="contained"
+                component={"label"}
+                onClick={() => uploadFile()}
+                loading={isLoading}
+              >
+                Cập nhật
+              </LoadingButton>
+            </CardActions>
+          </Card>
+          <Divider />
+          <Card>
+            <SubCard>
+              {ojtBatch.map((item) => (
+                <Card
+                  sx={{ display: "flex" }}
+                  className="rounded-2xl border-0 py-3 pb-1 hover:shadow-xl transition duration-500 ease-in-out border-solid border-2 border-slate-400"
+                  key={item.id}
+                >
+                  <div className="flex items-center space-x-96 gap-x-6 ml-5 w-full">
+                    <div className="flex-1">
+                      <h1 className="text-[22px] font-semibold mb-2">
+                        {item.name}
+                      </h1>
+                      <p className="mb-2 text-sm text-text2">University</p>
+                      <p className="mb-2 text-sm text-text2">
+                        Thời gian thực tập: {item.startTime} - {item.endTime}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-center text-white rounded-full w-fit bg-opacity-60">
+                      <Button
+                        variant="outlined"
+                        component="label"
+                        className="mr-3"
+                      >
+                        Chọn
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+              <TablePagination
+                labelRowsPerPage="Số dòng"
+                component="div"
+                count={totalItem}
+                page={page - 1}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                labelDisplayedRows={({ from, to, count }) =>
+                  `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+                }
+              />
+            </SubCard>
+          </Card>
+        </>
+      )}
+    </MainCard>
   );
 };
 

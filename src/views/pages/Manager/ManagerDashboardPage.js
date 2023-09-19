@@ -1,41 +1,35 @@
-import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import CampaignFeature from "views/modules/campaign/CampaignFeature";
-import CampaignGrid from "views/modules/campaign/CampaignGrid";
-import CampaignItem from "views/modules/campaign/CampaignItem";
-import React, { Fragment } from "react";
+
+import React, { Fragment, useState } from "react";
 import { useEffect } from "react";
-import { v4 } from "uuid";
+import {
+  Button,
+  CardActions,
+  Unstable_Grid2 as Grid,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import EarningCard from "views/components/cards/EarningCard";
 
 const ManagerDashboardPage = () => {
   const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  const theme = useTheme();
+
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    async function fetchCampaigns() {
-      try {
-        const response = await axiosPrivate.get("/api/campaigns");
-        console.log("fetchCampaigns ~ response", response);
-      } catch (error) {
-        console.log("fetchCampaigns ~ error", error);
-      }
-    }
-    fetchCampaigns();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setIsLoading(false);
   }, []);
+
   return (
     <Fragment>
-      <Heading number={2}>Affiliated Universities </Heading>
-      <CampaignFeature></CampaignFeature>
-      <Gap></Gap>
-      <Heading number={10}>Current Available Courses </Heading>
-      <CampaignGrid>
-        {Array(4)
-          .fill(0)
-          .map((item) => (
-            <CampaignItem key={v4()}></CampaignItem>
-          ))}
-      </CampaignGrid>
-      <Gap></Gap>
+      <Grid container spacing={2}>
+        {/* Card Part */}
+        <Grid item lg={4} md={6} sm={6} xs={12}>
+          <EarningCard isLoading={isLoading} />
+        </Grid>
+      </Grid>
     </Fragment>
   );
 };

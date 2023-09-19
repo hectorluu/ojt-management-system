@@ -107,7 +107,8 @@ const FormulaDetailPage = lazy(() =>
   import("views/pages/Manager/FormulaDetailPage")
 );
 const TemplateDetailPage = lazy(() =>
-  import("views/pages/Manager/TemplateDetailPage"));
+  import("views/pages/Manager/TemplateDetailPage")
+);
 
 // Trainer Page
 const AssignedTraineeListPage = lazy(() =>
@@ -146,6 +147,12 @@ const EvaluateExcelPage = lazy(() =>
 const TrainerRoleTraineeDetailPage = lazy(() =>
   import("views/pages/Trainer/TraineeDetailPage")
 );
+const AssignTrainingPlanPage = lazy(() =>
+  import("views/pages/Trainer/AssignTrainingPlanPage")
+);
+const AssignCompulsoryCoursePage = lazy(() =>
+  import("views/pages/Trainer/AssignCompulsoryCoursePage")
+);
 
 // Trainee Page
 const TraineeCourseDetailPage = lazy(() =>
@@ -170,7 +177,8 @@ const TraineeTrainingPlanPage = lazy(() =>
   import("views/pages/Trainee/TraineeTrainingPlanPage")
 );
 const TraineeCertificateSubmitPage = lazy(() =>
-  import("views/pages/Trainee/TraineeCertificateSubmitPage"));
+  import("views/pages/Trainee/TraineeCertificateSubmitPage")
+);
 
 const container = document.getElementById("root");
 
@@ -391,6 +399,14 @@ const router = createBrowserRouter([
               <TrainerRoleTraineeDetailPage></TrainerRoleTraineeDetailPage>
             ),
           },
+          {
+            path: "/assign-training-plan",
+            element: <AssignTrainingPlanPage></AssignTrainingPlanPage>,
+          },
+          {
+            path: "/assign-compulsory-course",
+            element: <AssignCompulsoryCoursePage></AssignCompulsoryCoursePage>,
+          },
         ],
       },
     ],
@@ -437,7 +453,9 @@ const router = createBrowserRouter([
           },
           {
             path: "/trainee-certificate",
-            element: <TraineeCertificateSubmitPage></TraineeCertificateSubmitPage>,
+            element: (
+              <TraineeCertificateSubmitPage></TraineeCertificateSubmitPage>
+            ),
           },
         ],
       },

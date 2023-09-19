@@ -13,6 +13,8 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import GradingIcon from "@mui/icons-material/Grading";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
+import SendIcon from "@mui/icons-material/Send";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 //items
 const iconsDaskboard = { IconDashboard };
@@ -41,6 +43,8 @@ const iconsPages = {
   SummarizeIcon,
   GradingIcon,
   AnalyticsIcon,
+  SendIcon,
+  AutoStoriesIcon,
 };
 
 const pages = {
@@ -76,6 +80,22 @@ const pages = {
           type: "item",
           url: "/certificate-certify",
           icon: iconsPages.ApprovalIcon,
+          breadcrumbs: false,
+        },
+        {
+          id: "assign-training-plan",
+          title: "Phân kế hoạch",
+          type: "item",
+          url: "/assign-training-plan",
+          icon: iconsPages.SendIcon,
+          breadcrumbs: false,
+        },
+        {
+          id: "assign-compulsory-course",
+          title: "Phân khóa học",
+          type: "item",
+          url: "/assign-compulsory-course",
+          icon: iconsPages.AutoStoriesIcon,
           breadcrumbs: false,
         },
       ],

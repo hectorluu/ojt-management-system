@@ -9,6 +9,8 @@ export const defaultUniversityImage = "/default-university.png";
 
 export const errorPage = "/error-404.png";
 
+export const EarningSVG = "Earning.svg";
+
 export const defaultPageSize = 10;
 
 export const defaultPageIndex = 1;
@@ -17,10 +19,12 @@ export const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 export const phoneRegex = /^[0-9]{10}$/;
 
+//eslint-disable-next-line
 export const passwordRegex =
   /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\w\s]|[_])).{8,}$/;
 
 export const urlRegex =
+  //eslint-disable-next-line
   /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
 export const genderOptions = [
