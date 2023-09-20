@@ -180,17 +180,15 @@ const ListFormulaPage = () => {
           },
         }}
       >
+        <MenuItem onClick={() => handleClickFormulaDetail(selectedItem)}>
+          <ModeEditOutlineIcon sx={{ mr: 2 }} />
+          Sửa
+        </MenuItem>
         {selectedItem.status === 2 ? (
-          <>
-            <MenuItem onClick={() => handleClickFormulaDetail(selectedItem)}>
-              <ModeEditOutlineIcon sx={{ mr: 2 }} />
-              Sửa
-            </MenuItem>
-            <MenuItem onClick={() => onClickDelete(selectedItem)}>
-              <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
-              <span style={{ color: theme.palette.error.main }}>Xóa</span>
-            </MenuItem>
-          </>
+          <MenuItem onClick={() => onClickDelete(selectedItem)}>
+            <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
+            <span style={{ color: theme.palette.error.main }}>Xóa</span>
+          </MenuItem>
         ) : (
           <MenuItem onClick={() => onClickActive(selectedItem)}>
             <ToggleOnIcon sx={{ mr: 2, color: theme.palette.success.main }} />

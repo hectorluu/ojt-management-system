@@ -188,11 +188,15 @@ export const skillNoti = {
   SUCCESS: {
     CREATE: "Thành công tạo kỹ năng mới!!!",
     UPDATE: "Thành công cập nhật kỹ năng!!!",
+    DELETE: "Thành công vô hiệu kỹ năng!!!",
+    ACTIVE: "Thành công kích hoạt kỹ năng!!!",
   },
 
   ERROR: {
     CREATE: "Không tạo được kỹ năng mới!!!",
     UPDATE: "Không cập nhật được kỹ năng!!!",
+    DELETE: "Không vô hiệu được kỹ năng!!!",
+    ACTIVE: "Không kích hoạt được kỹ năng!!!",
     BLANK_NAME: "Tên kỹ năng không được để trống!!!",
   },
 };
@@ -227,8 +231,19 @@ export const certificateNoti = {
   SUCCESS: {
     SUBMIT: "Thành công nộp chứng chỉ!!!",
   },
-  ERROR:{
+  ERROR: {
     BLANK_LINK: "Đường dẫn không được để trống!!!",
     LINK_FORMAT: "Đường dẫn không hợp lệ!!!",
+  },
+};
+
+export const assignNoti = {
+  SUCCESS: {
+    ASSIGN: "Thành công phân công thực tập sinh!!!",
+  },
+  ERROR: {
+    DUPPLICATED: "Thực tập sinh đã tồn tại trong danh sách!!!",
+    BLANK_TRAINER: "Vui lòng chọn đào tạo viên!!!",
+    BLANK_TRAINEE: "Vui lòng chọn thực tập sinh!!!",
   },
 };

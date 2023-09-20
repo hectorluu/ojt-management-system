@@ -40,6 +40,7 @@ import signalRService from "logic/utils/signalRService";
 import { toast } from "react-toastify";
 import { skillNoti } from "logic/constants/notification";
 import { skillValid } from "logic/utils/validateUtils";
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -118,17 +119,13 @@ const SkillListPage = () => {
     setOpen(null);
   };
 
-  const handleClickDeleteModal = (userModalId) => {
-    setOpen(null);
-  };
-
   // Popover
   const [open, setOpen] = useState(null); // use for AnchorEl
-  const [idSeclected, setIdSeclected] = useState(0);
+  const [selected, setSeclected] = useState(0);
 
-  const handleOpenMenu = (event, id) => {
+  const handleOpenMenu = (event, item) => {
     setOpen(event.currentTarget);
-    setIdSeclected(id);
+    setSeclected(item);
   };
 
   const handleCloseMenu = () => {
@@ -174,6 +171,31 @@ const SkillListPage = () => {
       }
     }
     setIsSubmitLoading(false);
+  };
+
+  const handleClickDeleteSkill = async (id) => {
+    try {
+      await axiosPrivate.delete(skillPath.DELETE_SKILL + id);
+      setOpen(null);
+      fetchSkills();
+      toast.success(skillNoti.SUCCESS.DELETE);
+    } catch (e) {
+      toast.error(e.response.data)
+    };
+  };
+
+  const handleClickActiveSkill = async (item) => {
+    try {
+      await axiosPrivate.put(skillPath.UPDATE_SKILL + item.id, {
+        name: item.name,
+        status: 2,
+      });
+      setOpen(null);
+      fetchSkills();
+      toast.success(skillNoti.SUCCESS.ACTIVE);
+    } catch (error) {
+      toast.error(skillNoti.ERROR.UPDATE);
+    }
   };
 
   return (
@@ -231,15 +253,21 @@ const SkillListPage = () => {
           },
         }}
       >
-        <MenuItem onClick={() => handleClickSkillModal(idSeclected)}>
+        <MenuItem onClick={() => handleClickSkillModal(selected)}>
           <ModeEditOutlineIcon sx={{ mr: 2 }} />
           Sửa
         </MenuItem>
-
-        <MenuItem onClick={() => handleClickDeleteModal(idSeclected)}>
-          <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
-          <span style={{ color: theme.palette.error.main }}>Xóa</span>
-        </MenuItem>
+        {selected.status === 2 ? (
+          <MenuItem onClick={() => handleClickDeleteSkill(selected)}>
+            <DeleteIcon sx={{ mr: 2 }} />
+            Xoá
+          </MenuItem>
+        ) : (
+          <MenuItem onClick={() => handleClickActiveSkill(selected)}>
+            <ToggleOnIcon sx={{ mr: 2, color: theme.palette.success.main }} />
+            Kích hoạt
+          </MenuItem>
+        )}
       </Popover>
 
       <SubCard>
@@ -332,7 +360,7 @@ const SkillListPage = () => {
                     <TableCell align="right" width={"10%"}>
                       <IconButton
                         size="large"
-                        onClick={(event) => handleOpenMenu(event, item.id)}
+                        onClick={(event) => handleOpenMenu(event, item)}
                       >
                         <MoreVertIcon />
                       </IconButton>

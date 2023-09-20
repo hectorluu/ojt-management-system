@@ -1,4 +1,4 @@
-import { accountNoti, authNoti, certificateNoti, configNoti, courseNoti, formulaNoti, ojtBatchNoti, positionNoti, skillNoti, templateNoti, universityNoti } from "logic/constants/notification";
+import { accountNoti, assignNoti, authNoti, certificateNoti, configNoti, courseNoti, formulaNoti, ojtBatchNoti, positionNoti, skillNoti, templateNoti, universityNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
 import { configOptions, configType, emailRegex, passwordRegex, phoneRegex, roleExchange, urlRegex } from "logic/constants/global";
 
@@ -384,3 +384,23 @@ export function changePasswordValid(object) {
   };
   return error;
 }
+
+export function updateCourseValid(course) {
+  let error = {};
+  if (course.name === "" || course.name === undefined || course.name === null) {
+    error["name"] = courseNoti.ERROR.BLANK_NAME;
+  };
+  return error;
+};
+
+export function traineeAssignValid(assign) {
+  let error = {};
+  if (assign.trainerId === 0 || assign.trainerId === "" || assign.trainerId === undefined || assign.trainerId === null) {
+
+    error["trainerId"] = assignNoti.ERROR.BLANK_TRAINER;
+  };
+  if (assign.trainees.length === 0) {
+    error["trainees"] = assignNoti.ERROR.BLANK_TRAINEE;
+  }
+  return error;
+};

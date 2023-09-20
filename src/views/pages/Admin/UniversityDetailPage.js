@@ -7,8 +7,6 @@ import {
   CardHeader,
   Divider,
   TextField,
-  Avatar,
-  useTheme,
   Typography,
   SvgIcon,
   TablePagination,
@@ -208,8 +206,6 @@ const UniversityDetailPage = () => {
       setIsSubmitLoading(false);
     }
   };
-
-  const theme = useTheme();
   return (
     <MainCard
       title="Hồ sơ"
@@ -244,21 +240,12 @@ const UniversityDetailPage = () => {
       ) : (
         <>
           <Card>
-            <div className="relative w-full h-[100px] bg-gray-500 rounded"></div>
-            <div className="flex flex-col items-center -mt-20">
-              <Avatar
-                src={url}
-                onError={(e) => {
-                  e.target.src = defaultUniversityImage;
-                }}
-                sx={{
-                  ...theme.typography.mediumAvatar,
-                  margin: "8px 0 8px 8px !important",
-                  cursor: "pointer",
-                }}
-                className="w-32 h-32 border-4 border-white rounded-full pointer-events-none"
+            <div className="relative w-full h-[300px] overflow-hidden">
+              <img className="w-full h-full object-cover object-scale-down" src={url} alt="courseImg"
+                onError={(e) => { e.target.src = defaultUniversityImage }}
               />
-
+            </div>
+            <div className="flex flex-col items-center">
               <div className="flex justify-center items-center mt-2">
                 <input
                   id="image-updload"

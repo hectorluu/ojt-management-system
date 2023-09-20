@@ -13,7 +13,7 @@ export const coursePath = {
   GET_COURSE_LIST: "/course",
   GET_COURSE: "/course/",
   CREATE_COURSE: "/course",
-  UPDATE_COURSE: "",
+  UPDATE_COURSE: "/course/",
 };
 
 export const criteriaPath = {
@@ -59,6 +59,8 @@ export const userPath = {
   GET_TRAINER_BY_ID: "/user/trainer/",
   GET_TRAINEE_BY_ID: "/user/trainee/",
   GET_TRAINEE_LIST_BY_TRAINER: "/user/manager/trainee-list/",
+  GET_UNASSIGNED_TRAINEE: "/user/unassigned-trainee",
+  ASSIGN_TRAINEES_TO_TRAINER: "/user/trainer/assign-trainees",
 };
 
 export const attendancePath = {
@@ -70,6 +72,7 @@ export const skillPath = {
   GET_SKILL: "/skill/",
   CREATE_SKILL: "/skill",
   UPDATE_SKILL: "/skill/",
+  DELETE_SKILL: "/skill/",
 };
 
 export const taskPath = {
