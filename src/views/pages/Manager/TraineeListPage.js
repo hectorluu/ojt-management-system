@@ -82,11 +82,14 @@ const TraineeListPage = () => {
   const [isTraineeDetailModalOpen, setIsTraineeDetailModalOpen] =
     useState(false);
 
+  const [selectedItem, setSelectedItem] = useState(null);
+
   return (
     <MainCard title={`Thực tập sinh (${totalUsers.length})`}>
       <ModalTraineeDetailManager
         isOpen={isTraineeDetailModalOpen}
         onRequestClose={() => setIsTraineeDetailModalOpen(false)}
+        traineeSelected={selectedItem}
       ></ModalTraineeDetailManager>
 
       <SubCard>
@@ -142,9 +145,12 @@ const TraineeListPage = () => {
                         className=""
                         type="button"
                         kind="ghost"
-                        onClick={() => setIsTraineeDetailModalOpen(true)}
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setIsTraineeDetailModalOpen(true);
+                        }}
                       >
-                        Edit
+                        Chi tiết
                       </Button>
                     </TableCell>
                   </TableRow>

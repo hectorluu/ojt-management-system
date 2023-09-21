@@ -31,7 +31,6 @@ import {
 import TablePagination from "@mui/material/TablePagination";
 import { roleOptions } from "logic/constants/global";
 
-import ModalUserDetailAdmin from "views/components/modal/ModalUserDetailAdmin";
 import useOnChange from "logic/hooks/useOnChange";
 import { defaultUserIcon } from "logic/constants/global";
 import signalRService from "logic/utils/signalRService";
@@ -111,12 +110,8 @@ const AccountListPage = () => {
   };
 
   // Modal
-  const [isUserDetailModalOpen, setIsUserDetailModalOpen] = useState(false);
-  const [userModalId, setUserModalId] = useState(0);
 
   const handleClickUserDetail = (userId) => {
-    // setIsUserDetailModalOpen(true);
-    // setUserModalId(userModalId);
     navigate("/account-list/" + userId);
     setOpen(null);
   };
@@ -161,12 +156,7 @@ const AccountListPage = () => {
         </Button>
       }
     >
-      {/* Modal and Popover */}
-      <ModalUserDetailAdmin
-        isOpen={isUserDetailModalOpen}
-        onRequestClose={() => setIsUserDetailModalOpen(false)}
-        userIdClicked={userModalId}
-      ></ModalUserDetailAdmin>
+      {/* Modal and Popover and Dialog */}
 
       <Popover
         open={Boolean(open)}

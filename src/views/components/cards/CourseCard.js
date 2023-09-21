@@ -1,30 +1,26 @@
 import PropTypes from "prop-types";
-import GroupsIcon from "@mui/icons-material/Groups";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  Divider,
-  Stack,
-  SvgIcon,
-  Typography,
-} from "@mui/material";
-import { defaultUniversityImage } from "logic/constants/global";
-import { fDate } from "logic/utils/formatTime";
+import { Avatar, Box, Card, CardContent, Typography } from "@mui/material";
+import { defaultCourseImage } from "logic/constants/global";
+import { useNavigate } from "react-router-dom";
+import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 
 export const CourseCard = (props) => {
   const { course } = props;
+  const navigate = useNavigate();
+
   return (
     <Card
       sx={{
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        minWidth: "23.5rem",
+        minWidth: "15rem",
         borderStyle: "solid",
         borderWidth: "2px",
+      }}
+      className="hover:shadow-xl transition duration-300 ease-in-out border-slate-500"
+      onClick={() => {
+        navigate("/course-list/" + course.id);
       }}
     >
       <CardContent>
@@ -33,57 +29,79 @@ export const CourseCard = (props) => {
             display: "flex",
             justifyContent: "center",
             pb: 3,
+            px: -5,
           }}
         >
           <Avatar
-            src={course.imgURL || defaultUniversityImage}
+            src={course?.imageURL || defaultCourseImage}
             onError={(e) => {
-              e.target.src = defaultUniversityImage;
+              e.target.src = defaultCourseImage;
             }}
             sx={{
               cursor: "pointer",
+              mx: -2,
             }}
             variant="square"
-            className="w-fit h-[200px] border-4 border-white pointer-events-none"
+            className="w-full h-[10rem] border-4 border-white pointer-events-none"
           />
         </Box>
-        <Typography align="center" gutterBottom variant="h5">
-          {course.name}
+        <Typography
+          align="left"
+          gutterBottom
+          variant="h5"
+          sx={{ mt: -2, display: "flex", alignItems: "center" }}
+        >
+          <FolderOpenIcon className="mr-2" />{" "}
+          {course.courseSkills.map((skill, index) => (
+            <span key={skill.skillId} style={{ marginRight: "0.5rem" }}>
+              {skill.skillName}
+              {index < course.courseSkills.length - 1 ? ", " : " "}
+            </span>
+          ))}
         </Typography>
-        <Typography align="center" variant="body1">
-          {course.address}
+        <Typography align="left" gutterBottom variant="h5">
+          <span className="font-bold text-xl">{course.name}</span>
+        </Typography>
+        <Typography align="left" variant="body1" className="mb-2">
+          {course.description}
+        </Typography>
+
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          className="mb-4"
+        >
+          {/* totalActiveEnrollment */}
+          <Typography align="left" variant="body1">
+            <span className="font-bold text-xl">
+              {course.totalActiveEnrollment}
+            </span>{" "}
+            <br />
+            <Typography align="left" variant="body1">
+              Số học viên đang học
+            </Typography>
+          </Typography>
+
+          {/* totalEnrollment */}
+          <Typography align="left" variant="body1">
+            <span className="font-bold text-xl">{course.totalEnrollment}</span>{" "}
+            <br />
+            <Typography align="left" variant="body1">
+              Tổng số lượt học
+            </Typography>
+          </Typography>
+        </Box>
+        <Typography align="left" variant="body1">
+          Nền tảng:{" "}
+          <span className="font-extrabold">{course.platformName}</span>
         </Typography>
       </CardContent>
       <Box sx={{ flexGrow: 1 }} />
-      <Divider />
-      <Stack
-        alignItems="center"
-        direction="row"
-        justifyContent="space-between"
-        spacing={2}
-        sx={{ p: 2 }}
-      >
-        <Stack alignItems="center" direction="row" spacing={1}>
-          <SvgIcon color="action" fontSize="small">
-            <AccessTimeIcon />
-          </SvgIcon>
-          <Typography color="text.secondary" display="inline" variant="body2">
-            Ngày liên kết: {fDate(course.joinDate)}
-          </Typography>
-        </Stack>
-        <Stack alignItems="center" direction="row" spacing={1}>
-          <SvgIcon color="action" fontSize="small">
-            <GroupsIcon />
-          </SvgIcon>
-          <Typography color="text.secondary" display="inline" variant="body2">
-            {course.ojtTrainees} OJTs
-          </Typography>
-        </Stack>
-      </Stack>
     </Card>
   );
 };
 
 CourseCard.propTypes = {
-  university: PropTypes.object.isRequired,
+  course: PropTypes.object.isRequired,
 };

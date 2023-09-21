@@ -40,7 +40,7 @@ import signalRService from "logic/utils/signalRService";
 import { toast } from "react-toastify";
 import { skillNoti } from "logic/constants/notification";
 import { skillValid } from "logic/utils/validateUtils";
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -86,12 +86,12 @@ const SkillListPage = () => {
     try {
       const response = await axiosPrivate.get(
         skillPath.GET_SKILL_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}`
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}`
       );
       setSkills(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -100,7 +100,7 @@ const SkillListPage = () => {
     } catch (error) {
       console.log("fetchSkill ~ error", error);
     }
-  };
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -142,13 +142,13 @@ const SkillListPage = () => {
         setIsSubmitLoading(true);
         await axiosPrivate.post(skillPath.CREATE_SKILL, values);
         setIsSubmitLoading(false);
-        setIsAddSkillModalOpen(false)
+        setIsAddSkillModalOpen(false);
         toast.success(skillNoti.SUCCESS.CREATE);
       } catch (error) {
         setIsSubmitLoading(false);
         toast.error(skillNoti.ERROR.CREATE);
       }
-    };
+    }
     setIsSubmitLoading(false);
   };
 
@@ -180,8 +180,8 @@ const SkillListPage = () => {
       fetchSkills();
       toast.success(skillNoti.SUCCESS.DELETE);
     } catch (e) {
-      toast.error(e.response.data)
-    };
+      toast.error(e.response.data);
+    }
   };
 
   const handleClickActiveSkill = async (item) => {
@@ -259,8 +259,8 @@ const SkillListPage = () => {
         </MenuItem>
         {selected.status === 2 ? (
           <MenuItem onClick={() => handleClickDeleteSkill(selected)}>
-            <DeleteIcon sx={{ mr: 2 }} />
-            Xoá
+            <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
+            <span style={{ color: theme.palette.error.main }}>Xóa</span>
           </MenuItem>
         ) : (
           <MenuItem onClick={() => handleClickActiveSkill(selected)}>

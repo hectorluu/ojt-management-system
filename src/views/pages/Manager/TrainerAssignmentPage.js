@@ -22,12 +22,11 @@ import { defaultPageIndex, genderOptions } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import SubCard from "views/components/cards/SubCard";
 import { LoadingButton } from "@mui/lab";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import { assignNoti } from "logic/constants/notification";
 import { traineeAssignValid } from "logic/utils/validateUtils";
 
 const TrainerAssignmentPage = () => {
-
   const handleTrainerAssignment = async () => {
     setIsLoading(true); // Set loading state
     const assign = {
@@ -35,7 +34,7 @@ const TrainerAssignmentPage = () => {
       trainees: trainees.map((trainee) => ({
         traineeId: trainee.id,
       })),
-    }
+    };
     const valid = traineeAssignValid(assign);
     setError(valid);
     if (Object.keys(valid).length === 0) {
@@ -49,7 +48,7 @@ const TrainerAssignmentPage = () => {
         setIsLoading(false);
         toast.error(error.response.data);
       }
-    };
+    }
     // values
     setIsLoading(false);
   };
@@ -75,17 +74,17 @@ const TrainerAssignmentPage = () => {
     try {
       const response = await axiosPrivate.get(
         userPath.GET_TRAINER_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage
       );
 
       setTrainers(response.data.data);
     } catch (error) {
       toast.error(error.response.data);
     }
-  };
+  }
 
   const fetchUnassignedTrainee = async () => {
     try {
@@ -109,7 +108,7 @@ const TrainerAssignmentPage = () => {
     } else {
       setTrainees([...trainees, item]);
     }
-  }
+  };
 
   return (
     <Fragment>
@@ -125,8 +124,17 @@ const TrainerAssignmentPage = () => {
                 disablePortal={false}
                 id="combo-box-demo"
                 options={trainers}
-                getOptionLabel={(option) => option.firstName + " " + option.lastName}
-                renderInput={(params) => <TextField {...params} placeholder="Chọn đào tạo viên" error={error?.trainerId ? true : false} helperText={error?.trainerId} />}
+                getOptionLabel={(option) =>
+                  option.firstName + " " + option.lastName
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Chọn đào tạo viên"
+                    error={error?.trainerId ? true : false}
+                    helperText={error?.trainerId}
+                  />
+                )}
                 onChange={(event, newValue) => {
                   if (newValue) {
                     setTrainer(newValue);
@@ -136,7 +144,10 @@ const TrainerAssignmentPage = () => {
                 }}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
               />
-              <SubCard sx={{ minHeight: "200px" }}>
+              <SubCard
+                sx={{ minHeight: "200px" }}
+                className="pointer-events-none"
+              >
                 <h4 className="text-xl text-gray-900 font-bold text-left ml-2">
                   Thông tin đào tạo viên
                 </h4>
@@ -147,18 +158,12 @@ const TrainerAssignmentPage = () => {
                         Họ và tên
                       </Typography>
                       <ListItemText
-                        primary={
-                          trainer.firstName || "" +
-                          " " +
-                          trainer.lastName || ""
-                        }
+                        primary={trainer?.firstName + " " + trainer?.lastName}
                       />
                     </ListItem>
                     <Divider />
                     <ListItem className="flex border-b py-2">
-                      <Typography className="font-bold w-24">
-                        Email:
-                      </Typography>
+                      <Typography className="font-bold w-24">Email:</Typography>
                       <ListItemText primary={trainer.email} />
                     </ListItem>
                     <Divider />
@@ -194,8 +199,17 @@ const TrainerAssignmentPage = () => {
                 disablePortal={false}
                 id="combo-box-demo"
                 options={unassigned}
-                getOptionLabel={(option) => option.firstName + " " + option.lastName + " " + option.email}
-                renderInput={(params) => <TextField {...params} placeholder="Chọn thực tập sinh" error={error?.trainees ? true : false} helperText={error?.trainees} />}
+                getOptionLabel={(option) =>
+                  option.firstName + " " + option.lastName + " " + option.email
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Chọn thực tập sinh"
+                    error={error?.trainees ? true : false}
+                    helperText={error?.trainees}
+                  />
+                )}
                 onChange={(event, newValue) => {
                   if (newValue) {
                     handleAddTrainee(newValue);
@@ -215,8 +229,11 @@ const TrainerAssignmentPage = () => {
                       sx={{ mb: 0.5 }}
                     >
                       <Stack direction="row" spacing={1} alignItems="center">
-                        <IconButton aria-label="delete" size="small"
-                          onClick={() => onClickRemove(index)}>
+                        <IconButton
+                          aria-label="delete"
+                          size="small"
+                          onClick={() => onClickRemove(index)}
+                        >
                           <DeleteIcon fontSize="inherit" />
                         </IconButton>
                         <Chip
@@ -224,10 +241,12 @@ const TrainerAssignmentPage = () => {
                           variant="contained"
                           sx={{ p: 1 }}
                           label={trainee.firstName + " " + trainee.lastName}
-                          icon={<Avatar
-                            src={trainee.avatarURL}
-                            sx={{ width: 24, height: 24 }}
-                          />}
+                          icon={
+                            <Avatar
+                              src={trainee.avatarURL}
+                              sx={{ width: 24, height: 24 }}
+                            />
+                          }
                         ></Chip>
                       </Stack>
                     </Tooltip>

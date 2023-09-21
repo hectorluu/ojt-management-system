@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { defaultCourseImage } from "logic/constants/global";
 
 export default function CourseCardDisplay(course) {
-
   const coursePosition = (course) => {
     let text = course.course.coursePositions[0]?.positionName;
     for (let i = 1; i < course.course.coursePositions.length; i++) {
@@ -33,26 +32,29 @@ export default function CourseCardDisplay(course) {
           navigate("/course-list/" + course.course.id);
         }}
       >
-      <div className="flex items-center gap-x-[5px] w-full">
-        <CourseImage className="h-[266px] flex-1" image={course.course.imageURL || defaultCourseImage}></CourseImage>
-        <div className="flex-auto max-w-[600px]">
-          <CourseCategory
-            text={coursePosition(course)}
-            className="text-sm"
-          ></CourseCategory>
-          <CourseName className="mb-4 text-xl font-bold">
-            {course.course.name}
-          </CourseName>
-          <CourseDesc className="mb-6 text-sm">
-            {course.course.description}
-          </CourseDesc>
-          <div className="w-4/4 rounded-full bg-primary h-[5px] mb-6"></div>
-          <CoursePlatform
-            text={course.course.platformName}
-            className="text-sm"
-          ></CoursePlatform>
+        <div className="flex items-center gap-x-[5px] w-full">
+          <CourseImage
+            className="h-[266px] flex-1"
+            image={course.course.imageURL || defaultCourseImage}
+          ></CourseImage>
+          <div className="flex-auto max-w-[600px]">
+            <CourseCategory
+              text={coursePosition(course)}
+              className="text-sm"
+            ></CourseCategory>
+            <CourseName className="mb-4 text-xl font-bold">
+              {course.course.name}
+            </CourseName>
+            <CourseDesc className="mb-6 text-sm">
+              {course.course.description}
+            </CourseDesc>
+            <div className="w-4/4 rounded-full bg-primary h-[5px] mb-6"></div>
+            <CoursePlatform
+              text={course.course.platformName}
+              className="text-sm"
+            ></CoursePlatform>
+          </div>
         </div>
-      </div>
       </CardActionArea>
     </Card>
   );
