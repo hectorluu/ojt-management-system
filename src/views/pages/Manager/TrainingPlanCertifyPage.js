@@ -15,11 +15,11 @@ import {
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { Button } from "views/components/button";
-import ModalTrainingPlanDetailManager from "views/components/modal/ModalTrainingPlanDetailManager";
 import { trainingPlanPath } from "logic/api/apiUrl";
 import MainCard from "views/components/cards/MainCard";
 import SubCard from "views/components/cards/SubCard";
 import StyledTableCell from "views/modules/table/StyledTableCell";
+import ModalTrainingPlanCertifyManager from "views/components/modal/ModalTrainingPlanCertifyManager";
 
 const TrainingPlanCertifyPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -60,15 +60,15 @@ const TrainingPlanCertifyPage = () => {
     setPage(0);
   };
 
-  const [isTraingingPlanDetailModalOpen, setIsTrainingPlanDetailModalOpen] =
+  const [isTraingingPlanCertifyModalOpen, setIsTrainingPlanCertifyModalOpen] =
     useState(false);
 
   return (
     <MainCard title="Phê duyệt kế hoạch đào tạo">
-      <ModalTrainingPlanDetailManager
-        isOpen={isTraingingPlanDetailModalOpen}
-        onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
-      ></ModalTrainingPlanDetailManager>
+      <ModalTrainingPlanCertifyManager
+        isOpen={isTraingingPlanCertifyModalOpen}
+        onRequestClose={() => setIsTrainingPlanCertifyModalOpen(false)}
+      ></ModalTrainingPlanCertifyManager>
 
       <SubCard>
         <TableContainer sx={{ width: 1, mb: -2, borderRadius: 4 }}>
@@ -98,7 +98,7 @@ const TrainingPlanCertifyPage = () => {
                       className=""
                       type="button"
                       kind="ghost"
-                      onClick={() => setIsTrainingPlanDetailModalOpen(true)}
+                      onClick={() => setIsTrainingPlanCertifyModalOpen(true)}
                     >
                       Chi tiết
                     </Button>

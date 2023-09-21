@@ -110,11 +110,8 @@ const AccountListPage = () => {
   };
 
   // Modal
-  const [userModalId, setUserModalId] = useState(0);
 
   const handleClickUserDetail = (userId) => {
-    // setIsUserDetailModalOpen(true);
-    // setUserModalId(userModalId);
     navigate("/account-list/" + userId);
     setOpen(null);
   };
