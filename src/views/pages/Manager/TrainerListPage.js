@@ -78,11 +78,14 @@ const TrainerListPage = () => {
     setPage(0);
   };
 
+  const [selectedItem, setSelectedItem] = useState(null);
+
   return (
     <MainCard title={`Đào tạo viên (${totalUsers.length})`}>
       <ModalTrainerDetailManager
         isOpen={isTrainerDetailModalOpen}
         onRequestClose={() => setIsTrainerDetailModalOpen(false)}
+        selectedTrainer={selectedItem}
       ></ModalTrainerDetailManager>
 
       <SubCard>
@@ -138,9 +141,12 @@ const TrainerListPage = () => {
                         className=""
                         type="button"
                         kind="ghost"
-                        onClick={() => setIsTrainerDetailModalOpen(true)}
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setIsTrainerDetailModalOpen(true);
+                        }}
                       >
-                        Edit
+                        Chi tiết
                       </Button>
                     </TableCell>
                   </TableRow>

@@ -64,7 +64,7 @@ const AdminDashBoardPage = () => {
           courseStatus.ACTIVE
       );
       // Get 5 courses
-      setCourses(response.data.data.slice(0, 5));
+      setCourses(response.data.data.slice(0, 3));
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -94,7 +94,6 @@ const AdminDashBoardPage = () => {
                 </Grid>
               ))}
             </Grid>
-            {/* <OverviewUniversities isLoading={isLoading}></OverviewUniversities> */}
 
             <CardActions
               sx={{ py: 1.25, pt: 2, mb: -2, justifyContent: "center" }}
@@ -123,11 +122,10 @@ const AdminDashBoardPage = () => {
             <Grid container spacing={3}>
               {courses.map((course) => (
                 <Grid xs={12} md={6} lg={4} key={course.id}>
-                  {/* <CourseCard courses={course} /> */}
+                  <CourseCard course={course} />
                 </Grid>
               ))}
             </Grid>
-            {/* <OverviewUniversities isLoading={isLoading}></OverviewUniversities> */}
 
             <CardActions
               sx={{ py: 1.25, pt: 2, mb: -2, justifyContent: "center" }}
@@ -137,7 +135,7 @@ const AdminDashBoardPage = () => {
                 disableElevation
                 sx={{ px: 2 }}
                 component={Link}
-                onClick={() => navigate("/university-list")}
+                onClick={() => navigate("/course-list")}
               >
                 Xem tất cả
                 <ChevronRightIcon />
