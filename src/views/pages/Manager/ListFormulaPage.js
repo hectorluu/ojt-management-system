@@ -247,44 +247,44 @@ const ListFormulaPage = () => {
                 <>
                   <TableRow>
                     <TableCell width={"30%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"5%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"5%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell width={"30%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"5%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"5%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell width={"30%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"5%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"5%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                   </TableRow>
                 </>

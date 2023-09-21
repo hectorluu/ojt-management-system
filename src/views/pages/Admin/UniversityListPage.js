@@ -138,37 +138,41 @@ const UniversityListPage = () => {
                     <Skeleton
                       className="mb-5 w-full h-full max-h-40 object-contain"
                       height={300}
+                      animation="wave"
                     />
-                    <Skeleton className="w-full" />
-                    <Skeleton className="w-full" />
-                    <Skeleton className="w-full" />
+                    <Skeleton className="w-full" animation="wave" />
+                    <Skeleton className="w-full" animation="wave" />
+                    <Skeleton className="w-full" animation="wave" />
                   </div>
                   <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
                     <Skeleton
                       className="mb-5 w-full h-full max-h-40 object-contain"
                       height={300}
+                      animation="wave"
                     />
-                    <Skeleton className="w-full" />
-                    <Skeleton className="w-full" />
-                    <Skeleton className="w-full" />
+                    <Skeleton className="w-full" animation="wave" />
+                    <Skeleton className="w-full" animation="wave" />
+                    <Skeleton className="w-full" animation="wave" />
                   </div>
                   <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
                     <Skeleton
                       className="mb-5 w-full h-full max-h-40 object-contain"
                       height={300}
+                      animation="wave"
                     />
-                    <Skeleton className="w-full" />
-                    <Skeleton className="w-full" />
-                    <Skeleton className="w-full" />
+                    <Skeleton className="w-full" animation="wave" />
+                    <Skeleton className="w-full" animation="wave" />
+                    <Skeleton className="w-full" animation="wave" />
                   </div>
                   <div className="bg-white shadow-1 flex flex-col justify-center items-center pt-[35px] px-6 pb-6 rounded-2xl w-full h-96">
                     <Skeleton
                       className="mb-5 w-full h-full max-h-40 object-contain"
                       height={300}
+                      animation="wave"
                     />
-                    <Skeleton className="w-full" />
-                    <Skeleton className="w-full" />
-                    <Skeleton className="w-full" />
+                    <Skeleton className="w-full" animation="wave" />
+                    <Skeleton className="w-full" animation="wave" />
+                    <Skeleton className="w-full" animation="wave" />
                   </div>
                 </>
               ) : universities.length !== 0 ? (

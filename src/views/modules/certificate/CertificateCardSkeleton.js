@@ -10,14 +10,14 @@ export default function CertificateSkeleton() {
     >
       <div className="flex items-center gap-x-[5px] w-full">
         <div className="flex-auto">
-          <Skeleton variant="rectangular" height={158} />
+          <Skeleton variant="rectangular" height={158} animation="wave" />
         </div>
         <div className="flex-auto">
-          <Skeleton />
-          <Skeleton />
-          <Skeleton />
+          <Skeleton animation="wave" />
+          <Skeleton animation="wave" />
+          <Skeleton animation="wave" />
           <div className="w-4/4 rounded-full bg-primary h-[5px] mb-6 pr-10 mr-10"></div>
-          <Skeleton />
+          <Skeleton animation="wave" />
         </div>
       </div>
     </Card>

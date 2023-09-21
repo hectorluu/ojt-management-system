@@ -126,7 +126,8 @@ const SignInPage = () => {
           name="password"
           placeholder="Nhập mật khẩu mới"
           onChange={(e) => setPassword(e.target.value)}
-          onBlur={(e) => setPassword(e.target.value)} />
+          onBlur={(e) => setPassword(e.target.value)}
+          inputProps={{ maxLength: 15 }} />
       </FormGroup>
       <FormGroup>
         <LoadingButton

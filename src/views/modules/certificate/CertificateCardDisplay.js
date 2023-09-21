@@ -37,6 +37,7 @@ export default function CertificateCardDisplay({ certificate, onClickSubmit, isL
             InputProps={{
               readOnly: certificate?.status === 4 ? true : false,
             }}
+            inputProps={{ maxLength: 500 }}
           />
           <Gap />
           <div className={classNames(

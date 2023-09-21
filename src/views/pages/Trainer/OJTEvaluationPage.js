@@ -1,6 +1,6 @@
 import Gap from "views/components/common/Gap";
 import React, { useEffect, useState } from "react";
-import { Card, SvgIcon, Button } from "@mui/material";
+import { Card, SvgIcon, Button, Skeleton } from "@mui/material";
 import { ojtBatchPath } from "logic/api/apiUrl";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import MainCard from "views/components/cards/MainCard";
@@ -44,7 +44,11 @@ const OJTEvaluationPage = () => {
       <Gap></Gap>
       {isLoading ? (
         <>
-          
+          <Skeleton variant="rectangular" width="100%" height={100} animation="wave" />
+          <Gap></Gap>
+          <Skeleton variant="rectangular" width="100%" height={100} animation="wave" />
+          <Gap></Gap>
+          <Skeleton variant="rectangular" width="100%" height={100} animation="wave" />
         </>
       ) : ojtBatch.length > 0 ? (
         ojtBatch.map((item) => (

@@ -107,10 +107,10 @@ export default function NotificationList({
           <ListItemWrapper>
             <ListItem alignItems="center">
               <ListItemAvatar>
-                <Skeleton variant="circular" width={40} height={40} />
+                <Skeleton variant="circular" width={40} height={40} animation="wave" />
               </ListItemAvatar>
               <ListItemText>
-                <Skeleton variant="text" sx={{ fontSize: "1rem" }} width={40} />
+                <Skeleton variant="text" sx={{ fontSize: "1rem" }} width={40} animation="wave" />
               </ListItemText>
               <ListItemSecondaryAction>
                 <Grid container justifyContent="flex-end">
@@ -119,6 +119,7 @@ export default function NotificationList({
                       variant="text"
                       sx={{ fontSize: "1rem" }}
                       width={40}
+                      animation="wave"
                     />
                   </Grid>
                 </Grid>
@@ -126,9 +127,9 @@ export default function NotificationList({
             </ListItem>
             <Grid container direction="column" className="list-container">
               <Grid item xs={12} sx={{ pb: 2 }}>
-                <Skeleton width={250} />
-                <Skeleton width={250} />
-                <Skeleton width={250} />
+                <Skeleton width={250} animation="wave" />
+                <Skeleton width={250} animation="wave" />
+                <Skeleton width={250} animation="wave" />
               </Grid>
               <Grid item xs={12}>
                 <Grid container>
@@ -137,6 +138,7 @@ export default function NotificationList({
                       variant="text"
                       sx={{ fontSize: "1rem" }}
                       width={40}
+                      animation="wave"
                     />
                   </Grid>
                   <Grid item>
@@ -144,6 +146,7 @@ export default function NotificationList({
                       variant="text"
                       sx={{ fontSize: "1rem" }}
                       width={40}
+                      animation="wave"
                     />
                   </Grid>
                 </Grid>
@@ -154,10 +157,10 @@ export default function NotificationList({
           <ListItemWrapper>
             <ListItem alignItems="center">
               <ListItemAvatar>
-                <Skeleton variant="circular" width={40} height={40} />
+                <Skeleton variant="circular" width={40} height={40} animation="wave" />
               </ListItemAvatar>
               <ListItemText>
-                <Skeleton variant="text" sx={{ fontSize: "1rem" }} width={40} />
+                <Skeleton variant="text" sx={{ fontSize: "1rem" }} width={40} animation="wave" />
               </ListItemText>
               <ListItemSecondaryAction>
                 <Grid container justifyContent="flex-end">
@@ -166,6 +169,7 @@ export default function NotificationList({
                       variant="text"
                       sx={{ fontSize: "1rem" }}
                       width={40}
+                      animation="wave"
                     />
                   </Grid>
                 </Grid>
@@ -173,9 +177,9 @@ export default function NotificationList({
             </ListItem>
             <Grid container direction="column" className="list-container">
               <Grid item xs={12} sx={{ pb: 2 }}>
-                <Skeleton width={250} />
-                <Skeleton width={250} />
-                <Skeleton width={250} />
+                <Skeleton width={250} animation="wave" />
+                <Skeleton width={250} animation="wave" />
+                <Skeleton width={250} animation="wave" />
               </Grid>
               <Grid item xs={12}>
                 <Grid container>
@@ -184,6 +188,7 @@ export default function NotificationList({
                       variant="text"
                       sx={{ fontSize: "1rem" }}
                       width={40}
+                      animation="wave"
                     />
                   </Grid>
                   <Grid item>
@@ -191,6 +196,7 @@ export default function NotificationList({
                       variant="text"
                       sx={{ fontSize: "1rem" }}
                       width={40}
+                      animation="wave"
                     />
                   </Grid>
                 </Grid>
@@ -201,10 +207,10 @@ export default function NotificationList({
           <ListItemWrapper>
             <ListItem alignItems="center">
               <ListItemAvatar>
-                <Skeleton variant="circular" width={40} height={40} />
+                <Skeleton variant="circular" width={40} height={40} animation="wave" />
               </ListItemAvatar>
               <ListItemText>
-                <Skeleton variant="text" sx={{ fontSize: "1rem" }} width={40} />
+                <Skeleton variant="text" sx={{ fontSize: "1rem" }} width={40} animation="wave" />
               </ListItemText>
               <ListItemSecondaryAction>
                 <Grid container justifyContent="flex-end">
@@ -220,9 +226,9 @@ export default function NotificationList({
             </ListItem>
             <Grid container direction="column" className="list-container">
               <Grid item xs={12} sx={{ pb: 2 }}>
-                <Skeleton width={250} />
-                <Skeleton width={250} />
-                <Skeleton width={250} />
+                <Skeleton width={250} animation="wave" />
+                <Skeleton width={250} animation="wave" />
+                <Skeleton width={250} animation="wave" />
               </Grid>
               <Grid item xs={12}>
                 <Grid container>
@@ -231,6 +237,7 @@ export default function NotificationList({
                       variant="text"
                       sx={{ fontSize: "1rem" }}
                       width={40}
+                      animation="wave"
                     />
                   </Grid>
                   <Grid item>
@@ -238,6 +245,7 @@ export default function NotificationList({
                       variant="text"
                       sx={{ fontSize: "1rem" }}
                       width={40}
+                      animation="wave"
                     />
                   </Grid>
                 </Grid>

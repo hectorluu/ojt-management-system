@@ -201,7 +201,7 @@ const FormulaDetailPage = () => {
           <FormGroup className="bg-white">
             <Label>Tên công thức *</Label>
             {isFetchingLoading ? (
-              <Skeleton height={70} />
+              <Skeleton height={70} animation="wave" />
             ) : (
               <TextField
                 value={name}
@@ -279,7 +279,7 @@ const FormulaDetailPage = () => {
           </div>
           <div className="flex justify-center mt-5">
             {isFetchingLoading ? (
-              <Skeleton height={210} width={"100%"} />
+              <Skeleton height={210} width={"100%"} animation="wave" />
             ) : (<TextField
               multiline
               error={error?.calculation ? true : false}

@@ -55,7 +55,8 @@ const ModalAddPositionAdmin = ({ isOpen, onRequestClose, handleAddNewPosition, i
                   name="name"
                   placeholder="Ex: ReactJS"
                   onChange={(e) => setName(e.target.value)}
-                  onBlur={(e) => setName(e.target.value)} />
+                  onBlur={(e) => setName(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />
               </FormGroup>
 
               <div className="mt-5 text-center">

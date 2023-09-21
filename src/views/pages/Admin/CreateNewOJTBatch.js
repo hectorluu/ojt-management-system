@@ -93,7 +93,8 @@ const CreateNewOJTBatch = () => {
                   name="name"
                   placeholder="Ex: Đợt 1"
                   onChange={(e) => setName(e.target.value)}
-                  onBlur={(e) => setName(e.target.value)} />
+                  onBlur={(e) => setName(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />
               </FormGroup>
               <FormGroup>
                 <Label>Mẫu đánh giá(*)</Label>

@@ -4,7 +4,7 @@ import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { formulaPath, templatePath, universityPath } from "logic/api/apiUrl";
+import { formulaPath, templatePath } from "logic/api/apiUrl";
 import ExcelUpload from "views/modules/file/ExcelUpload";
 import { useForm } from "react-hook-form";
 import { isCriteriaOptions, notCriteriaOptions } from "logic/constants/global";
@@ -27,7 +27,6 @@ import { Autocomplete, Skeleton, Stack, TextField } from "@mui/material";
 function TemplateDetailPage() {
   const { templateId } = useParams();
   const axiosPrivate = useAxiosPrivate();
-  const [universityList, setUniversityList] = useState([]);
   const [file, setFile] = useState(null);
   const [url, setUrl] = useState("");
   const [universityId, setUniversityId] = useState(0);
@@ -42,6 +41,7 @@ function TemplateDetailPage() {
   const [name, setName] = useState("");
   const [startCell, setStartCell] = useState("");
   const [newUrl, setNewUrl] = useState("");
+  const [universityName, setUniversityName] = useState("");
   const navigate = useNavigate();
 
 
@@ -91,7 +91,6 @@ function TemplateDetailPage() {
     notCriteria.unshift(...nothing);
     setNotCriteriaList(notCriteria);
     fetchFormulars();
-    fetchUniversities();
     fetchTemplateDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -114,35 +113,19 @@ function TemplateDetailPage() {
     }
   };
 
-  const fetchUniversities = async () => {
-    try {
-      const response = await axiosPrivate.get(
-        universityPath.GET_UNIVERSITY_LIST +
-        "?PageIndex=" +
-        1 +
-        "&PageSize=" +
-        100000 +
-        "&filterStatus=" +
-        2
-      );
-      setUniversityList(response.data.data);
-      console.log("fetchUniversities ~ success", response);
-    } catch (error) {
-      console.log("fetchUniversities ~ error", error);
-    }
-  };
-
   const fetchTemplateDetail = async () => {
     try {
       setIsFetchingLoading(true);
       const response = await axiosPrivate.get(
         templatePath.GET_TEMPLATE_DETAIL + templateId
       );
+      console.log(response.data);
       setName(response.data.name);
       setStartCell(response.data.startCell);
       setUniversityId(response.data.universityId);
       setUrl(response.data.url);
       setTemplateHeaders(response.data.templateHeaders);
+      setUniversityName(response.data.universityName);
       setIsFetchingLoading(false);
       console.log("fetchFormula ~ success", response);
     } catch (error) {
@@ -256,7 +239,7 @@ function TemplateDetailPage() {
             <FormGroup>
               <Label>Tên phiếu đánh giá (*)</Label>
               {isFetchingLoading ? (
-                <Skeleton height={70} />
+                <Skeleton height={70} animation="wave" />
               ) : (
                 <TextField
                   value={name}
@@ -265,31 +248,21 @@ function TemplateDetailPage() {
                   name="name"
                   placeholder="Ex: Phiếu đánh giá thực tập sinh"
                   onChange={(e) => setName(e.target.value)}
-                  onBlur={(e) => setName(e.target.value)} />)}
-
+                  onBlur={(e) => setName(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />)}
             </FormGroup>
             <FormGroup>
               <Label>Tên trường (*)</Label>
               {isFetchingLoading ? (
-                <Skeleton height={70} />
+                <Skeleton height={70} animation="wave" />
               ) : (
-                <Autocomplete
-                  value={universityList.find((label) => label.id === universityId) || { id: 0, name: "Chọn trường đại học" }}
-                  disablePortal={false}
-                  options={universityList}
-                  getOptionLabel={(option) => option.name}
-                  renderInput={(params) => <TextField {...params} placeholder="Chọn trường đại học"
-                    error={error?.universityId ? true : false} helperText={error?.universityId} />}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setUniversityId(newValue.id);
-                      console.log(universityId);
-                    } else {
-                      setUniversityId("");
-                    }
-                  }}
-                  isOptionEqualToValue={(option, value) => option.id === value.id}
-                />)}
+                <TextField
+                  value={universityName}
+                  name="universityName"
+                  placeholder="Ex: Tên trường"
+                  inputProps={{
+                    readOnly: true,
+                  }} />)}
             </FormGroup>
             <FormGroup>
               <Label>Tệp đánh giá (*) (.xlsx)</Label>
@@ -301,7 +274,7 @@ function TemplateDetailPage() {
               <FormGroup>
                 <Label>Ô bắt đầu dữ liệu</Label>
                 {isFetchingLoading ? (
-                  <Skeleton height={70} />
+                  <Skeleton height={70} animation="wave" />
                 ) : (
                   <TextField
                     value={startCell}
@@ -310,7 +283,8 @@ function TemplateDetailPage() {
                     name="startCell"
                     placeholder="Ex: ABZ12"
                     onChange={(e) => setStartCell(e.target.value)}
-                    onBlur={(e) => setStartCell(e.target.value)} />)}
+                    onBlur={(e) => setStartCell(e.target.value)}
+                    inputProps={{ maxLength: 5 }} />)}
               </FormGroup>
             </FormRow>
             {templateHeaders.map((header, index) => (
@@ -326,7 +300,8 @@ function TemplateDetailPage() {
                       name="name"
                       placeholder="Ex: MSSV"
                       onChange={(e) => onChangeCriteriaText(index, "name", e.target.value)}
-                      onBlur={(e) => onChangeCriteriaText(index, "name", e.target.value)} />
+                      onBlur={(e) => onChangeCriteriaText(index, "name", e.target.value)}
+                      inputProps={{ maxLength: 100 }} />
                   </FormGroup>
                   <FormGroup>
                     <Label>Tiêu chí hệ thống</Label>

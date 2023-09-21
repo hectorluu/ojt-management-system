@@ -277,6 +277,7 @@ const UniversityDetailPage = () => {
                   onChange={(e) => setName(e.target.value)}
                   onBlur={(e) => setName(e.target.value)}
                   value={name}
+                  inputProps={{ maxLength: 100 }}
                 />
               </FormGroup>
               <FormRow>
@@ -290,6 +291,7 @@ const UniversityDetailPage = () => {
                     onChange={(e) => setUniversityCode(e.target.value)}
                     onBlur={(e) => setUniversityCode(e.target.value)}
                     value={universityCode}
+                    inputProps={{ maxLength: 100 }}
                   />
                 </FormGroup>
                 <FormGroup>
@@ -318,6 +320,7 @@ const UniversityDetailPage = () => {
                   onChange={(e) => setAddress(e.target.value)}
                   onBlur={(e) => setAddress(e.target.value)}
                   value={address}
+                  inputProps={{ maxLength: 500 }}
                 />
               </FormGroup>
             </CardContent>

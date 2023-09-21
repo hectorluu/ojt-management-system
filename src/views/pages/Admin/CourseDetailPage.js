@@ -257,6 +257,7 @@ const CourseDetailPage = () => {
                   onChange={(e) => setName(e.target.value)}
                   onBlur={(e) => setName(e.target.value)}
                   value={name}
+                  inputProps={{ maxLength: 100 }}
                 />
               </FormGroup>
               <FormRow>
@@ -270,6 +271,7 @@ const CourseDetailPage = () => {
                     onChange={(e) => setLink(e.target.value)}
                     onBlur={(e) => setLink(e.target.value)}
                     value={link}
+                    inputProps={{ maxLength: 500 }}
                   />
                 </FormGroup>
                 <FormGroup>
@@ -282,6 +284,7 @@ const CourseDetailPage = () => {
                     onChange={(e) => setPlatformName(e.target.value)}
                     onBlur={(e) => setPlatformName(e.target.value)}
                     value={platformName}
+                    inputProps={{ maxLength: 100 }}
                   />
                 </FormGroup>
               </FormRow>
@@ -297,6 +300,7 @@ const CourseDetailPage = () => {
                     inputComponent: TextareaAutosize,
                     inputProps: {
                       minRows: 5,
+                      maxLength: 500,
                       maxRows: 8,
                       placeholder: "Viết mô tả về khóa học....",
                       onChange: (e) => setDescription(e.target.value),

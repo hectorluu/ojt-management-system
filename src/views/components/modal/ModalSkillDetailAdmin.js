@@ -88,7 +88,7 @@ const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked, handleU
           <form onSubmit={handleSubmit(handleEditSkill)}>
             <FormGroup>
               <Label>Tên kĩ năng (*)</Label>
-              {isLoading ? <Skeleton height={60} /> :
+              {isLoading ? <Skeleton height={60} animation="wave" /> :
                 <TextField
                   error={error?.name ? true : false}
                   helperText={error?.name}
@@ -96,7 +96,8 @@ const ModalSkillDetailAdmin = ({ isOpen, onRequestClose, skillIdClicked, handleU
                   defaultValue={name}
                   placeholder="Ex: ReactJS"
                   onChange={(e) => setName(e.target.value)}
-                  onBlur={(e) => setName(e.target.value)} />
+                  onBlur={(e) => setName(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />
               }
 
             </FormGroup>

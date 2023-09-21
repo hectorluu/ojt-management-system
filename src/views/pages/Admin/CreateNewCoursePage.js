@@ -155,7 +155,7 @@ const CreateNewCoursePage = () => {
     }
     const valid = courseValid(course);
     setError(valid);
-    if(Object.keys(valid).length > 0) {
+    if (Object.keys(valid).length > 0) {
       if (coursePic) {
         try {
           const imageRef = ref(storage, "images/courses/" + coursePic.name);
@@ -231,7 +231,8 @@ const CreateNewCoursePage = () => {
                   name="name"
                   placeholder="Ex: Object-oriented programming"
                   onChange={(e) => setName(e.target.value)}
-                  onBlur={(e) => setName(e.target.value)} />
+                  onBlur={(e) => setName(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />
               </FormGroup>
               <FormGroup>
                 <Label>Nền tảng (*)</Label>
@@ -241,7 +242,8 @@ const CreateNewCoursePage = () => {
                   name="platformName"
                   placeholder="Ex: Udemy"
                   onChange={(e) => setPlatformName(e.target.value)}
-                  onBlur={(e) => setPlatformName(e.target.value)} />
+                  onBlur={(e) => setPlatformName(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />
               </FormGroup>
             </FormRow>
             <FormGroup>
@@ -252,7 +254,8 @@ const CreateNewCoursePage = () => {
                 name="link"
                 placeholder="Ex: Udemy"
                 onChange={(e) => setLink(e.target.value)}
-                onBlur={(e) => setLink(e.target.value)} />
+                onBlur={(e) => setLink(e.target.value)}
+                inputProps={{ maxLength: 500 }} />
             </FormGroup>
             <FormGroup>
               <Label>Mô tả khóa học *</Label>
@@ -266,6 +269,7 @@ const CreateNewCoursePage = () => {
                   inputProps: {
                     minRows: 5,
                     maxRows: 8,
+                    maxLength: 500,
                     placeholder: "Viết mô tả về khóa học....",
                     onChange: (e) => setDescription(e.target.value),
                     onKeyDown: (e) => setDescription(e.target.value),

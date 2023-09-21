@@ -110,7 +110,7 @@ const ModalEditOJTBatch = ({
               <FormGroup>
                 <Label>Tên đợt thực tập (*)</Label>
                 {isLoading ?
-                  <Skeleton height={60} />
+                  <Skeleton height={60} animation="wave" />
                   :
                   <TextField
                     value={name}
@@ -119,12 +119,13 @@ const ModalEditOJTBatch = ({
                     name="name"
                     placeholder="Ex: Đợt 1"
                     onChange={(e) => setName(e.target.value)}
-                    onBlur={(e) => setName(e.target.value)} />}
+                    onBlur={(e) => setName(e.target.value)}
+                    inputProps={{ maxLength: 100 }} />}
               </FormGroup>
               <FormGroup>
                 <Label>Mẫu đánh giá(*)</Label>
                 {isLoading ?
-                  <Skeleton height={60} />
+                  <Skeleton height={60} animation="wave" />
                   :
                   <Autocomplete
                     value={templateList.find((template) => template.id === templateId) || { id: 0, name: "Chọn tiêu chí" }}
@@ -148,7 +149,7 @@ const ModalEditOJTBatch = ({
               <FormGroup>
                 <Label>Ngày bắt đầu (*)</Label>
                 {isLoading ?
-                  <Skeleton height={60} />
+                  <Skeleton height={60} animation="wave" />
                   :
                   <DatePicker
                     value={moment(startTime)}
@@ -166,7 +167,7 @@ const ModalEditOJTBatch = ({
               <FormGroup>
                 <Label>Ngày kết thúc (*)</Label>
                 {isLoading ?
-                  <Skeleton height={60} />
+                  <Skeleton height={60} animation="wave" />
                   :
                   <DatePicker
                     value={moment(endTime)}

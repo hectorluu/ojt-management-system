@@ -231,7 +231,8 @@ function DefineNewReportPage() {
                 name="name"
                 placeholder="Ex: Phiếu đánh giá thực tập sinh"
                 onChange={(e) => setName(e.target.value)}
-                onBlur={(e) => setName(e.target.value)} />
+                onBlur={(e) => setName(e.target.value)}
+                inputProps={{ maxLength: 100 }} />
             </FormGroup>
             <FormGroup>
               <Label>Tên trường (*)</Label>
@@ -266,7 +267,8 @@ function DefineNewReportPage() {
                   name="startCell"
                   placeholder="Ex: ABZ12"
                   onChange={(e) => setStartCell(e.target.value)}
-                  onBlur={(e) => setStartCell(e.target.value)} />
+                  onBlur={(e) => setStartCell(e.target.value)}
+                  inputProps={{ maxLength: 5 }} />
               </FormGroup>
             </FormRow>
             {templateHeaders.map((header, index) => (
@@ -281,7 +283,8 @@ function DefineNewReportPage() {
                       name="name"
                       placeholder="Ex: MSSV"
                       onChange={(e) => onChangeCriteriaText(index, "name", e.target.value)}
-                      onBlur={(e) => onChangeCriteriaText(index, "name", e.target.value)} />
+                      onBlur={(e) => onChangeCriteriaText(index, "name", e.target.value)}
+                      inputProps={{ maxLength: 100 }} />
                   </FormGroup>
                   <FormGroup>
                     <Label>Tiêu chí hệ thống</Label>

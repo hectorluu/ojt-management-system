@@ -107,9 +107,9 @@ const ConfigPage = () => {
       <SubCard>
         {isLoading ? (
           <>
-            <Skeleton variant="rectangular" height={45} />
+            <Skeleton variant="rectangular" height={45} animation="wave" />
             <Gap />
-            <Skeleton variant="rectangular" height={45} />
+            <Skeleton variant="rectangular" height={45} animation="wave" />
           </>
         ) : configs.length > 0 ? (
           <>

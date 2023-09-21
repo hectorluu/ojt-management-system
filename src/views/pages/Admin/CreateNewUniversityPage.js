@@ -103,7 +103,8 @@ const CreateNewUniversityPage = () => {
                   name="name"
                   placeholder="Ex: Đại học FPT TP Hồ Chí Minh"
                   onChange={(e) => setName(e.target.value)}
-                  onBlur={(e) => setName(e.target.value)} />
+                  onBlur={(e) => setName(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />
               </FormGroup>
               <FormGroup>
                 <Label>Mã trường đại học (*)</Label>
@@ -113,7 +114,8 @@ const CreateNewUniversityPage = () => {
                   name="universityCode"
                   placeholder="Ex: FPT"
                   onChange={(e) => setUniversityCode(e.target.value)}
-                  onBlur={(e) => setUniversityCode(e.target.value)} />
+                  onBlur={(e) => setUniversityCode(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />
               </FormGroup>
             </FormRow>
             <FormRow>
@@ -125,7 +127,8 @@ const CreateNewUniversityPage = () => {
                   name="address"
                   placeholder="Ex: số 54 Liễu Giai, Phường Cống Vị, Quận Ba Đình, Hà Nội..."
                   onChange={(e) => setAddress(e.target.value)}
-                  onBlur={(e) => setAddress(e.target.value)} />
+                  onBlur={(e) => setAddress(e.target.value)}
+                  inputProps={{ maxLength: 500 }} />
               </FormGroup>
               <FormGroup>
                 <Label>Ngày liên kết (*)</Label>

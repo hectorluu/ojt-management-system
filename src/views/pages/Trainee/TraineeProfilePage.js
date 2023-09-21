@@ -243,6 +243,7 @@ const TraineeProfilePage = () => {
                     onChange={(e) => setFirstName(e.target.value)}
                     onBlur={(e) => setFirstName(e.target.value)}
                     value={firstName}
+                    inputProps={{ maxLength: 100 }}
                   />
                 </FormGroup>
                 <FormGroup>
@@ -255,6 +256,7 @@ const TraineeProfilePage = () => {
                     onChange={(e) => setLastName(e.target.value)}
                     onBlur={(e) => setLastName(e.target.value)}
                     value={lastName}
+                    inputProps={{ maxLength: 100 }}
                   />
                 </FormGroup>
               </FormRow>
@@ -267,6 +269,7 @@ const TraineeProfilePage = () => {
                     InputProps={{
                       readOnly: true,
                     }}
+                    inputProps={{ maxLength: 100 }}
                   />
                 </FormGroup>
                 <FormGroup>
@@ -279,6 +282,7 @@ const TraineeProfilePage = () => {
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     onBlur={(e) => setPhoneNumber(e.target.value)}
                     value={phoneNumber}
+                    inputProps={{ maxLength: 20 }}
                   />
                 </FormGroup>
               </FormRow>
@@ -293,6 +297,7 @@ const TraineeProfilePage = () => {
                   onChange={(e) => setAddress(e.target.value)}
                   onBlur={(e) => setAddress(e.target.value)}
                   value={address}
+                  inputProps={{ maxLength: 50 }}
                 />
               </FormGroup>
 
@@ -437,6 +442,7 @@ const TraineeProfilePage = () => {
                     placeholder="Mật khẩu mới..."
                     onChange={(e) => setNewPassword(e.target.value)}
                     onBlur={(e) => setNewPassword(e.target.value)}
+                    inputProps={{ maxLength: 15 }}
                   />
                 </FormGroup>
               </FormRow>
@@ -451,6 +457,7 @@ const TraineeProfilePage = () => {
                     placeholder="Nhập lại mật khẩu..."
                     onChange={(e) => setConfirm(e.target.value)}
                     onBlur={(e) => setConfirm(e.target.value)}
+                    inputProps={{ maxLength: 15 }}
                   />
                 </FormGroup>
               </FormRow>

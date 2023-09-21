@@ -96,14 +96,15 @@ const ModalEditPositionAdmin = ({
           <form onSubmit={handleSubmit(handleEditSkill)}>
             <FormGroup>
               <Label>Tên vị trí (*)</Label>
-              {isLoading ? <Skeleton height={60} /> :
+              {isLoading ? <Skeleton height={60} animation="wave" /> :
                 <TextField
                   error={error?.name ? true : false}
                   helperText={error?.name}
                   name="name"
                   placeholder="Ex: ReactJS"
                   onChange={(e) => setName(e.target.value)}
-                  onBlur={(e) => setName(e.target.value)} />
+                  onBlur={(e) => setName(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />
               }
             </FormGroup>
 

@@ -309,3 +309,9 @@ export const traineeCourseOptions = [
   { value: 1, label: "Khuyến nghị" },
   { value: 2, label: "Tất cả" },
 ];
+
+export const accomplishedTaskStatusOptions = [
+  { value: 1, label: "Đang chờ" },
+  { value: 2, label: "Đạt" },
+  { value: 3, label: "Không đạt" },
+];

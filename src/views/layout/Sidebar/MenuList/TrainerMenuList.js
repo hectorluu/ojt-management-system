@@ -13,6 +13,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import GradingIcon from "@mui/icons-material/Grading";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import SendIcon from "@mui/icons-material/Send";
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 //items
 const iconsDaskboard = { IconDashboard };
@@ -41,6 +42,7 @@ const iconsPages = {
   GradingIcon,
   AnalyticsIcon,
   SendIcon,
+  AssignmentTurnedInIcon,
 };
 
 const pages = {
@@ -94,6 +96,14 @@ const pages = {
       type: "item",
       url: "/trainer-training-plan",
       icon: iconsPages.CalendarMonthIcon,
+      breadcrumbs: false,
+    },
+    {
+      id: "task-certify",
+      title: "Duyệt công việc",
+      type: "item",
+      url: "/task-certify",
+      icon: iconsPages.AssignmentTurnedInIcon,
       breadcrumbs: false,
     },
     {

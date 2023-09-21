@@ -139,4 +139,9 @@ export const certificatePath = {
   RE_SUBMIT_CERTIFICATE: "/certificate/resubmition-certificate",
 };
 
+export const trainerTaskPath = {
+  GET_ACCOMPLISHED_TASK_LIST_BY_BOARD: "/task-process/open-board/{boardId}/task-accomplished",
+  GET_OPEN_BOARD_LIST: "/task-process/open-board",
+};
+
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

@@ -162,6 +162,7 @@ const CreateNewTrainingPlanPage = () => {
                 placeholder="Ex: Kế hoạch đào tạo cho sinh viên trường Đại học FPT quý 3 năm 2023"
                 onChange={(e) => setTrainingPlanName(e.target.value)}
                 onBlur={(e) => setTrainingPlanName(e.target.value)}
+                inputProps={{ maxLength: 100 }}
               />
             </FormGroup>
 
@@ -240,6 +241,7 @@ const CreateNewTrainingPlanPage = () => {
                     placeholder="Ex: Làm việc với đào tạo viên"
                     onChange={(e) => setTrainingPlanDetailName(e.target.value)}
                     onBlur={(e) => setTrainingPlanDetailName(e.target.value)}
+                    inputProps={{ maxLength: 100 }}
                   />
                 </FormGroup>
                 <FormGroup>
@@ -256,6 +258,7 @@ const CreateNewTrainingPlanPage = () => {
                     onBlur={(e) =>
                       setTrainingPlanDetailDescription(e.target.value)
                     }
+                    inputProps={{ maxLength: 500 }}
                   />
                 </FormGroup>
                 <FormRow>

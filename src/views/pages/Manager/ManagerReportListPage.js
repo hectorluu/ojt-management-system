@@ -147,53 +147,53 @@ const ManagerReportListPage = () => {
                 <>
                   <TableRow>
                     <TableCell width={"15%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"25%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"25%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"15%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"20%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell width={"15%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"25%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"25%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"15%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"20%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell width={"15%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"25%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"25%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"15%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"20%"}>
-                      <Skeleton />
+                      <Skeleton animation="wave" />
                     </TableCell>
                   </TableRow>
                 </>

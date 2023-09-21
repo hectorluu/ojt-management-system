@@ -51,12 +51,13 @@ const ModalAddSkillAdmin = ({ isOpen, onRequestClose, handleAddNewSkill, isLoadi
               <FormGroup>
                 <Label>Tên kĩ năng (*)</Label>
                 <TextField
-                  error={error?.name?true:false}
+                  error={error?.name ? true : false}
                   helperText={error?.name}
                   name="name"
                   placeholder="Ex: ReactJS"
                   onChange={(e) => setName(e.target.value)}
-                  onBlur={(e) => setName(e.target.value)} />
+                  onBlur={(e) => setName(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />
               </FormGroup>
 
               <div className="mt-5 text-center">

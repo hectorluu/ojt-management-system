@@ -312,7 +312,8 @@ const CreateNewAccountPage = () => {
                   name="lastName"
                   placeholder="Họ"
                   onChange={(e) => setLastName(e.target.value)}
-                  onBlur={(e) => setLastName(e.target.value)} />
+                  onBlur={(e) => setLastName(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />
               </FormGroup>
               <FormGroup>
                 <Label>Tên (*)</Label>
@@ -322,7 +323,8 @@ const CreateNewAccountPage = () => {
                   name="firstName"
                   placeholder="Tên"
                   onChange={(e) => setFirstName(e.target.value)}
-                  onBlur={(e) => setFirstName(e.target.value)} />
+                  onBlur={(e) => setFirstName(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />
               </FormGroup>
               <FormGroup>
                 <Label>Số điện thoại (*)</Label>
@@ -332,7 +334,8 @@ const CreateNewAccountPage = () => {
                   name="phoneNumber"
                   placeholder="1234567890"
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  onBlur={(e) => setPhoneNumber(e.target.value)} />
+                  onBlur={(e) => setPhoneNumber(e.target.value)}
+                  inputProps={{ maxLength: 20 }} />
               </FormGroup>
             </FormRow>
             {/* This is the line to separate between section */}
@@ -346,7 +349,8 @@ const CreateNewAccountPage = () => {
                   name="email"
                   placeholder="admin@gmail.com"
                   onChange={(e) => setEmail(e.target.value)}
-                  onBlur={(e) => setEmail(e.target.value)} />
+                  onBlur={(e) => setEmail(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />
               </FormGroup>
               <FormGroup>
                 <Label>Địa chỉ (*)</Label>
@@ -356,7 +360,8 @@ const CreateNewAccountPage = () => {
                   name="address"
                   placeholder="Ex: số 54 Liễu Giai, Phường Cống Vị, Quận Ba Đình, Hà Nội..."
                   onChange={(e) => setAddress(e.target.value)}
-                  onBlur={(e) => setAddress(e.target.value)} />
+                  onBlur={(e) => setAddress(e.target.value)}
+                  inputProps={{ maxLength: 50 }} />
               </FormGroup>
             </FormRow>
             <FormRow>
@@ -424,7 +429,8 @@ const CreateNewAccountPage = () => {
                         name="rollNumber"
                         placeholder="Ex: KNS1234"
                         onChange={(e) => setRollNumber(e.target.value)}
-                        onBlur={(e) => setRollNumber(e.target.value)} />
+                        onBlur={(e) => setRollNumber(e.target.value)}
+                        inputProps={{ maxLength: 20 }} />
                     </FormGroup>
                     <FormGroup>
                       <Label>Vị trí (*)</Label>
@@ -498,7 +504,8 @@ const CreateNewAccountPage = () => {
                         name="studentCode"
                         placeholder="Ex: SE150056"
                         onChange={(e) => setStudentCode(e.target.value)}
-                        onBlur={(e) => setStudentCode(e.target.value)} />
+                        onBlur={(e) => setStudentCode(e.target.value)}
+                      inputProps={{ maxLength: 20 }} />
                     </FormGroup>
                     <FormGroup>
                       <Label>Kì thực tập (*)</Label>
