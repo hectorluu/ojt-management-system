@@ -8,7 +8,6 @@ import {
   accomplishedTaskStatusOptions,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
-import CourseCardSkeleton from "views/modules/course/CourseCardSkeleton";
 import MainCard from "views/components/cards/MainCard";
 import {
   Autocomplete,
@@ -19,6 +18,7 @@ import SubCard from "views/components/cards/SubCard";
 import { toast } from "react-toastify";
 import TaskCardDisplay from "views/modules/task/TaskCardDisplay";
 import TaskGrid from "views/modules/task/TaskGrid";
+import TaskCardSkeleton from "views/modules/task/TaskCardSkeleton";
 
 const TrainerTaskCertifyPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -123,9 +123,9 @@ const TrainerTaskCertifyPage = () => {
           {boardId ? isLoading ? ( // Render skeleton loading when loading is true
             // Use the animate-pulse class for skeleton effect
             <>
-              <CourseCardSkeleton />
-              <CourseCardSkeleton />
-              <CourseCardSkeleton />
+              <TaskCardSkeleton />
+              <TaskCardSkeleton />
+              <TaskCardSkeleton />
             </>
           ) : taskList.length !== 0 ? (
             taskList.map((item) => (
