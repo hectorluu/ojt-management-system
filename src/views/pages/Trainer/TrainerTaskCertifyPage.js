@@ -7,8 +7,6 @@ import {
   defaultPageIndex,
   accomplishedTaskStatusOptions,
 } from "logic/constants/global";
-import CourseCardDisplay from "views/modules/course/CourseCardDisplay";
-import CourseGrid from "views/modules/course/CourseGrid";
 import TablePagination from "@mui/material/TablePagination";
 import CourseCardSkeleton from "views/modules/course/CourseCardSkeleton";
 import MainCard from "views/components/cards/MainCard";
@@ -19,6 +17,8 @@ import {
 } from "@mui/material";
 import SubCard from "views/components/cards/SubCard";
 import { toast } from "react-toastify";
+import TaskCardDisplay from "views/modules/task/TaskCardDisplay";
+import TaskGrid from "views/modules/task/TaskGrid";
 
 const TrainerTaskCertifyPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -119,7 +119,7 @@ const TrainerTaskCertifyPage = () => {
           </div>
         </div>
         <Gap></Gap>
-        <CourseGrid type="secondary">
+        <TaskGrid>
           {boardId ? isLoading ? ( // Render skeleton loading when loading is true
             // Use the animate-pulse class for skeleton effect
             <>
@@ -129,7 +129,7 @@ const TrainerTaskCertifyPage = () => {
             </>
           ) : taskList.length !== 0 ? (
             taskList.map((item) => (
-              <CourseCardSkeleton />
+              <TaskCardDisplay task={item} key={item.id} />
             ))
           ) : (
             <>Không có công việc nào được tìm thấy.</>
@@ -137,7 +137,7 @@ const TrainerTaskCertifyPage = () => {
             <Typography variant="h3" color="text.secondary" sx={{ mb: 2 }}>
               Vui lòng chọn bảng Trello
             </Typography>}
-        </CourseGrid>
+        </TaskGrid>
         <TablePagination
           labelRowsPerPage="Số dòng"
           component="div"
