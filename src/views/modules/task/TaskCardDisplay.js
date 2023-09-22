@@ -50,7 +50,7 @@ export default function TaskCardDisplay({ task }) {
             </Typography>
           </CardContent>
           <CardActions disableSpacing>
-            {task.status === 1 ?
+            {task.processStatus === 1 ?
               <>
                 <IconButton aria-label="Từ chối">
                   <ClearIcon color="error" />
@@ -60,11 +60,11 @@ export default function TaskCardDisplay({ task }) {
                 </IconButton>
               </> :
               <Chip
-                color={task.status === 3 ? "error" : "success"}
+                color={task.processStatus === 3 ? "error" : "success"}
                 sx={{ marginLeft: "22px" }}
-                startIcon={task.status === 3 ? <CloseIcon /> : <DoneIcon />}
+                startIcon={task.processStatus === 3 ? <CloseIcon /> : <DoneIcon />}
               >
-                {task.status === 3 ? "Chưa đạt" : "Đạt"}
+                {task.processStatus === 3 ? "Chưa đạt" : "Đạt"}
               </Chip>}
             <ExpandMore
               expand={expanded}
@@ -90,7 +90,7 @@ export default function TaskCardDisplay({ task }) {
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          {task.status === 1 ?
+          {task.processStatus === 1 ?
             <>
               <IconButton aria-label="Từ chối">
                 <ClearIcon color="error" />
@@ -100,11 +100,11 @@ export default function TaskCardDisplay({ task }) {
               </IconButton>
             </> :
             <Chip
-              color={task.status === 3 ? "error" : "success"}
+              color={task.processStatus === 3 ? "error" : "success"}
               sx={{ marginLeft: "22px" }}
-              startIcon={task.status === 3 ? <CloseIcon /> : <DoneIcon />}
+              startIcon={task.processStatus === 3 ? <CloseIcon /> : <DoneIcon />}
             >
-              {task.status === 3 ? "Chưa đạt" : "Đạt"}
+              {task.processStatus === 3 ? "Chưa đạt" : "Đạt"}
             </Chip>}
           <ExpandMore
             expand={expanded}
