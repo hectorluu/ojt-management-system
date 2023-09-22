@@ -88,12 +88,12 @@ const SkillListPage = () => {
     try {
       const response = await axiosPrivate.get(
         skillPath.GET_SKILL_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}`
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}`
       );
       setSkills(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -113,25 +113,22 @@ const SkillListPage = () => {
     setPage(1);
   };
 
-  const [skillModalId, setSkillModalId] = useState(0);
-
   const handleClickSkillModal = (id) => {
     setIsSkillDetailModalOpen(true);
-    setSkillModalId(id);
-    setOpen(null);
+    setOpen(false);
   };
 
   // Popover
-  const [open, setOpen] = useState(null); // use for AnchorEl
-  const [selected, setSeclected] = useState(0);
+  const [open, setOpen] = useState(false); // use for AnchorEl
+  const [selected, setSelected] = useState({});
 
   const handleOpenMenu = (event, item) => {
     setOpen(event.currentTarget);
-    setSeclected(item);
+    setSelected(item);
   };
 
   const handleCloseMenu = () => {
-    setOpen(null);
+    setOpen(false);
   };
 
   const theme = useTheme();
@@ -160,6 +157,7 @@ const SkillListPage = () => {
     if (Object.keys(valid).length === 0) {
       try {
         setIsSubmitLoading(true);
+        setSelected({});
         await axiosPrivate.put(skillPath.UPDATE_SKILL + values.id, {
           name: values.name,
           status: values.status,
@@ -175,10 +173,10 @@ const SkillListPage = () => {
     setIsSubmitLoading(false);
   };
 
-  const handleClickDeleteSkill = async (id) => {
+  const handleClickDeleteSkill = async (item) => {
     try {
-      await axiosPrivate.put(skillPath.DELETE_SKILL + id);
-      setIsModalDeleteOpen(null);
+      await axiosPrivate.put(skillPath.DELETE_SKILL + item.id);
+      setIsModalDeleteOpen(false);
       fetchSkills();
       toast.success(skillNoti.SUCCESS.DELETE);
     } catch (e) {
@@ -189,7 +187,7 @@ const SkillListPage = () => {
   const handleClickActiveSkill = async (item) => {
     try {
       await axiosPrivate.put(skillPath.ACTIVE_SKILL + item.id);
-      setOpen(null);
+      setOpen(false);
       fetchSkills();
       toast.success(skillNoti.SUCCESS.ACTIVE);
     } catch (error) {
@@ -207,7 +205,7 @@ const SkillListPage = () => {
 
   const handleOpenDeleteModal = (skill) => {
     setIsModalDeleteOpen(true);
-    setOpen(null);
+    setOpen(false);
   };
 
   return (
@@ -234,7 +232,7 @@ const SkillListPage = () => {
       <ModalSkillDetailAdmin
         isOpen={isSkillDetailModalOpen}
         onRequestClose={() => setIsSkillDetailModalOpen(false)}
-        skillIdClicked={skillModalId}
+        skillIdClicked={selected.id}
         handleUpdateSkill={handleUpdateSkill}
         isSubmitLoading={isSubmitLoading}
         error={error}
@@ -322,7 +320,7 @@ const SkillListPage = () => {
               }}
               component="label"
               className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
-              onClick={() => handleClickDeleteSkill(selected.id)}
+              onClick={() => handleClickDeleteSkill(selected)}
             >
               <span className="text-white">Xác nhận</span>
             </Button>

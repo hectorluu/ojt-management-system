@@ -18,14 +18,13 @@ import {
   IconButton,
 } from "@mui/material";
 import { userPath } from "logic/api/apiUrl";
-import { defaultPageIndex, genderOptions } from "logic/constants/global";
+import { genderOptions } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import SubCard from "views/components/cards/SubCard";
 import { LoadingButton } from "@mui/lab";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { assignNoti } from "logic/constants/notification";
 import { traineeAssignValid } from "logic/utils/validateUtils";
-import Gap from "views/components/common/Gap";
 
 const TrainerAssignmentPage = () => {
   const handleTrainerAssignment = async () => {
@@ -56,8 +55,6 @@ const TrainerAssignmentPage = () => {
 
   const [trainers, setTrainers] = useState([]);
   const [trainees, setTrainees] = useState([]);
-  const [page] = React.useState(defaultPageIndex);
-  const [rowsPerPage] = React.useState(100000);
   const axiosPrivate = useAxiosPrivate();
   const [error, setError] = useState({});
   const [trainer, setTrainer] = useState({});
@@ -76,9 +73,9 @@ const TrainerAssignmentPage = () => {
       const response = await axiosPrivate.get(
         userPath.GET_TRAINER_LIST +
         "?PageIndex=" +
-        page +
+        1 +
         "&PageSize=" +
-        rowsPerPage
+        100000
       );
 
       setTrainers(response.data.data);
@@ -268,15 +265,6 @@ const TrainerAssignmentPage = () => {
               Lưu thay đổi
             </LoadingButton>
           </div>
-          <Gap />
-          {trainer.id ? (
-            <FormGroup>
-              <Label>Thực tập sinh hiện tại</Label>
-              <SubCard>
-
-              </SubCard>
-            </FormGroup>
-          ) : null}
         </div>
       </div>
     </Fragment>
