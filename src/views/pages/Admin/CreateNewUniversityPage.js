@@ -141,6 +141,7 @@ const CreateNewUniversityPage = () => {
                       variant: 'outlined',
                       error: error?.joinDate ? true : false,
                       helperText: error?.joinDate,
+                      readOnly: true,
                     },
                   }}
                 />

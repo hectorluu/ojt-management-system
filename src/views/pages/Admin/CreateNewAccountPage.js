@@ -391,6 +391,7 @@ const CreateNewAccountPage = () => {
                       variant: 'outlined',
                       error: error?.birthday ? true : false,
                       helperText: error?.birthday,
+                      readOnly: true,
                     },
                   }}
                 />

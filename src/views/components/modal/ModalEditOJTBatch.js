@@ -160,6 +160,7 @@ const ModalEditOJTBatch = ({
                         variant: 'outlined',
                         error: error?.startTime ? true : false,
                         helperText: error?.startTime,
+                        readOnly: true,
                       },
                     }}
                   />}
@@ -178,6 +179,7 @@ const ModalEditOJTBatch = ({
                         variant: 'outlined',
                         error: error?.endTime ? true : false,
                         helperText: error?.endTime,
+                        readOnly: true,
                       },
                     }}
                   />}

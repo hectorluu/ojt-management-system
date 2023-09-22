@@ -127,6 +127,7 @@ const CreateNewOJTBatch = () => {
                       variant: 'outlined',
                       error: error?.startTime ? true : false,
                       helperText: error?.startTime,
+                      readOnly: true,
                     },
                   }}
                 />
@@ -142,6 +143,7 @@ const CreateNewOJTBatch = () => {
                       variant: 'outlined',
                       error: error?.endTime ? true : false,
                       helperText: error?.endTime,
+                      readOnly: true,
                     },
                   }}
                 />

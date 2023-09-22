@@ -111,10 +111,12 @@ export const trainingPlanNoti = {
 
   ERROR: {
     BLANK_NAME: "Tên kế hoạch đào tạo không được để trống!!!",
+    BLANK_DETAILS_NAME: "Chi tiết không được để trống!!!",
     BLANK_DESCRIPTION: "Mô tả không được để trống!!!",
     BLANK_STARTDAY: "Ngày bắt đầu không được để trống!!!",
     BLANK_ENDDAY: "Ngày kết thúc không được để trống!!!",
     ITEMS_OVERFLOW: "Đã đạt giới hạn số mục của hệ thống!!!",
+    INVALID_ENDDAY: "Ngày kết thúc phải sau ngày bắt đầu!!!",
   },
 };
 

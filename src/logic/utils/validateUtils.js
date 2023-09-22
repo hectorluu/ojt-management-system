@@ -1,4 +1,4 @@
-import { accountNoti, assignNoti, authNoti, certificateNoti, configNoti, courseNoti, formulaNoti, ojtBatchNoti, positionNoti, skillNoti, templateNoti, universityNoti } from "logic/constants/notification";
+import { accountNoti, assignNoti, authNoti, certificateNoti, configNoti, courseNoti, formulaNoti, ojtBatchNoti, positionNoti, skillNoti, templateNoti, trainingPlanNoti, universityNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
 import { configOptions, configType, emailRegex, passwordRegex, phoneRegex, roleExchange, urlRegex } from "logic/constants/global";
 
@@ -402,5 +402,31 @@ export function traineeAssignValid(assign) {
   if (assign.trainees.length === 0) {
     error["trainees"] = assignNoti.ERROR.BLANK_TRAINEE;
   }
+  return error;
+};
+
+export function trainingPlanValid(plan) {
+  let error = {};
+  if (plan.name === "" || plan.name === undefined || plan.name === null) {
+    error["name"] = trainingPlanNoti.ERROR.BLANK_NAME;
+  };
+  for (let i = 0; i < plan.details.length; i++) {
+    if (!plan.details[i].name || !plan.details[i].description) {
+      if (!error["details"]) {
+        error["details"] = [{ name: "", description: "", startTime: "", endTime: "" }];
+      } else {
+        error["details"] = [...error["details"], { name: "", description: "", startTime: "", endTime: "" }];
+      };
+      if (!plan.details[i].name) {
+        error["details"][i]["name"] = trainingPlanNoti.ERROR.BLANK_DETAILS_NAME;
+      };
+      if (!plan.details[i].description) {
+        error["details"][i]["description"] = trainingPlanNoti.ERROR.BLANK_DESCRIPTION;
+      };
+      if (plan.details[i].endTime < plan.details[i].startTime) {
+        error["details"][i]["endTime"] = trainingPlanNoti.ERROR.INVALID_ENDDAY;
+      };
+    };
+  };
   return error;
 };

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import FormRow from "views/components/common/FormRow";
@@ -6,38 +6,38 @@ import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
 import {
   Box,
-  Button,
   Drawer,
   IconButton,
   Stack,
   TextField,
+  TextareaAutosize,
   Typography,
 } from "@mui/material";
 
 import { trainingPlanPath } from "logic/api/apiUrl";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { trainingPlanNoti } from "logic/constants/notification";
-import { Form, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import TrainingPlanTimeline from "views/components/timeline/TrainingPlanTimeline";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import { trainingPlanValid } from "logic/utils/validateUtils";
+import { LoadingButton } from "@mui/lab";
+import Button from "views/components/button/Button";
 
 const CreateNewTrainingPlanPage = () => {
-  const { handleSubmit, getValues } = useForm();
+  const { handleSubmit } = useForm();
 
   const [error, setError] = useState({});
   const [trainingPlanName, setTrainingPlanName] = useState("");
-  const [trainingPlanDetailName, setTrainingPlanDetailName] = useState("");
-  const [trainingPlanDetailDescription, setTrainingPlanDetailDescription] =
-    useState("");
-  const [startDay, setStartDay] = useState(new Date());
-  const [endDay, setEndDay] = useState(new Date());
-
   const [createTrainingPlanDetails, setCreateTrainingPlanDetails] = useState([
-    { name: "", description: "", startDay: new Date(), endDay: new Date() },
+    { name: "", description: "", startTime: new Date(), endTime: new Date() },
   ]);
+  const moment = require("moment");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const [drawerState, setDrawerState] = useState(false);
   const toggleDrawer = (anchor, open) => (event) => {
@@ -51,90 +51,36 @@ const CreateNewTrainingPlanPage = () => {
     setDrawerState({ ...drawerState, [anchor]: open });
   };
 
-  const fakeData = [
-    {
-      name: "Training Plan 1",
-      description: "This is the first training plan.",
-      startTime: "2023-06-22 08:30:00.1234567",
-      endTime: "2023-06-22 10:30:00.9876543",
-    },
-    {
-      name: "Training Plan 2",
-      description: "Another training plan for testing.",
-      startTime: "2023-06-23 14:00:00.2345678",
-      endTime: "2023-06-23 15:30:00.8765432",
-    },
-    {
-      name: "Training Plan 3",
-      description: "A third training plan example.",
-      startTime: "2023-06-24 09:15:00.3456789",
-      endTime: "2023-06-24 11:45:00.7654321",
-    },
-    {
-      name: "Training Plan 4",
-      description: "Yet another training plan detail.",
-      startTime: "2023-06-25 13:30:00.4567890",
-      endTime: "2023-06-25 14:45:00.6543210",
-    },
-    {
-      name: "Training Plan 5",
-      description: "The fifth training plan entry.",
-      startTime: "2023-06-26 16:00:00.5678901",
-      endTime: "2023-06-26 17:30:00.5432109",
-    },
-    {
-      name: "Training Plan 1",
-      description: "This is the first training plan.",
-      startTime: "2023-06-22 08:30:00.1234567",
-      endTime: "2023-06-22 10:30:00.9876543",
-    },
-    {
-      name: "Training Plan 2",
-      description: "Another training plan for testing.",
-      startTime: "2023-06-23 14:00:00.2345678",
-      endTime: "2023-06-23 15:30:00.8765432",
-    },
-    {
-      name: "Training Plan 3",
-      description: "A third training plan example.",
-      startTime: "2023-06-24 09:15:00.3456789",
-      endTime: "2023-06-24 11:45:00.7654321",
-    },
-    {
-      name: "Training Plan 4",
-      description: "Yet another training plan detail.",
-      startTime: "2023-06-25 13:30:00.4567890",
-      endTime: "2023-06-25 14:45:00.6543210",
-    },
-    {
-      name: "Training Plan 5",
-      description: "The fifth training plan entry.",
-      startTime: "2023-06-26 16:00:00.5678901",
-      endTime: "2023-06-26 17:30:00.5432109",
-    },
-  ];
-
   const axiosPrivate = useAxiosPrivate();
 
   const handleAddNewTrainingPlan = async (values) => {
-    try {
-      await axiosPrivate.post(trainingPlanPath.CREATE_NEW_TRAINING_PLAN, {
-        trainingPlanName,
-      });
-      toast.success(trainingPlanNoti.SUCCESS.CREATE);
-    } catch (error) {
-      toast.error(error);
+    setIsLoading(true);
+    const plan = {
+      name: trainingPlanName,
+      details: createTrainingPlanDetails,
     }
+    const valid = trainingPlanValid(plan);
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
+      try {
+        await axiosPrivate.post(trainingPlanPath.CREATE_NEW_TRAINING_PLAN, plan);
+        setIsLoading(false);
+        navigate("/trainer-training-plan");
+        toast.success(trainingPlanNoti.SUCCESS.CREATE);
+      } catch (error) {
+        toast.error(error.response.data);
+        setIsLoading(false);
+      }
+    };
+    setIsLoading(false);
   };
-
-  const [trainingPlanDetailList, setTrainingPlanDetailList] = useState([]);
 
   const handleAddField = () => {
     const newField = {
       name: "",
       description: "",
-      startDay: new Date(),
-      endDay: new Date(),
+      startTime: new Date(),
+      endTime: new Date(),
     };
     setCreateTrainingPlanDetails([...createTrainingPlanDetails, newField]);
   };
@@ -143,6 +89,12 @@ const CreateNewTrainingPlanPage = () => {
     let temp = createTrainingPlanDetails.slice();
     temp.pop();
     setCreateTrainingPlanDetails(temp);
+  };
+
+  const onChangeDetails = (index, name, value) => {
+    const newArray = createTrainingPlanDetails.slice();
+    newArray[index][name] = value;
+    setCreateTrainingPlanDetails(newArray);
   };
 
   return (
@@ -156,8 +108,8 @@ const CreateNewTrainingPlanPage = () => {
             <FormGroup>
               <Label>Tên kế hoạch đào tạo (*)</Label>
               <TextField
-                error={error?.trainingPlanName ? true : false}
-                helperText={error?.trainingPlanName}
+                error={error?.name ? true : false}
+                helperText={error?.name}
                 name="trainingplanname"
                 placeholder="Ex: Kế hoạch đào tạo cho sinh viên trường Đại học FPT quý 3 năm 2023"
                 onChange={(e) => setTrainingPlanName(e.target.value)}
@@ -174,15 +126,16 @@ const CreateNewTrainingPlanPage = () => {
 
             {/*Drawer Preview Training Plan */}
             <div className="flex justify-end mb-12">
-              <Button
+              <LoadingButton
                 component={Link}
                 variant="contained"
                 size="large"
                 sx={{ borderRadius: "10px" }}
                 onClick={toggleDrawer("right", true)}
+                disabled={createTrainingPlanDetails.length === 0}
               >
                 Preview kế hoạch đang tạo
-              </Button>
+              </LoadingButton>
             </div>
 
             <Drawer
@@ -210,7 +163,7 @@ const CreateNewTrainingPlanPage = () => {
                         {trainingPlanName || "Kế hoạch đào tạo chưa có tên"}
                       </span>
                     }
-                    list={fakeData.map((item, index) => ({
+                    list={createTrainingPlanDetails.map((item, index) => ({
                       title: item.name,
                       description: item.description,
                       startDay: item.startTime,
@@ -235,43 +188,48 @@ const CreateNewTrainingPlanPage = () => {
                   <Label>Nhiệm vụ (*)</Label>
                   <TextField
                     className="w-3/5"
-                    error={error?.trainingPlanDetailName ? true : false}
-                    helperText={error?.trainingPlanDetailName}
+                    error={error?.details?.[index]?.name ? true : false}
+                    helperText={error?.details?.[index]?.name}
                     name="trainingplandetailname"
                     placeholder="Ex: Làm việc với đào tạo viên"
-                    onChange={(e) => setTrainingPlanDetailName(e.target.value)}
-                    onBlur={(e) => setTrainingPlanDetailName(e.target.value)}
+                    onChange={(e) => onChangeDetails(index, "name", e.target.value)}
+                    onBlur={(e) => onChangeDetails(index, "name", e.target.value)}
                     inputProps={{ maxLength: 100 }}
                   />
                 </FormGroup>
                 <FormGroup>
                   <Label>Mô tả về nhiệm vụ (ngắn gọn) (*)</Label>
                   <TextField
-                    className="w-3/5"
-                    error={error?.trainingPlanDetailDescription ? true : false}
-                    helperText={error?.trainingPlanDetailDescription}
-                    name="trainingplandetaildescription"
-                    placeholder="Ex: Chuẩn bị sẵn sàng môi trường làm việc"
-                    onChange={(e) =>
-                      setTrainingPlanDetailDescription(e.target.value)
-                    }
-                    onBlur={(e) =>
-                      setTrainingPlanDetailDescription(e.target.value)
-                    }
-                    inputProps={{ maxLength: 500 }}
+                    multiline
+                    error={error?.details?.[index]?.description ? true : false}
+                    helperText={error?.details?.[index]?.description}
+                    fullWidth
+                    InputProps={{
+                      inputComponent: TextareaAutosize,
+                      inputProps: {
+                        minRows: 5,
+                        maxRows: 8,
+                        maxLength: 500,
+                        placeholder: "Ex: Chuẩn bị sẵn sàng môi trường làm việc",
+                        onChange: (e) => onChangeDetails(index, "description", e.target.value),
+                        onKeyDown: (e) => onChangeDetails(index, "description", e.target.value),
+                      }
+                    }}
                   />
                 </FormGroup>
                 <FormRow>
                   <FormGroup>
                     <Label>Ngày bắt đầu (*)</Label>
                     <DatePicker
-                      onChange={(newValue) => setStartDay(newValue.toDate())}
+                      value={moment(createTrainingPlanDetails?.[index]?.startTime)}
+                      onChange={(newValue) => onChangeDetails(index, "startTime", newValue.toDate())}
                       slotProps={{
                         textField: {
                           fullWidth: true,
                           variant: "outlined",
-                          error: error?.startDay ? true : false,
-                          helperText: error?.startDay,
+                          error: error?.details?.[index]?.startTime ? true : false,
+                          helperText: error?.details?.[index]?.startTime,
+                          readOnly: true,
                         },
                       }}
                     />
@@ -279,13 +237,15 @@ const CreateNewTrainingPlanPage = () => {
                   <FormGroup>
                     <Label>Ngày kết thúc (*)</Label>
                     <DatePicker
-                      onChange={(newValue) => setEndDay(newValue.toDate())}
+                      value={moment(createTrainingPlanDetails?.[index]?.endTime)}
+                      onChange={(newValue) => onChangeDetails(index, "endTime", newValue.toDate())}
                       slotProps={{
                         textField: {
                           fullWidth: true,
                           variant: "outlined",
-                          error: error?.endDay ? true : false,
-                          helperText: error?.endDay,
+                          error: error?.details?.[index]?.endTime ? true : false,
+                          helperText: error?.details?.[index]?.endTime,
+                          readOnly: true,
                         },
                       }}
                     />
@@ -313,9 +273,9 @@ const CreateNewTrainingPlanPage = () => {
 
             <div className="mt-10 text-center">
               <Button
-                component="label"
-                variant="contained"
-                className="px-10 mx-auto"
+                type="submit"
+                className="px-10 mx-auto text-white bg-primary"
+                isLoading={isLoading}
               >
                 Thêm mới{" "}
               </Button>
