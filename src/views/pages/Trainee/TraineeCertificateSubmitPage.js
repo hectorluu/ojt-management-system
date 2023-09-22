@@ -28,24 +28,20 @@ const TraineeCertificateSubmitPage = () => {
   const [isLoading, setIsLoading] = useState(true); // New loading state
   const [isSubmitLoading, setIsSubmitLoading] = useState(false); // New loading state
 
-  // useEffect(() => {
-  //   signalRService.on(signalRMessage.COURSE.CREATED, (message) => {
-  //     fetchCourses();
-  //   });
-  //   signalRService.on(signalRMessage.COURSE.UPDATED, (message) => {
-  //     fetchCourses();
-  //   });
-  //   signalRService.on(signalRMessage.COURSE.DELETED, (message) => {
-  //     fetchCourses();
-  //   });
+  useEffect(() => {
+    signalRService.on(signalRMessage.CERTIFICATE.PROCESS_CERTIFICATE, (message) => {
+      fetchCertificate();
+    });
+    signalRService.on(signalRMessage.CERTIFICATE.UPDATE_PROCESS, (message) => {
+      fetchCertificate();
+    });
 
-  //   return () => {
-  //     signalRService.off(signalRMessage.COURSE.CREATED);
-  //     signalRService.off(signalRMessage.COURSE.DELETED);
-  //     signalRService.off(signalRMessage.COURSE.UPDATED);
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+    return () => {
+      signalRService.off(signalRMessage.CERTIFICATE.PROCESS_CERTIFICATE);
+      signalRService.off(signalRMessage.CERTIFICATE.UPDATE_PROCESS);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchCertificate = async () => {
     try {

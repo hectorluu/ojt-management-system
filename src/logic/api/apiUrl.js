@@ -14,6 +14,8 @@ export const coursePath = {
   GET_COURSE: "/course/",
   CREATE_COURSE: "/course",
   UPDATE_COURSE: "/course/",
+  GET_RECOMMENDED_LIST: "/course/recommendation-courses",
+  GET_TRAINEE_COURSE_LIST: "course/list-course-trainee",
 };
 
 export const criteriaPath = {
