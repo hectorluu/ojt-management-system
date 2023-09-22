@@ -2,11 +2,13 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
 import {
   Autocomplete,
+  Box,
   Button,
   Card,
   IconButton,
   InputAdornment,
   MenuItem,
+  Modal,
   OutlinedInput,
   Popover,
   Skeleton,
@@ -110,23 +112,30 @@ const AccountListPage = () => {
   };
 
   // Modal
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
 
   const handleClickUserDetail = (userId) => {
     navigate("/account-list/" + userId);
     setOpen(null);
   };
 
-  const handleClickDeleteModal = (userModalId) => {
+  const handleCloseDeleteModal = () => {
+    setIsModalDeleteOpen(false);
+    setOpen(null);
+  };
+
+  const handleOpenDeleteModal = (userId) => {
+    setIsModalDeleteOpen(true);
     setOpen(null);
   };
 
   // Popover
   const [open, setOpen] = useState(null); // use for AnchorEl
-  const [idSeclected, setIdSeclected] = useState(0);
+  const [userSelected, setUserSelected] = useState(null);
 
-  const handleOpenMenu = (event, id) => {
+  const handleOpenMenu = (event, user) => {
     setOpen(event.currentTarget);
-    setIdSeclected(id);
+    setUserSelected(user);
   };
 
   const handleCloseMenu = () => {
@@ -156,7 +165,92 @@ const AccountListPage = () => {
         </Button>
       }
     >
-      {/* Modal and Popover and Dialog */}
+      {/* Modal Delete and Popover*/}
+      <Modal open={isModalDeleteOpen} onClose={handleCloseDeleteModal}>
+        <Box
+          sx={{
+            borderRadius: "0.5rem",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 600,
+            height: 200,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <button
+            className="absolute z-10 flex items-center justify-center cursor-pointer w-11 h-11 right-1 top-1 text-text1"
+            onClick={handleCloseDeleteModal}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+          <div className="text-center">
+            <h2 className="font-bold text-[25px]">Vô hiệu hóa tài khoản</h2>
+
+            <div className="text-text1 text-base flex justify-center my-auto h-24 items-center">
+              Bạn có chắc muốn vô hiệu hóa tài khoản &nbsp;
+              <strong className="text-text1">{userSelected?.email}</strong>
+              &nbsp; ?
+            </div>
+          </div>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "space-between",
+            }}
+            className="space-x-2"
+          >
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                "&:hover": {
+                  backgroundColor: theme.palette.primary.dark, // Color on hover
+                },
+              }}
+              component="label"
+              className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
+              onClick={handleCloseDeleteModal}
+            >
+              <span className="text-white">Hủy</span>
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: theme.palette.error.main,
+                "&:hover": {
+                  backgroundColor: theme.palette.error.dark, // Color on hover
+                },
+              }}
+              component="label"
+              className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
+              onClick={() => {
+                // Handle the second button click
+              }}
+            >
+              <span className="text-white">Xác nhận</span>
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
 
       <Popover
         open={Boolean(open)}
@@ -176,12 +270,12 @@ const AccountListPage = () => {
           },
         }}
       >
-        <MenuItem onClick={() => handleClickUserDetail(idSeclected)}>
+        <MenuItem onClick={() => handleClickUserDetail(userSelected)}>
           <ModeEditOutlineIcon sx={{ mr: 2 }} />
           Sửa
         </MenuItem>
 
-        <MenuItem onClick={() => handleClickDeleteModal(idSeclected)}>
+        <MenuItem onClick={() => handleOpenDeleteModal(userSelected)}>
           <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
           <span style={{ color: theme.palette.error.main }}>Xóa</span>
         </MenuItem>
@@ -257,7 +351,12 @@ const AccountListPage = () => {
                 <>
                   <TableRow>
                     <TableCell width={"10%"}>
-                      <Skeleton variant="circular" width={40} height={40} animation="wave" />
+                      <Skeleton
+                        variant="circular"
+                        width={40}
+                        height={40}
+                        animation="wave"
+                      />
                     </TableCell>
                     <TableCell width={"25%"} animation="wave">
                       <Skeleton />
@@ -277,7 +376,12 @@ const AccountListPage = () => {
                   </TableRow>
                   <TableRow>
                     <TableCell width={"10%"}>
-                      <Skeleton variant="circular" width={40} height={40} animation="wave" />
+                      <Skeleton
+                        variant="circular"
+                        width={40}
+                        height={40}
+                        animation="wave"
+                      />
                     </TableCell>
                     <TableCell width={"25%"} animation="wave">
                       <Skeleton />
@@ -297,7 +401,12 @@ const AccountListPage = () => {
                   </TableRow>
                   <TableRow>
                     <TableCell width={"10%"}>
-                      <Skeleton variant="circular" width={40} height={40} animation="wave" />
+                      <Skeleton
+                        variant="circular"
+                        width={40}
+                        height={40}
+                        animation="wave"
+                      />
                     </TableCell>
                     <TableCell width={"25%"} animation="wave">
                       <Skeleton />
@@ -351,7 +460,7 @@ const AccountListPage = () => {
                     <TableCell align="right">
                       <IconButton
                         size="large"
-                        onClick={(event) => handleOpenMenu(event, item.id)}
+                        onClick={(event) => handleOpenMenu(event, item)}
                       >
                         <MoreVertIcon />
                       </IconButton>

@@ -92,7 +92,7 @@ const ModalTrainingPlanCertifyManager = ({ isOpen, onRequestClose }) => {
               // Handle the second button click
             }}
           >
-            Từ chối
+            <span className="text-white">Từ chối</span>
           </Button>
           <Button
             variant="contained"
@@ -108,7 +108,7 @@ const ModalTrainingPlanCertifyManager = ({ isOpen, onRequestClose }) => {
               // Handle the second button click
             }}
           >
-            Chấp nhận
+            <span className="text-white">Chấp nhận</span>
           </Button>
         </Box>
       </Box>
