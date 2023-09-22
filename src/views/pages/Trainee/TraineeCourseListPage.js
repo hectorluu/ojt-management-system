@@ -21,6 +21,8 @@ import {
   Card,
   OutlinedInput,
   InputAdornment,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import SubCard from "views/components/cards/SubCard";
@@ -134,6 +136,24 @@ const TraineeCourseListPage = () => {
               onChange={setSearchTerm}
             />
           </Card>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              id="combo-box-demo"
+              options={skillList}
+              getOptionLabel={(option) => option.name}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Kỹ năng" />}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setSkill(newValue.id);
+                } else {
+                  setSkill("");
+                }
+              }}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+            />
+          </div>
         </div>
         <Gap></Gap>
         <CourseGrid type="secondary">
