@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Label } from "views/components/label";
-import { Button } from "views/components/button";
 import { useForm } from "react-hook-form";
 import FormGroup from "views/components/common/FormGroup";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { skillPath } from "logic/api/apiUrl";
-import { Box, Modal, Skeleton, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Modal,
+  Skeleton,
+  TextField,
+  useTheme,
+} from "@mui/material";
 
 const ModalSkillDetailAdmin = ({
   isOpen,
@@ -60,6 +66,8 @@ const ModalSkillDetailAdmin = ({
     });
   };
 
+  const theme = useTheme();
+
   return (
     <Modal open={isOpen} onClose={onRequestClose}>
       <Box
@@ -96,17 +104,18 @@ const ModalSkillDetailAdmin = ({
           </svg>
         </button>
         <h2 className="font-bold text-[25px] mb-5 text-center">
-          Chỉnh sửa kĩ năng
+          Chỉnh sửa kỹ năng
         </h2>
         <div>
           <div className="bg-white shadow-1 rounded-xl p-4">
             <form onSubmit={handleSubmit(handleEditSkill)}>
               <FormGroup>
-                <Label>Tên kĩ năng (*)</Label>
+                <Label className="font-semibold">Tên kĩ năng (*)</Label>
                 {isLoading ? (
                   <Skeleton height={60} />
                 ) : (
                   <TextField
+                    value={skill.name}
                     error={error?.name ? true : false}
                     helperText={error?.name}
                     name="name"
@@ -119,13 +128,23 @@ const ModalSkillDetailAdmin = ({
                 )}
               </FormGroup>
 
-              <div className="mt-5 text-center">
+              <div className="mt-5 flex justify-center">
                 <Button
-                  type="submit"
-                  className="px-10 mx-auto text-white bg-primary"
+                  variant="contained"
+                  sx={{
+                    backgroundColor: theme.palette.success.dark,
+                    "&:hover": {
+                      backgroundColor: "#009e47", // Color on hover
+                    },
+                  }}
+                  component="label"
+                  className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
+                  onClick={() => {
+                    // Handle the second button click
+                  }}
                   isLoading={isSubmitLoading}
                 >
-                  Cập nhật{" "}
+                  <span className="text-white">Cập nhật </span>
                 </Button>
               </div>
             </form>
