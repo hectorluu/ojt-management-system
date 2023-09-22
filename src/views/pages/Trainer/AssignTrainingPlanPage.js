@@ -11,6 +11,7 @@ import {
   TextField,
   Avatar,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import { trainingPlanPath, userPath } from "logic/api/apiUrl";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
@@ -57,6 +58,7 @@ const AssignTrainingPlanPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [trainingPlanList, setTrainingPlanList] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState({});
+  const [isFetchingLoading, setIsFetchingLoading] = useState(false);
 
   // fetch trainers
   useEffect(() => {
@@ -74,10 +76,13 @@ const AssignTrainingPlanPage = () => {
 
   async function fetchTrainingPlanDetails() {
     try {
+      setIsFetchingLoading(true);
       const response = await axiosPrivate.get(trainingPlanPath.GET_TRAINING_PLAN_DETAIL + selectedId);
       setSelectedPlan(response.data);
+      setIsFetchingLoading(false);
     } catch (error) {
       toast.error(error.response.data);
+      setIsFetchingLoading(false);
     }
   }
 
@@ -90,7 +95,7 @@ const AssignTrainingPlanPage = () => {
         "&PageSize=" +
         100000 +
         "&status=" +
-        2
+        3
       );
       setTrainingPlanList(response.data.data);
     } catch (error) {
@@ -164,24 +169,28 @@ const AssignTrainingPlanPage = () => {
                 sx={{ minHeight: "200px" }}
                 className="pointer-events-none"
               >
-                <h4 className="text-xl text-gray-900 font-bold text-left ml-2">
-                  Thông tin kế hoạch đào tạo
-                </h4>
-                {Object.keys(selectedPlan).length !== 0 && (
-                  <SubCard>
-                    <TrainingPlanTimeline
-                      title={
-                        selectedPlan?.name
-                      }
-                      list={selectedPlan?.details?.map((item, index) => ({
-                        title: item.name,
-                        description: item.description,
-                        startDay: new Date(item.startTime),
-                        endDay: new Date(item.endTime),
-                      }))}
-                    />
-                  </SubCard>
-                )}
+                {isFetchingLoading ? <CircularProgress /> :
+                  <>
+                    <h4 className="text-xl text-gray-900 font-bold text-left ml-2">
+                      Thông tin kế hoạch đào tạo
+                    </h4>
+                    {Object.keys(selectedPlan).length !== 0 && (
+                      <SubCard>
+                        <TrainingPlanTimeline
+                          title={
+                            selectedPlan?.name
+                          }
+                          list={selectedPlan?.details?.map((item, index) => ({
+                            title: item.name,
+                            description: item.description,
+                            startDay: new Date(item.startTime),
+                            endDay: new Date(item.endTime),
+                          }))}
+                        />
+                      </SubCard>
+                    )}
+                  </>
+                }
               </SubCard>
             </FormGroup>
 
