@@ -72,7 +72,8 @@ export const skillPath = {
   GET_SKILL: "/skill/",
   CREATE_SKILL: "/skill",
   UPDATE_SKILL: "/skill/",
-  DELETE_SKILL: "/skill/",
+  DELETE_SKILL: "/skill/disable-skill/",
+  ACTIVE_SKILL: "/skill/active-skill/",
 };
 
 export const taskPath = {

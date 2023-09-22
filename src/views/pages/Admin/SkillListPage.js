@@ -177,7 +177,7 @@ const SkillListPage = () => {
 
   const handleClickDeleteSkill = async (id) => {
     try {
-      await axiosPrivate.delete(skillPath.DELETE_SKILL + id);
+      await axiosPrivate.put(skillPath.DELETE_SKILL + id);
       setIsModalDeleteOpen(null);
       fetchSkills();
       toast.success(skillNoti.SUCCESS.DELETE);
@@ -188,10 +188,7 @@ const SkillListPage = () => {
 
   const handleClickActiveSkill = async (item) => {
     try {
-      await axiosPrivate.put(skillPath.UPDATE_SKILL + item.id, {
-        name: item.name,
-        status: 2,
-      });
+      await axiosPrivate.put(skillPath.ACTIVE_SKILL + item.id);
       setOpen(null);
       fetchSkills();
       toast.success(skillNoti.SUCCESS.ACTIVE);
@@ -285,7 +282,7 @@ const SkillListPage = () => {
             </svg>
           </button>
           <div className="text-center">
-            <h2 className="font-bold text-[25px]">Vô hiệu hóa tài khoản</h2>
+            <h2 className="font-bold text-[25px]">Vô hiệu hóa kỹ năng</h2>
 
             <div className="text-text1 text-base flex justify-center my-auto h-24 items-center">
               Bạn có chắc muốn vô hiệu hóa kỹ năng &nbsp;
