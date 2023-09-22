@@ -1,12 +1,14 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  useTheme,
 } from "@mui/material";
 import {
   defaultPageSize,
@@ -14,7 +16,6 @@ import {
   trainingPlanStatus,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
-import { Button } from "views/components/button";
 import { trainingPlanPath } from "logic/api/apiUrl";
 import MainCard from "views/components/cards/MainCard";
 import SubCard from "views/components/cards/SubCard";
@@ -63,6 +64,8 @@ const TrainingPlanCertifyPage = () => {
   const [isTraingingPlanCertifyModalOpen, setIsTrainingPlanCertifyModalOpen] =
     useState(false);
 
+  const theme = useTheme();
+
   return (
     <MainCard title="Phê duyệt kế hoạch đào tạo">
       <ModalTrainingPlanCertifyManager
@@ -84,7 +87,7 @@ const TrainingPlanCertifyPage = () => {
                 <StyledTableCell align="center" width={"20%"}>
                   Ngày gửi
                 </StyledTableCell>
-                <StyledTableCell align="right" width={"10%"}></StyledTableCell>
+                <StyledTableCell align="right" width={"15%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -93,14 +96,20 @@ const TrainingPlanCertifyPage = () => {
                   <TableCell>{item.name}</TableCell>
                   <TableCell></TableCell>
                   <TableCell></TableCell>
-                  <TableCell align="right" width={"10%"}>
+                  <TableCell align="right" width={"15%"}>
                     <Button
-                      className=""
-                      type="button"
-                      kind="ghost"
+                      variant="contained"
+                      sx={{
+                        backgroundColor: theme.palette.primary.main,
+                        "&:hover": {
+                          backgroundColor: theme.palette.primary.dark, // Color on hover
+                        },
+                      }}
+                      component="label"
+                      className="flex items-center justify-center cursor-pointer w-3/4 h-8 text-text1 rounded-md"
                       onClick={() => setIsTrainingPlanCertifyModalOpen(true)}
                     >
-                      Chi tiết
+                      <span className="text-white">Chi tiết</span>
                     </Button>
                   </TableCell>
                 </TableRow>

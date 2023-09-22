@@ -1,6 +1,7 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   // Card,
   // InputAdornment,
   // OutlinedInput,
@@ -11,11 +12,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  useTheme,
 } from "@mui/material";
 
 import { defaultPageSize, defaultPageIndex } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
-import { Button } from "views/components/button";
 import MainCard from "views/components/cards/MainCard";
 import SubCard from "views/components/cards/SubCard";
 import StyledTableCell from "views/modules/table/StyledTableCell";
@@ -81,6 +82,7 @@ const AssignedTraineeListPage = () => {
   //   useState(false);
 
   const navigate = useNavigate();
+  const theme = useTheme();
 
   return (
     <MainCard title={`Thực tập sinh (${totalUsers.length})`}>
@@ -119,14 +121,20 @@ const AssignedTraineeListPage = () => {
                     <TableCell align="center">{item.positionName}</TableCell>
                     <TableCell align="right" width={"10%"}>
                       <Button
-                        className=""
-                        type="button"
-                        kind="ghost"
+                        variant="contained"
+                        sx={{
+                          backgroundColor: theme.palette.primary.main,
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.dark, // Color on hover
+                          },
+                        }}
+                        component="label"
+                        className="flex items-center justify-center cursor-pointer w-3/4 h-8 text-text1 rounded-md"
                         onClick={() => {
                           navigate("/trainee/" + item.id);
                         }}
                       >
-                        Chi tiết
+                        <span className="text-white">Chi tiết</span>
                       </Button>
                     </TableCell>
                   </TableRow>

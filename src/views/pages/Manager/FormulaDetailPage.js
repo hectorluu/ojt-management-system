@@ -1,7 +1,16 @@
 import Gap from "views/components/common/Gap";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
-import { Typography, Paper, Chip, Stack, Card, TextField, Skeleton, CircularProgress } from "@mui/material";
+import {
+  Typography,
+  Paper,
+  Chip,
+  Stack,
+  Card,
+  TextField,
+  Skeleton,
+  CircularProgress,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -12,7 +21,7 @@ import { formulaPath } from "logic/api/apiUrl";
 import { formulaNoti } from "logic/constants/notification";
 import { Button as ButtonC } from "views/components/button";
 import { formulaOptions } from "logic/constants/global";
-import LoadingButton from '@mui/lab/LoadingButton';
+import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { formulaValid } from "logic/utils/validateUtils";
 
@@ -52,8 +61,9 @@ const FormulaDetailPage = () => {
     color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
     background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
     border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
-    box-shadow: 0px 2px 2px ${theme.palette.mode === "dark" ? grey[900] : grey[50]
-      };
+    box-shadow: 0px 2px 2px ${
+      theme.palette.mode === "dark" ? grey[900] : grey[50]
+    };
   
     &:hover {
       border-color: ${blue[400]};
@@ -61,7 +71,8 @@ const FormulaDetailPage = () => {
   
     &:focus {
       border-color: ${blue[400]};
-      box-shadow: 0 0 0 3px ${theme.palette.mode === "dark" ? blue[500] : blue[200]
+      box-shadow: 0 0 0 3px ${
+        theme.palette.mode === "dark" ? blue[500] : blue[200]
       };
     }
   
@@ -113,9 +124,7 @@ const FormulaDetailPage = () => {
   };
 
   const handleChipClick = (key) => {
-    setCalculation(
-      (prevValue) => prevValue + `(${key.key})`
-    );
+    setCalculation((prevValue) => prevValue + `(${key.key})`);
   };
 
   const textareaRef = useRef(null);
@@ -125,8 +134,8 @@ const FormulaDetailPage = () => {
       setIsLoading(true);
       let response = await axiosPrivate.get(
         formulaPath.GET_KEY_LIST +
-        "?category=" +
-        `${selectedCategory === null ? "" : selectedCategory}`
+          "?category=" +
+          `${selectedCategory === null ? "" : selectedCategory}`
       );
       setKeyList(response.data);
     } catch (error) {
@@ -158,7 +167,7 @@ const FormulaDetailPage = () => {
     setCalculation(newValue);
   };
 
-  const handleTextareaKeyDown = (event) => { };
+  const handleTextareaKeyDown = (event) => {};
 
   const { handleSubmit } = useForm();
 
@@ -184,7 +193,7 @@ const FormulaDetailPage = () => {
         setIsLoadingSubmit(false);
         toast.error(error);
       }
-    };
+    }
     setIsLoadingSubmit(false);
   };
 
@@ -210,9 +219,9 @@ const FormulaDetailPage = () => {
                 name="name"
                 placeholder="Nhập tên công thức"
                 onChange={(e) => setName(e.target.value)}
-                onBlur={(e) => setName(e.target.value)} />
+                onBlur={(e) => setName(e.target.value)}
+              />
             )}
-
           </FormGroup>
           <div className="flex justify-center"></div>
 
@@ -236,9 +245,15 @@ const FormulaDetailPage = () => {
                   <LoadingButton
                     key={category.value}
                     component="label"
-                    variant={selectedCategory === category.value ? "contained" : "outlined"}
+                    variant={
+                      selectedCategory === category.value
+                        ? "contained"
+                        : "outlined"
+                    }
                     onClick={() => handleCategoryClick(category)}
-                    loading={selectedCategory === category.value ? isLoading : false}
+                    loading={
+                      selectedCategory === category.value ? isLoading : false
+                    }
                   >
                     {category.label}
                   </LoadingButton>
@@ -263,41 +278,43 @@ const FormulaDetailPage = () => {
             >
               {isLoading ? (
                 <CircularProgress />
-              ) : (
-                keyList.length !== 0 ? (keyList?.map((key) => (
+              ) : keyList.length !== 0 ? (
+                keyList?.map((key) => (
                   <ListItem key={key.key}>
                     <Chip
                       label={key.name}
                       onClick={() => handleChipClick(key)}
                     />
                   </ListItem>
-                ))) : (
-                  <p>Không có từ khoá nào</p>
-                )
+                ))
+              ) : (
+                <p>Không có từ khoá nào</p>
               )}
             </Paper>
           </div>
           <div className="flex justify-center mt-5">
             {isFetchingLoading ? (
               <Skeleton height={210} width={"100%"} animation="wave" />
-            ) : (<TextField
-              multiline
-              error={error?.calculation ? true : false}
-              helperText={error?.calculation}
-              fullWidth
-              InputProps={{
-                inputComponent: StyledTextarea,
-                inputProps: {
-                  minRows: 5,
-                  maxRows: 8,
-                  placeholder: "Điền công thức tính",
-                  value: calculation,
-                  onChange: handleTextareaChange,
-                  onKeyDown: handleTextareaKeyDown,
-                  ref: textareaRef
-                }
-              }}
-            />)}
+            ) : (
+              <TextField
+                multiline
+                error={error?.calculation ? true : false}
+                helperText={error?.calculation}
+                fullWidth
+                InputProps={{
+                  inputComponent: StyledTextarea,
+                  inputProps: {
+                    minRows: 5,
+                    maxRows: 8,
+                    placeholder: "Điền công thức tính",
+                    value: calculation,
+                    onChange: handleTextareaChange,
+                    onKeyDown: handleTextareaKeyDown,
+                    ref: textareaRef,
+                  },
+                }}
+              />
+            )}
           </div>
           <div className="mt-5 text-center">
             <ButtonC

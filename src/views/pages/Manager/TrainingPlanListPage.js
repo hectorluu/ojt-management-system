@@ -1,6 +1,7 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Card,
   InputAdornment,
   OutlinedInput,
@@ -11,10 +12,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  useTheme,
 } from "@mui/material";
-import { defaultPageSize, defaultPageIndex } from "logic/constants/global";
+import {
+  defaultPageSize,
+  defaultPageIndex,
+  trainingPlanStatus,
+} from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
-import { Button } from "views/components/button";
 import ModalTrainingPlanDetailManager from "views/components/modal/ModalTrainingPlanDetailManager";
 import { trainingPlanPath } from "logic/api/apiUrl";
 import MainCard from "views/components/cards/MainCard";
@@ -42,7 +47,9 @@ const TrainingPlanListPage = () => {
             "&PageSize=" +
             rowsPerPage +
             "&nameSearch=" +
-            `${searchTerm === null ? "" : searchTerm}`
+            `${searchTerm === null ? "" : searchTerm}` +
+            "&status=" +
+            trainingPlanStatus.ACTIVE
         );
         setTrainingplans(response.data.data);
         setTotalItem(response.data.totalItem);
@@ -77,6 +84,8 @@ const TrainingPlanListPage = () => {
 
   const [isTraingingPlanDetailModalOpen, setIsTrainingPlanDetailModalOpen] =
     useState(false);
+
+  const theme = useTheme();
 
   return (
     <MainCard
@@ -120,7 +129,7 @@ const TrainingPlanListPage = () => {
                 <StyledTableCell align="center" width={"20%"}>
                   Ngày gửi
                 </StyledTableCell>
-                <StyledTableCell align="right" width={"10%"}></StyledTableCell>
+                <StyledTableCell align="right" width={"15%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -129,14 +138,20 @@ const TrainingPlanListPage = () => {
                   <TableCell>{item.name}</TableCell>
                   <TableCell></TableCell>
                   <TableCell></TableCell>
-                  <TableCell align="right" width={"10%"}>
+                  <TableCell align="right" width={"15%"}>
                     <Button
-                      className=""
-                      type="button"
-                      kind="ghost"
+                      variant="contained"
+                      sx={{
+                        backgroundColor: theme.palette.primary.main,
+                        "&:hover": {
+                          backgroundColor: theme.palette.primary.dark, // Color on hover
+                        },
+                      }}
+                      component="label"
+                      className="flex items-center justify-center cursor-pointer w-3/4 h-8 text-text1 rounded-md"
                       onClick={() => setIsTrainingPlanDetailModalOpen(true)}
                     >
-                      Chi tiết
+                      <span className="text-white">Chi tiết</span>
                     </Button>
                   </TableCell>
                 </TableRow>

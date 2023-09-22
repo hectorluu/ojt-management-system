@@ -41,7 +41,7 @@ const ModalTrainingPlanCertifyManager = ({ isOpen, onRequestClose }) => {
           </svg>
         </button>
         <h2 className="font-bold text-[25px] mb-10 text-center">
-          Thông tin chi tiết kế hoạch đào tạo
+          Phê duyệt kế hoạch đào tạo
         </h2>
         <PerfectScrollbar
           style={{
