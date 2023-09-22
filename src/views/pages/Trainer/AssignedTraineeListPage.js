@@ -119,7 +119,7 @@ const AssignedTraineeListPage = () => {
                     </TableCell>
                     <TableCell>{item.email}</TableCell>
                     <TableCell align="center">{item.positionName}</TableCell>
-                    <TableCell align="right" width={"10%"}>
+                    <TableCell align="right">
                       <Button
                         variant="contained"
                         sx={{
@@ -129,7 +129,7 @@ const AssignedTraineeListPage = () => {
                           },
                         }}
                         component="label"
-                        className="flex items-center justify-center cursor-pointer w-3/4 h-8 text-text1 rounded-md"
+                        className="flex items-center justify-center cursor-pointer w-full h-8 text-text1 rounded-md"
                         onClick={() => {
                           navigate("/trainee/" + item.id);
                         }}

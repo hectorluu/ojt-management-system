@@ -31,7 +31,6 @@ const TraineeListPage = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState([]);
-  const [totalUsers, setTotalUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
@@ -59,20 +58,6 @@ const TraineeListPage = () => {
     }
     fetchUsers();
 
-    async function fetchTotalUsers() {
-      try {
-        const response = await axiosPrivate.get(
-          userPath.GET_TRAINEE_LIST + "?PageSize=" + 1000000
-        );
-
-        setTotalUsers(response.data.data);
-        // setPage(response.data.pageIndex);
-        // console.log("fetchUsers ~ response", response);
-      } catch (error) {
-        console.log("Error", error);
-      }
-    }
-    fetchTotalUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
@@ -93,7 +78,7 @@ const TraineeListPage = () => {
   const theme = useTheme();
 
   return (
-    <MainCard title={`Thực tập sinh (${totalUsers.length})`}>
+    <MainCard title={`Thực tập sinh `}>
       <ModalTraineeDetailManager
         isOpen={isTraineeDetailModalOpen}
         onRequestClose={() => setIsTraineeDetailModalOpen(false)}
@@ -132,7 +117,7 @@ const TraineeListPage = () => {
                 >
                   {" "}
                 </StyledTableCell>
-                <StyledTableCell align="left" width={"34%"}>
+                <StyledTableCell align="left" width={"32%"}>
                   Họ và tên
                 </StyledTableCell>
                 <StyledTableCell align="left" width="30%">

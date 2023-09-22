@@ -31,7 +31,6 @@ const TrainerListPage = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState([]);
-  const [totalUsers, setTotalUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
@@ -61,17 +60,6 @@ const TrainerListPage = () => {
     }
     fetchUsers();
 
-    async function fetchTotalUsers() {
-      try {
-        const response = await axiosPrivate.get(
-          userPath.GET_TRAINER_LIST + "?PageSize=" + 1000000
-        );
-        setTotalUsers(response.data.data);
-      } catch (error) {
-        console.log("fetchUsers ~ error", error);
-      }
-    }
-    fetchTotalUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
@@ -89,7 +77,7 @@ const TrainerListPage = () => {
   const theme = useTheme();
 
   return (
-    <MainCard title={`Đào tạo viên (${totalUsers.length})`}>
+    <MainCard title={`Đào tạo viên`}>
       <ModalTrainerDetailManager
         isOpen={isTrainerDetailModalOpen}
         onRequestClose={() => setIsTrainerDetailModalOpen(false)}
@@ -128,7 +116,7 @@ const TrainerListPage = () => {
                 >
                   {" "}
                 </StyledTableCell>
-                <StyledTableCell align="left" width={"34%"}>
+                <StyledTableCell align="left" width={"32%"}>
                   Họ và tên
                 </StyledTableCell>
                 <StyledTableCell align="left" width="30%">

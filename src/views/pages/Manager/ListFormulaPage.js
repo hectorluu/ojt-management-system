@@ -40,7 +40,7 @@ import { toast } from "react-toastify";
 import { useTheme } from "@emotion/react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 
 const ListFormulaPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -82,14 +82,14 @@ const ListFormulaPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         formulaPath.GET_FORMULA_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}` +
-        "&filterStatus=" +
-        status
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}` +
+          "&filterStatus=" +
+          status
       );
       setFormulaList(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -220,7 +220,9 @@ const ListFormulaPage = () => {
               disablePortal={false}
               options={formulaStatusOptions}
               sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} label="Trạng thái" />}
+              renderInput={(params) => (
+                <TextField {...params} label="Trạng thái" />
+              )}
               onChange={(event, newValue) => {
                 if (newValue) {
                   setStatus(newValue.value);
@@ -255,9 +257,6 @@ const ListFormulaPage = () => {
                     <TableCell width={"5%"}>
                       <Skeleton animation="wave" />
                     </TableCell>
-                    <TableCell width={"5%"}>
-                      <Skeleton animation="wave" />
-                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell width={"30%"}>
@@ -269,18 +268,12 @@ const ListFormulaPage = () => {
                     <TableCell width={"5%"}>
                       <Skeleton animation="wave" />
                     </TableCell>
-                    <TableCell width={"5%"}>
-                      <Skeleton animation="wave" />
-                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell width={"30%"}>
                       <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell>
-                      <Skeleton animation="wave" />
-                    </TableCell>
-                    <TableCell width={"5%"}>
                       <Skeleton animation="wave" />
                     </TableCell>
                     <TableCell width={"5%"}>
