@@ -6,6 +6,7 @@ import {
   IconButton,
   InputAdornment,
   MenuItem,
+  Modal,
   OutlinedInput,
   Popover,
   Skeleton,
@@ -41,6 +42,7 @@ import SubCard from "views/components/cards/SubCard";
 import { positionValid } from "logic/utils/validateUtils";
 import { toast } from "react-toastify";
 import { positionNoti } from "logic/constants/notification";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -120,17 +122,13 @@ const PositionListPage = () => {
     setOpen(null);
   };
 
-  const handleClickDeleteModal = (userModalId) => {
-    setOpen(null);
-  };
-
   // Popover
   const [open, setOpen] = useState(null); // use for AnchorEl
-  const [idSeclected, setIdSeclected] = useState(0);
+  const [selected, setSelected] = useState(0);
 
-  const handleOpenMenu = (event, id) => {
+  const handleOpenMenu = (event, item) => {
     setOpen(event.currentTarget);
-    setIdSeclected(id);
+    setSelected(item);
   };
 
   const handleCloseMenu = () => {
@@ -178,6 +176,39 @@ const PositionListPage = () => {
     setIsSubmitLoading(false);
   };
 
+  const handleClickDeletePosition = async (item) => {
+    try {
+      await axiosPrivate.put(positionPath.DELETE_POSITION + item.id);
+      setIsModalDeleteOpen(false);
+      toast.success(positionNoti.SUCCESS.DELETE);
+    } catch (e) {
+      toast.error(e.response.data);
+    }
+  };
+
+  const handleClickActivePosition = async (item) => {
+    try {
+      await axiosPrivate.put(positionPath.ACTIVE_POSITION + item.id);
+      setOpen(false);
+      toast.success(positionNoti.SUCCESS.ACTIVE);
+    } catch (error) {
+      toast.error(positionNoti.ERROR.ACTIVE);
+    }
+  };
+
+  // Modal Delete
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+
+  const handleCloseDeleteModal = () => {
+    setIsModalDeleteOpen(false);
+    setOpen(null);
+  };
+
+  const handleOpenDeleteModal = (skill) => {
+    setIsModalDeleteOpen(true);
+    setOpen(false);
+  };
+
   return (
     <MainCard
       title={`Vị trí`}
@@ -214,7 +245,7 @@ const PositionListPage = () => {
         handleAddNewPosition={handleAddNewPosition}
         error={error}
       ></ModalAddPositionAdmin>
-      {/* <Modal open={isModalDeleteOpen} onClose={handleCloseDeleteModal}>
+      <Modal open={isModalDeleteOpen} onClose={handleCloseDeleteModal}>
         <Box
           sx={{
             borderRadius: "0.5rem",
@@ -290,13 +321,13 @@ const PositionListPage = () => {
               }}
               component="label"
               className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
-              onClick={() => handleClickDeleteSkill(selected.id)}
+              onClick={() => handleClickDeletePosition(selected)}
             >
               <span className="text-white">Xác nhận</span>
             </Button>
           </Box>
         </Box>
-      </Modal> */}
+      </Modal>
 
       <Popover
         open={Boolean(open)}
@@ -316,15 +347,21 @@ const PositionListPage = () => {
           },
         }}
       >
-        <MenuItem onClick={() => handleClickPositionModal(idSeclected)}>
+        <MenuItem onClick={() => handleClickPositionModal(selected.id)}>
           <ModeEditOutlineIcon sx={{ mr: 2 }} />
           Sửa
         </MenuItem>
-
-        <MenuItem onClick={() => handleClickDeleteModal(idSeclected)}>
-          <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
-          <span style={{ color: theme.palette.error.main }}>Xóa</span>
-        </MenuItem>
+        {selected.status === 2 ? (
+          <MenuItem onClick={() => handleOpenDeleteModal(selected)}>
+            <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
+            <span style={{ color: theme.palette.error.main }}>Xóa</span>
+          </MenuItem>
+        ) : (
+          <MenuItem onClick={() => handleClickActivePosition(selected)}>
+            <ToggleOnIcon sx={{ mr: 2, color: theme.palette.success.main }} />
+            Kích hoạt
+          </MenuItem>
+        )}
       </Popover>
 
       <SubCard>
@@ -417,7 +454,7 @@ const PositionListPage = () => {
                     <TableCell align="right" width={"10%"}>
                       <IconButton
                         size="large"
-                        onClick={(event) => handleOpenMenu(event, item.id)}
+                        onClick={(event) => handleOpenMenu(event, item)}
                       >
                         <MoreVertIcon />
                       </IconButton>

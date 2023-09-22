@@ -207,11 +207,15 @@ export const positionNoti = {
   SUCCESS: {
     CREATE: "Thành công tạo vị trí mới!!!",
     UPDATE: "Thành công cập nhật vị trí!!!",
+    DELETE: "Thành công vô hiệu vị trí!!!",
+    ACTIVE: "Thành công kích hoạt vị trí!!!",
   },
 
   ERROR: {
     CREATE: "Không tạo được vị trí mới!!!",
     UPDATE: "Không cập nhật được vị trí!!!",
+    DELETE: "Không vô hiệu được vị trí!!!",
+    ACTIVE: "Không kích hoạt được vị trí!!!",
     BLANK_NAME: "Tên vị trí không được để trống!!!",
   },
 };

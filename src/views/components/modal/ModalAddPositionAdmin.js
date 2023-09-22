@@ -1,10 +1,9 @@
-import { Fragment, useState } from "react";
 import FormGroup from "views/components/common/FormGroup";
 import { useForm } from "react-hook-form";
 import { Label } from "views/components/label";
 import { Button } from "views/components/button";
-import ReactModal from "react-modal";
 import { Box, Modal, TextField } from "@mui/material";
+import { useState } from "react";
 
 const ModalAddPositionAdmin = ({
   isOpen,
@@ -17,7 +16,7 @@ const ModalAddPositionAdmin = ({
   const [name, setName] = useState("");
 
   const handleAdd = async () => {
-    await handleAddNewPosition(name);
+    await handleAddNewPosition({ name });
   };
 
   return (

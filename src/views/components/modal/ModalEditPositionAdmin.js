@@ -6,12 +6,11 @@ import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
 import {
   Box,
-  Button,
   Modal,
   Skeleton,
   TextField,
-  useTheme,
 } from "@mui/material";
+import Button from "../button/Button";
 
 const ModalEditPositionAdmin = ({
   isOpen,
@@ -33,6 +32,7 @@ const ModalEditPositionAdmin = ({
         positionPath.GET_POSITION + positionIdClicked
       );
       setPosition(response.data);
+      setName(response.data.name);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -66,8 +66,6 @@ const ModalEditPositionAdmin = ({
     });
     // values, dateOfBirth
   };
-
-  const theme = useTheme();
 
   return (
     <Modal open={isOpen} onClose={onRequestClose}>
@@ -116,7 +114,7 @@ const ModalEditPositionAdmin = ({
                   <Skeleton height={60} />
                 ) : (
                   <TextField
-                    value={position.name}
+                    value={name}
                     error={error?.name ? true : false}
                     helperText={error?.name}
                     name="name"
@@ -130,19 +128,11 @@ const ModalEditPositionAdmin = ({
 
               <div className="mt-5 flex justify-center">
                 <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: theme.palette.success.dark,
-                    "&:hover": {
-                      backgroundColor: "#009e47", // Color on hover
-                    },
-                  }}
-                  component="label"
-                  className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
-                  onClick={() => {}}
-                  isLoading={isSubmitLoading}
+                  type="submit"
+                  className="px-10 mx-auto text-white bg-primary"
+                  isLoading={isLoading}
                 >
-                  <span className="text-white">Cập nhật </span>
+                  Chỉnh sửa{" "}
                 </Button>
               </div>
             </form>

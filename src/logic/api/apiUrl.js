@@ -91,6 +91,8 @@ export const positionPath = {
   GET_POSITION: "/position/",
   CREATE_POSITION: "/position",
   UPDATE_POSITION: "/position/",
+  DELETE_POSITION: "/position/disable-position/",
+  ACTIVE_POSITION: "/position/active-position/",
 };
 
 export const templatePath = {
