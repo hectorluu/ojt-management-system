@@ -21,7 +21,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function TaskCardDisplay({ task }) {
+export default function TaskCardDisplay({ task, onClickProcess }) {
   const [expanded, setExpanded] = React.useState(false);
   const moment = require('moment');
   const handleExpandClick = () => {
@@ -52,10 +52,12 @@ export default function TaskCardDisplay({ task }) {
           <CardActions disableSpacing>
             {task.processStatus === 1 ?
               <>
-                <IconButton aria-label="Từ chối">
+                <IconButton aria-label="Từ chối"
+                  onClick={() => onClickProcess(false, task)}>
                   <ClearIcon color="error" />
                 </IconButton>
-                <IconButton aria-label="Chấp thuận">
+                <IconButton aria-label="Chấp thuận"
+                  onClick={() => onClickProcess(true, task)}>
                   <CheckIcon color="success" />
                 </IconButton>
               </> :
@@ -92,10 +94,12 @@ export default function TaskCardDisplay({ task }) {
         <CardActions disableSpacing>
           {task.processStatus === 1 ?
             <>
-              <IconButton aria-label="Từ chối">
+              <IconButton aria-label="Từ chối"
+                onClick={() => onClickProcess(false, task)}>
                 <ClearIcon color="error" />
               </IconButton>
-              <IconButton aria-label="Chấp thuận">
+              <IconButton aria-label="Chấp thuận"
+                onClick={() => onClickProcess(true, task)}>
                 <CheckIcon color="success" />
               </IconButton>
             </> :

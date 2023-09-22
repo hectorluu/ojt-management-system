@@ -256,3 +256,14 @@ export const assignNoti = {
     BLANK_TRAINEE: "Vui lòng chọn thực tập sinh!!!",
   },
 };
+
+export const taskNoti = {
+  SUCCESS: {
+    APPROVE: "!!!",
+  },
+  ERROR: {
+    DUPPLICATED: "Thực tập sinh đã tồn tại trong danh sách!!!",
+    BLANK_TRAINER: "Vui lòng chọn đào tạo viên!!!",
+    BLANK_TRAINEE: "Vui lòng chọn thực tập sinh!!!",
+  },
+};
