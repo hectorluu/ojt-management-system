@@ -2,6 +2,7 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { useEffect, useState } from "react";
 import {
   Button,
+  Skeleton,
   // Card,
   // InputAdornment,
   // OutlinedInput,
@@ -32,10 +33,12 @@ const AssignedTraineeListPage = () => {
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // New loading state
 
   useEffect(() => {
     async function fetchUsers() {
       try {
+        setIsLoading(true);
         const response = await axiosPrivate.get(
           trainerPath.GET_TRAINEE_LIST +
             "?PageIndex=" +
@@ -46,8 +49,10 @@ const AssignedTraineeListPage = () => {
 
         setUsers(response.data.data);
         setTotalItem(response.data.totalItem);
+        setIsLoading(false); // Set loading to false after fetching data
       } catch (error) {
         console.log("fetchUsers ~ error", error);
+        setIsLoading(false); // Set loading to false after fetching data
       }
     }
     fetchUsers();
@@ -92,19 +97,100 @@ const AssignedTraineeListPage = () => {
       ></ModalTraineeDetailManager> */}
 
       <SubCard>
-        <TableContainer sx={{ width: 1, mt: 2, mb: -2, borderRadius: 4 }}>
+        <TableContainer sx={{ width: 1, mb: -2, borderRadius: 4 }}>
           <Table>
             <TableHead>
               <TableRow>
-                <StyledTableCell></StyledTableCell>
-                <StyledTableCell>Họ và tên</StyledTableCell>
-                <StyledTableCell width="25%">Email</StyledTableCell>
-                <StyledTableCell align="center">Vai trò</StyledTableCell>
-                <StyledTableCell align="right" width={"10%"}></StyledTableCell>
+                <StyledTableCell
+                  align="center"
+                  width={"8%"}
+                  className="min-w-fit"
+                >
+                  {" "}
+                </StyledTableCell>
+                <StyledTableCell align="left" width={"32%"}>
+                  Họ và tên
+                </StyledTableCell>
+                <StyledTableCell align="left" width="30%">
+                  Email
+                </StyledTableCell>
+                <StyledTableCell align="center" width={"15%"}>
+                  Vai trò
+                </StyledTableCell>
+                <StyledTableCell align="right" width={"15%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.length !== 0 ? (
+              {isLoading ? (
+                <>
+                  <TableRow>
+                    <TableCell width={"6%"}>
+                      <Skeleton
+                        variant="circular"
+                        width={40}
+                        height={40}
+                        animation="wave"
+                      />
+                    </TableCell>
+                    <TableCell width={"39%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"6%"}>
+                      <Skeleton
+                        variant="circular"
+                        width={40}
+                        height={40}
+                        animation="wave"
+                      />
+                    </TableCell>
+                    <TableCell width={"39%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"6%"}>
+                      <Skeleton
+                        variant="circular"
+                        width={40}
+                        height={40}
+                        animation="wave"
+                      />
+                    </TableCell>
+                    <TableCell width={"39%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                </>
+              ) : users.length !== 0 ? (
                 users.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell className="w-20">
@@ -114,10 +200,10 @@ const AssignedTraineeListPage = () => {
                         alt=""
                       />
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="left">
                       {item.firstName + " " + item.lastName}
                     </TableCell>
-                    <TableCell>{item.email}</TableCell>
+                    <TableCell align="left">{item.email}</TableCell>
                     <TableCell align="center">{item.positionName}</TableCell>
                     <TableCell align="right">
                       <Button
@@ -129,7 +215,7 @@ const AssignedTraineeListPage = () => {
                           },
                         }}
                         component="label"
-                        className="flex items-center justify-center cursor-pointer w-full h-8 text-text1 rounded-md"
+                        className="flex items-center justify-center cursor-pointer w-3/4 h-8 text-text1 rounded-md"
                         onClick={() => {
                           navigate("/trainee/" + item.id);
                         }}

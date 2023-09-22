@@ -117,10 +117,10 @@ const TraineeTaskListPage = () => {
                   {moment(item.endTime).format("DD/MM/YYYY")}
                 </TableCell>
                 <TableCell align="center" width={"20%"}>
-                  {/* <Chip
+                  <Chip
                     color={
                       item.status === 3
-                        ? "yellow"
+                        ? "warning"
                         : item.status === 2
                         ? "error"
                         : "success"
@@ -131,7 +131,7 @@ const TraineeTaskListPage = () => {
                         (label) => label.value === item.status
                       ).label
                     }
-                  </Chip> */}
+                  </Chip>
                 </TableCell>
                 <TableCell align="right" width={"10%"}>
                   <Button className="" type="button" kind="ghost">
