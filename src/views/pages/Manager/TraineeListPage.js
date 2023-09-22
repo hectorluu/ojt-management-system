@@ -16,7 +16,11 @@ import {
   useTheme,
 } from "@mui/material";
 import { userPath } from "logic/api/apiUrl";
-import { defaultPageSize, defaultPageIndex } from "logic/constants/global";
+import {
+  defaultPageSize,
+  defaultPageIndex,
+  defaultUserIcon,
+} from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import ModalTraineeDetailManager from "views/components/modal/ModalTraineeDetailManager";
 import MainCard from "views/components/cards/MainCard";
@@ -205,7 +209,7 @@ const TraineeListPage = () => {
                     <TableCell className="w-20">
                       <img
                         className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
-                        src="logo.png"
+                        src={item.avatarURL || defaultUserIcon}
                         alt=""
                       />
                     </TableCell>

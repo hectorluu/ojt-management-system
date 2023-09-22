@@ -110,9 +110,6 @@ const TemplateDetailPage = lazy(() =>
 const AssignedTraineeListPage = lazy(() =>
   import("views/pages/Trainer/AssignedTraineeListPage")
 );
-const AssignedTraineeTaskListPage = lazy(() =>
-  import("views/pages/Trainer/AssignedTraineeTaskListPage")
-);
 const CertificateCertifyPage = lazy(() =>
   import("views/pages/Trainer/CertificateCertifyPage")
 );
@@ -143,7 +140,9 @@ const TrainerRoleTraineeDetailPage = lazy(() =>
 const AssignTrainingPlanPage = lazy(() =>
   import("views/pages/Trainer/AssignTrainingPlanPage")
 );
-const TrainerTaskCertifyPage = lazy(() => import("views/pages/Trainer/TrainerTaskCertifyPage"));
+const TrainerTaskCertifyPage = lazy(() =>
+  import("views/pages/Trainer/TrainerTaskCertifyPage")
+);
 
 // Trainee Page
 const TraineeCourseDetailPage = lazy(() =>
@@ -349,12 +348,6 @@ const router = createBrowserRouter([
           {
             path: "/assigned-trainee-list",
             element: <AssignedTraineeListPage></AssignedTraineeListPage>,
-          },
-          {
-            path: "/assigned-trainee-task-list",
-            element: (
-              <AssignedTraineeTaskListPage></AssignedTraineeTaskListPage>
-            ),
           },
           {
             path: "/certificate-certify",
