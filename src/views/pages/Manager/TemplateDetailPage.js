@@ -292,7 +292,7 @@ function TemplateDetailPage() {
             <SubCard sx={{ maxHeight: "400px", overflowY: "auto" }}>
               <Grid container spacing={2}>
                 {templateHeaders.map((header, index) => (
-                  <Grid item xs={4} key={index}>
+                  <Grid item key={index}>
                     <Tooltip
                       title={
                         `${(header.matchedAttribute === "Point" ? (formulaList.find((item) => item.id === header.formulaId) ? "Tiêu chí hệ thống: " + formulaList.find((item) => item.id === header.formulaId).name : "") : ("Tiêu chí hệ thống: " + header.matchedAttribute))} ${header.totalPoint ? "Điểm tối đa: " + header.totalPoint : ""}`

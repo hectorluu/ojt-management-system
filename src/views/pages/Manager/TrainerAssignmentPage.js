@@ -273,7 +273,7 @@ const TrainerAssignmentPage = () => {
             <FormGroup>
               <Label>Thực tập sinh hiện tại</Label>
               <SubCard>
-
+                
               </SubCard>
             </FormGroup>
           ) : null}
