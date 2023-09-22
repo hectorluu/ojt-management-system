@@ -20,7 +20,8 @@ import { reportValid } from "logic/utils/validateUtils";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { Autocomplete, Skeleton, Stack, TextField } from "@mui/material";
+import { Autocomplete, Chip, Grid, Skeleton, Stack, TextField, Tooltip } from "@mui/material";
+import SubCard from "views/components/cards/SubCard";
 
 
 
@@ -287,9 +288,48 @@ function TemplateDetailPage() {
                     inputProps={{ maxLength: 5 }} />)}
               </FormGroup>
             </FormRow>
+            <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
+            <SubCard sx={{ maxHeight: "400px", overflowY: "auto" }}>
+              <Grid container spacing={2}>
+                {templateHeaders.map((header, index) => (
+                  <Grid item xs={4} key={index}>
+                    <Tooltip
+                      title={
+                        `${(header.matchedAttribute === "Point" ? (formulaList.find((item) => item.id === header.formulaId) ? "Tiêu chí hệ thống: " + formulaList.find((item) => item.id === header.formulaId).name : "") : ("Tiêu chí hệ thống: " + header.matchedAttribute))} ${header.totalPoint ? "Điểm tối đa: " + header.totalPoint : ""}`
+                      }
+                      placement="top"
+                      className="w-fit whitespace-pre-line"
+                      key={index}
+                      sx={{ mb: 0.5 }}
+                    >
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        <IconButton
+                          aria-label="delete"
+                          size="small"
+                          onClick={() => console.log("click")}
+                        >
+                          <DeleteIcon fontSize="inherit" />
+                        </IconButton>
+                        <Chip
+                          key={index}
+                          variant="contained"
+                          sx={{ p: 1 }}
+                          label={(index + 1) + ") " + header.name}
+                        ></Chip>
+                      </Stack>
+                    </Tooltip>
+                  </Grid>
+                ))}
+              </Grid>
+              <Stack direction="row" spacing={1} justifyContent="center">
+                <IconButton color="primary" aria-label="delete" onClick={() => handleAddField()}>
+                  <AddIcon />
+                </IconButton>
+              </Stack>
+            </SubCard>
+            <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
             {templateHeaders.map((header, index) => (
               <div key={index}>
-                <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
                 <FormRow>
                   <FormGroup>
                     <Label>Tên cột(*)</Label>

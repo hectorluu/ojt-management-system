@@ -25,6 +25,7 @@ const ManagerReportListPage = () => {
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [exportLoading, setExportLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [selected, setSelected] = useState([]);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
@@ -64,6 +65,7 @@ const ManagerReportListPage = () => {
   };
 
   const onClickExport = async (item) => {
+    setSelected(item);
     setExportLoading(true);
     if (item.status === reportStatus.CAN) {
       getDownloadURL(ref(storage, item.url))
@@ -223,7 +225,7 @@ const ManagerReportListPage = () => {
                         component="label"
                         variant="contained"
                         onClick={() => onClickExport(item)}
-                        loading={exportLoading}
+                        loading={exportLoading && item.id === selected.id}
                         startIcon={item.status === reportStatus.CAN ? <FileOpenIcon /> : <EditNotificationsIcon />}
                       >
                         {item.status === reportStatus.CAN ? "Xuất báo cáo" : "Nhắc nhở"}

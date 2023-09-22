@@ -25,6 +25,7 @@ import { LoadingButton } from "@mui/lab";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { assignNoti } from "logic/constants/notification";
 import { traineeAssignValid } from "logic/utils/validateUtils";
+import Gap from "views/components/common/Gap";
 
 const TrainerAssignmentPage = () => {
   const handleTrainerAssignment = async () => {
@@ -74,10 +75,10 @@ const TrainerAssignmentPage = () => {
     try {
       const response = await axiosPrivate.get(
         userPath.GET_TRAINER_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage
       );
 
       setTrainers(response.data.data);
@@ -267,6 +268,15 @@ const TrainerAssignmentPage = () => {
               Lưu thay đổi
             </LoadingButton>
           </div>
+          <Gap />
+          {trainer.id ? (
+            <FormGroup>
+              <Label>Thực tập sinh hiện tại</Label>
+              <SubCard>
+
+              </SubCard>
+            </FormGroup>
+          ) : null}
         </div>
       </div>
     </Fragment>

@@ -52,9 +52,8 @@ const DefineFormulaPage = () => {
     color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
     background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
     border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
-    box-shadow: 0px 2px 2px ${
-      theme.palette.mode === "dark" ? grey[900] : grey[50]
-    };
+    box-shadow: 0px 2px 2px ${theme.palette.mode === "dark" ? grey[900] : grey[50]
+      };
   
     &:hover {
       border-color: ${blue[400]};
@@ -62,8 +61,7 @@ const DefineFormulaPage = () => {
   
     &:focus {
       border-color: ${blue[400]};
-      box-shadow: 0 0 0 3px ${
-        theme.palette.mode === "dark" ? blue[500] : blue[200]
+      box-shadow: 0 0 0 3px ${theme.palette.mode === "dark" ? blue[500] : blue[200]
       };
     }
   
@@ -104,8 +102,8 @@ const DefineFormulaPage = () => {
       setIsLoading(true);
       let response = await axiosPrivate.get(
         formulaPath.GET_KEY_LIST +
-          "?category=" +
-          `${selectedCategory === null ? "" : selectedCategory}`
+        "?category=" +
+        `${selectedCategory === null ? "" : selectedCategory}`
       );
       setKeyList(response.data);
     } catch (error) {
@@ -137,7 +135,7 @@ const DefineFormulaPage = () => {
     setCalculation(newValue);
   };
 
-  const handleTextareaKeyDown = (event) => {};
+  const handleTextareaKeyDown = (event) => { };
 
   const { handleSubmit } = useForm();
 
@@ -157,7 +155,7 @@ const DefineFormulaPage = () => {
         navigate("/list-formula");
       } catch (error) {
         setIsLoadingSubmit(false);
-        toast.error(error);
+        toast.error(error.response.data);
       }
     }
     setIsLoadingSubmit(false);

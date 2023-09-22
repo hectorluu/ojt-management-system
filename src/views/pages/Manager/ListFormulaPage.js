@@ -67,8 +67,8 @@ const ListFormulaPage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const handleClickFormulaDetail = (formulaId) => {
-    navigate("/formula-detail/" + formulaId);
+  const handleClickFormulaDetail = (item) => {
+    navigate("/formula-detail/" + item.id);
     setOpen(null);
   };
 
