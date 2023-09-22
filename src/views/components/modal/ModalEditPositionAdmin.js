@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
-import ReactModal from "react-modal";
-import { Button } from "views/components/button";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { positionPath } from "logic/api/apiUrl";
 import { useForm } from "react-hook-form";
 import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
-import { Box, Modal, Skeleton, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Modal,
+  Skeleton,
+  TextField,
+  useTheme,
+} from "@mui/material";
 
 const ModalEditPositionAdmin = ({
   isOpen,
@@ -62,6 +67,8 @@ const ModalEditPositionAdmin = ({
     // values, dateOfBirth
   };
 
+  const theme = useTheme();
+
   return (
     <Modal open={isOpen} onClose={onRequestClose}>
       <Box
@@ -104,11 +111,12 @@ const ModalEditPositionAdmin = ({
           <div className="bg-white shadow-1 rounded-xl p-4">
             <form onSubmit={handleSubmit(handleEditSkill)}>
               <FormGroup>
-                <Label>Tên vị trí (*)</Label>
+                <Label className="font-semibold">Tên vị trí (*)</Label>
                 {isLoading ? (
                   <Skeleton height={60} />
                 ) : (
                   <TextField
+                    value={position.name}
                     error={error?.name ? true : false}
                     helperText={error?.name}
                     name="name"
@@ -120,13 +128,21 @@ const ModalEditPositionAdmin = ({
                 )}
               </FormGroup>
 
-              <div className="mt-5 text-center">
+              <div className="mt-5 flex justify-center">
                 <Button
-                  type="submit"
-                  className="px-10 mx-auto text-white bg-primary"
+                  variant="contained"
+                  sx={{
+                    backgroundColor: theme.palette.success.dark,
+                    "&:hover": {
+                      backgroundColor: "#009e47", // Color on hover
+                    },
+                  }}
+                  component="label"
+                  className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
+                  onClick={() => {}}
                   isLoading={isSubmitLoading}
                 >
-                  Cập nhật{" "}
+                  <span className="text-white">Cập nhật </span>
                 </Button>
               </div>
             </form>
