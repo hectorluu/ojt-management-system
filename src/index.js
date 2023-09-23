@@ -108,6 +108,9 @@ const FormulaDetailPage = lazy(() =>
 const TemplateDetailPage = lazy(() =>
   import("views/pages/Manager/TemplateDetailPage")
 );
+const ManagerProfilePage = lazy(() =>
+  import("views/pages/Manager/ManagerProfilePage")
+);
 
 // Trainer Page
 const AssignedTraineeListPage = lazy(() =>
@@ -330,6 +333,10 @@ const router = createBrowserRouter([
           {
             path: "/template-detail/:templateId",
             element: <TemplateDetailPage></TemplateDetailPage>,
+          },
+          {
+            path: "/manager-profile",
+            element: <ManagerProfilePage></ManagerProfilePage>,
           },
         ],
       },

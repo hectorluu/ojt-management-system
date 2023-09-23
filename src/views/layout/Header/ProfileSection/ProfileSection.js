@@ -83,6 +83,11 @@ const ProfileSection = () => {
     navigate("/trainee-profile");
   };
 
+  const handleClickProfileManager = () => {
+    setOpen(false);
+    navigate("/manager-profile");
+  };
+
   return (
     <>
       <Chip
@@ -231,6 +236,33 @@ const ProfileSection = () => {
                             borderRadius: `${customization.borderRadius}px`,
                           }}
                           onClick={handleClickProfileTrainee}
+                        >
+                          <ListItemIcon>
+                            <IconUser stroke={2} size="1.3rem" />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={
+                              <Grid
+                                container
+                                spacing={1}
+                                justifyContent="space-between"
+                              >
+                                <Grid item>
+                                  <Typography variant="body2">
+                                    Hồ sơ cá nhân
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            }
+                          />
+                        </ListItemButton>
+                      )}
+                      {userRole === roleExchange.MANAGER && (
+                        <ListItemButton
+                          sx={{
+                            borderRadius: `${customization.borderRadius}px`,
+                          }}
+                          onClick={handleClickProfileManager}
                         >
                           <ListItemIcon>
                             <IconUser stroke={2} size="1.3rem" />
