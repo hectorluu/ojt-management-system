@@ -9,7 +9,6 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { list } from "firebase/storage";
 import { userPath } from "logic/api/apiUrl";
 import { defaultUserIcon, genderOptions } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
@@ -24,7 +23,7 @@ const ModalTrainerDetailManager = ({
 }) => {
   const theme = useTheme();
   const axiosPrivate = useAxiosPrivate();
-  const [isLoading, setIsLoading] = useState(true); // New loading state
+  const [, setIsLoading] = useState(true); // New loading state
   const [listEmployee, setListEmployee] = useState([]);
 
   useEffect(() => {
@@ -173,7 +172,8 @@ const ModalTrainerDetailManager = ({
                 <ListItem className="flex border-y py-2 justify-between">
                   <div className="w-3/4 flex items-center">
                     <Typography className="font-bold w-24">
-                      {index + 1} ) Họ và tên:
+                      {index + 1}
+                      {")"} Họ và tên:
                     </Typography>
                     <ListItemText
                       primary={item?.firstName + " " + item?.lastName}

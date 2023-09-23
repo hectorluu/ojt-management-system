@@ -70,12 +70,14 @@ const TrainingPlanCertifyPage = () => {
     useState(false);
 
   const theme = useTheme();
+  const [selectedItem, setSelectedItem] = useState(null);
 
   return (
     <MainCard title="Phê duyệt kế hoạch đào tạo">
       <ModalTrainingPlanCertifyManager
         isOpen={isTraingingPlanCertifyModalOpen}
         onRequestClose={() => setIsTrainingPlanCertifyModalOpen(false)}
+        selectedTrainingPlan={selectedItem}
       ></ModalTrainingPlanCertifyManager>
 
       <SubCard>
@@ -162,7 +164,10 @@ const TrainingPlanCertifyPage = () => {
                         }}
                         component="label"
                         className="flex items-center justify-center cursor-pointer w-3/4 h-8 text-text1 rounded-md"
-                        onClick={() => setIsTrainingPlanCertifyModalOpen(true)}
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setIsTrainingPlanCertifyModalOpen(true);
+                        }}
                       >
                         <span className="text-white">Chi tiết</span>
                       </Button>
