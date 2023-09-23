@@ -17,6 +17,7 @@ export const coursePath = {
   GET_RECOMMENDED_LIST: "/course/recommendation-courses",
   GET_TRAINEE_COURSE_LIST: "course/list-course-trainee",
   GET_COMPULSORY_COURSE_LIST: "course/compulsory-courses",
+  ENROLL_COURSE: "/course/course-participation/",
 };
 
 export const criteriaPath = {
@@ -144,6 +145,7 @@ export const configPath = {
 
 export const certificatePath = {
   GET_CERTIFICATE_LIST: "/certificate",
+  GET_CERTIFICATE_DETAIL: "/certificate/",
   SUBMIT_CERTIFICATE: "/certificate/submition-certificate",
   RE_SUBMIT_CERTIFICATE: "/certificate/resubmition-certificate",
   GET_PENDING_CERTIFICATE: "/certificate/trainer/pending-certificate",
