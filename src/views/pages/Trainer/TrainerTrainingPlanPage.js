@@ -1,33 +1,267 @@
-import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
-import React, { Fragment } from "react";
-import { Table, TableContainer } from "@mui/material";
-import { Button } from "views/components/button";
+import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Card,
+  InputAdornment,
+  OutlinedInput,
+  Skeleton,
+  SvgIcon,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  useTheme,
+} from "@mui/material";
+import {
+  defaultPageSize,
+  defaultPageIndex,
+  trainingPlanStatus,
+  trainingPlanStatusOptions,
+} from "logic/constants/global";
+import TablePagination from "@mui/material/TablePagination";
+
+import { trainingPlanPath } from "logic/api/apiUrl";
+import MainCard from "views/components/cards/MainCard";
+import SubCard from "views/components/cards/SubCard";
+import StyledTableCell from "views/modules/table/StyledTableCell";
+import SearchIcon from "@mui/icons-material/Search";
+import useOnChange from "logic/hooks/useOnChange";
+import AddIcon from "@mui/icons-material/Add";
+import { Link } from "react-router-dom";
+import ModalTrainingPlanDetailTrainer from "views/components/modal/ModalTrainingPlanDetailTrainer";
+import { fDate } from "logic/utils/formatTime";
+import Chip from "views/components/chip/Chip";
 
 const TrainerTrainingPlanPage = () => {
-  return (
-    <Fragment>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">
-            Danh sách kế hoạch đào tạo
-          </Heading>
-        </div>
+  const [page, setPage] = React.useState(defaultPageIndex);
+  const [totalItem, setTotalItem] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
+  const axiosPrivate = useAxiosPrivate();
+  const [trainingplans, setTrainingplans] = useState([]);
+  const [searchTerm, setSearchTerm] = useOnChange(500);
+  const [isLoading, setIsLoading] = useState(true); // New loading state
 
+  useEffect(() => {
+    async function fetchTrainingPlans() {
+      try {
+        setIsLoading(true);
+        const response = await axiosPrivate.get(
+          trainingPlanPath.GET_TRAINING_PLAN_OF_TRAINER +
+            "?PageIndex=" +
+            page +
+            "&PageSize=" +
+            rowsPerPage +
+            "&nameSearch=" +
+            `${searchTerm === null ? "" : searchTerm}`
+        );
+        setTrainingplans(response.data.data);
+        setTotalItem(response.data.totalItem);
+        setIsLoading(false); // Set loading to false after fetching data
+      } catch (error) {
+        console.log("fetchTrainingPlans ~ error", error);
+        setIsLoading(false); // Set loading to false after fetching data
+      }
+    }
+    fetchTrainingPlans();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage + 1);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const [isTraingingPlanDetailModalOpen, setIsTrainingPlanDetailModalOpen] =
+    useState(false);
+
+  const theme = useTheme();
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  return (
+    <MainCard
+      title={`Danh sách kế hoạch đào tạo`}
+      secondary={
         <Button
-          className="px-7"
-          type="button"
-          href="/create-new-training-plan"
-          kind="secondary"
+          startIcon={
+            <SvgIcon fontSize="small">
+              <AddIcon />
+            </SvgIcon>
+          }
+          component={Link}
+          to="/create-new-training-plan"
+          variant="contained"
+          size="medium"
+          sx={{ borderRadius: "10px" }}
         >
-          Thêm kế hoạch đào tạo mới
+          Thêm mới
         </Button>
-      </div>
-      <Gap></Gap>
-      <TableContainer>
-        <Table></Table>
-      </TableContainer>
-    </Fragment>
+      }
+    >
+      <ModalTrainingPlanDetailTrainer
+        isOpen={isTraingingPlanDetailModalOpen}
+        onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
+        selectedTrainingPlan={selectedItem}
+      ></ModalTrainingPlanDetailTrainer>
+
+      <SubCard>
+        <div className="flex flex-wrap items-start gap-3">
+          {/*Custom search bar*/}
+          <Card className="w-2/5">
+            <OutlinedInput
+              defaultValue=""
+              fullWidth
+              placeholder="Tìm kiếm ..."
+              startAdornment={
+                <InputAdornment position="start">
+                  <SvgIcon color="action" fontSize="small">
+                    <SearchIcon />
+                  </SvgIcon>
+                </InputAdornment>
+              }
+              sx={{ maxWidth: 550 }}
+              onChange={setSearchTerm}
+            />
+          </Card>
+        </div>
+        <TableContainer sx={{ width: 1, mt: 2, mb: -2, borderRadius: 4 }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align="left" width={"45%"}>
+                  Tên kế hoạch
+                </StyledTableCell>
+                <StyledTableCell align="center" width={"20%"}>
+                  Ngày sửa đổi
+                </StyledTableCell>
+                <StyledTableCell align="center" width={"20%"}>
+                  Trạng thái
+                </StyledTableCell>
+                <StyledTableCell align="right" width={"15%"}></StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {isLoading ? (
+                <>
+                  <TableRow>
+                    <TableCell width={"45%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"10%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"45%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"10%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"45%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"10%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                </>
+              ) : trainingplans.length !== 0 ? (
+                trainingplans.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell align="left">{item.name}</TableCell>
+                    <TableCell align="center">
+                      {fDate(item.updateDate)}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Chip
+                        color={
+                          item?.status === trainingPlanStatus.PENDING
+                            ? "warning"
+                            : item?.status === trainingPlanStatus.ACTIVE
+                            ? "success"
+                            : "error"
+                        }
+                      >
+                        {
+                          trainingPlanStatusOptions.find(
+                            (label) => label.value === item?.status
+                          ).label
+                        }
+                      </Chip>
+                    </TableCell>
+                    <TableCell align="right" width={"10%"}>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          backgroundColor: theme.palette.primary.main,
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.dark, // Color on hover
+                          },
+                        }}
+                        component="label"
+                        className="flex items-center justify-center cursor-pointer w-3/4 h-8 text-text1 rounded-md"
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setIsTrainingPlanDetailModalOpen(true);
+                        }}
+                      >
+                        <span className="text-white">Chi tiết</span>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    Không có kế hoạch đào tạo nào được tìm thấy.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          <TablePagination
+            labelRowsPerPage="Số dòng"
+            component="div"
+            count={totalItem}
+            page={page - 1}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+            }
+          />
+        </TableContainer>
+      </SubCard>
+    </MainCard>
   );
 };
 

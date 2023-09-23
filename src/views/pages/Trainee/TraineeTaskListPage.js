@@ -1,55 +1,34 @@
 import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { Fragment, useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
-import { taskPath } from "logic/api/apiUrl";
+import { useEffect, useState } from "react";
+import { traineeTaskPath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
   defaultPageIndex,
-  traineeTaskStatus,
+  accomplishedTaskStatusOptions,
 } from "logic/constants/global";
-import { Button } from "views/components/button";
 import TablePagination from "@mui/material/TablePagination";
-import SearchBar from "views/modules/SearchBar";
-import moment from "moment";
-import useOnChange from "logic/hooks/useOnChange";
+import MainCard from "views/components/cards/MainCard";
+import { Autocomplete, TextField } from "@mui/material";
+import SubCard from "views/components/cards/SubCard";
+import { toast } from "react-toastify";
+import TaskGrid from "views/modules/task/TaskGrid";
+import TaskCardSkeleton from "views/modules/task/TaskCardSkeleton";
+import TraineeTaskCardDisplay from "views/modules/task/TraineeTaskCardDisplay";
 
 const TraineeTaskListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
-  const [totalItem, setTotalItem] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(defaultPageSize);
+  const [totalItem, setTotalItem] = useState(0);
   const axiosPrivate = useAxiosPrivate();
-  const [tasks, setTasks] = useState([]);
-  const [searchTerm, setSearchTerm] = useOnChange(500);
-
-  const fetchTasks = async () => {
-    try {
-      const response = await axiosPrivate.get(
-        taskPath.GET_TASK_LIST +
-        "?PageSize=" +
-        rowsPerPage +
-        "&PageIndex=" +
-        page
-      );
-      setTasks(response.data.data);
-      setTotalItem(response.data.totalItem);
-    } catch (error) {
-      console.log("fetchTasks ~ error", error);
-    }
-  };
+  const [status, setStatus] = useState("");
+  const [taskList, setTaskList] = useState([]); // New task list state
+  const [isLoading, setIsLoading] = useState(true); // New loading state
 
   useEffect(() => {
-    fetchTasks();
+    fetchAccomplishedTask();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, [status, rowsPerPage, page]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -60,66 +39,68 @@ const TraineeTaskListPage = () => {
     setPage(1);
   };
 
+  const fetchAccomplishedTask = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axiosPrivate.get(
+        traineeTaskPath.GET_ACCOMPLISHED_TASK_LIST +
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&status=" +
+          status
+      );
+      setTaskList(response.data.data);
+      setTotalItem(response.data.totalItem);
+      console.log(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(error.response.data);
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <Fragment>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className="flex items-center justify-center">
-          <Heading className="text-[2.25rem] font-bold pt-6">Công việc</Heading>
+    <MainCard title="Công việc">
+      <SubCard>
+        <div className="flex flex-wrap items-start gap-3">
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              id="combo-box-demo"
+              options={accomplishedTaskStatusOptions}
+              fullWidth
+              renderInput={(params) => (
+                <TextField {...params} label="Trạng thái" />
+              )}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setStatus(newValue.value);
+                } else {
+                  setStatus("");
+                }
+              }}
+            />
+          </div>
         </div>
-      </div>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className=" max-w-[600px] w-full">
-          <SearchBar onChangeSearch={setSearchTerm}></SearchBar>
-        </div>
-      </div>
-      <Gap></Gap>
-      <TableContainer>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell align="left" width={"30%"}>
-                Tên công việc
-              </TableCell>
-              <TableCell align="left" width={"20%"}>
-                Ngày giao việc
-              </TableCell>
-              <TableCell align="center" width={"20%"}>
-                Hạn hoàn thành
-              </TableCell>
-              <TableCell align="center" width={"20%"}>
-                Trạng thái
-              </TableCell>
-              <TableCell align="right" width={"10%"}></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tasks.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell align="left" width={"30%"}>
-                  {item.name}
-                </TableCell>
-                <TableCell align="left" width={"20%"}>
-                  {moment(item.startTime).format("DD/MM/YYYY")}
-                </TableCell>
-                <TableCell align="center" width={"20%"}>
-                  {moment(item.endTime).format("DD/MM/YYYY")}
-                </TableCell>
-                <TableCell align="center" width={"20%"}>
-                  {
-                    traineeTaskStatus.find(
-                      (label) => label.value === item.status
-                    ).label
-                  }
-                </TableCell>
-                <TableCell align="right" width={"10%"}>
-                  <Button className="" type="button" kind="ghost">
-                    Edit
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <Gap></Gap>
+        <TaskGrid>
+          {isLoading ? ( // Render skeleton loading when loading is true
+            // Use the animate-pulse class for skeleton effect
+            <>
+              <TaskCardSkeleton />
+              <TaskCardSkeleton />
+              <TaskCardSkeleton />
+            </>
+          ) : taskList.length !== 0 ? (
+            taskList.map((item) => (
+              <TraineeTaskCardDisplay task={item} key={item.id} />
+            ))
+          ) : (
+            <>Không có công việc nào được tìm thấy.</>
+          )}
+        </TaskGrid>
         <TablePagination
           labelRowsPerPage="Số dòng"
           component="div"
@@ -128,10 +109,12 @@ const TraineeTaskListPage = () => {
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
+          labelDisplayedRows={({ from, to, count }) =>
+            `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+          }
         />
-      </TableContainer>
-    </Fragment>
+      </SubCard>
+    </MainCard>
   );
 };
 
