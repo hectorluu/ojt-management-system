@@ -208,7 +208,7 @@ const FormulaDetailPage = () => {
 
         <form onSubmit={handleSubmit(handleUpdateFormula)}>
           <FormGroup className="bg-white">
-            <Label>Tên công thức *</Label>
+            <span className="font-bold text-xl">Tên công thức *</span>
             {isFetchingLoading ? (
               <Skeleton height={70} animation="wave" />
             ) : (
@@ -229,7 +229,7 @@ const FormulaDetailPage = () => {
             <Card variant="outlined" className="w-full p-2">
               <Typography
                 sx={{ flex: "1 1 100%" }}
-                variant="h6"
+                variant="h5"
                 id="tableTitle"
                 component="div"
               >
@@ -319,7 +319,7 @@ const FormulaDetailPage = () => {
           <div className="mt-5 text-center">
             <ButtonC
               type="submit"
-              className="px-10 mx-auto text-white bg-primary"
+              className="px-11 mx-auto text-white bg-primary"
               isLoading={isLoadingSubmit}
             >
               Chỉnh sửa{" "}

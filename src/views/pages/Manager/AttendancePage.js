@@ -421,7 +421,7 @@ const AttendancePage = () => {
                 left: "50%",
                 transform: "translate(-50%, -50%)",
                 width: 700,
-                height: "35rem",
+                height: "fit",
                 bgcolor: "background.paper",
                 border: "2px solid #000",
                 boxShadow: 24,
@@ -458,9 +458,9 @@ const AttendancePage = () => {
                   Chi tiết điểm danh
                 </h2>
 
-                {attendanceByDay.length > 0 ? (
+                {attendanceByDay?.length > 0 ? (
                   attendanceByDay.map((item, index) => (
-                    <List className="text-gray-700">
+                    <List className="text-gray-700" key={item.id}>
                       <ListItem className="flex space-between" sx={{ mt: -2 }}>
                         <div className="w-1/2 flex items-center">
                           <Typography className="font-bold w-24">
@@ -495,7 +495,7 @@ const AttendancePage = () => {
                     </List>
                   ))
                 ) : (
-                  <p className="text-gray-800 block mb-1 font-bold text-sm ">
+                  <p className="text-gray-800 block mb-1 font-bold text-xl text-center">
                     Không có dữ liệu được ghi nhận
                   </p>
                 )}

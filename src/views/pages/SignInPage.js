@@ -44,7 +44,8 @@ const SignInPage = () => {
           name="email"
           placeholder="example@gmail.com"
           onChange={(e) => setEmail(e.target.value)}
-          onBlur={(e) => setEmail(e.target.value)} />
+          onBlur={(e) => setEmail(e.target.value)}
+        />
       </FormGroup>
       <FormGroup>
         <Label htmlFor="password">Mật khẩu *</Label>
@@ -63,11 +64,17 @@ const SignInPage = () => {
                 onClick={handleTogglePassword}
               ></IconEyeToggle>
             ),
-          }} />
+          }}
+        />
       </FormGroup>
       <FormGroup>
         <div className="text-right">
-          <a href="/reset-password" className="inline-block text-sm font-medium text-primary underline hover:underline-offset-2">Quên mật khẩu?</a>
+          <a
+            href="/reset-password"
+            className="inline-block text-sm font-medium text-primary underline hover:underline-offset-2"
+          >
+            Quên mật khẩu?
+          </a>
         </div>
       </FormGroup>
       <FormGroup>
@@ -76,7 +83,7 @@ const SignInPage = () => {
           loading={isLoading}
           onClick={() => handleSignIn()}
           variant="contained"
-          color="success"
+          className="bg-green-500 hover:bg-green-600"
           sx={{ height: "50px" }}
         >
           Đăng nhập

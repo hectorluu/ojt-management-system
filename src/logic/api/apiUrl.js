@@ -52,6 +52,7 @@ export const trainingPlanPath = {
   ASSIGN_TRAINING_PLAN: "/training-plan/assign-trainee",
   APPROVE_PLAN: "/training-plan/verification-accept/",
   DENY_PLAN: "/training-plan/verification-deny/",
+  GET_PERSONAL_TRAINING_PLAN: "/training-plan/personal-trainee",
 };
 
 export const userPath = {

@@ -7,10 +7,14 @@ import {
   ListItem,
   ListItemText,
   Modal,
+  Paper,
   Tab,
   Tabs,
   Typography,
 } from "@mui/material";
+import { trainingPlanPath } from "logic/api/apiUrl";
+import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
+import { fDate, fDateTime } from "logic/utils/formatTime";
 import React, { useEffect, useState } from "react";
 import MainCard from "views/components/cards/MainCard";
 import SubCard from "views/components/cards/SubCard";
@@ -169,6 +173,26 @@ const TraineeTrainingPlanPage = () => {
     setValue(newValue);
   };
 
+  const axiosPrivate = useAxiosPrivate();
+  const [trainingPlan, setTrainingPlan] = useState([]);
+  const [trainingPlanDetails, setTrainingPlanDetails] = useState([]);
+
+  useEffect(() => {
+    async function fetchTraineeTrainingPlan() {
+      try {
+        const response = await axiosPrivate.get(
+          trainingPlanPath.GET_PERSONAL_TRAINING_PLAN
+        );
+
+        setTrainingPlan(response.data);
+        setTrainingPlanDetails(response.data.details);
+      } catch (error) {}
+    }
+
+    fetchTraineeTrainingPlan();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <MainCard title="Kế hoạch đào tạo">
       <Box sx={{ width: "100%" }}>
@@ -181,22 +205,54 @@ const TraineeTrainingPlanPage = () => {
         <CustomTabPanel value={value} index={0}>
           {/*Training plan timeline*/}
           <SubCard>
-            <TrainingPlanTimeline
-              title={""}
-              list={[...Array(5)].map((_, index) => ({
-                id: faker.datatype.uuid(),
-                title: [
-                  "1983, orders, $4220",
-                  "12 Invoices have been paid",
-                  "Order #37745 from September",
-                  "New order placed #XF-2356",
-                  "New order placed #XF-2346",
-                ][index],
-                type: `order${index + 1}`,
-                startDay: faker.date.past(),
-                endDay: faker.date.past(),
-              }))}
-            />
+            <div className="p-5">
+              <Typography
+                variant="h4"
+                className="text-2xl text-gray-900 font-bold mt-2 mb-4"
+              >
+                {trainingPlan.name}
+              </Typography>
+              <div className="mb-2 text-base ">
+                <strong className="font-semi">Ngày thay đổi: </strong>
+                <span className="text-text2">
+                  {fDate(trainingPlan?.updateDate)}
+                </span>
+              </div>
+            </div>
+            <div className="relative px-4">
+              <div className="absolute h-full border border-dashed border-opacity-60 border-secondary"></div>
+
+              {/* Timeline item */}
+              {trainingPlanDetails.map((task) => (
+                <div className="flex items-center w-full my-6 -ml-1.5">
+                  <div className="w-1/12 z-10">
+                    <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
+                  </div>
+                  <div className="w-11/12">
+                    <Typography variant="body1" className="text-sm">
+                      {task.name}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      className="text-xs text-gray-700"
+                    >
+                      Mô tả: {task.description}
+                    </Typography>
+                    <br />
+                    <Typography
+                      variant="caption"
+                      className="text-xs text-gray-700"
+                    >
+                      Thời hạn:{" "}
+                      {fDateTime(task.startTime) +
+                        "  -  " +
+                        fDateTime(task.endTime)}
+                    </Typography>
+                  </div>
+                </div>
+              ))}
+              {/* End Timeline item  */}
+            </div>
           </SubCard>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
@@ -399,7 +455,7 @@ const TraineeTrainingPlanPage = () => {
                     left: "50%",
                     transform: "translate(-50%, -50%)",
                     width: 700,
-                    height: "35rem",
+                    height: "fit",
                     bgcolor: "background.paper",
                     border: "2px solid #000",
                     boxShadow: 24,
