@@ -24,6 +24,7 @@ import MainCard from "views/components/cards/MainCard";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import SubCard from "views/components/cards/SubCard";
+import UniversityGrid from "views/modules/university/UniversityGrid";
 
 const UniversityListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -130,7 +131,7 @@ const UniversityListPage = () => {
         <Gap />
         <div className="pt-[66px]">
           <div className="w-full max-w-[1000px] mx-auto text-center">
-            <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] space-x-10">
+            <UniversityGrid>
               {isLoading ? ( // Render skeleton loading when loading is true
                 // Use the animate-pulse class for skeleton effect
                 <>
@@ -210,7 +211,7 @@ const UniversityListPage = () => {
               ) : (
                 <>Không có trường đại học nào được tìm thấy.</>
               )}
-            </div>
+            </UniversityGrid>
             <TablePagination
               labelRowsPerPage="Số dòng"
               component="div"

@@ -57,6 +57,9 @@ const UniversityListPage = lazy(() =>
 const UniversityDetailPage = lazy(() =>
   import("views/pages/Admin/UniversityDetailPage")
 );
+const ChangePasswordPage = lazy(() =>
+  import("views/pages/Admin/ChangePasswordPage")
+);
 
 // Manager Page
 const AttendancePage = lazy(() => import("views/pages/Manager/AttendancePage"));
@@ -239,6 +242,10 @@ const router = createBrowserRouter([
           {
             path: "/university/:universityId",
             element: <UniversityDetailPage></UniversityDetailPage>,
+          },
+          {
+            path: "/change-password",
+            element: <ChangePasswordPage></ChangePasswordPage>,
           },
           {
             path: "/config",
