@@ -40,7 +40,7 @@ const TraineeDetailPage = () => {
     async function fetchTraineeTask() {
       try {
         const response = await axiosPrivate.get(
-          trainerTaskPath.GET_TRAINEE_LIST_TASK + traineeId
+          trainerTaskPath.GET_TRAINEE_LIST_TASK + traineeId + "&status=" + 3
         );
         // Get 6 task
         setTraineeTask(response.data.data).slice(0, 6);
