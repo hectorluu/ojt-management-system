@@ -14,7 +14,11 @@ import {
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
 import { Label } from "views/components/label";
-import { defaultUserIcon, genderOptions, roleExchange } from "logic/constants/global";
+import {
+  defaultUserIcon,
+  genderOptions,
+  roleExchange,
+} from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { userPath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";
@@ -51,7 +55,7 @@ const ManagerProfilePage = () => {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const moment = require('moment');
+  const moment = require("moment");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -81,7 +85,7 @@ const ManagerProfilePage = () => {
   const handleUpdateAccount = async () => {
     if (avatarURL === "" || avatarURL === null || avatarURL === undefined) {
       setAvatarURL(url);
-    };
+    }
     try {
       await axiosPrivate.put(userPath.UPDATE_PROFILE, {
         firstName,
@@ -164,7 +168,7 @@ const ManagerProfilePage = () => {
         toast.error(error.response.data);
         setIsLoading(false);
       }
-    };
+    }
     setIsLoading(false);
   };
 
@@ -172,7 +176,6 @@ const ManagerProfilePage = () => {
     if (birthday) {
       console.log(moment(birthday));
     }
-
   });
 
   const onImageChange = (file) => {
@@ -221,7 +224,9 @@ const ManagerProfilePage = () => {
                 <Button
                   variant="outlined"
                   className="mt-1 p-2 rounded-lg bg-white"
-                  onClick={() => document.getElementById("image-updload").click()}
+                  onClick={() =>
+                    document.getElementById("image-updload").click()
+                  }
                 >
                   <span className="mx-auto">Chọn ảnh</span>
                 </Button>
@@ -304,7 +309,12 @@ const ManagerProfilePage = () => {
                     disablePortal={false}
                     id="combo-box-demo"
                     options={genderOptions}
-                    value={genderOptions.find((item) => item.value === gender) || { value: 0, label: "Chọn giới tính" }}
+                    value={
+                      genderOptions.find((item) => item.value === gender) || {
+                        value: 0,
+                        label: "Chọn giới tính",
+                      }
+                    }
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -406,7 +416,8 @@ const ManagerProfilePage = () => {
                 variant="contained"
                 component={"label"}
                 loading={isLoading}
-                onClick={() => handleNewPasswordSubmit()}>
+                onClick={() => handleNewPasswordSubmit()}
+              >
                 Cập nhật
               </LoadingButton>
             </CardActions>

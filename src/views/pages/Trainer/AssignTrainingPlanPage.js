@@ -77,7 +77,9 @@ const AssignTrainingPlanPage = () => {
   async function fetchTrainingPlanDetails() {
     try {
       setIsFetchingLoading(true);
-      const response = await axiosPrivate.get(trainingPlanPath.GET_TRAINING_PLAN_DETAIL + selectedId);
+      const response = await axiosPrivate.get(
+        trainingPlanPath.GET_TRAINING_PLAN_DETAIL + selectedId
+      );
       setSelectedPlan(response.data);
       setIsFetchingLoading(false);
     } catch (error) {
@@ -90,12 +92,12 @@ const AssignTrainingPlanPage = () => {
     try {
       const response = await axiosPrivate.get(
         trainingPlanPath.GET_TRAINING_PLAN_OF_TRAINER +
-        "?PageIndex=" +
-        1 +
-        "&PageSize=" +
-        100000 +
-        "&status=" +
-        3
+          "?PageIndex=" +
+          1 +
+          "&PageSize=" +
+          100000 +
+          "&status=" +
+          3
       );
       setTrainingPlanList(response.data.data);
     } catch (error) {
@@ -105,11 +107,9 @@ const AssignTrainingPlanPage = () => {
 
   const fetchUnassignedTrainee = async () => {
     try {
-      const response = await axiosPrivate.get(userPath.GET_TRAINER_TRAINEE +
-        "?PageIndex=" +
-        1 +
-        "&PageSize=" +
-        100000);
+      const response = await axiosPrivate.get(
+        userPath.GET_TRAINER_TRAINEE + "?PageIndex=" + 1 + "&PageSize=" + 100000
+      );
       setAssignedTraineeList(response.data.data);
     } catch (e) {
       toast.error(e.response.data);
@@ -140,14 +140,15 @@ const AssignTrainingPlanPage = () => {
           </h1>
           <FormRow>
             <FormGroup>
-              <Label>Kế hoạch đào tạo</Label>
+              <Label>
+                {" "}
+                <span className="text-xl font-bold">Kế hoạch đào tạo</span>
+              </Label>
               <Autocomplete
                 disablePortal={false}
                 id="combo-box-demo"
                 options={trainingPlanList}
-                getOptionLabel={(option) =>
-                  option.name
-                }
+                getOptionLabel={(option) => option.name}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -169,7 +170,9 @@ const AssignTrainingPlanPage = () => {
                 sx={{ minHeight: "200px" }}
                 className="pointer-events-none"
               >
-                {isFetchingLoading ? <CircularProgress /> :
+                {isFetchingLoading ? (
+                  <CircularProgress />
+                ) : (
                   <>
                     <h4 className="text-xl text-gray-900 font-bold text-left ml-2">
                       Thông tin kế hoạch đào tạo
@@ -177,9 +180,7 @@ const AssignTrainingPlanPage = () => {
                     {Object.keys(selectedPlan).length !== 0 && (
                       <SubCard>
                         <TrainingPlanTimeline
-                          title={
-                            selectedPlan?.name
-                          }
+                          title={selectedPlan?.name}
                           list={selectedPlan?.details?.map((item, index) => ({
                             title: item.name,
                             description: item.description,
@@ -190,12 +191,15 @@ const AssignTrainingPlanPage = () => {
                       </SubCard>
                     )}
                   </>
-                }
+                )}
               </SubCard>
             </FormGroup>
 
             <FormGroup>
-              <Label>Thực tập sinh</Label>
+              <Label>
+                {" "}
+                <span className="text-xl font-bold">Thực tập sinh</span>
+              </Label>
               <Autocomplete
                 value={null}
                 disablePortal={false}

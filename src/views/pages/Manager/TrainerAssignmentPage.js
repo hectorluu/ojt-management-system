@@ -71,11 +71,7 @@ const TrainerAssignmentPage = () => {
   async function fetchTrainers() {
     try {
       const response = await axiosPrivate.get(
-        userPath.GET_TRAINER_LIST +
-        "?PageIndex=" +
-        1 +
-        "&PageSize=" +
-        100000
+        userPath.GET_TRAINER_LIST + "?PageIndex=" + 1 + "&PageSize=" + 100000
       );
 
       setTrainers(response.data.data);
@@ -117,7 +113,9 @@ const TrainerAssignmentPage = () => {
           </h1>
           <FormRow>
             <FormGroup>
-              <Label>Đào tạo viên</Label>
+              <Label>
+                <span className="text-xl font-bold">Đào tạo viên</span>{" "}
+              </Label>
               <Autocomplete
                 disablePortal={false}
                 id="combo-box-demo"
@@ -191,7 +189,9 @@ const TrainerAssignmentPage = () => {
             </FormGroup>
 
             <FormGroup>
-              <Label>Thực tập sinh</Label>
+              <Label>
+                <span className="text-xl font-bold">Thực tập sinh</span>
+              </Label>
               <Autocomplete
                 value={null}
                 disablePortal={false}

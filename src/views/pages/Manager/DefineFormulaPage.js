@@ -52,8 +52,9 @@ const DefineFormulaPage = () => {
     color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
     background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
     border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
-    box-shadow: 0px 2px 2px ${theme.palette.mode === "dark" ? grey[900] : grey[50]
-      };
+    box-shadow: 0px 2px 2px ${
+      theme.palette.mode === "dark" ? grey[900] : grey[50]
+    };
   
     &:hover {
       border-color: ${blue[400]};
@@ -61,7 +62,8 @@ const DefineFormulaPage = () => {
   
     &:focus {
       border-color: ${blue[400]};
-      box-shadow: 0 0 0 3px ${theme.palette.mode === "dark" ? blue[500] : blue[200]
+      box-shadow: 0 0 0 3px ${
+        theme.palette.mode === "dark" ? blue[500] : blue[200]
       };
     }
   
@@ -102,8 +104,8 @@ const DefineFormulaPage = () => {
       setIsLoading(true);
       let response = await axiosPrivate.get(
         formulaPath.GET_KEY_LIST +
-        "?category=" +
-        `${selectedCategory === null ? "" : selectedCategory}`
+          "?category=" +
+          `${selectedCategory === null ? "" : selectedCategory}`
       );
       setKeyList(response.data);
     } catch (error) {
@@ -135,7 +137,7 @@ const DefineFormulaPage = () => {
     setCalculation(newValue);
   };
 
-  const handleTextareaKeyDown = (event) => { };
+  const handleTextareaKeyDown = (event) => {};
 
   const { handleSubmit } = useForm();
 
@@ -172,7 +174,9 @@ const DefineFormulaPage = () => {
 
         <form onSubmit={handleSubmit(handleAddNewFormula)}>
           <FormGroup className="bg-white">
-            <Label>Tên công thức *</Label>
+            <Label>
+              <span className="font-bold text-xl">Tên công thức *</span>
+            </Label>
             <TextField
               error={error?.name ? true : false}
               helperText={error?.name}
@@ -189,7 +193,7 @@ const DefineFormulaPage = () => {
             <Card variant="outlined" className="w-full p-2">
               <Typography
                 sx={{ flex: "1 1 100%" }}
-                variant="h6"
+                variant="h5"
                 id="tableTitle"
                 component="div"
               >
@@ -271,10 +275,10 @@ const DefineFormulaPage = () => {
               }}
             />
           </div>
-          <div className="mt-5 text-center">
+          <div className="mt-8 text-center">
             <ButtonC
               type="submit"
-              className="px-10 mx-auto text-white bg-primary"
+              className="px-11 mx-auto text-white bg-primary"
               isLoading={isLoadingSubmit}
             >
               Tạo công thức{" "}

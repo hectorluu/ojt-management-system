@@ -57,16 +57,20 @@ const TrainerTaskCertifyPage = () => {
     if (!boardId) return;
     setIsLoading(true);
     try {
-      const response = await axiosPrivate.get(trainerTaskPath.GET_ACCOMPLISHED_TASK_LIST_BY_BOARD.replace("{boardId}", boardId) +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage +
-        "&status=" +
-        status);
+      const response = await axiosPrivate.get(
+        trainerTaskPath.GET_ACCOMPLISHED_TASK_LIST_BY_BOARD.replace(
+          "{boardId}",
+          boardId
+        ) +
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&status=" +
+          status
+      );
       setTaskList(response.data.data);
       setTotalItem(response.data.totalItem);
-      console.log(response.data)
       setIsLoading(false);
     } catch (error) {
       toast.error(error.response.data);
@@ -76,7 +80,9 @@ const TrainerTaskCertifyPage = () => {
 
   const fetchBoardList = async () => {
     try {
-      const response = await axiosPrivate.get(trainerTaskPath.GET_OPEN_BOARD_LIST);
+      const response = await axiosPrivate.get(
+        trainerTaskPath.GET_OPEN_BOARD_LIST
+      );
       setBoardList(response.data);
     } catch (error) {
       toast.error(error.response.data);
@@ -95,16 +101,18 @@ const TrainerTaskCertifyPage = () => {
     setIsApprove(isApprove);
     setIsModalOpen(true);
   };
-  
+
   const handleCertify = async (item) => {
-    console.log(item);
-    console.log(isApprove);
     try {
       if (isApprove) {
-        const response = await axiosPrivate.put(trainerTaskPath.APPROVE_TASK + item.id);
+        const response = await axiosPrivate.put(
+          trainerTaskPath.APPROVE_TASK + item.id
+        );
         console.log(response);
       } else {
-        const response = await axiosPrivate.put(trainerTaskPath.REJECT_TASK + item.id);
+        const response = await axiosPrivate.put(
+          trainerTaskPath.REJECT_TASK + item.id
+        );
         console.log(response);
       }
       fetchAccomplishedTask();
@@ -116,9 +124,7 @@ const TrainerTaskCertifyPage = () => {
   const theme = useTheme();
 
   return (
-    <MainCard
-      title={`Duyệt công việc`}
-    >
+    <MainCard title={`Duyệt công việc`}>
       <Modal open={isModalOpen} onClose={handleCloseModal}>
         <Box
           sx={{
@@ -158,7 +164,8 @@ const TrainerTaskCertifyPage = () => {
             <h2 className="font-bold text-[25px]">Xử lí công việc</h2>
 
             <div className="text-text1 text-base flex justify-center my-auto h-24 items-center">
-              Bạn có chắc muốn {isApprove ? "chấp thuận" : "huỷ bỏ"} công việc &nbsp;
+              Bạn có chắc muốn {isApprove ? "chấp thuận" : "huỷ bỏ"} công việc
+              &nbsp;
               <strong className="text-text1">{selected.name}</strong>
               &nbsp; ?
             </div>
@@ -188,9 +195,13 @@ const TrainerTaskCertifyPage = () => {
             <Button
               variant="contained"
               sx={{
-                backgroundColor: theme.palette.error.main,
+                backgroundColor: isApprove
+                  ? theme.palette.success.dark // Use success color when isApprove is true
+                  : theme.palette.error.main, // Use error color when isApprove is false
                 "&:hover": {
-                  backgroundColor: theme.palette.error.dark, // Color on hover
+                  backgroundColor: isApprove
+                    ? "#009e47" // Hover color for success
+                    : theme.palette.error.dark, // Hover color for error
                 },
               }}
               component="label"
@@ -211,7 +222,9 @@ const TrainerTaskCertifyPage = () => {
               options={boardList}
               getOptionLabel={(option) => option.boardName}
               fullWidth
-              renderInput={(params) => <TextField {...params} label="Chọn bảng Trello" />}
+              renderInput={(params) => (
+                <TextField {...params} label="Chọn bảng Trello" />
+              )}
               onChange={(event, newValue) => {
                 if (newValue) {
                   setBoardId(newValue.boardTrelloId);
@@ -219,7 +232,9 @@ const TrainerTaskCertifyPage = () => {
                   setBoardId("");
                 }
               }}
-              isOptionEqualToValue={(option, value) => option.boardTrelloId === value.boardTrelloId}
+              isOptionEqualToValue={(option, value) =>
+                option.boardTrelloId === value.boardTrelloId
+              }
             />
           </div>
           <div className="flex flex-wrap items-start max-w-[200px] w-full">
@@ -228,7 +243,9 @@ const TrainerTaskCertifyPage = () => {
               id="combo-box-demo"
               options={accomplishedTaskStatusOptions}
               fullWidth
-              renderInput={(params) => <TextField {...params} label="Trạng thái" />}
+              renderInput={(params) => (
+                <TextField {...params} label="Trạng thái" />
+              )}
               onChange={(event, newValue) => {
                 if (newValue) {
                   setStatus(newValue.value);
@@ -241,23 +258,30 @@ const TrainerTaskCertifyPage = () => {
         </div>
         <Gap></Gap>
         <TaskGrid>
-          {boardId ? isLoading ? ( // Render skeleton loading when loading is true
-            // Use the animate-pulse class for skeleton effect
-            <>
-              <TaskCardSkeleton />
-              <TaskCardSkeleton />
-              <TaskCardSkeleton />
-            </>
-          ) : taskList.length !== 0 ? (
-            taskList.map((item) => (
-              <TaskCardDisplay task={item} key={item.id} onClickProcess={handleOpenModal} />
-            ))
+          {boardId ? (
+            isLoading ? ( // Render skeleton loading when loading is true
+              // Use the animate-pulse class for skeleton effect
+              <>
+                <TaskCardSkeleton />
+                <TaskCardSkeleton />
+                <TaskCardSkeleton />
+              </>
+            ) : taskList.length !== 0 ? (
+              taskList.map((item) => (
+                <TaskCardDisplay
+                  task={item}
+                  key={item.id}
+                  onClickProcess={handleOpenModal}
+                />
+              ))
+            ) : (
+              <>Không có công việc nào được tìm thấy.</>
+            )
           ) : (
-            <>Không có công việc nào được tìm thấy.</>
-          ) :
             <Typography variant="h3" color="text.secondary" sx={{ mb: 2 }}>
               Vui lòng chọn bảng Trello
-            </Typography>}
+            </Typography>
+          )}
         </TaskGrid>
         <TablePagination
           labelRowsPerPage="Số dòng"

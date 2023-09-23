@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import LayoutAuthentication from "../layout/LayoutAuthentication";
 import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
-import { changePasswordWithCodeValid, resetPasswordValid } from "logic/utils/validateUtils";
+import {
+  changePasswordWithCodeValid,
+  resetPasswordValid,
+} from "logic/utils/validateUtils";
 import { Button, Stack, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +14,6 @@ import { authPath } from "logic/api/apiUrl";
 import { toast } from "react-toastify";
 import { authNoti } from "logic/constants/notification";
 const SignInPage = () => {
-
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
@@ -36,7 +38,7 @@ const SignInPage = () => {
         toast.error(authNoti.ERROR.RESET_CODE);
         setIsLoading(false);
       }
-    };
+    }
   };
 
   useEffect(() => {
@@ -64,26 +66,25 @@ const SignInPage = () => {
       console.log("here");
       try {
         await axios.post(authPath.VERIFY_RESET_CODE, { resetCode: code });
-        await axios.put(authPath.RESET_PASSWORD, { resetCode: code, newPassword: password });
+        await axios.put(authPath.RESET_PASSWORD, {
+          resetCode: code,
+          newPassword: password,
+        });
         navigate("/login");
       } catch (error) {
         console.log(error);
         toast.error(authNoti.ERROR.WRONG_CODE);
         setIsLoading(false);
       }
-    };
+    }
     setIsLoading(false);
   };
-
 
   return (
     <LayoutAuthentication heading="Đặt lại mật khẩu">
       <FormGroup>
         <Label htmlFor="email">Email *</Label>
-        <Stack
-          spacing={2}
-          direction="row"
-        >
+        <Stack spacing={2} direction="row">
           <TextField
             sx={{ width: "80%" }}
             error={error ? true : false}
@@ -91,7 +92,8 @@ const SignInPage = () => {
             name="email"
             placeholder="example@gmail.com"
             onChange={(e) => setEmail(e.target.value)}
-            onBlur={(e) => setEmail(e.target.value)} />
+            onBlur={(e) => setEmail(e.target.value)}
+          />
           <Button
             component="label"
             variant="contained"
@@ -104,21 +106,18 @@ const SignInPage = () => {
         </Stack>
       </FormGroup>
       <FormGroup>
-        <Label htmlFor="Mã">
-          Mã xác thực*
-        </Label>
+        <Label htmlFor="Mã">Mã xác thực*</Label>
         <TextField
           error={submitError?.code ? true : false}
           helperText={submitError?.code}
           name="code"
           placeholder="ABCDEF"
           onChange={(e) => setCode(e.target.value)}
-          onBlur={(e) => setCode(e.target.value)} />
+          onBlur={(e) => setCode(e.target.value)}
+        />
       </FormGroup>
       <FormGroup>
-        <Label htmlFor="Mã">
-          Mật khẩu mới *
-        </Label>
+        <Label htmlFor="Mã">Mật khẩu mới *</Label>
         <TextField
           type="password"
           error={submitError?.password ? true : false}
@@ -127,19 +126,22 @@ const SignInPage = () => {
           placeholder="Nhập mật khẩu mới"
           onChange={(e) => setPassword(e.target.value)}
           onBlur={(e) => setPassword(e.target.value)}
-          inputProps={{ maxLength: 15 }} />
+          inputProps={{ maxLength: 15 }}
+        />
       </FormGroup>
       <FormGroup>
         <LoadingButton
           component="label"
           variant="contained"
-          color="success"
+          className="bg-green-500 hover:bg-green-600"
           sx={{ height: "50px" }}
           loading={isLoading}
           onClick={() => onSubmit()}
-        >Đổi mật khẩu</LoadingButton>
+        >
+          Đổi mật khẩu
+        </LoadingButton>
       </FormGroup>
-    </LayoutAuthentication >
+    </LayoutAuthentication>
   );
 };
 

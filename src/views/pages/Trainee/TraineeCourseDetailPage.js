@@ -15,9 +15,7 @@ import {
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
 import { Label } from "views/components/label";
-import {
-  defaultCourseImage,
-} from "logic/constants/global";
+import { defaultCourseImage } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { certificatePath, coursePath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";
@@ -28,10 +26,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import ProfileSkeleton from "views/modules/account/ProfileSkeleton";
 import SubCard from "views/components/cards/SubCard";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import Chip from "views/components/chip/Chip";
-import CheckIcon from '@mui/icons-material/Check';
+import CheckIcon from "@mui/icons-material/Check";
 
 const TraineeCourseDetailPage = () => {
   const { courseId } = useParams();
@@ -52,9 +50,7 @@ const TraineeCourseDetailPage = () => {
   const fetchCourseDetail = async () => {
     try {
       setIsFetchingLoading(true);
-      const response = await axiosPrivate.get(
-        coursePath.GET_COURSE + courseId
-      );
+      const response = await axiosPrivate.get(coursePath.GET_COURSE + courseId);
       console.log(response.data);
       setName(response.data.name);
       setPlatformName(response.data.platformName);
@@ -73,13 +69,15 @@ const TraineeCourseDetailPage = () => {
   const fetchCertificate = async () => {
     try {
       setIsFetchingLoading(true);
-      const response = await axiosPrivate.get(certificatePath.GET_CERTIFICATE_DETAIL + courseId);
+      const response = await axiosPrivate.get(
+        certificatePath.GET_CERTIFICATE_DETAIL + courseId
+      );
       setCertificate(response.data);
       setIsFetchingLoading(false);
     } catch (error) {
       setIsFetchingLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     if (!courseId) {
@@ -94,7 +92,7 @@ const TraineeCourseDetailPage = () => {
     try {
       setIsLoading(true);
       const response = await axiosPrivate.post(
-        coursePath.ENROLL_COURSE + courseId,
+        coursePath.ENROLL_COURSE + courseId
       );
       console.log(response);
       toast.success(universityNoti.SUCCESS.UPDATE);
@@ -131,8 +129,13 @@ const TraineeCourseDetailPage = () => {
         <>
           <Card>
             <div className="relative w-full h-[300px] overflow-hidden">
-              <img className="w-full h-full object-cover object-scale-down" src={url} alt="courseImg"
-                onError={(e) => { e.target.src = defaultCourseImage }}
+              <img
+                className="w-full h-full object-cover object-scale-down"
+                src={url}
+                alt="courseImg"
+                onError={(e) => {
+                  e.target.src = defaultCourseImage;
+                }}
               />
             </div>
             <CardHeader title="Thông tin" />
@@ -172,21 +175,22 @@ const TraineeCourseDetailPage = () => {
                       placeholder: "Viết mô tả về khóa học....",
                       onChange: (e) => setDescription(e.target.value),
                       onKeyDown: (e) => setDescription(e.target.value),
-                    }
+                    },
                   }}
                 />
               </FormGroup>
             </CardContent>
 
             <CardActions sx={{ justifyContent: "flex-end", mt: -4 }}>
-              {certificate.courseId ?
+              {certificate.courseId ? (
                 <Chip
                   color="success"
                   sx={{ float: "right" }}
                   startIcon={<CheckIcon />}
                 >
                   Đã đăng kí
-                </Chip> :
+                </Chip>
+              ) : (
                 <LoadingButton
                   variant="contained"
                   component={"label"}
@@ -194,8 +198,8 @@ const TraineeCourseDetailPage = () => {
                   loading={isLoading}
                 >
                   Đăng kí
-                </LoadingButton>}
-
+                </LoadingButton>
+              )}
             </CardActions>
           </Card>
           <Divider />
@@ -204,21 +208,34 @@ const TraineeCourseDetailPage = () => {
             <SubCard>
               {courseSkills.length !== 0 ? (
                 courseSkills.map((item, index) => (
-                  <Stack key={index}
-                    direction="row" spacing={2}
-                  >
-                    <Typography variant="h3" color="text.secondary">{item.skillName}</Typography>
-                    <Rating name="read-only" value={item.recommendedLevel} readOnly />
+                  <Stack key={index} direction="row" spacing={2}>
+                    <Typography variant="h3" color="text.secondary">
+                      {item.skillName}
+                    </Typography>
+                    <Rating
+                      name="read-only"
+                      value={item.recommendedLevel}
+                      readOnly
+                    />
                     <ArrowForwardIcon />
-                    <Rating name="read-only" value={item.afterwardLevel} readOnly />
+                    <Rating
+                      name="read-only"
+                      value={item.afterwardLevel}
+                      readOnly
+                    />
                   </Stack>
-                ))) :
+                ))
+              ) : (
                 <>
-                  <Typography variant="h3" color="text.secondary" sx={{ mb: 2 }}>
+                  <Typography
+                    variant="h3"
+                    color="text.secondary"
+                    sx={{ mb: 2 }}
+                  >
                     Khoá học không yêu cầu kĩ năng
                   </Typography>
                 </>
-              }
+              )}
             </SubCard>
           </Card>
           <Divider />
@@ -227,19 +244,34 @@ const TraineeCourseDetailPage = () => {
             <SubCard>
               {coursePositions.length !== 0 ? (
                 coursePositions.map((item, index) => (
-                  <Stack key={index}
-                    direction="row" spacing={2}
-                  >
-                    <Typography variant="h3" color="text.secondary" sx={{ mb: 2 }}>{item.positionName}: </Typography>
-                    <Typography variant="h3" color="text.secondary" sx={{ mb: 2 }}>{item.isCompulsory ? "Bắt buộc" : "Không bắt buộc"}</Typography>
+                  <Stack key={index} direction="row" spacing={2}>
+                    <Typography
+                      variant="h3"
+                      color="text.secondary"
+                      sx={{ mb: 2 }}
+                    >
+                      {item.positionName}:{" "}
+                    </Typography>
+                    <Typography
+                      variant="h3"
+                      color="text.secondary"
+                      sx={{ mb: 2 }}
+                    >
+                      {item.isCompulsory ? "Bắt buộc" : "Không bắt buộc"}
+                    </Typography>
                   </Stack>
-                ))) :
+                ))
+              ) : (
                 <>
-                  <Typography variant="h3" color="text.secondary" sx={{ mb: 2 }}>
+                  <Typography
+                    variant="h3"
+                    color="text.secondary"
+                    sx={{ mb: 2 }}
+                  >
                     Khoá học không yêu cầu vị trí
                   </Typography>
                 </>
-              }
+              )}
             </SubCard>
           </Card>
         </>
@@ -249,4 +281,3 @@ const TraineeCourseDetailPage = () => {
 };
 
 export default TraineeCourseDetailPage;
-

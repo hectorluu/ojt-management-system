@@ -40,7 +40,7 @@ const TraineeDetailPage = () => {
     async function fetchTraineeTask() {
       try {
         const response = await axiosPrivate.get(
-          trainerTaskPath.GET_TRAINEE_LIST_TASK + traineeId + "&status=" + 3
+          trainerTaskPath.GET_TRAINEE_LIST_TASK + traineeId + "?status=" + 1
         );
         // Get 6 task
         setTraineeTask(response.data.data).slice(0, 6);
@@ -265,7 +265,10 @@ const TraineeDetailPage = () => {
 
           {/* Timeline item */}
           {traineeTask.map((task) => (
-            <div className="flex items-center w-full my-6 -ml-1.5">
+            <div
+              className="flex items-center w-full my-6 -ml-1.5"
+              key={task.id}
+            >
               <div className="w-1/12 z-10">
                 <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
               </div>
