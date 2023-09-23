@@ -23,6 +23,7 @@ import SubCard from "views/components/cards/SubCard";
 import StyledTableCell from "views/modules/table/StyledTableCell";
 import ModalTrainingPlanCertifyManager from "views/components/modal/ModalTrainingPlanCertifyManager";
 import { fDate } from "logic/utils/formatTime";
+import { toast } from "react-toastify";
 
 const TrainingPlanCertifyPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -33,26 +34,6 @@ const TrainingPlanCertifyPage = () => {
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
   useEffect(() => {
-    async function fetchTrainingPlans() {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.get(
-          trainingPlanPath.GET_TRAINING_PLAN_LIST +
-            "?PageIndex=" +
-            page +
-            "&PageSize=" +
-            rowsPerPage +
-            "&status=" +
-            trainingPlanStatus.PENDING
-        );
-        setTrainingplans(response.data.data);
-        setTotalItem(response.data.totalItem);
-        setIsLoading(false); // Set loading to false after fetching data
-      } catch (error) {
-        console.log("fetchTrainingPlans ~ error", error);
-        setIsLoading(false); // Set loading to false after fetching data
-      }
-    }
     fetchTrainingPlans();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -66,11 +47,58 @@ const TrainingPlanCertifyPage = () => {
     setPage(0);
   };
 
+  async function fetchTrainingPlans() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        trainingPlanPath.GET_TRAINING_PLAN_LIST +
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&status=" +
+        trainingPlanStatus.PENDING
+      );
+      setTrainingplans(response.data.data);
+      setTotalItem(response.data.totalItem);
+      setIsLoading(false); // Set loading to false after fetching data
+    } catch (error) {
+      console.log("fetchTrainingPlans ~ error", error);
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  }
+
   const [isTraingingPlanCertifyModalOpen, setIsTrainingPlanCertifyModalOpen] =
     useState(false);
 
   const theme = useTheme();
   const [selectedItem, setSelectedItem] = useState(null);
+
+  const handleApprovePlan = async () => {
+    try {
+      const response = await axiosPrivate.put(
+        trainingPlanPath.APPROVE_PLAN + selectedItem.id
+      );
+      toast.success(response.data);
+      setIsTrainingPlanCertifyModalOpen(false);
+      fetchTrainingPlans();
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  };
+
+  const handleRejectPlan = async () => {
+    try {
+      const response = await axiosPrivate.put(
+        trainingPlanPath.DENY_PLAN + selectedItem.id
+      );
+      toast.success(response.data);
+      setIsTrainingPlanCertifyModalOpen(false);
+      fetchTrainingPlans();
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  };
 
   return (
     <MainCard title="Phê duyệt kế hoạch đào tạo">
@@ -78,6 +106,8 @@ const TrainingPlanCertifyPage = () => {
         isOpen={isTraingingPlanCertifyModalOpen}
         onRequestClose={() => setIsTrainingPlanCertifyModalOpen(false)}
         selectedTrainingPlan={selectedItem}
+        handleApprove={handleApprovePlan}
+        handleDeny={handleRejectPlan}
       ></ModalTrainingPlanCertifyManager>
 
       <SubCard>

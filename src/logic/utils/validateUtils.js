@@ -59,6 +59,31 @@ export function reportValid(report) {
   return error;
 };
 
+export function templateHeaderValid(header) {
+  let error = {};
+  if (header.isCriteria) {
+    if (!header.name || !header.totalPoint) {
+      if (!header.name) {
+        error["name"] = templateNoti.ERROR.BLANK_HEADER_NAME;
+      }
+      if (!header.totalPoint) {
+        error["totalPoint"] = templateNoti.ERROR.BLANK_MAX_POINT;
+      } else {
+        if (header.totalPoint < 1) {
+          error["totalPoint"] = templateNoti.ERROR.MAX_POINT_TOO_LOW;
+        }
+      }
+    };
+  } else {
+    if (!header.name || !header.totalPoint) {
+      if (!header.name) {
+        error["name"] = templateNoti.ERROR.BLANK_HEADER_NAME;
+      }
+    };
+  }
+  return error;
+};
+
 export function accountValid(account) {
   let error = {};
   if (account.firstName === "" || account.firstName === undefined || account.firstName === null) {

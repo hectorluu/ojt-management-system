@@ -9,6 +9,8 @@ const ModalTrainingPlanCertifyManager = ({
   isOpen,
   onRequestClose,
   selectedTrainingPlan,
+  handleApprove,
+  handleDeny,
 }) => {
   const axiosPrivate = useAxiosPrivate();
   const [, setIsLoading] = useState(true); // New loading state
@@ -159,7 +161,7 @@ const ModalTrainingPlanCertifyManager = ({
             component="label"
             className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
             onClick={() => {
-              // Handle the second button click
+              handleDeny();
             }}
           >
             <span className="text-white">Từ chối</span>
@@ -175,7 +177,7 @@ const ModalTrainingPlanCertifyManager = ({
             component="label"
             className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
             onClick={() => {
-              // Handle the second button click
+              handleApprove();
             }}
           >
             <span className="text-white">Chấp nhận</span>

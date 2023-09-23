@@ -7,7 +7,6 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { formulaPath, templatePath } from "logic/api/apiUrl";
 import ExcelUpload from "views/modules/file/ExcelUpload";
 import { useForm } from "react-hook-form";
-import { isCriteriaOptions, notCriteriaOptions } from "logic/constants/global";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "logic/config/firebase/firebase";
 import { toast } from "react-toastify";
@@ -16,12 +15,13 @@ import Gap from "views/components/common/Gap";
 import { templateNoti } from "logic/constants/notification";
 import { useNavigate, useParams } from "react-router-dom";
 import Luckysheet from "views/components/Luckysheet/Luckysheet";
-import { reportValid } from "logic/utils/validateUtils";
+import { reportValid, templateHeaderValid } from "logic/utils/validateUtils";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { Autocomplete, Chip, Grid, Skeleton, Stack, TextField, Tooltip } from "@mui/material";
+import { Chip, Grid, Skeleton, Stack, TextField, Tooltip } from "@mui/material";
 import SubCard from "views/components/cards/SubCard";
+import ModalAddTemplateHeader from "views/components/modal/ModalAddTemplateHeader";
 
 
 
@@ -33,16 +33,17 @@ function TemplateDetailPage() {
   const [universityId, setUniversityId] = useState(0);
   const { handleSubmit } = useForm();
   const [templateHeaders, setTemplateHeaders] = useState([{ name: "", formulaId: undefined, matchedAttribute: "", totalPoint: undefined, isCriteria: false, order: 1 }]);
-  const [notCriteriaList, setNotCriteriaList] = useState(notCriteriaOptions);
   const [formulaList, setFormulaList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingLoading, setIsFetchingLoading] = useState(false);
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const [data, setData] = useState([]);
   const [error, setError] = useState({});
   const [name, setName] = useState("");
   const [startCell, setStartCell] = useState("");
   const [newUrl, setNewUrl] = useState("");
   const [universityName, setUniversityName] = useState("");
+  const [isAddTemplateHeaderModalOpen, setIsAddTemplateHeaderModalOpen] = useState(false);
   const navigate = useNavigate();
 
 
@@ -87,10 +88,6 @@ function TemplateDetailPage() {
   }, [templateHeaders]);
 
   useEffect(() => {
-    const nothing = [{ value: "", label: "Không" }];
-    const notCriteria = notCriteriaOptions.slice();
-    notCriteria.unshift(...nothing);
-    setNotCriteriaList(notCriteria);
     fetchFormulars();
     fetchTemplateDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -147,12 +144,6 @@ function TemplateDetailPage() {
     setTemplateHeaders([...templateHeaders, newField]);
   };
 
-  const handleRemoveField = (index) => {
-    let temp = templateHeaders.slice();
-    temp.pop();
-    setTemplateHeaders(temp);
-  };
-
   async function uploadFile() {
     if (file) {
       try {
@@ -192,25 +183,6 @@ function TemplateDetailPage() {
     }
   };
 
-  const onChangeCriteria = (index, name, value) => {
-    const newArray = templateHeaders.slice();
-    newArray[index][name] = value;
-    if (name === "formulaId") {
-      newArray[index].matchedAttribute = "Point";
-    }
-    if (newArray[index].isCriteria === false) {
-      newArray[index].formulaId = undefined;
-    }
-    newArray[index].totalPoint = "";
-    setTemplateHeaders(newArray);
-  };
-
-  const onChangeCriteriaText = (index, name, value) => {
-    const newArray = templateHeaders.slice();
-    newArray[index][name] = value;
-    setTemplateHeaders(newArray);
-  }
-
   const onClickSubmit = () => {
     setIsLoading(true);
     const template = {
@@ -228,6 +200,24 @@ function TemplateDetailPage() {
     setIsLoading(false);
   };
 
+  const handleAddNewTemplateHeader = async (values) => {
+    const valid = templateHeaderValid(values);
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
+      try {
+        setIsSubmitLoading(true);
+        await axiosPrivate.post(templatePath.CREATE_SKILL, values);
+        setIsSubmitLoading(false);
+        setIsAddTemplateHeaderModalOpen(false);
+        toast.success(templateNoti.SUCCESS.CREATE);
+      } catch (error) {
+        setIsSubmitLoading(false);
+        toast.error(error.response.data);
+      }
+    }
+    setIsSubmitLoading(false);
+  };
+
   return (
     <Fragment>
       <div className="bg-white rounded-xl py-10 px-[66px]">
@@ -235,6 +225,13 @@ function TemplateDetailPage() {
           <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
             Chỉnh sửa phiếu đánh giá
           </h1>
+          <ModalAddTemplateHeader
+            isOpen={isAddTemplateHeaderModalOpen}
+            onRequestClose={() => setIsAddTemplateHeaderModalOpen(false)}
+            isLoading={isSubmitLoading}
+            handleAddNewTemplateHeader={handleAddNewTemplateHeader}
+            error={error}
+          />
 
           <form onSubmit={handleSubmit(onClickSubmit)}>
             <FormGroup>
@@ -327,105 +324,6 @@ function TemplateDetailPage() {
                 </IconButton>
               </Stack>
             </SubCard>
-            <div className="w-full rounded-full bg-black h-[5px] mb-6"></div>
-            {templateHeaders.map((header, index) => (
-              <div key={index}>
-                <FormRow>
-                  <FormGroup>
-                    <Label>Tên cột(*)</Label>
-                    <TextField
-                      value={templateHeaders?.[index]?.name}
-                      error={error?.templateHeaders?.[index]?.name ? true : false}
-                      helperText={error?.templateHeaders?.[index]?.name}
-                      name="name"
-                      placeholder="Ex: MSSV"
-                      onChange={(e) => onChangeCriteriaText(index, "name", e.target.value)}
-                      onBlur={(e) => onChangeCriteriaText(index, "name", e.target.value)}
-                      inputProps={{ maxLength: 100 }} />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label>Tiêu chí hệ thống</Label>
-                    {header.isCriteria ? (
-                      <Autocomplete
-                        value={formulaList.find((label) => label.id === templateHeaders?.[index]?.formulaId) || { id: 0, name: "Lựa chọn" }}
-                        disablePortal={false}
-                        options={formulaList}
-                        getOptionLabel={(option) => option.name || ""}
-                        renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            onChangeCriteria(index, "formulaId", newValue.id);
-                          } else {
-                            onChangeCriteria(index, "formulaId", "");
-                          }
-                        }}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                      />
-                    ) : (
-                      <Autocomplete
-                        value={notCriteriaList.find((label) => label.value === templateHeaders?.[index]?.matchedAttribute) || { value: "", label: "Lựa chọn" }}
-                        disablePortal={false}
-                        options={notCriteriaList}
-                        getOptionLabel={(option) => option.label || ""}
-                        renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            onChangeCriteria(index, "matchedAttribute", newValue.value);
-                          } else {
-                            onChangeCriteria(index, "matchedAttribute", "");
-                          }
-                        }}
-                      />
-                    )}
-                  </FormGroup>
-                </FormRow>
-                <FormRow>
-                  <FormGroup>
-                    <Label>Tiêu chí đánh giá (*)</Label>
-                    <Autocomplete
-                      value={isCriteriaOptions.find((label) => label.value === templateHeaders?.[index]?.isCriteria) || { value: "", label: "Lựa chọn" }}
-                      disablePortal={false}
-                      options={isCriteriaOptions}
-                      renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          onChangeCriteria(index, "isCriteria", newValue.value);
-                        } else {
-                          onChangeCriteria(index, "isCriteria", "");
-                        }
-                      }}
-                    />
-                  </FormGroup>
-                  {header.isCriteria ? (
-                    <FormGroup>
-                      <Label>Điểm tối đa(*)</Label>
-                      <TextField
-                        value={templateHeaders?.[index]?.totalPoint}
-                        error={error?.templateHeaders?.[index]?.totalPoint ? true : false}
-                        helperText={error?.templateHeaders?.[index]?.totalPoint}
-                        type="number"
-                        name="totalPoint"
-                        placeholder="Ex: 30"
-                        InputProps={{
-                          inputProps: {
-                            min: 0
-                          }
-                        }}
-                        onChange={(e) => onChangeCriteriaText(index, "totalPoint", e.target.value)}
-                        onBlur={(e) => onChangeCriteriaText(index, "totalPoint", e.target.value)} />
-                    </FormGroup>
-                  ) : null}
-                </FormRow>
-              </div>
-            ))}
-            <Stack direction="row" spacing={1} justifyContent="center">
-              <IconButton color="error" aria-label="delete" onClick={() => handleRemoveField()}>
-                <DeleteIcon />
-              </IconButton>
-              <IconButton color="primary" aria-label="delete" onClick={() => handleAddField()}>
-                <AddIcon />
-              </IconButton>
-            </Stack>
             <div className="mt-5 text-center">
               <Button
                 type="submit"
