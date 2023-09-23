@@ -9,7 +9,8 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { formulaPath } from "logic/api/apiUrl";
 import { isCriteriaOptions, notCriteriaOptions } from "logic/constants/global";
 
-const ModalAddTemplateHeader = ({
+const ModalEditTemplateHeader = ({
+  header,
   isOpen,
   onRequestClose,
   handleAddNewTemplateHeader,
@@ -17,11 +18,11 @@ const ModalAddTemplateHeader = ({
   error,
 }) => {
   const { handleSubmit } = useForm();
-  const [name, setName] = useState("");
+  const [name, setName] = useState(header.name);
   const [formula, setFormula] = useState(undefined);
-  const [matchedAttribute, setMatchedAttribute] = useState("");
-  const [totalPoint, setTotalpoint] = useState(undefined);
-  const [isCriteria, setIsCriteria] = useState(false);
+  const [matchedAttribute, setMatchedAttribute] = useState(header.matchedAttribute);
+  const [totalPoint, setTotalpoint] = useState(header.totalPoint);
+  const [isCriteria, setIsCriteria] = useState(header.isCriteria);
   const [formulaList, setFormulaList] = useState([]);
   const axiosPrivate = useAxiosPrivate();
   const [notCriteriaList, setNotCriteriaList] = useState(notCriteriaOptions);
@@ -34,6 +35,13 @@ const ModalAddTemplateHeader = ({
     setTotalpoint("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCriteria]);
+
+  useEffect(() => {
+    if(formulaList.length > 0){
+      setFormula(formulaList.find((item) => item.id === header.formulaId));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formulaList]);
 
   useEffect(() => {
     setTotalpoint("");
@@ -56,13 +64,7 @@ const ModalAddTemplateHeader = ({
   }, []);
 
   const handleClick = async () => {
-    await handleAddNewTemplateHeader({
-      name: name,
-      totalPoint: totalPoint,
-      matchedAttribute: matchedAttribute,
-      isCriteria: isCriteria,
-      formulaId: formula?.id,
-    });
+    await handleAddNewTemplateHeader({ name });
   };
 
   const fetchFormulars = async () => {
@@ -223,4 +225,4 @@ const ModalAddTemplateHeader = ({
   );
 };
 
-export default ModalAddTemplateHeader;
+export default ModalEditTemplateHeader;
