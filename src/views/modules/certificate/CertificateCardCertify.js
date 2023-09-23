@@ -46,7 +46,7 @@ export default function CertificateCardCertify({ certificate, onClickProcess }) 
           <Gap />
           <Button
             component={Link}
-            to={`/trainee-course-detail/${certificate?.courseId}`}
+            to={`/trainer-course-detail/${certificate?.courseId}`}
             variant="contained"
           >
             Chi Tiết

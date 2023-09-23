@@ -150,6 +150,7 @@ const AssignTrainingPlanPage = lazy(() =>
   import("views/pages/Trainer/AssignTrainingPlanPage")
 );
 const TrainerTaskCertifyPage = lazy(() => import("views/pages/Trainer/TrainerTaskCertifyPage"));
+const TrainerCourseDetailPage = lazy(() => import("views/pages/Trainer/TrainerCourseDetailPage"));
 
 // Trainee Page
 const TraineeCourseDetailPage = lazy(() =>
@@ -408,6 +409,10 @@ const router = createBrowserRouter([
             path: "/task-certify",
             element: <TrainerTaskCertifyPage></TrainerTaskCertifyPage>,
           },
+          {
+            path: "/trainer-course-detail/:courseId",
+            element: <TrainerCourseDetailPage></TrainerCourseDetailPage>,
+          }
         ],
       },
     ],

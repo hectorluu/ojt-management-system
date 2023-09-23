@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   Divider,
@@ -19,21 +18,16 @@ import {
   defaultCourseImage,
 } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { certificatePath, coursePath } from "logic/api/apiUrl";
+import { coursePath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
-import { universityNoti } from "logic/constants/notification";
-import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
-import { LoadingButton } from "@mui/lab";
 import ProfileSkeleton from "views/modules/account/ProfileSkeleton";
 import SubCard from "views/components/cards/SubCard";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
-import Chip from "views/components/chip/Chip";
-import CheckIcon from '@mui/icons-material/Check';
 
-const TraineeCourseDetailPage = () => {
+const TrainerCourseDetailPage = () => {
   const { courseId } = useParams();
 
   const axiosPrivate = useAxiosPrivate();
@@ -41,13 +35,11 @@ const TraineeCourseDetailPage = () => {
   const navigate = useNavigate();
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [link, setLink] = useState("");
   const [platformName, setPlatformName] = useState("");
   const [description, setDescription] = useState("");
   const [courseSkills, setCourseSkills] = useState([]);
   const [coursePositions, setCoursePositions] = useState([]);
-  const [certificate, setCertificate] = useState({});
 
   const fetchCourseDetail = async () => {
     try {
@@ -70,40 +62,13 @@ const TraineeCourseDetailPage = () => {
     }
   };
 
-  const fetchCertificate = async () => {
-    try {
-      setIsFetchingLoading(true);
-      const response = await axiosPrivate.get(certificatePath.GET_CERTIFICATE_DETAIL + courseId);
-      setCertificate(response.data);
-      setIsFetchingLoading(false);
-    } catch (error) {
-      setIsFetchingLoading(false);
-    }
-  }
-
   useEffect(() => {
     if (!courseId) {
-      navigate("/trainee-dashboard");
+      navigate("/trainer-dashboard");
     }
-    fetchCertificate();
     fetchCourseDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const enrollCourse = async () => {
-    try {
-      setIsLoading(true);
-      const response = await axiosPrivate.post(
-        coursePath.ENROLL_COURSE + courseId,
-      );
-      console.log(response);
-      toast.success(universityNoti.SUCCESS.UPDATE);
-      setIsLoading(false);
-    } catch (error) {
-      toast.error(error.response.data);
-      setIsLoading(false);
-    }
-  };
 
   return (
     <MainCard
@@ -177,26 +142,6 @@ const TraineeCourseDetailPage = () => {
                 />
               </FormGroup>
             </CardContent>
-
-            <CardActions sx={{ justifyContent: "flex-end", mt: -4 }}>
-              {certificate.courseId ?
-                <Chip
-                  color="success"
-                  sx={{ float: "right" }}
-                  startIcon={<CheckIcon />}
-                >
-                  Đã đăng kí
-                </Chip> :
-                <LoadingButton
-                  variant="contained"
-                  component={"label"}
-                  onClick={() => enrollCourse()}
-                  loading={isLoading}
-                >
-                  Đăng kí
-                </LoadingButton>}
-
-            </CardActions>
           </Card>
           <Divider />
           <Card>
@@ -248,5 +193,5 @@ const TraineeCourseDetailPage = () => {
   );
 };
 
-export default TraineeCourseDetailPage;
+export default TrainerCourseDetailPage;
 
