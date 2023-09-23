@@ -16,6 +16,7 @@ export const coursePath = {
   UPDATE_COURSE: "/course/",
   GET_RECOMMENDED_LIST: "/course/recommendation-courses",
   GET_TRAINEE_COURSE_LIST: "course/list-course-trainee",
+  GET_COMPULSORY_COURSE_LIST: "course/compulsory-courses",
 };
 
 export const criteriaPath = {

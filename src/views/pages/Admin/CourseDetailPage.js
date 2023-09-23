@@ -189,7 +189,7 @@ const CourseDetailPage = () => {
 
   return (
     <MainCard
-      title="Hồ sơ"
+      title="Thông tin khoá học"
     // secondary={
     //   <Button
     //     startIcon={

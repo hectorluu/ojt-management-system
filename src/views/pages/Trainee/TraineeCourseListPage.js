@@ -9,7 +9,6 @@ import {
   skillStatus,
   traineeCourseOptions,
 } from "logic/constants/global";
-import CourseCardDisplay from "views/modules/course/CourseCardDisplay";
 import CourseGrid from "views/modules/course/CourseGrid";
 import TablePagination from "@mui/material/TablePagination";
 import useOnChange from "logic/hooks/useOnChange";
@@ -27,6 +26,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import SubCard from "views/components/cards/SubCard";
+import TraineeCourseCardDisplay from "views/modules/course/TraineeCourseCardDisplay";
 
 const TraineeCourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -64,7 +64,7 @@ const TraineeCourseListPage = () => {
     try {
       setIsLoading(true); // Set loading to true before fetching data)
       let response = {};
-      if(courseOption === 2){
+      if (courseOption === 3) {
         response = await axiosPrivate.get(
           coursePath.GET_TRAINEE_COURSE_LIST +
           "?PageIndex=" +
@@ -76,7 +76,7 @@ const TraineeCourseListPage = () => {
           "&filterSkill=" +
           `${skill === null ? "" : skill}`
         );
-      }else{
+      } else if (courseOption === 1) {
         response = await axiosPrivate.get(
           coursePath.GET_RECOMMENDED_LIST +
           "?PageIndex=" +
@@ -88,7 +88,16 @@ const TraineeCourseListPage = () => {
           "&filterSkill=" +
           `${skill === null ? "" : skill}`
         );
+      } else {
+        response = await axiosPrivate.get(
+          coursePath.GET_COMPULSORY_COURSE_LIST +
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage
+        );
       }
+      console.log(response.data);
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
@@ -137,40 +146,44 @@ const TraineeCourseListPage = () => {
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           {/*Custom search bar*/}
-          <Card className="w-2/5">
-            <OutlinedInput
-              defaultValue=""
-              fullWidth
-              placeholder="Tìm kiếm ..."
-              startAdornment={
-                <InputAdornment position="start">
-                  <SvgIcon color="action" fontSize="small">
-                    <SearchIcon />
-                  </SvgIcon>
-                </InputAdornment>
-              }
-              sx={{ maxWidth: 550 }}
-              onChange={setSearchTerm}
-            />
-          </Card>
-          <div className="flex flex-wrap items-start max-w-[200px] w-full">
-            <Autocomplete
-              disablePortal={false}
-              id="combo-box-demo"
-              options={skillList}
-              getOptionLabel={(option) => option.name}
-              sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} label="Kỹ năng" />}
-              onChange={(event, newValue) => {
-                if (newValue) {
-                  setSkill(newValue.id);
-                } else {
-                  setSkill("");
-                }
-              }}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
-            />
-          </div>
+          {courseOption !== 2 ?
+            <>
+              <Card className="w-2/5">
+                <OutlinedInput
+                  defaultValue=""
+                  fullWidth
+                  placeholder="Tìm kiếm ..."
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <SvgIcon color="action" fontSize="small">
+                        <SearchIcon />
+                      </SvgIcon>
+                    </InputAdornment>
+                  }
+                  sx={{ maxWidth: 550 }}
+                  onChange={setSearchTerm}
+                />
+              </Card>
+              <div className="flex flex-wrap items-start max-w-[200px] w-full">
+                <Autocomplete
+                  disablePortal={false}
+                  id="combo-box-demo"
+                  options={skillList}
+                  getOptionLabel={(option) => option.name}
+                  sx={{ width: 300 }}
+                  renderInput={(params) => <TextField {...params} label="Kỹ năng" />}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setSkill(newValue.id);
+                    } else {
+                      setSkill("");
+                    }
+                  }}
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                />
+              </div>
+            </>
+            : null}
           <div className="flex flex-wrap items-start max-w-[200px] w-full">
             <Autocomplete
               disablePortal={false}
@@ -199,7 +212,7 @@ const TraineeCourseListPage = () => {
             </>
           ) : courses.length !== 0 ? (
             courses.map((item) => (
-              <CourseCardDisplay course={item} key={item.id} />
+              <TraineeCourseCardDisplay course={item} key={item.id} />
             ))
           ) : (
             <>Không có khóa học nào được tìm thấy.</>
