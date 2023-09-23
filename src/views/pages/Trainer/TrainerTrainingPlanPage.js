@@ -201,16 +201,16 @@ const TrainerTrainingPlanPage = () => {
                     <TableCell align="center">
                       <Chip
                         color={
-                          item.status === trainingPlanStatus.PENDING
+                          item?.status === trainingPlanStatus.PENDING
                             ? "warning"
-                            : item.status === trainingPlanStatus.ACTIVE
-                            ? "successs"
+                            : item?.status === trainingPlanStatus.ACTIVE
+                            ? "success"
                             : "error"
                         }
                       >
                         {
                           trainingPlanStatusOptions.find(
-                            (label) => label.value === item.status
+                            (label) => label.value === item?.status
                           ).label
                         }
                       </Chip>
