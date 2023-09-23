@@ -25,6 +25,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import SubCard from "views/components/cards/SubCard";
 import UniversityGrid from "views/modules/university/UniversityGrid";
+import { useTheme } from "@emotion/react";
 
 const UniversityListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -36,17 +37,19 @@ const UniversityListPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
+  const theme = useTheme();
+
   const fetchUniversities = async () => {
     try {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         universityPath.GET_UNIVERSITY_LIST +
-        "?PageSize=" +
-        rowsPerPage +
-        "&PageIndex=" +
-        page +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}`
+          "?PageSize=" +
+          rowsPerPage +
+          "&PageIndex=" +
+          page +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}`
       );
       setUniversities(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -179,7 +182,7 @@ const UniversityListPage = () => {
               ) : universities.length !== 0 ? (
                 universities.map((university) => (
                   <div
-                    className="bg-white shadow-1 flex flex-col justify-center items-center px-6 pb-6 rounded-2xl w-full h-96"
+                    className="bg-white shadow-lg flex flex-col justify-center items-center px-6 pb-6 rounded-2xl w-full h-96"
                     key={university.id}
                   >
                     <img
@@ -198,13 +201,22 @@ const UniversityListPage = () => {
                         {university.address}
                       </p>
                     </div>
+
                     <Button
-                      className="w-full bg-opacity-20 text-secondary bg-violet-500 hover:bg-violet-300"
+                      variant="contained"
+                      sx={{
+                        backgroundColor: theme.palette.success.dark,
+                        "&:hover": {
+                          backgroundColor: "#009e47", // Color on hover
+                        },
+                      }}
+                      component="label"
+                      className="flex items-center justify-center cursor-pointer w-full h-11 text-text1 rounded-lg"
                       onClick={() => {
                         navigate("/university/" + university.id);
                       }}
                     >
-                      Chọn
+                      <span className="text-white">Chọn</span>
                     </Button>
                   </div>
                 ))

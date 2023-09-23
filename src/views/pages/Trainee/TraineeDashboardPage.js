@@ -325,9 +325,18 @@ const TraineeDashboardPage = () => {
               "Math",
             ]}
             chartData={[
-              { name: "Series 1", data: [80, 50, 30, 40, 100, 20] },
-              { name: "Series 2", data: [20, 30, 40, 80, 20, 80] },
-              { name: "Series 3", data: [44, 76, 78, 13, 43, 10] },
+              {
+                name: "Series 1",
+                data: [80, 0, 0, 0, 30, 70],
+              },
+              {
+                name: "Series 2",
+                data: [20, 30, 40, 80, 20, 80],
+              },
+              {
+                name: "Series 3",
+                data: [44, 76, 78, 13, 43, 0],
+              },
             ]}
             chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
             sx={{ px: -5 }}

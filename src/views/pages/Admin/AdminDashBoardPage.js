@@ -152,8 +152,7 @@ const AdminDashBoardPage = () => {
         {/* ... Line Chart Part */}
         <Grid item xs={12} md={6} lg={8}>
           <HorizontalLineChart
-            title="Conversion Rates"
-            subheader="(+43%) than last year"
+            title={<span className="text-xl font-bold">Đào tạo viên</span>}
             chartData={[
               { label: "Italy", value: 400 },
               { label: "Japan", value: 430 },

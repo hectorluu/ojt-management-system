@@ -17,7 +17,7 @@ const ModalEditOJTBatch = ({
   isSubmitLoading,
   handleUpdateBatch,
   error,
-  universityId
+  universityId,
 }) => {
   const [name, setName] = useState("");
   const [startTime, setStartTime] = useState(new Date());
@@ -50,11 +50,13 @@ const ModalEditOJTBatch = ({
 
   const fetchTemplateList = async () => {
     try {
-      const response = await axiosPrivate.get(templatePath.GET_TEMPLATE_UNIVERSITY + universityId);
+      const response = await axiosPrivate.get(
+        templatePath.GET_TEMPLATE_UNIVERSITY + universityId
+      );
       setTemplateList(response.data);
     } catch (error) {
       console.log("fetchTemplateList ~ error", error);
-    };
+    }
   };
 
   useEffect(() => {
@@ -109,9 +111,9 @@ const ModalEditOJTBatch = ({
             <FormRow>
               <FormGroup>
                 <Label>Tên đợt thực tập (*)</Label>
-                {isLoading ?
+                {isLoading ? (
                   <Skeleton height={60} animation="wave" />
-                  :
+                ) : (
                   <TextField
                     value={name}
                     error={error?.name ? true : false}
@@ -120,57 +122,67 @@ const ModalEditOJTBatch = ({
                     placeholder="Ex: Đợt 1"
                     onChange={(e) => setName(e.target.value)}
                     onBlur={(e) => setName(e.target.value)}
-                    inputProps={{ maxLength: 100 }} />}
+                    inputProps={{ maxLength: 100 }}
+                  />
+                )}
               </FormGroup>
               <FormGroup>
                 <Label>Mẫu đánh giá(*)</Label>
-                {isLoading ?
+                {isLoading ? (
                   <Skeleton height={60} animation="wave" />
-                  :
+                ) : (
                   <TextField
-                    value={templateList.find((template) => template.id === templateId).name}
+                    value={
+                      templateList.find(
+                        (template) => template.id === templateId
+                      )?.name
+                    }
                     name="template"
-                    inputProps={{ readOnly: true }} />}
+                    inputProps={{ readOnly: true }}
+                  />
+                )}
               </FormGroup>
             </FormRow>
             <FormRow>
               <FormGroup>
                 <Label>Ngày bắt đầu (*)</Label>
-                {isLoading ?
+                {isLoading ? (
                   <Skeleton height={60} animation="wave" />
-                  :
+                ) : (
                   <DatePicker
                     value={moment(startTime)}
                     onChange={(newValue) => setStartTime(newValue.toDate())}
                     slotProps={{
                       textField: {
                         fullWidth: true,
-                        variant: 'outlined',
+                        variant: "outlined",
                         error: error?.startTime ? true : false,
                         helperText: error?.startTime,
                         readOnly: true,
                       },
                     }}
-                  />}
+                  />
+                )}
               </FormGroup>
               <FormGroup>
                 <Label>Ngày kết thúc (*)</Label>
-                {isLoading ?
+                {isLoading ? (
                   <Skeleton height={60} animation="wave" />
-                  :
+                ) : (
                   <DatePicker
                     value={moment(endTime)}
                     onChange={(newValue) => setEndTime(newValue.toDate())}
                     slotProps={{
                       textField: {
                         fullWidth: true,
-                        variant: 'outlined',
+                        variant: "outlined",
                         error: error?.endTime ? true : false,
                         helperText: error?.endTime,
                         readOnly: true,
                       },
                     }}
-                  />}
+                  />
+                )}
               </FormGroup>
             </FormRow>
 

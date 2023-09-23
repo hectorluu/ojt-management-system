@@ -74,6 +74,8 @@ export const userPath = {
 
 export const attendancePath = {
   GET_ATTENDANCE_FILE: "/attendance/data-of-file-attendance",
+  GET_ATTENDANCE_BY_MONTH: "/attendance/attendance-by-month/",
+  GET_ATTENDANCE_BY_DATE: "/attendance/attendance-by-date/",
 };
 
 export const skillPath = {
@@ -93,6 +95,7 @@ export const traineeTaskPath = {
   GET_TASK_LIST: "/task-process",
   GET_TASK: "/task-process/",
   GET_TASK_OF_TRAINEE: "/task-process/trainee/",
+  GET_ACCOMPLISHED_TASK_LIST: "/trainee-tasks/accomplished-tasks",
 };
 
 export const positionPath = {
@@ -161,10 +164,12 @@ export const certificatePath = {
 };
 
 export const trainerTaskPath = {
-  GET_ACCOMPLISHED_TASK_LIST_BY_BOARD: "/task-process/open-board/{boardId}/task-accomplished",
+  GET_ACCOMPLISHED_TASK_LIST_BY_BOARD:
+    "/task-process/open-board/{boardId}/task-accomplished",
   GET_OPEN_BOARD_LIST: "/task-process/open-board",
   APPROVE_TASK: "/task-process/task-accept/",
-  REJECT_TASK: "/task-process/task-reject/"
+  REJECT_TASK: "/task-process/task-reject/",
+  GET_TRAINEE_LIST_TASK: "/task-process/trainee/",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

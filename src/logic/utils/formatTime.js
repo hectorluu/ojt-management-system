@@ -10,7 +10,7 @@ export function fDate(date, newFormat) {
 }
 
 export function fDateTime(date, newFormat) {
-  const fm = newFormat || "dd MMM yyyy p";
+  const fm = newFormat || "p dd MMM yyyy";
 
   return date ? format(new Date(date), fm, { locale: vi }) : "";
 }
