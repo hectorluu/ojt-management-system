@@ -110,6 +110,8 @@ export const templatePath = {
   GET_TEMPLATE_UNIVERSITY: "/template/list-active-template-by-university/",
   DELETE_TEMPLATE: "/template/disable-template/",
   ACTIVE_TEMPLATE: "/template/active-template/",
+  ADD_TEMPLATE_HEADER: "/template/template-header/",
+  DELETE_TEMPLATE_HEADER: "/template/template-header/",
 };
 
 export const formulaPath = {
