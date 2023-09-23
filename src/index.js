@@ -57,6 +57,9 @@ const UniversityListPage = lazy(() =>
 const UniversityDetailPage = lazy(() =>
   import("views/pages/Admin/UniversityDetailPage")
 );
+const ChangePasswordPage = lazy(() =>
+  import("views/pages/Admin/ChangePasswordPage")
+);
 
 // Manager Page
 const AttendancePage = lazy(() => import("views/pages/Manager/AttendancePage"));
@@ -105,6 +108,9 @@ const FormulaDetailPage = lazy(() =>
 const TemplateDetailPage = lazy(() =>
   import("views/pages/Manager/TemplateDetailPage")
 );
+const ManagerProfilePage = lazy(() =>
+  import("views/pages/Manager/ManagerProfilePage")
+);
 
 // Trainer Page
 const AssignedTraineeListPage = lazy(() =>
@@ -142,6 +148,9 @@ const AssignTrainingPlanPage = lazy(() =>
 );
 const TrainerTaskCertifyPage = lazy(() =>
   import("views/pages/Trainer/TrainerTaskCertifyPage")
+);
+const TrainerCourseDetailPage = lazy(() =>
+  import("views/pages/Trainer/TrainerCourseDetailPage")
 );
 
 // Trainee Page
@@ -240,6 +249,10 @@ const router = createBrowserRouter([
             element: <UniversityDetailPage></UniversityDetailPage>,
           },
           {
+            path: "/change-password",
+            element: <ChangePasswordPage></ChangePasswordPage>,
+          },
+          {
             path: "/config",
             element: <ConfigPage></ConfigPage>,
           },
@@ -323,6 +336,10 @@ const router = createBrowserRouter([
             path: "/template-detail/:templateId",
             element: <TemplateDetailPage></TemplateDetailPage>,
           },
+          {
+            path: "/manager-profile",
+            element: <ManagerProfilePage></ManagerProfilePage>,
+          },
         ],
       },
     ],
@@ -386,6 +403,10 @@ const router = createBrowserRouter([
           {
             path: "/task-certify",
             element: <TrainerTaskCertifyPage></TrainerTaskCertifyPage>,
+          },
+          {
+            path: "/trainer-course-detail/:courseId",
+            element: <TrainerCourseDetailPage></TrainerCourseDetailPage>,
           },
         ],
       },

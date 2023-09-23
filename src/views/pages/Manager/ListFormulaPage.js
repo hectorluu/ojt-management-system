@@ -19,6 +19,8 @@ import {
   IconButton,
   Autocomplete,
   TextField,
+  Modal,
+  Box,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link, useNavigate } from "react-router-dom";
@@ -109,38 +111,41 @@ const ListFormulaPage = () => {
     setPage(1);
   };
 
-  const onClickDelete = async (item) => {
+  const handleClickDeleteFormula = async (item) => {
     try {
-      setIsLoading(true);
-      await axiosPrivate.delete(formulaPath.DELETE_FORMULA + item.id);
+      await axiosPrivate.put(formulaPath.DELETE_FORMULA + item.id);
+      setIsModalDeleteOpen(false);
       fetchFormulas();
       toast.success(formulaNoti.SUCCESS.DELETE);
-      setIsLoading(false);
-      setOpen(null);
-      // setPage(response.data.pageIndex);
-    } catch (error) {
-      console.log("fetchSkill ~ error", error);
-      setIsLoading(false);
+    } catch (e) {
+      toast.error(e.response.data);
     }
   };
 
-  const onClickActive = async (item) => {
+  const handleClickActiveFormula = async (item) => {
     try {
-      setIsLoading(true);
-      await axiosPrivate.put(formulaPath.UPDATE_FORMULA + item.id, {
-        calculation: item.calculation,
-        name: item.name,
-        status: 2,
-      });
+      await axiosPrivate.put(formulaPath.ACTIVE_FORMLA + item.id);
+      setOpen(false);
       fetchFormulas();
       toast.success(formulaNoti.SUCCESS.ACTIVE);
-      setIsLoading(false);
-      setOpen(null);
     } catch (error) {
-      console.log("Active error", error);
-      setIsLoading(false);
+      toast.error(error.response.data);
     }
   };
+
+  // Modal Delete
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+
+  const handleCloseDeleteModal = () => {
+    setIsModalDeleteOpen(false);
+    setOpen(null);
+  };
+
+  const handleOpenDeleteModal = (skill) => {
+    setIsModalDeleteOpen(true);
+    setOpen(false);
+  };
+
 
   return (
     <MainCard
@@ -162,6 +167,89 @@ const ListFormulaPage = () => {
         </Button>
       }
     >
+      <Modal open={isModalDeleteOpen} onClose={handleCloseDeleteModal}>
+        <Box
+          sx={{
+            borderRadius: "0.5rem",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 600,
+            height: 200,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <button
+            className="absolute z-10 flex items-center justify-center cursor-pointer w-11 h-11 right-1 top-1 text-text1"
+            onClick={handleCloseDeleteModal}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+          <div className="text-center">
+            <h2 className="font-bold text-[25px]">Vô hiệu hóa công thức tính</h2>
+
+            <div className="text-text1 text-base flex justify-center my-auto h-24 items-center">
+              Bạn có chắc muốn vô hiệu hóa công thức tính &nbsp;
+              <strong className="text-text1">{selectedItem.name}</strong>
+              &nbsp; ?
+            </div>
+          </div>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "space-between",
+            }}
+            className="space-x-2"
+          >
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                "&:hover": {
+                  backgroundColor: theme.palette.primary.dark, // Color on hover
+                },
+              }}
+              component="label"
+              className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
+              onClick={handleCloseDeleteModal}
+            >
+              <span className="text-white">Hủy</span>
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: theme.palette.error.main,
+                "&:hover": {
+                  backgroundColor: theme.palette.error.dark, // Color on hover
+                },
+              }}
+              component="label"
+              className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
+              onClick={() => handleClickDeleteFormula(selectedItem)}
+            >
+              <span className="text-white">Xác nhận</span>
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
       <Popover
         open={Boolean(open)}
         anchorEl={open}
@@ -185,12 +273,12 @@ const ListFormulaPage = () => {
           Sửa
         </MenuItem>
         {selectedItem.status === 2 ? (
-          <MenuItem onClick={() => onClickDelete(selectedItem)}>
+          <MenuItem onClick={() => handleOpenDeleteModal(selectedItem)}>
             <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
             <span style={{ color: theme.palette.error.main }}>Xóa</span>
           </MenuItem>
         ) : (
-          <MenuItem onClick={() => onClickActive(selectedItem)}>
+          <MenuItem onClick={() => handleClickActiveFormula(selectedItem)}>
             <ToggleOnIcon sx={{ mr: 2, color: theme.palette.success.main }} />
             Kích hoạt
           </MenuItem>

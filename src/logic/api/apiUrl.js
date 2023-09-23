@@ -16,6 +16,8 @@ export const coursePath = {
   UPDATE_COURSE: "/course/",
   GET_RECOMMENDED_LIST: "/course/recommendation-courses",
   GET_TRAINEE_COURSE_LIST: "course/list-course-trainee",
+  GET_COMPULSORY_COURSE_LIST: "course/compulsory-courses",
+  ENROLL_COURSE: "/course/course-participation/",
 };
 
 export const criteriaPath = {
@@ -105,7 +107,9 @@ export const templatePath = {
   GET_TEMPLATE_HEADER: "/template/template-header/criteriaheader",
   GET_TEMPLATE_LIST: "/template",
   GET_TEMPLATE_DETAIL: "/template/",
-  GET_TEMPLATE_UNIVERSITY: "/template/list-active-template-by-university/"
+  GET_TEMPLATE_UNIVERSITY: "/template/list-active-template-by-university/",
+  DELETE_TEMPLATE: "/template/disable-template/",
+  ACTIVE_TEMPLATE: "/template/active-template/",
 };
 
 export const formulaPath = {
@@ -113,8 +117,9 @@ export const formulaPath = {
   GET_FORMULA_DETAIL: "/formula/",
   CREATE_FORMULA: "/formula",
   GET_KEY_LIST: "/formula/data-operand",
-  DELETE_FORMULA: "/formula/",
   UPDATE_FORMULA: "/formula/",
+  DELETE_FORMULA: "/formula/disable-formula/",
+  ACTIVE_FORMLA: "/formula/active-formula/",
 };
 
 export const notificationPath = {
@@ -143,13 +148,19 @@ export const configPath = {
 
 export const certificatePath = {
   GET_CERTIFICATE_LIST: "/certificate",
+  GET_CERTIFICATE_DETAIL: "/certificate/",
   SUBMIT_CERTIFICATE: "/certificate/submition-certificate",
   RE_SUBMIT_CERTIFICATE: "/certificate/resubmition-certificate",
+  GET_PENDING_CERTIFICATE: "/certificate/trainer/pending-certificate",
+  VALID_CERTIFICATE: "/certificate/trainer/valid-certificate",
+  INVALID_CERTIFICATE: "/certificate/trainer/invalid-certificate",
 };
 
 export const trainerTaskPath = {
   GET_ACCOMPLISHED_TASK_LIST_BY_BOARD: "/task-process/open-board/{boardId}/task-accomplished",
   GET_OPEN_BOARD_LIST: "/task-process/open-board",
+  APPROVE_TASK: "/task-process/task-accept/",
+  REJECT_TASK: "/task-process/task-reject/"
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

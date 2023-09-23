@@ -58,7 +58,11 @@ function Luckysheet({ data = [] }) {
         data: data,
       }
     }
-    luckysheet.create(options);
+    try {
+      luckysheet.create(options);
+    } catch (e) {
+      
+    }
   }, [data]);
 
   const luckyCss = {

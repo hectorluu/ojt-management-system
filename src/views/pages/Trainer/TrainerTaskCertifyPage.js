@@ -11,6 +11,9 @@ import TablePagination from "@mui/material/TablePagination";
 import MainCard from "views/components/cards/MainCard";
 import {
   Autocomplete,
+  Box,
+  Button,
+  Modal,
   TextField,
   Typography,
 } from "@mui/material";
@@ -19,6 +22,7 @@ import { toast } from "react-toastify";
 import TaskCardDisplay from "views/modules/task/TaskCardDisplay";
 import TaskGrid from "views/modules/task/TaskGrid";
 import TaskCardSkeleton from "views/modules/task/TaskCardSkeleton";
+import { useTheme } from "@emotion/react";
 
 const TrainerTaskCertifyPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -28,6 +32,8 @@ const TrainerTaskCertifyPage = () => {
   const [status, setStatus] = useState("");
   const [boardId, setBoardId] = useState("");
   const [boardList, setBoardList] = useState([]);
+  const [isApprove, setIsApprove] = useState(false);
+  const [selected, setSelected] = useState({}); // New selected state
   const [taskList, setTaskList] = useState([]); // New task list state
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
@@ -77,10 +83,125 @@ const TrainerTaskCertifyPage = () => {
     }
   };
 
+  // Modal Delete
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleOpenModal = (isApprove, item) => {
+    setSelected(item);
+    setIsApprove(isApprove);
+    setIsModalOpen(true);
+  };
+  
+  const handleCertify = async (item) => {
+    console.log(item);
+    console.log(isApprove);
+    try {
+      if (isApprove) {
+        const response = await axiosPrivate.put(trainerTaskPath.APPROVE_TASK + item.id);
+        console.log(response);
+      } else {
+        const response = await axiosPrivate.put(trainerTaskPath.REJECT_TASK + item.id);
+        console.log(response);
+      }
+      fetchAccomplishedTask();
+      setIsModalOpen(false);
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  };
+  const theme = useTheme();
+
   return (
     <MainCard
       title={`Duyệt công việc`}
     >
+      <Modal open={isModalOpen} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            borderRadius: "0.5rem",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 600,
+            height: 200,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <button
+            className="absolute z-10 flex items-center justify-center cursor-pointer w-11 h-11 right-1 top-1 text-text1"
+            onClick={handleCloseModal}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+          <div className="text-center">
+            <h2 className="font-bold text-[25px]">Xử lí công việc</h2>
+
+            <div className="text-text1 text-base flex justify-center my-auto h-24 items-center">
+              Bạn có chắc muốn {isApprove ? "chấp thuận" : "huỷ bỏ"} công việc &nbsp;
+              <strong className="text-text1">{selected.name}</strong>
+              &nbsp; ?
+            </div>
+          </div>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "space-between",
+            }}
+            className="space-x-2"
+          >
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                "&:hover": {
+                  backgroundColor: theme.palette.primary.dark, // Color on hover
+                },
+              }}
+              component="label"
+              className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
+              onClick={handleCloseModal}
+            >
+              <span className="text-white">Hủy</span>
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: theme.palette.error.main,
+                "&:hover": {
+                  backgroundColor: theme.palette.error.dark, // Color on hover
+                },
+              }}
+              component="label"
+              className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
+              onClick={() => handleCertify(selected)}
+            >
+              <span className="text-white">Xác nhận</span>
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           <div className="flex flex-wrap items-start max-w-[500px] w-full">
@@ -129,7 +250,7 @@ const TrainerTaskCertifyPage = () => {
             </>
           ) : taskList.length !== 0 ? (
             taskList.map((item) => (
-              <TaskCardDisplay task={item} key={item.id} />
+              <TaskCardDisplay task={item} key={item.id} onClickProcess={handleOpenModal} />
             ))
           ) : (
             <>Không có công việc nào được tìm thấy.</>

@@ -314,7 +314,8 @@ export const certificateStatus = {
 
 export const traineeCourseOptions = [
   { value: 1, label: "Khuyến nghị" },
-  { value: 2, label: "Tất cả" },
+  { value: 2, label: "Bắt buộc" },
+  { value: 3, label: "Tất cả" },
 ];
 
 export const accomplishedTaskStatusOptions = [

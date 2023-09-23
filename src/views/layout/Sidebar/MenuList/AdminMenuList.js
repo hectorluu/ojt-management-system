@@ -11,6 +11,7 @@ import SensorOccupiedIcon from "@mui/icons-material/SensorOccupied";
 import KeyboardIcon from "@mui/icons-material/Keyboard";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SchoolIcon from "@mui/icons-material/School";
+import PasswordIcon from '@mui/icons-material/Password';
 
 //items
 const iconsDaskboard = { IconDashboard };
@@ -37,6 +38,7 @@ const iconsPages = {
   KeyboardIcon,
   SettingsIcon,
   SchoolIcon,
+  PasswordIcon,
 };
 
 const pages = {
@@ -82,6 +84,14 @@ const pages = {
       type: "item",
       url: "/university-list",
       icon: iconsPages.SchoolIcon,
+      breadcrumbs: false,
+    },
+    {
+      id: "change-password",
+      title: "Đổi mật khẩu",
+      type: "item",
+      url: "/change-password",
+      icon: iconsPages.PasswordIcon,
       breadcrumbs: false,
     },
     {

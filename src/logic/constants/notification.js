@@ -89,6 +89,8 @@ export const criteraNoti = {
 export const templateNoti = {
   SUCCESS: {
     CREATE: "Thành công tạo mẫu đánh giá!!!",
+    DELETE: "Thành công vô hiệu mẫu đánh giá!!!",
+    ACTIVE: "Thành công kích hoạt mẫu đánh giá!!!",
   },
 
   ERROR: {
@@ -239,6 +241,7 @@ export const configNoti = {
 export const certificateNoti = {
   SUCCESS: {
     SUBMIT: "Thành công nộp chứng chỉ!!!",
+    CERTIFY: "Thành công duyệt chứng chỉ!!!",
   },
   ERROR: {
     BLANK_LINK: "Đường dẫn không được để trống!!!",
@@ -249,6 +252,17 @@ export const certificateNoti = {
 export const assignNoti = {
   SUCCESS: {
     ASSIGN: "Thành công phân công thực tập sinh!!!",
+  },
+  ERROR: {
+    DUPPLICATED: "Thực tập sinh đã tồn tại trong danh sách!!!",
+    BLANK_TRAINER: "Vui lòng chọn đào tạo viên!!!",
+    BLANK_TRAINEE: "Vui lòng chọn thực tập sinh!!!",
+  },
+};
+
+export const taskNoti = {
+  SUCCESS: {
+    CERTIFY: "Thành công duyệt công việc!!!",
   },
   ERROR: {
     DUPPLICATED: "Thực tập sinh đã tồn tại trong danh sách!!!",
