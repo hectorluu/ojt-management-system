@@ -16,7 +16,7 @@ const Button = ({
     children
   );
   let defaultClassName =
-    "flex items-center justify-center p-4 text-base font-semibold rounded-xl min-h-[56px]";
+    "flex items-center justify-center px-2 text-base font-semibold rounded-xl min-h-[56px]";
   switch (rest.kind) {
     case "primary":
       defaultClassName = defaultClassName + " bg-primary text-white";

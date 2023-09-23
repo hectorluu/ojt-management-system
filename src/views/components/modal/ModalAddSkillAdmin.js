@@ -1,44 +1,44 @@
-import { Fragment } from "react";
+import { useEffect, useState } from "react";
 import FormGroup from "views/components/common/FormGroup";
-import axios from "axios";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { Label } from "views/components/label";
-import { Input } from "views/components/input";
 import { Button } from "views/components/button";
-import { apiURL } from "logic/config/general-config/config";
-import ReactModal from "react-modal";
+import { Box, Modal, TextField } from "@mui/material";
 
-const ModalAddSkillAdmin = ({ isOpen, onRequestClose }) => {
-  const { handleSubmit, control, reset } = useForm();
+const ModalAddSkillAdmin = ({
+  isOpen,
+  onRequestClose,
+  handleAddNewSkill,
+  isLoading,
+  error,
+}) => {
+  const { handleSubmit } = useForm();
+  const [name, setName] = useState("");
 
-  const resetValues = () => {
-    reset({});
+  const handleClick = async () => {
+    await handleAddNewSkill({name});
   };
 
-  const handleAddNewSkill = async (values) => {
-    try {
-      await axios.post(`${apiURL}/`, {
-        ...values,
-      });
-      toast.success("Create new skill successfully");
-      resetValues();
-    } catch (error) {
-      toast.error("Can not create new skill");
-    }
-    // values, dateOfBirth
-  };
+  useEffect(() => { console.log(name) }, [name]);
 
   return (
-    <Fragment>
-      <ReactModal
-        isOpen={isOpen}
-        onRequestClose={onRequestClose}
-        overlayClassName="modal-overlay fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
-        className="modal-content w-full max-w-[500px] bg-white rounded-2xl outline-none p-10 relative max-h-[90vh] overflow-y-auto scroll-hidden"
+    <Modal open={isOpen} onClose={onRequestClose}>
+      <Box
+        sx={{
+          borderRadius: "0.5rem",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 600,
+          bgcolor: "background.paper",
+          border: "2px solid #000",
+          boxShadow: 24,
+          p: 4,
+        }}
       >
         <button
-          className="absolute z-10 flex items-center justify-center cursor-pointer w-11 h-11 right-10 top-[10px] text-text1"
+          className="absolute z-10 flex items-center justify-center cursor-pointer w-11 h-11 right-1 top-1 text-text1"
           onClick={onRequestClose}
         >
           <svg
@@ -61,21 +61,24 @@ const ModalAddSkillAdmin = ({ isOpen, onRequestClose }) => {
         </h2>
         <div>
           <div className="bg-white shadow-1 rounded-xl p-4">
-            <form onSubmit={handleSubmit(handleAddNewSkill)}>
+            <form onSubmit={handleSubmit(handleClick)}>
               <FormGroup>
                 <Label>Tên kĩ năng (*)</Label>
-                <Input
-                  control={control}
-                  name="skill name"
+                <TextField
+                  error={error?.name ? true : false}
+                  helperText={error?.name}
+                  name="name"
                   placeholder="Ex: ReactJS"
-                  autoComplete="off"
-                ></Input>
+                  onChange={(e) => setName(e.target.value)}
+                  onBlur={(e) => setName(e.target.value)}
+                  inputProps={{ maxLength: 100 }} />
               </FormGroup>
 
               <div className="mt-5 text-center">
                 <Button
                   type="submit"
                   className="px-10 mx-auto text-white bg-primary"
+                  isLoading={isLoading}
                 >
                   Thêm mới{" "}
                 </Button>
@@ -83,8 +86,8 @@ const ModalAddSkillAdmin = ({ isOpen, onRequestClose }) => {
             </form>
           </div>
         </div>
-      </ReactModal>
-    </Fragment>
+      </Box>
+    </Modal>
   );
 };
 

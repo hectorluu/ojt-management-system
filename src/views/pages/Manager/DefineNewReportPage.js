@@ -1,18 +1,11 @@
-import React, { useRef, useEffect, Fragment, useState } from "react";
-import { IgrExcelXlsxModule } from "igniteui-react-excel";
-import { IgrExcelCoreModule } from "igniteui-react-excel";
-import { IgrExcelModule } from "igniteui-react-excel";
-import { IgrSpreadsheetModule } from "igniteui-react-spreadsheet";
-import { IgrSpreadsheet } from "igniteui-react-spreadsheet";
+import React, { useEffect, Fragment, useState } from "react";
 import { ExcelUtility } from "logic/utils/excelUtils";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
-import { Dropdown } from "views/components/dropdown";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { formulaPath, templatePath, universityPath } from "logic/api/apiUrl";
 import ExcelUpload from "views/modules/file/ExcelUpload";
-import { Input } from "views/components/input";
 import { useForm } from "react-hook-form";
 import { isCriteriaOptions, notCriteriaOptions } from "logic/constants/global";
 import { ref, uploadBytes } from "firebase/storage";
@@ -21,25 +14,32 @@ import { toast } from "react-toastify";
 import { Button } from "views/components/button";
 import Gap from "views/components/common/Gap";
 import { templateNoti } from "logic/constants/notification";
+import { useNavigate } from "react-router-dom";
+import Luckysheet from "views/components/Luckysheet/Luckysheet";
+import { reportValid } from "logic/utils/validateUtils";
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import { Autocomplete, Stack, TextField } from "@mui/material";
 
-IgrExcelCoreModule.register();
-IgrExcelModule.register();
-IgrExcelXlsxModule.register();
-IgrSpreadsheetModule.register();
 
 
 function DefineNewReportPage() {
   const axiosPrivate = useAxiosPrivate();
-  const spreadsheetRef = useRef(null);
   const [universityList, setUniversityList] = useState([]);
   const [file, setFile] = useState(null);
   const [url, setUrl] = useState("");
   const [universityId, setUniversityId] = useState(0);
-  const { handleSubmit, control, getValues, setValue } = useForm();
+  const { handleSubmit } = useForm();
   const [templateHeaders, setTemplateHeaders] = useState([{ name: "", formulaId: undefined, matchedAttribute: "", totalPoint: undefined, isCriteria: false, order: 1 }]);
   const [notCriteriaList, setNotCriteriaList] = useState(notCriteriaOptions);
   const [formulaList, setFormulaList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const [error, setError] = useState({});
+  const [name, setName] = useState("");
+  const [startCell, setStartCell] = useState("");
+  const navigate = useNavigate();
 
 
   const openFile = (files) => {
@@ -47,7 +47,7 @@ function DefineNewReportPage() {
       ExcelUtility.load(files[0]).then(
         (w) => {
           setFile(files[0]);
-          spreadsheetRef.current.workbook = w;
+          setData(w.sheets);
         },
         (e) => {
           console.error("Workbook Load Error");
@@ -57,11 +57,8 @@ function DefineNewReportPage() {
   };
 
   useEffect(() => {
-    // const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2Ftest.xlsx?alt=media&token=f9d22c08-4b80-4da8-97de-a0c3711a46f7";
+    // const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2FFile%20danh%20gia%20danh%20sach%20sv%20BKU.xlsx?alt=media&token=d2a90118-f684-4f4b-ba12-ba79c9f11067";
     // ExcelUtility.loadFromUrl(url).then((w) => {
-    //   if (spreadsheetRef.current) {
-    //     spreadsheetRef.current.workbook = w;
-    //   }
     // });
     fetchUniversities();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,11 +86,6 @@ function DefineNewReportPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getApiDropdownLabel = (value, options = [{ value: "", label: "" }], defaultValue = "") => {
-    const label = options.find((label) => label.id === value);
-    return label ? label.name : defaultValue;
-  };
-
   const fetchFormulars = async () => {
     try {
       const response = await axiosPrivate.get(
@@ -116,8 +108,12 @@ function DefineNewReportPage() {
     try {
       const response = await axiosPrivate.get(
         universityPath.GET_UNIVERSITY_LIST +
-        "?id=" +
-        universityId
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        100000 +
+        "&filterStatus=" +
+        2
       );
       setUniversityList(response.data.data);
       console.log("fetchUniversities ~ success", response);
@@ -140,112 +136,84 @@ function DefineNewReportPage() {
 
   const handleRemoveField = (index) => {
     let temp = templateHeaders.slice();
-    temp.splice(index, 1);
-    for (let i = 0; i < temp.length; i++) {
-      temp[i].order = i + 1;
-    }
+    temp.pop();
     setTemplateHeaders(temp);
-  };
-
-  const getFormulaDropdownLabel = (
-    index,
-    name,
-    options = [{ value: "", label: "" }],
-    defaultValue = ""
-  ) => {
-    const headers = templateHeaders.slice();
-    const value = headers[index][name];
-    const label = options.find((label) => label.id === value);
-    return label !== undefined ? label.name : defaultValue;
   };
 
   async function uploadFile() {
     if (file) {
-      ExcelUtility.save(spreadsheetRef.current.workbook).then(async (w) => {
-        try {
-          const reportRef = ref(storage, "reports/" + file.name);
-          await uploadBytes(reportRef, file).then(async (snapshot) => {
-            setUrl(`reports/${file.name}`);
-          });
-        } catch (e) {
-          setIsLoading(false);
-          toast.error(e);
-        }
-      })
+      try {
+        const reportRef = ref(storage, "reports/" + file.name);
+        await uploadBytes(reportRef, file).then(async (snapshot) => {
+          setUrl(`reports/${file.name}`);
+        });
+      } catch (e) {
+        setIsLoading(false);
+        setUrl("");
+        toast.error(e);
+      }
     } else {
       setIsLoading(false);
-      toast.error("File cannot be null");
+      setUrl("");
+      toast.error(templateNoti.ERROR.BLANK_FILE);
     }
   };
 
   const handleAddNewTemplate = async () => {
     try {
-      const name = getValues("name");
-      const startCell = getValues("startCell");
       await axiosPrivate.post(templatePath.CREATE_TEMPLATE, {
         name,
+        url,
         startCell,
         universityId,
         templateHeaders,
-        url,
       });
       setIsLoading(false);
+      setUrl("");
       toast.success(templateNoti.SUCCESS.CREATE);
+      navigate("/list-template");
     } catch (error) {
       setIsLoading(false);
+      setUrl("");
       toast.error(error);
     }
-  };
-
-  const getCriteriaDropdownLabel = (
-    index,
-    name,
-    options = [{ value: "", label: "" }],
-    defaultValue = ""
-  ) => {
-    const criteria = templateHeaders.slice();
-    const value = criteria[index][name] !== undefined ? criteria[index][name] : defaultValue;
-    const label = options.find((label) => label.value === value);
-    return label !== undefined ? label.label : defaultValue;
   };
 
   const onChangeCriteria = (index, name, value) => {
     const newArray = templateHeaders.slice();
     newArray[index][name] = value;
     if (name === "formulaId") {
-      newArray[index].matchedAttribute = "point";
+      newArray[index].matchedAttribute = "Point";
     }
     if (newArray[index].isCriteria === false) {
       newArray[index].formulaId = undefined;
     }
     newArray[index].totalPoint = "";
-    setValue(`maxPoint${index}`, undefined);
     setTemplateHeaders(newArray);
   };
+
+  const onChangeCriteriaText = (index, name, value) => {
+    const newArray = templateHeaders.slice();
+    newArray[index][name] = value;
+    setTemplateHeaders(newArray);
+  }
 
   const onClickSubmit = () => {
     setIsLoading(true);
-    const newArray = templateHeaders.slice();
-    for (let i = 0; i < newArray.length; i++) {
-      newArray[i].name = getValues(`headerName${i}`);
-      newArray[i].totalPoint = getValues(`maxPoint${i}`);
+    const template = {
+      name: name,
+      startCell: startCell,
+      universityId: universityId,
+      templateHeaders: templateHeaders,
+      file: file
+    };
+    const valid = reportValid(template);
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
+      uploadFile();
     }
-    setTemplateHeaders(newArray);
-    uploadFile();
+    setIsLoading(false);
   };
-
-  // const onTest = () => {
-  //   ExcelUtility.save(spreadsheetRef.current.workbook).then((w) => {
-  //     console.log(file);
-  //     console.log(w);
-  //     try {
-  //       const reportRef = ref(storage, "reports/" + "test.xlsx");
-  //       uploadBytes(reportRef, w)
-  //     } catch (e) {
-  //       toast.error(e);
-  //     }
-  //   })
-  // }
 
   return (
     <Fragment>
@@ -257,41 +225,35 @@ function DefineNewReportPage() {
           <form onSubmit={handleSubmit(onClickSubmit)}>
             <FormGroup>
               <Label>Tên phiếu đánh giá (*)</Label>
-              <Input
-                control={control}
+              <TextField
+                error={error?.name ? true : false}
+                helperText={error?.name}
                 name="name"
                 placeholder="Ex: Phiếu đánh giá thực tập sinh"
-                autoComplete="off"
-              />
+                onChange={(e) => setName(e.target.value)}
+                onBlur={(e) => setName(e.target.value)}
+                inputProps={{ maxLength: 100 }} />
             </FormGroup>
             <FormGroup>
               <Label>Tên trường (*)</Label>
-              <Dropdown>
-                <Dropdown.Select
-                  placeholder={getApiDropdownLabel(
-                    universityId,
-                    universityList,
-                    "Chọn trường đại học"
-                  )}
-                ></Dropdown.Select>
-                <Dropdown.List>
-                  {universityList.map((university) => (
-                    <Dropdown.Option
-                      key={university.id}
-                      onClick={() =>
-                        setUniversityId(
-                          university.id
-                        )
-                      }
-                    >
-                      <span className="capitalize">{university.name}</span>
-                    </Dropdown.Option>
-                  ))}
-                </Dropdown.List>
-              </Dropdown>
+              <Autocomplete
+                disablePortal={false}
+                options={universityList}
+                getOptionLabel={(option) => option.name}
+                renderInput={(params) => <TextField {...params} placeholder="Chọn trường đại học"
+                  error={error?.universityId ? true : false} helperText={error?.universityId} />}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    setUniversityId(newValue.id);
+                  } else {
+                    setUniversityId("");
+                  }
+                }}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+              />
             </FormGroup>
             <FormGroup>
-              <Label>Tệp đánh giá (*) (.xlsx, .xls)</Label>
+              <Label>Tệp đánh giá (*) (.xlsx)</Label>
               <ExcelUpload
                 openFile={openFile}
               />
@@ -299,12 +261,14 @@ function DefineNewReportPage() {
             <FormRow>
               <FormGroup>
                 <Label>Ô bắt đầu dữ liệu</Label>
-                <Input
-                  control={control}
+                <TextField
+                  error={error?.startCell ? true : false}
+                  helperText={error?.startCell}
                   name="startCell"
                   placeholder="Ex: ABZ12"
-                  autoComplete="off"
-                />
+                  onChange={(e) => setStartCell(e.target.value)}
+                  onBlur={(e) => setStartCell(e.target.value)}
+                  inputProps={{ maxLength: 5 }} />
               </FormGroup>
             </FormRow>
             {templateHeaders.map((header, index) => (
@@ -313,102 +277,98 @@ function DefineNewReportPage() {
                 <FormRow>
                   <FormGroup>
                     <Label>Tên cột(*)</Label>
-                    <Input
-                      control={control}
-                      name={`headerName${index}`}
+                    <TextField
+                      error={error?.templateHeaders?.[index]?.name ? true : false}
+                      helperText={error?.templateHeaders?.[index]?.name}
+                      name="name"
                       placeholder="Ex: MSSV"
-                      autoComplete="off"
-                      onChange={(e) => console.log("onchange here")}
-                    />
+                      onChange={(e) => onChangeCriteriaText(index, "name", e.target.value)}
+                      onBlur={(e) => onChangeCriteriaText(index, "name", e.target.value)}
+                      inputProps={{ maxLength: 100 }} />
                   </FormGroup>
                   <FormGroup>
                     <Label>Tiêu chí hệ thống</Label>
                     {header.isCriteria ? (
-                      <Dropdown>
-                        <Dropdown.Select
-                          placeholder={getFormulaDropdownLabel(index, "formulaId", formulaList, "Lựa chọn")}
-                        ></Dropdown.Select>
-                        <Dropdown.List>
-                          {formulaList.map((option) => (
-                            <Dropdown.Option
-                              key={option.id}
-                              onClick={() =>
-                                onChangeCriteria(index, "formulaId", option.id)
-                              }
-                            >
-                              <span className="capitalize">{option.name}</span>
-                            </Dropdown.Option>
-                          ))}
-                        </Dropdown.List>
-                      </Dropdown>
+                      <Autocomplete
+                        disablePortal={false}
+                        options={formulaList}
+                        getOptionLabel={(option) => option.name || ""}
+                        renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            onChangeCriteria(index, "formulaId", newValue.id);
+                          } else {
+                            onChangeCriteria(index, "formulaId", "");
+                          }
+                        }}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                      />
                     ) : (
-                      <Dropdown>
-                        <Dropdown.Select
-                          placeholder={getCriteriaDropdownLabel(index, "matchedAttribute", notCriteriaList, "Lựa chọn")}
-                        ></Dropdown.Select>
-                        <Dropdown.List>
-                          {notCriteriaList.map((option) => (
-                            <Dropdown.Option
-                              key={option.value}
-                              onClick={() =>
-                                onChangeCriteria(index, "matchedAttribute", option.value)
-                              }
-                            >
-                              <span className="capitalize">{option.label}</span>
-                            </Dropdown.Option>
-                          ))}
-                        </Dropdown.List>
-                      </Dropdown>
+                      <Autocomplete
+                        disablePortal={false}
+                        options={notCriteriaList}
+                        getOptionLabel={(option) => option.label || ""}
+                        renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            onChangeCriteria(index, "matchedAttribute", newValue.value);
+                          } else {
+                            onChangeCriteria(index, "matchedAttribute", "");
+                          }
+                        }}
+                      />
                     )}
                   </FormGroup>
                 </FormRow>
                 <FormRow>
                   <FormGroup>
                     <Label>Tiêu chí đánh giá (*)</Label>
-                    <Dropdown>
-                      <Dropdown.Select
-                        placeholder={getCriteriaDropdownLabel(index, "isCriteria", isCriteriaOptions, "Lựa chọn")}
-                      ></Dropdown.Select>
-                      <Dropdown.List>
-                        {isCriteriaOptions.map((option) => (
-                          <Dropdown.Option
-                            key={option.value}
-                            onClick={() =>
-                              onChangeCriteria(index, "isCriteria", option.value)
-                            }
-                          >
-                            <span className="capitalize">{option.label}</span>
-                          </Dropdown.Option>
-                        ))}
-                      </Dropdown.List>
-                    </Dropdown>
+                    <Autocomplete
+                      disablePortal={false}
+                      options={isCriteriaOptions}
+                      renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          onChangeCriteria(index, "isCriteria", newValue.value);
+                        } else {
+                          onChangeCriteria(index, "isCriteria", "");
+                        }
+                      }}
+                    />
                   </FormGroup>
                   {header.isCriteria ? (
                     <FormGroup>
                       <Label>Điểm tối đa(*)</Label>
-                      <Input
-                        control={control}
-                        name={`maxPoint${index}`}
-                        placeholder="Ex: 30"
-                        autoComplete="off"
+                      <TextField
+                        error={error?.templateHeaders?.[index]?.totalPoint ? true : false}
+                        helperText={error?.templateHeaders?.[index]?.totalPoint}
                         type="number"
-                        min="0"
-                      />
+                        name="totalPoint"
+                        placeholder="Ex: 30"
+                        InputProps={{
+                          inputProps: {
+                            min: 0
+                          }
+                        }}
+                        onChange={(e) => onChangeCriteriaText(index, "totalPoint", e.target.value)}
+                        onBlur={(e) => onChangeCriteriaText(index, "totalPoint", e.target.value)} />
                     </FormGroup>
                   ) : null}
                 </FormRow>
-                <button type="button" onClick={() => handleRemoveField(index)}>
-                  xoá
-                </button>
               </div>
             ))}
-            <button type="button" onClick={() => handleAddField()}>
-              Thêm
-            </button>
+            <Stack direction="row" spacing={1} justifyContent="center">
+              <IconButton color="error" aria-label="delete" onClick={() => handleRemoveField()}>
+                <DeleteIcon />
+              </IconButton>
+              <IconButton color="primary" aria-label="delete" onClick={() => handleAddField()}>
+                <AddIcon />
+              </IconButton>
+            </Stack>
             <div className="mt-5 text-center">
               <Button
                 type="submit"
-                className="px-10 mx-auto text-white bg-primary"
+                className="px-20 mx-auto text-white bg-primary"
                 isLoading={isLoading}
               >
                 Tạo
@@ -418,10 +378,9 @@ function DefineNewReportPage() {
         </div>
       </div>
       <Gap></Gap>
-      <IgrSpreadsheet
-        ref={spreadsheetRef}
-        height="100vh"
-        width="100%" />
+      {data.length > 0 ?
+        <Luckysheet data={data} />
+        : null}
     </Fragment >
   );
 }

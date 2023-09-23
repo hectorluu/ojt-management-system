@@ -1,18 +1,35 @@
 export const defaultImage =
   "https://images.unsplash.com/photo-1533105079780-92b9be482077?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80";
 
-export const defaultUserIcon = "user.png";
+export const defaultUserIcon = "/user.png";
 
-export const defaultCourseImage = "default-course.png";
+export const defaultCourseImage = "/default-course.png";
+
+export const defaultUniversityImage = "/default-university.png";
+
+export const errorPage = "/error-404.png";
+
+export const EarningSVG = "Earning.svg";
 
 export const defaultPageSize = 10;
 
 export const defaultPageIndex = 1;
 
+export const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
+export const phoneRegex = /^[0-9]{10}$/;
+
+//eslint-disable-next-line
+export const passwordRegex =
+  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?([^\w\s]|[_])).{8,}$/;
+
+export const urlRegex =
+  //eslint-disable-next-line
+  /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+
 export const genderOptions = [
   { value: 1, label: "Nam" },
   { value: 2, label: "Nữ" },
-  { value: 3, label: "Khác" },
 ];
 
 export const courseOptions = [
@@ -83,6 +100,33 @@ export const positionStatusOptions = [
   { value: 3, label: "Không sử dụng" },
 ];
 
+export const formulaStatusOptions = [
+  { value: 2, label: "Đang sử dụng" },
+  { value: 3, label: "Không sử dụng" },
+];
+
+export const templateStatusOptions = [
+  { value: 2, label: "Đang sử dụng" },
+  { value: 3, label: "Không sử dụng" },
+];
+
+export const trainingPlanStatusOptions = [
+  { value: 2, label: "Đang được duyệt" },
+  { value: 3, label: "Đang sử dụng" },
+  { value: 4, label: "Bị từ chối" },
+  { value: 5, label: "Đã đóng" },
+];
+
+export const reportStatusOptions = [
+  { value: "Can export", label: "Có thể xuất báo cáo" },
+  { value: "Can not export", label: "Chưa thể xuất báo cáo" },
+];
+
+export const evaluationStatusOptions = [
+  { value: "Graded", label: "Đã chấm điểm" },
+  { value: "Not Grade yet", label: "Chưa chấm điểm" },
+];
+
 export const isCriteriaOptions = [
   { value: true, label: "Có" },
   { value: false, label: "Không" },
@@ -94,17 +138,21 @@ export const statusColor = {
   INACTIVE: "bg-yellow-500",
 };
 
-export const signalRMessage = {
-  COURSE: "New Course Created",
-  SKILL: "New Skill Created",
-  USER: "New User Created",
-  TRAINING_PLAN: "New Training Plan Created",
-  POSITION: "New Position Created",
-  OJTBATCH: "New OJT Batch Created",
-};
+export const certificateStatusColor = [
+  { value: 1, label: "Đã xóa", color: "bg-gray-500" },
+  { value: 2, label: "Đang chờ", color: "bg-yellow-500" },
+  { value: 3, label: "Chưa nộp", color: "bg-sky-500" },
+  { value: 4, label: "Đã chấp thuận", color: "bg-green-500" },
+  { value: 5, label: "Không chấp thuận", color: "bg-red-500" },
+];
 
 export const skillStatus = {
   DELETED: 1,
+  ACTIVE: 2,
+  INACTIVE: 3,
+};
+
+export const courseStatus = {
   ACTIVE: 2,
   INACTIVE: 3,
 };
@@ -115,7 +163,30 @@ export const positionStatus = {
   INACTIVE: 3,
 };
 
+export const trainingPlanStatus = {
+  PENDING: 2,
+  ACTIVE: 3,
+  DENIED: 4,
+  CLOSED: 5,
+};
+
+export const reportStatus = {
+  CAN: "Can export",
+  CANNOT: "Can not export",
+};
+
+export const evaluationStatus = {
+  DONE: "Graded",
+  NOTYET: "Not Grade yet",
+};
+
+export const evaluationOptions = {
+  CREATE: 1,
+  EDIT: 2,
+};
+
 export const notCriteriaOptions = [
+  { value: "STT", label: "Số thứ tự" },
   { value: "LastName", label: "Họ" },
   { value: "FirstName", label: "Tên" },
   { value: "Email", label: "Email" },
@@ -126,4 +197,129 @@ export const notCriteriaOptions = [
   { value: "Birthday", label: "Ngày sinh" },
   { value: "PositionId", label: "Vị trí" },
   { value: "StudentCode", label: "Mã số sinh viên" },
+  { value: "Total", label: "Tổng điểm" },
+];
+
+export const formulaOptions = [
+  { value: "Attendance", label: "Điểm danh" },
+  { value: "Skill", label: "Kỹ năng" },
+  { value: "Certificate", label: "Khoá học" },
+  { value: "Task", label: "Công việc" },
+];
+
+export const configOptions = [
+  {
+    value: "Total Working Days Per Month",
+    label: "Số ngày làm việc trong tháng:",
+    maxValue: 31,
+  },
+  {
+    value: "Work Hours Required",
+    label: "Số giờ làm việc trong ngày:",
+    maxValue: 24,
+  },
+];
+
+export const notiOptions = [
+  { value: "All", label: "Tất cả" },
+  { value: true, label: "Đã đọc" },
+  { value: false, label: "Chưa đọc" },
+];
+
+export const configType = {
+  TOTAL_WORKING_DAYS_PER_MONTH: "Total Working Days Per Month",
+  WORK_HOURS_REQUIRED: "Work Hours Required",
+};
+
+export const notiOptionsVaue = {
+  ALL: "All",
+  READ: true,
+  NOT_READ: false,
+};
+
+export const notiStyle = {
+  CERTIFICATE_TYPE: 1,
+  TRAINING_PLAN_TYPE: 2,
+  BATCH_TYPE: 3,
+};
+
+export const signalRMessage = {
+  COURSE: {
+    CREATED: "New Course Created",
+    UPDATED: "New Course Updated",
+    DELETED: "New Course Deleted",
+  },
+  SKILL: {
+    CREATED: "New Skill Created",
+    UPDATED: "New Skill Updated",
+    DELETED: "New Skill Deleted",
+  },
+  USER: {
+    CREATE: "New User Created",
+    UPDATE: "User Profile Updated",
+  },
+  TRAINING_PLAN: {
+    CREATE: "New Training Plan Created",
+    UPDATE: "Training Plan Updated",
+    DELETE: "Training Plan Deleted",
+    DETAIL_DELETE: "Detail of training plan Deleted",
+    ASSIGN: "Training plan assigned to trainee",
+    PROCESS:
+      "Training plan has been process. Please reload get training plan and get notification for user.",
+  },
+  TASK: {
+    UPDATE_FINISH:
+      "Trainee has checked finish a Task on Trello. Please process it.",
+    UPDATE_PROCESS: "Update Task Processing for Trainer",
+  },
+  CERTIFICATE: {
+    PROCESS_CERTIFICATE:
+      "Trainer process Trainee certificate. Trainee reload notificattion and get certificate.",
+    UPDATE_PROCESS: "Update Task Processing for Trainer",
+  },
+  NOTIFICATION: {
+    UPDATE_NOTI: "Update Notification Read. Reload notification list.",
+    CREATE_NOTI: "Notification created. Reload notification list.",
+  },
+  TEMPLATE: {
+    CREATED: "New Template Created",
+    UPDATED: "New Template Updated",
+    DELETED: "New Template Deleted",
+  },
+  TEMPLATE_HEADER: {
+    CREATED: "New Template Header Created",
+    UPDATED: "New Template Header Updated",
+    DELETED: "New Template Header Deleted",
+  },
+  UNIVERSITY: {
+    CREATED: "New University Created",
+    UPDATED: "New University Updated",
+    DELETED: "New University Deleted",
+  },
+  POSITION: {
+    CREATED: "New Position Created",
+    UPDATED: "New Position Updated",
+    DELETED: "New Position Deleted",
+  },
+  OJTBATCH: {},
+};
+
+export const certificateStatus = {
+  DELETED: 1,
+  PENDING: 2,
+  NOT_SUBMIT: 3,
+  APPROVED: 4,
+  DENY: 5,
+};
+
+export const traineeCourseOptions = [
+  { value: 1, label: "Khuyến nghị" },
+  { value: 2, label: "Bắt buộc" },
+  { value: 3, label: "Tất cả" },
+];
+
+export const accomplishedTaskStatusOptions = [
+  { value: 1, label: "Đang chờ" },
+  { value: 2, label: "Đạt" },
+  { value: 3, label: "Không đạt" },
 ];

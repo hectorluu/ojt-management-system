@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { DataGrid, GridEditInputCell } from '@mui/x-data-grid';
 import { useEffect } from 'react';
 import useAxiosPrivate from 'logic/hooks/useAxiosPrivate';
@@ -6,22 +6,33 @@ import { criteriaPath, templatePath } from 'logic/api/apiUrl';
 import { processRequestData, processResponseData } from 'logic/utils/evaluationUtils';
 import { StyledBox } from 'views/components/common/StyledBox';
 import Button from 'views/components/button/Button';
-import Heading from 'views/components/common/Heading';
 import { toast } from 'react-toastify';
 import { criteraNoti } from 'logic/constants/notification';
+import { useNavigate, useParams } from 'react-router-dom';
+import MainCard from 'views/components/cards/MainCard';
+import { evaluationOptions } from 'logic/constants/global';
 
 const EvaluateExcelPage = () => {
+  const { ojtBatchId } = useParams();
+  const { action } = useParams();
   const [data, setData] = useState([]);
   const [headers, setHeaders] = useState([]);
   const axiosPrivate = useAxiosPrivate();
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log(data);
     console.log("header", headers);
+    console.log("batchid", ojtBatchId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
+    console.log(action);
+    if (ojtBatchId === undefined || ojtBatchId === null) {
+      navigate("/login");
+    };
     fetchPoints();
     fetchHeaders();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -29,10 +40,16 @@ const EvaluateExcelPage = () => {
 
   const fetchPoints = async () => {
     try {
-      let response = await axiosPrivate.get(
-        criteriaPath.GET_STUDENT_PONIT_LIST +
-        "/1"
-      );
+      let response = null;
+      if (parseFloat(action) === evaluationOptions.CREATE) {
+        response = await axiosPrivate.get(
+          criteriaPath.GET_STUDENT_UNMARKED_POINT_LIST + "/" + ojtBatchId
+        );
+      } else {
+        response = await axiosPrivate.get(
+          criteriaPath.GET_STUDENT_MARKED_POINT_LIST + "/" + ojtBatchId
+        );
+      };
       const point = processResponseData(response.data);
       setData(point);
     } catch (error) {
@@ -55,7 +72,7 @@ const EvaluateExcelPage = () => {
           editable: false,
           align: "left",
           headerAlign: "left",
-          flex: 0.15,
+          // flex: 0.15,
         },
         {
           id: "lastName",
@@ -65,7 +82,7 @@ const EvaluateExcelPage = () => {
           editable: false,
           align: 'left',
           headerAlign: 'left',
-          flex: 0.15,
+          // flex: 0.15,
         },
         {
           id: "rollNumber",
@@ -75,7 +92,7 @@ const EvaluateExcelPage = () => {
           editable: false,
           align: 'left',
           headerAlign: 'left',
-          flex: 0.1,
+          // flex: 0.1,
         },
       ];
       for (const item of response.data) {
@@ -87,7 +104,7 @@ const EvaluateExcelPage = () => {
           editable: true,
           align: 'left',
           headerAlign: 'left',
-          flex: 0.1,
+          // flex: 0.1,
           renderEditCell: (params) => (
             <GridEditInputCell
               {...params}
@@ -127,6 +144,7 @@ const EvaluateExcelPage = () => {
       toast.error(criteraNoti.ERROR.POINT_ERROR);
       return;
     };
+    setIsLoading(true);
     const req = processRequestData(data);
     console.log("req", req);
     handleEvaluate(req);
@@ -135,6 +153,8 @@ const EvaluateExcelPage = () => {
   const handleEvaluate = async (data) => {
     try {
       await axiosPrivate.post(criteriaPath.EVALUATE_STUDENT, data);
+      setIsLoading(false);
+      navigate("/ojt-evaluation");
       toast.success(criteraNoti.SUCCESS.CREATE);
     } catch (error) {
       toast.error(error);
@@ -142,22 +162,21 @@ const EvaluateExcelPage = () => {
   };
 
   return (
-    <Fragment>
-      <div className="flex flex-wrap items-center justify-between">
-        <div className="flex items-center justify-center">
-          <Heading className="text-[2.25rem] font-bold pt-6">
-            Đánh giá sinh viên sau khoá đào tạo
-          </Heading>
-        </div>
+    <MainCard
+      title="Đánh giá sinh viên sau khoá đào tạo"
+      secondary={
         <Button
           className="px-7 float-right"
           type="button"
           kind="secondary"
           onClick={onClickSubmit}
+          isLoading={isLoading}
+          disabled={data.length === 0}
         >
           Nộp điểm
         </Button>
-      </div>
+      }
+    >
       <div className="flex flex-wrap items-start">
         {data.length !== 0 ? (
           <StyledBox>
@@ -169,20 +188,28 @@ const EvaluateExcelPage = () => {
               disableDensitySelector={true}
               disableRowSelectionOnClick={true}
               processRowUpdate={onStopEdit}
+              loading={isLoading}
               onProcessRowUpdateError={(error) => {
                 console.log("error", error);
               }}
-              componentsProps={{
+              slotProps={{
                 pagination: {
                   labelRowsPerPage: "Số dòng",
-                  defaultLabelDisplayedRows({ from, to, count }) { return `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`; }
+                  labelDisplayedRows({ from, to, count }) { return `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`; },
                 }
               }}
             />
           </StyledBox>
-        ) : null}
+        ) :
+          <DataGrid
+            rows={[{ id: 1 }]}
+            columns={[]}
+            loading
+            autoHeight
+            hideFooterPagination
+          />}
       </div>
-    </Fragment>
+    </MainCard>
   );
 };
 

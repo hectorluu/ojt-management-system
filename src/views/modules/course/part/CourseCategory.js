@@ -2,6 +2,12 @@ import React from "react";
 import classNames from "logic/utils/classNames";
 import FolderOpenOutlinedIcon from "@mui/icons-material/FolderOpenOutlined";
 
+const headingStyle = {
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis'
+};
+
 const CourseCategory = ({ text = "BE", className = "text-xs", link }) => {
   return (
     <span
@@ -9,6 +15,7 @@ const CourseCategory = ({ text = "BE", className = "text-xs", link }) => {
         "flex items-middle mb-4 font-medium gap-x-3 text-text3",
         className
       )}
+      style={headingStyle}
     >
       <FolderOpenOutlinedIcon />
       <span className="mt-1">{text}</span>

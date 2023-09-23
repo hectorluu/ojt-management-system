@@ -1,7 +1,6 @@
 import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { coursePath, positionPath, skillPath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
@@ -11,13 +10,25 @@ import {
   skillStatus,
 } from "logic/constants/global";
 import CourseCardDisplay from "views/modules/course/CourseCardDisplay";
-import { Button } from "views/components/button";
 import CourseGrid from "views/modules/course/CourseGrid";
 import TablePagination from "@mui/material/TablePagination";
-import SearchBar from "views/modules/SearchBar";
-import { Dropdown } from "views/components/dropdown";
 import useOnChange from "logic/hooks/useOnChange";
 import signalRService from "logic/utils/signalRService";
+import CourseCardSkeleton from "views/modules/course/CourseCardSkeleton";
+import MainCard from "views/components/cards/MainCard";
+import {
+  SvgIcon,
+  Button,
+  Card,
+  OutlinedInput,
+  InputAdornment,
+  Autocomplete,
+  TextField,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { Link } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
+import SubCard from "views/components/cards/SubCard";
 
 const CourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -30,18 +41,24 @@ const CourseListPage = () => {
   const [skill, setSkill] = useState("");
   const [skillList, setSkillList] = useState([]);
   const [positionList, setPositionList] = useState([]);
-  const [positionFiltered, setPositionFiltered] = useState([]);
-  const [skillFiltered, setSkillFiltered] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
   useEffect(() => {
-    signalRService.on(signalRMessage.COURSE, (message) => {
+    signalRService.on(signalRMessage.COURSE.CREATED, (message) => {
+      fetchCourses();
+    });
+    signalRService.on(signalRMessage.COURSE.UPDATED, (message) => {
+      fetchCourses();
+    });
+    signalRService.on(signalRMessage.COURSE.DELETED, (message) => {
       fetchCourses();
     });
 
     return () => {
-      signalRService.off(signalRMessage.COURSE);
+      signalRService.off(signalRMessage.COURSE.CREATED);
+      signalRService.off(signalRMessage.COURSE.DELETED);
+      signalRService.off(signalRMessage.COURSE.UPDATED);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -112,22 +129,6 @@ const CourseListPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, position, skill, rowsPerPage, page]);
 
-  useEffect(() => {
-    const allSkill = [{ id: "", name: "Tất cả" }];
-    const skills = skillList.slice();
-    skills.unshift(...allSkill);
-    setSkillFiltered(skills);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skillList]);
-
-  useEffect(() => {
-    const allPosition = [{ id: "", name: "Tất cả" }];
-    const positions = positionList.slice();
-    positions.unshift(...allPosition);
-    setPositionFiltered(positions);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [positionList]);
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
   };
@@ -137,119 +138,113 @@ const CourseListPage = () => {
     setPage(1);
   };
 
-  const getPositionDropdownLabel = (
-    name,
-    options = [{ id: "", name: "" }],
-    defaultValue = ""
-  ) => {
-    const value = name || defaultValue;
-    const label = options.find((label) => label.id === value);
-    return label ? label.name : defaultValue;
-  };
-
-  const getSkillDropdownLabel = (
-    name,
-    options = [{ value: "", label: "" }],
-    defaultValue = ""
-  ) => {
-    const value = name || defaultValue;
-    const label = options.find((label) => label.id === value);
-    return label ? label.name : defaultValue;
-  };
-
-  const handleSelectPositionDropdownOption = (value) => {
-    setPosition(value);
-  };
-
-  const handleSelectSkillDropdownOption = (value) => {
-    setSkill(value);
-  };
-
   return (
-    <Fragment>
-      <div className="flex flex-wrap items-center justify-between">
-        <div className="flex items-center justify-center">
-          <Heading className="text-[2.25rem] font-bold pt-6">
-            Danh sách khóa học
-          </Heading>
-        </div>
+    <MainCard
+      title={`Khóa học`}
+      secondary={
         <Button
-          className="px-7"
-          type="button"
-          href="/create-new-course"
-          kind="secondary"
+          startIcon={
+            <SvgIcon fontSize="small">
+              <AddIcon />
+            </SvgIcon>
+          }
+          component={Link}
+          to="/create-new-course"
+          variant="contained"
+          size="medium"
+          sx={{ borderRadius: "10px" }}
         >
-          Thêm khóa học mới
+          Thêm mới
         </Button>
-      </div>
-      <div className="flex flex-wrap items-start gap-5 mt-5">
-        <div className=" max-w-[600px] w-full">
-          <SearchBar onChangeSearch={setSearchTerm}></SearchBar>
+      }
+    >
+      <SubCard>
+        <div className="flex flex-wrap items-start gap-3">
+          {/*Custom search bar*/}
+          <Card className="w-2/5">
+            <OutlinedInput
+              defaultValue=""
+              fullWidth
+              placeholder="Tìm kiếm ..."
+              startAdornment={
+                <InputAdornment position="start">
+                  <SvgIcon color="action" fontSize="small">
+                    <SearchIcon />
+                  </SvgIcon>
+                </InputAdornment>
+              }
+              sx={{ maxWidth: 550 }}
+              onChange={setSearchTerm}
+            />
+          </Card>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              id="combo-box-demo"
+              options={positionList}
+              getOptionLabel={(option)=>option.name}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Vị trí" />}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setPosition(newValue.id);
+                } else {
+                  setPosition("");
+                }
+              }}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+            />
+          </div>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              id="combo-box-demo"
+              options={skillList}
+              getOptionLabel={(option) => option.name}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Kỹ năng" />}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setSkill(newValue.id);
+                } else {
+                  setSkill("");
+                }
+              }}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+            />
+          </div>
         </div>
-        <div className="flex flex-wrap items-start max-w-[200px] w-full">
-          <Dropdown>
-            <Dropdown.Select
-              placeholder={getPositionDropdownLabel(
-                position,
-                positionFiltered,
-                "Vị trí"
-              )}
-            ></Dropdown.Select>
-            <Dropdown.List>
-              {positionFiltered.map((pos) => (
-                <Dropdown.Option
-                  key={pos.id}
-                  onClick={() => handleSelectPositionDropdownOption(pos.id)}
-                >
-                  <span className="capitalize">{pos.name}</span>
-                </Dropdown.Option>
-              ))}
-            </Dropdown.List>
-          </Dropdown>
-        </div>
-        <div className=" max-w-[200px] w-full">
-          <Dropdown>
-            <Dropdown.Select
-              placeholder={getSkillDropdownLabel(
-                skill,
-                skillFiltered,
-                "Kỹ năng"
-              )}
-            ></Dropdown.Select>
-            <Dropdown.List>
-              {skillFiltered.map((ski) => (
-                <Dropdown.Option
-                  key={ski.id}
-                  onClick={() => handleSelectSkillDropdownOption(ski.id)}
-                >
-                  <span className="capitalize">{ski.name}</span>
-                </Dropdown.Option>
-              ))}
-            </Dropdown.List>
-          </Dropdown>
-        </div>
-      </div>
-      <Gap></Gap>
-      <CourseGrid type="secondary">
-        {courses.length !== 0 ? (
-          courses.map((item) => (
-            <CourseCardDisplay course={item} key={item.id} />
-          ))
-        ) : (
-          <>Không có khóa học nào được tìm thấy.</>
-        )}
-      </CourseGrid>
-      <TablePagination
-        labelRowsPerPage="Số dòng"
-        component="div"
-        count={totalItem}
-        page={page - 1}
-        onPageChange={handleChangePage}
-        rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
-      />
-    </Fragment>
+        <Gap></Gap>
+        <CourseGrid type="secondary">
+          {isLoading ? ( // Render skeleton loading when loading is true
+            // Use the animate-pulse class for skeleton effect
+            <>
+              <CourseCardSkeleton />
+              <CourseCardSkeleton />
+              <CourseCardSkeleton />
+            </>
+          ) : courses.length !== 0 ? (
+            courses.map((item) => (
+              <CourseCardDisplay course={item} key={item.id} />
+            ))
+          ) : (
+            <>Không có khóa học nào được tìm thấy.</>
+          )}
+        </CourseGrid>
+        <TablePagination
+          labelRowsPerPage="Số dòng"
+          component="div"
+          count={totalItem}
+          page={page - 1}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelDisplayedRows={({ from, to, count }) =>
+            `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+          }
+        />
+      </SubCard>
+    </MainCard>
   );
 };
 

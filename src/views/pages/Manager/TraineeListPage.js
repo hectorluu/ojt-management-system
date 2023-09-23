@@ -1,24 +1,33 @@
-import Gap from "views/components/common/Gap";
-import Heading from "views/components/common/Heading";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
+  Button,
+  Card,
+  InputAdornment,
+  OutlinedInput,
+  Skeleton,
+  SvgIcon,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  useTheme,
 } from "@mui/material";
 import { userPath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
   defaultPageIndex,
-  accountStatus,
+  defaultUserIcon,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
-import { Button } from "views/components/button";
 import ModalTraineeDetailManager from "views/components/modal/ModalTraineeDetailManager";
+import MainCard from "views/components/cards/MainCard";
+import SubCard from "views/components/cards/SubCard";
+import StyledTableCell from "views/modules/table/StyledTableCell";
+import SearchIcon from "@mui/icons-material/Search";
+import useOnChange from "logic/hooks/useOnChange";
 
 const TraineeListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -26,28 +35,35 @@ const TraineeListPage = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useOnChange(500);
+  const [isLoading, setIsLoading] = useState(true); // New loading state
+
   useEffect(() => {
     async function fetchUsers() {
       try {
+        setIsLoading(true);
         const response = await axiosPrivate.get(
           userPath.GET_TRAINEE_LIST +
             "?PageIndex=" +
             page +
             "&PageSize=" +
-            rowsPerPage
+            rowsPerPage +
+            "&keyword=" +
+            `${searchTerm === null ? "" : searchTerm}`
         );
 
         setUsers(response.data.data);
         setTotalItem(response.data.totalItem);
-        // setPage(response.data.pageIndex);
-        // console.log("fetchUsers ~ response", response);
+        setIsLoading(false); // Set loading to false after fetching data
       } catch (error) {
         console.log("fetchUsers ~ error", error);
+        setIsLoading(false); // Set loading to false after fetching data
       }
     }
     fetchUsers();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchTerm]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -61,79 +77,192 @@ const TraineeListPage = () => {
   const [isTraineeDetailModalOpen, setIsTraineeDetailModalOpen] =
     useState(false);
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 1:
-        return "bg-red-500";
-      case 2:
-        return "bg-green-500";
-      default:
-        return "bg-gray-500"; // You can set a default color class if needed
-    }
-  };
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const theme = useTheme();
 
   return (
-    <Fragment>
+    <MainCard title={`Thực tập sinh `}>
       <ModalTraineeDetailManager
         isOpen={isTraineeDetailModalOpen}
         onRequestClose={() => setIsTraineeDetailModalOpen(false)}
+        traineeSelected={selectedItem}
       ></ModalTraineeDetailManager>
-      <div className="flex flex-wrap items-center justify-between	">
-        <div className="flex items-center justify-center">
-          <Heading className="text-4xl font-bold pt-6">Thực tập sinh</Heading>
+
+      <SubCard>
+        <div className="flex flex-wrap items-start gap-3">
+          {/*Custom search bar*/}
+          <Card className="w-2/5">
+            <OutlinedInput
+              defaultValue=""
+              fullWidth
+              placeholder="Tìm kiếm ..."
+              startAdornment={
+                <InputAdornment position="start">
+                  <SvgIcon color="action" fontSize="small">
+                    <SearchIcon />
+                  </SvgIcon>
+                </InputAdornment>
+              }
+              sx={{ maxWidth: 550 }}
+              onChange={setSearchTerm}
+            />
+          </Card>
         </div>
-      </div>
-      <Gap></Gap>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell>Họ và tên</TableCell>
-              <TableCell width="25%">Email</TableCell>
-              <TableCell align="center">Vai trò</TableCell>
-              <TableCell align="right" width={"10%"}></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell className="w-20">
-                  <img
-                    className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
-                    src="logo.png"
-                    alt=""
-                  />
-                </TableCell>
-                <TableCell>{item.firstName + " " + item.lastName}</TableCell>
-                <TableCell>{item.email}</TableCell>
-                <TableCell align="center">{item.positionName}</TableCell>
-                <TableCell align="right" width={"10%"}>
-                  <Button
-                    className=""
-                    type="button"
-                    kind="ghost"
-                    onClick={() => setIsTraineeDetailModalOpen(true)}
-                  >
-                    Edit
-                  </Button>
-                </TableCell>
+
+        <TableContainer sx={{ width: 1, mt: 2, mb: -2, borderRadius: 4 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell
+                  align="center"
+                  width={"8%"}
+                  className="min-w-fit"
+                >
+                  {" "}
+                </StyledTableCell>
+                <StyledTableCell align="left" width={"32%"}>
+                  Họ và tên
+                </StyledTableCell>
+                <StyledTableCell align="left" width="30%">
+                  Email
+                </StyledTableCell>
+                <StyledTableCell align="center" width={"15%"}>
+                  Vai trò
+                </StyledTableCell>
+                <StyledTableCell align="right" width={"15%"}></StyledTableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          labelRowsPerPage="Số dòng"
-          component="div"
-          count={totalItem}
-          page={page - 1}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelDisplayedRows={({ from, to, count }) => `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`}
-        />
-      </TableContainer>
-    </Fragment>
+            </TableHead>
+            <TableBody>
+              {isLoading ? (
+                <>
+                  <TableRow>
+                    <TableCell width={"6%"}>
+                      <Skeleton
+                        variant="circular"
+                        width={40}
+                        height={40}
+                        animation="wave"
+                      />
+                    </TableCell>
+                    <TableCell width={"39%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"6%"}>
+                      <Skeleton
+                        variant="circular"
+                        width={40}
+                        height={40}
+                        animation="wave"
+                      />
+                    </TableCell>
+                    <TableCell width={"39%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"6%"}>
+                      <Skeleton
+                        variant="circular"
+                        width={40}
+                        height={40}
+                        animation="wave"
+                      />
+                    </TableCell>
+                    <TableCell width={"39%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                </>
+              ) : users.length !== 0 ? (
+                users.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="w-20">
+                      <img
+                        className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
+                        src={item.avatarURL || defaultUserIcon}
+                        alt=""
+                      />
+                    </TableCell>
+                    <TableCell align="left">
+                      {item.firstName + " " + item.lastName}
+                    </TableCell>
+                    <TableCell align="left">{item.email}</TableCell>
+                    <TableCell align="center">{item.positionName}</TableCell>
+                    <TableCell align="right">
+                      <Button
+                        variant="contained"
+                        sx={{
+                          backgroundColor: theme.palette.primary.main,
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.dark, // Color on hover
+                          },
+                        }}
+                        component="label"
+                        className="flex items-center justify-center cursor-pointer w-full h-8 text-text1 rounded-md"
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setIsTraineeDetailModalOpen(true);
+                        }}
+                      >
+                        <span className="text-white">Chi tiết</span>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} align="center">
+                    Không có thực tập sinh nào được tìm thấy.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          <TablePagination
+            labelRowsPerPage="Số dòng"
+            component="div"
+            count={totalItem}
+            page={page - 1}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
+            }
+          />
+        </TableContainer>
+      </SubCard>
+    </MainCard>
   );
 };
 
