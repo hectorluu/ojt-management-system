@@ -81,6 +81,8 @@ const TraineeListPage = () => {
 
   const theme = useTheme();
 
+  useEffect(() => {console.log(selectedItem)},[selectedItem]);
+
   return (
     <MainCard title={`Thực tập sinh `}>
       <ModalTraineeDetailManager

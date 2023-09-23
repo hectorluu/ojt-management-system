@@ -180,6 +180,7 @@ const DefineFormulaPage = () => {
               placeholder="Nhập tên công thức"
               onChange={(e) => setName(e.target.value)}
               onBlur={(e) => setName(e.target.value)}
+              inputProps={{ maxLength: 100 }}
             />
           </FormGroup>
           <div className="flex justify-center"></div>
@@ -259,6 +260,7 @@ const DefineFormulaPage = () => {
                 inputComponent: StyledTextarea,
                 inputProps: {
                   minRows: 5,
+                  maxLength: 700,
                   maxRows: 8,
                   placeholder: "Điền công thức tính",
                   value: calculation,
