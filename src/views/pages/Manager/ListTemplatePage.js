@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, SvgIcon, Button, OutlinedInput, InputAdornment, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, Skeleton, TablePagination, Autocomplete, TextField, Popover, MenuItem, IconButton } from "@mui/material";
+import { Card, SvgIcon, Button, OutlinedInput, InputAdornment, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, Skeleton, TablePagination, Autocomplete, TextField, Popover, MenuItem, IconButton, Modal, Box } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
@@ -16,6 +16,9 @@ import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { useTheme } from "@emotion/react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { toast } from "react-toastify";
+import { templateNoti } from "logic/constants/notification";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 
 const ListTemplatePage = () => {
   const [templateList, setTemplateList] = useState([]);
@@ -28,11 +31,11 @@ const ListTemplatePage = () => {
   const axiosPrivate = useAxiosPrivate();
   // Popover
   const [open, setOpen] = useState(null); // use for AnchorEl
-  const [idSeclected, setIdSeclected] = useState(0);
+  const [selected, setSelected] = useState({});
 
-  const handleOpenMenu = (event, id) => {
+  const handleOpenMenu = (event, item) => {
     setOpen(event.currentTarget);
-    setIdSeclected(id);
+    setSelected(item);
   };
 
   const handleCloseMenu = () => {
@@ -42,12 +45,8 @@ const ListTemplatePage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const handleClickTemplateDetail = (templateId) => {
-    navigate("/template-detail/" + templateId);
-    setOpen(null);
-  };
-
-  const handleClickDeleteModal = (userModalId) => {
+  const handleClickTemplateDetail = (item) => {
+    navigate("/template-detail/" + item.id);
     setOpen(null);
   };
 
@@ -86,6 +85,41 @@ const ListTemplatePage = () => {
     }
   }
 
+  const handleClickDeleteTemplate = async (item) => {
+    try {
+      await axiosPrivate.put(templatePath.DELETE_TEMPLATE + item.id);
+      setIsModalDeleteOpen(false);
+      fetchTemplates();
+      toast.success(templateNoti.SUCCESS.DELETE);
+    } catch (e) {
+      toast.error(e.response.data);
+    }
+  };
+
+  const handleClickActiveTemplate = async (item) => {
+    try {
+      await axiosPrivate.put(templatePath.ACTIVE_TEMPLATE + item.id);
+      setOpen(false);
+      fetchTemplates();
+      toast.success(templateNoti.SUCCESS.ACTIVE);
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  };
+
+  // Modal Delete
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+
+  const handleCloseDeleteModal = () => {
+    setIsModalDeleteOpen(false);
+    setOpen(null);
+  };
+
+  const handleOpenDeleteModal = (skill) => {
+    setIsModalDeleteOpen(true);
+    setOpen(false);
+  };
+
   return (
     <MainCard
       title={`Danh sách mẫu báo cáo`}
@@ -106,6 +140,89 @@ const ListTemplatePage = () => {
         </Button>
       }
     >
+      <Modal open={isModalDeleteOpen} onClose={handleCloseDeleteModal}>
+        <Box
+          sx={{
+            borderRadius: "0.5rem",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 600,
+            height: 200,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <button
+            className="absolute z-10 flex items-center justify-center cursor-pointer w-11 h-11 right-1 top-1 text-text1"
+            onClick={handleCloseDeleteModal}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+          <div className="text-center">
+            <h2 className="font-bold text-[25px]">Vô hiệu hóa mẫu đánh giá</h2>
+
+            <div className="text-text1 text-base flex justify-center my-auto h-24 items-center">
+              Bạn có chắc muốn vô hiệu hóa mẫu đánh giá &nbsp;
+              <strong className="text-text1">{selected.name}</strong>
+              &nbsp; ?
+            </div>
+          </div>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "space-between",
+            }}
+            className="space-x-2"
+          >
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                "&:hover": {
+                  backgroundColor: theme.palette.primary.dark, // Color on hover
+                },
+              }}
+              component="label"
+              className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
+              onClick={handleCloseDeleteModal}
+            >
+              <span className="text-white">Hủy</span>
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: theme.palette.error.main,
+                "&:hover": {
+                  backgroundColor: theme.palette.error.dark, // Color on hover
+                },
+              }}
+              component="label"
+              className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
+              onClick={() => handleClickDeleteTemplate(selected)}
+            >
+              <span className="text-white">Xác nhận</span>
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
       <Popover
         open={Boolean(open)}
         anchorEl={open}
@@ -124,15 +241,21 @@ const ListTemplatePage = () => {
           },
         }}
       >
-        <MenuItem onClick={() => handleClickTemplateDetail(idSeclected)}>
+        <MenuItem onClick={() => handleClickTemplateDetail(selected)}>
           <ModeEditOutlineIcon sx={{ mr: 2 }} />
           Sửa
         </MenuItem>
-
-        <MenuItem onClick={() => handleClickDeleteModal(idSeclected)}>
-          <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
-          <span style={{ color: theme.palette.error.main }}>Xóa</span>
-        </MenuItem>
+        {selected.status === 2 ? (
+          <MenuItem onClick={() => handleOpenDeleteModal(selected)}>
+            <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
+            <span style={{ color: theme.palette.error.main }}>Xóa</span>
+          </MenuItem>
+        ) : (
+          <MenuItem onClick={() => handleClickActiveTemplate(selected)}>
+            <ToggleOnIcon sx={{ mr: 2, color: theme.palette.success.main }} />
+            Kích hoạt
+          </MenuItem>
+        )}
       </Popover>
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
@@ -262,7 +385,7 @@ const ListTemplatePage = () => {
                     <TableCell align="right">
                       <IconButton
                         size="large"
-                        onClick={(event) => handleOpenMenu(event, item.id)}
+                        onClick={(event) => handleOpenMenu(event, item)}
                       >
                         <MoreVertIcon />
                       </IconButton>

@@ -89,6 +89,8 @@ export const criteraNoti = {
 export const templateNoti = {
   SUCCESS: {
     CREATE: "Thành công tạo mẫu đánh giá!!!",
+    DELETE: "Thành công vô hiệu mẫu đánh giá!!!",
+    ACTIVE: "Thành công kích hoạt mẫu đánh giá!!!",
   },
 
   ERROR: {

@@ -107,7 +107,9 @@ export const templatePath = {
   GET_TEMPLATE_HEADER: "/template/template-header/criteriaheader",
   GET_TEMPLATE_LIST: "/template",
   GET_TEMPLATE_DETAIL: "/template/",
-  GET_TEMPLATE_UNIVERSITY: "/template/list-active-template-by-university/"
+  GET_TEMPLATE_UNIVERSITY: "/template/list-active-template-by-university/",
+  DELETE_TEMPLATE: "/template/disable-template/",
+  ACTIVE_TEMPLATE: "/template/active-template/",
 };
 
 export const formulaPath = {
@@ -115,8 +117,9 @@ export const formulaPath = {
   GET_FORMULA_DETAIL: "/formula/",
   CREATE_FORMULA: "/formula",
   GET_KEY_LIST: "/formula/data-operand",
-  DELETE_FORMULA: "/formula/",
   UPDATE_FORMULA: "/formula/",
+  DELETE_FORMULA: "/formula/disable-formula/",
+  ACTIVE_FORMLA: "/formula/active-formula/",
 };
 
 export const notificationPath = {
