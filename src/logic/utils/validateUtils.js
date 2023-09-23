@@ -430,3 +430,15 @@ export function trainingPlanValid(plan) {
   };
   return error;
 };
+
+export function trainingPlanAssignValid(assign) {
+  let error = {};
+  if (assign.trainingPlanId === 0 || assign.trainingPlanId === "" || assign.trainingPlanId === undefined || assign.trainerId === null) {
+
+    error["trainingPlanId"] = trainingPlanNoti.ERROR.BLANK_PLAN;
+  };
+  if (assign.trainees.length === 0) {
+    error["trainees"] = trainingPlanNoti.ERROR.BLANK_TRAINEE;
+  }
+  return error;
+};

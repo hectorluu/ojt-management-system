@@ -34,10 +34,10 @@ export default function CertificateCardDisplay({ certificate, onClickSubmit, isL
             placeholder="https://example.com"
             onChange={(e) => setLink(e.target.value)}
             onBlur={(e) => setLink(e.target.value)}
-            InputProps={{
+            inputProps={{
+              maxLength: 500,
               readOnly: certificate?.status === 4 ? true : false,
             }}
-            inputProps={{ maxLength: 500 }}
           />
           <Gap />
           <div className={classNames(

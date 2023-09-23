@@ -14,6 +14,8 @@ export const coursePath = {
   GET_COURSE: "/course/",
   CREATE_COURSE: "/course",
   UPDATE_COURSE: "/course/",
+  GET_RECOMMENDED_LIST: "/course/recommendation-courses",
+  GET_TRAINEE_COURSE_LIST: "course/list-course-trainee",
 };
 
 export const criteriaPath = {
@@ -44,6 +46,8 @@ export const trainingPlanPath = {
   GET_TRAINING_PLAN_OF_TRAINER: "/training-plan/owner",
   CREATE_NEW_TRAINING_PLAN: "/training-plan",
   ADD_TRAINING_PLAN_DETAIL: "/training-plan/",
+  GET_TRAINING_PLAN_DETAIL: "/training-plan/",
+  ASSIGN_TRAINING_PLAN: "/training-plan/assign-trainee",
 };
 
 export const userPath = {
@@ -61,6 +65,7 @@ export const userPath = {
   GET_TRAINEE_LIST_BY_TRAINER: "/user/manager/trainee-list/",
   GET_UNASSIGNED_TRAINEE: "/user/unassigned-trainee",
   ASSIGN_TRAINEES_TO_TRAINER: "/user/trainer/assign-trainees",
+  GET_TRAINER_TRAINEE: "/user/trainer/trainee",
 };
 
 export const attendancePath = {

@@ -11,7 +11,6 @@ import {
   Modal,
   OutlinedInput,
   Popover,
-  Skeleton,
   SvgIcon,
   Table,
   TableBody,
@@ -47,6 +46,7 @@ import SubCard from "views/components/cards/SubCard";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AccountListSkeleton from "views/modules/account/AccountListSkeleton";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -64,14 +64,14 @@ const AccountListPage = () => {
       setIsLoading(true);
       let response = await axiosPrivate.get(
         userPath.GET_USER_LIST +
-          "?PageSize=" +
-          rowsPerPage +
-          "&PageIndex=" +
-          page +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&role=" +
-          role
+        "?PageSize=" +
+        rowsPerPage +
+        "&PageIndex=" +
+        page +
+        "&searchTerm=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&role=" +
+        role
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -348,83 +348,7 @@ const AccountListPage = () => {
             <TableBody>
               {isLoading ? ( // Render skeleton loading when loading is true
                 // Use the animate-pulse class for skeleton effect
-                <>
-                  <TableRow>
-                    <TableCell width={"10%"}>
-                      <Skeleton
-                        variant="circular"
-                        width={40}
-                        height={40}
-                        animation="wave"
-                      />
-                    </TableCell>
-                    <TableCell width={"25%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"25%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"15%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"15%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"20%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell width={"10%"}>
-                      <Skeleton
-                        variant="circular"
-                        width={40}
-                        height={40}
-                        animation="wave"
-                      />
-                    </TableCell>
-                    <TableCell width={"25%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"25%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"15%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"15%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"20%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell width={"10%"}>
-                      <Skeleton
-                        variant="circular"
-                        width={40}
-                        height={40}
-                        animation="wave"
-                      />
-                    </TableCell>
-                    <TableCell width={"25%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"25%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"15%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"15%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"20%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                  </TableRow>
-                </>
+                <AccountListSkeleton />
               ) : users.length !== 0 ? (
                 users.map((item) => (
                   <TableRow key={item.id}>

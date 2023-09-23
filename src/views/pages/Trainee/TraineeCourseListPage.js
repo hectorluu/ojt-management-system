@@ -7,6 +7,7 @@ import {
   defaultPageIndex,
   signalRMessage,
   skillStatus,
+  traineeCourseOptions,
 } from "logic/constants/global";
 import CourseCardDisplay from "views/modules/course/CourseCardDisplay";
 import CourseGrid from "views/modules/course/CourseGrid";
@@ -21,6 +22,8 @@ import {
   Card,
   OutlinedInput,
   InputAdornment,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import SubCard from "views/components/cards/SubCard";
@@ -34,6 +37,7 @@ const TraineeCourseListPage = () => {
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [skill, setSkill] = useState("");
   const [skillList, setSkillList] = useState([]);
+  const [courseOption, setCourseOption] = useState(1);
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
@@ -58,18 +62,33 @@ const TraineeCourseListPage = () => {
 
   const fetchCourses = async () => {
     try {
-      setIsLoading(true); // Set loading to true before fetching data
-      let response = await axiosPrivate.get(
-        coursePath.GET_COURSE_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}` +
-        "&filterSkill=" +
-        `${skill === null ? "" : skill}`
-      );
+      setIsLoading(true); // Set loading to true before fetching data)
+      let response = {};
+      if(courseOption === 2){
+        response = await axiosPrivate.get(
+          coursePath.GET_TRAINEE_COURSE_LIST +
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}` +
+          "&filterSkill=" +
+          `${skill === null ? "" : skill}`
+        );
+      }else{
+        response = await axiosPrivate.get(
+          coursePath.GET_RECOMMENDED_LIST +
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}` +
+          "&filterSkill=" +
+          `${skill === null ? "" : skill}`
+        );
+      }
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
@@ -100,7 +119,7 @@ const TraineeCourseListPage = () => {
     fetchCourses();
     fetchSkills();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, skill, rowsPerPage, page]);
+  }, [searchTerm, skill, rowsPerPage, page, courseOption]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -134,6 +153,40 @@ const TraineeCourseListPage = () => {
               onChange={setSearchTerm}
             />
           </Card>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              id="combo-box-demo"
+              options={skillList}
+              getOptionLabel={(option) => option.name}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Kỹ năng" />}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setSkill(newValue.id);
+                } else {
+                  setSkill("");
+                }
+              }}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+            />
+          </div>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              id="combo-box-demo"
+              options={traineeCourseOptions}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Lựa chọn" />}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setCourseOption(newValue.value);
+                } else {
+                  setCourseOption("");
+                }
+              }}
+            />
+          </div>
         </div>
         <Gap></Gap>
         <CourseGrid type="secondary">

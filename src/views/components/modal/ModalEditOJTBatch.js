@@ -6,9 +6,9 @@ import { ojtBatchPath, templatePath } from "logic/api/apiUrl";
 import { useForm } from "react-hook-form";
 import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
-import { Autocomplete, Skeleton, TextField } from "@mui/material";
 import FormRow from "../common/FormRow";
 import { DatePicker } from "@mui/x-date-pickers";
+import { Skeleton, TextField } from "@mui/material";
 
 const ModalEditOJTBatch = ({
   isOpen,
@@ -127,22 +127,10 @@ const ModalEditOJTBatch = ({
                 {isLoading ?
                   <Skeleton height={60} animation="wave" />
                   :
-                  <Autocomplete
-                    value={templateList.find((template) => template.id === templateId) || { id: 0, name: "Chọn tiêu chí" }}
-                    disablePortal={false}
-                    id="combo-box-demo"
-                    options={templateList}
-                    getOptionLabel={(option) => option.name}
-                    renderInput={(params) => <TextField {...params} placeholder="Chọn mẫu đánh giá" error={error?.templateId ? true : false} helperText={error?.templateId} />}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setTemplateId(newValue.id);
-                      } else {
-                        setTemplateId("");
-                      }
-                    }}
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                  />}
+                  <TextField
+                    value={templateList.find((template) => template.id === templateId).name}
+                    name="template"
+                    inputProps={{ readOnly: true }} />}
               </FormGroup>
             </FormRow>
             <FormRow>
