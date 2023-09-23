@@ -2,9 +2,7 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { Fragment, useState } from "react";
 import { useEffect } from "react";
 import {
-  Button,
   Card,
-  CardActions,
   CardContent,
   Unstable_Grid2 as Grid,
   Paper,
@@ -17,8 +15,8 @@ import HorizontalLineChart from "views/components/chart/HorizontalLineChart";
 import PieChart from "views/components/chart/PieChart";
 
 const TrainerDashboardPage = () => {
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
+  // const axiosPrivate = useAxiosPrivate();
+  // const navigate = useNavigate();
   const theme = useTheme();
 
   const [isLoading, setIsLoading] = useState(true);

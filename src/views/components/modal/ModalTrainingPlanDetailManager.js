@@ -75,7 +75,7 @@ const ModalTrainingPlanDetailManager = ({
         <PerfectScrollbar
           style={{
             height: "100%",
-            maxHeight: "calc(100% - 7rem)",
+            maxHeight: "calc(100% - 4.5rem)",
             overflowX: "hidden",
           }}
         >

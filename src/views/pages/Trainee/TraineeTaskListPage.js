@@ -22,7 +22,6 @@ import {
   defaultPageIndex,
   traineeTaskStatus,
 } from "logic/constants/global";
-import { Button } from "views/components/button";
 import TablePagination from "@mui/material/TablePagination";
 import moment from "moment";
 import useOnChange from "logic/hooks/useOnChange";

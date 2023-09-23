@@ -83,6 +83,7 @@ const TrainerTrainingPlanPage = () => {
     useState(false);
 
   const theme = useTheme();
+  const [selectedItem, setSelectedItem] = useState(null);
 
   return (
     <MainCard
@@ -107,6 +108,7 @@ const TrainerTrainingPlanPage = () => {
       <ModalTrainingPlanDetailTrainer
         isOpen={isTraingingPlanDetailModalOpen}
         onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
+        selectedTrainingPlan={selectedItem}
       ></ModalTrainingPlanDetailTrainer>
 
       <SubCard>
@@ -226,7 +228,10 @@ const TrainerTrainingPlanPage = () => {
                         }}
                         component="label"
                         className="flex items-center justify-center cursor-pointer w-3/4 h-8 text-text1 rounded-md"
-                        onClick={() => setIsTrainingPlanDetailModalOpen(true)}
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setIsTrainingPlanDetailModalOpen(true);
+                        }}
                       >
                         <span className="text-white">Chi tiết</span>
                       </Button>
