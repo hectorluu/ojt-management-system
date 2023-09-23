@@ -165,6 +165,7 @@ export const trainerTaskPath = {
   GET_OPEN_BOARD_LIST: "/task-process/open-board",
   APPROVE_TASK: "/task-process/task-accept/",
   REJECT_TASK: "/task-process/task-reject/",
+  GET_TRAINEE_LIST_TASK: "/task-process/trainee/",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

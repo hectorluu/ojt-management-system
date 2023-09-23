@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Divider,
-  Link,
   List,
   ListItem,
   ListItemText,
@@ -16,15 +15,16 @@ import {
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { userPath } from "logic/api/apiUrl";
+import { trainerTaskPath, userPath } from "logic/api/apiUrl";
 import { defaultUserIcon, genderOptions } from "logic/constants/global";
-import { fDate } from "logic/utils/formatTime";
+import { fDate, fDateTime } from "logic/utils/formatTime";
 import { useParams } from "react-router-dom";
 
 const TraineeDetailPage = () => {
   const { traineeId } = useParams();
   const axiosPrivate = useAxiosPrivate();
   const [trainee, setTrainee] = useState([]);
+  const [traineeTask, setTraineeTask] = useState([]);
 
   useEffect(() => {
     async function fetchTraineeDetail() {
@@ -36,6 +36,19 @@ const TraineeDetailPage = () => {
       } catch (error) {}
     }
     fetchTraineeDetail();
+
+    async function fetchTraineeTask() {
+      try {
+        const response = await axiosPrivate.get(
+          trainerTaskPath.GET_TRAINEE_LIST_TASK + traineeId
+        );
+        // Get 6 task
+        setTraineeTask(response.data.data).slice(0, 6);
+        console.log(traineeTask);
+      } catch (error) {}
+    }
+    fetchTraineeTask();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -144,7 +157,7 @@ const TraineeDetailPage = () => {
                       variant="h6"
                       className="text-2xl 2xl:text-3xl font-bold"
                     >
-                      $8,141
+                      8,141
                     </Typography>
                   </div>
                 </div>
@@ -251,119 +264,21 @@ const TraineeDetailPage = () => {
           <div className="absolute h-full border border-dashed border-opacity-60 border-secondary"></div>
 
           {/* Timeline item */}
-          <div className="flex items-center w-full my-6 -ml-1.5">
-            <div className="w-1/12 z-10">
-              <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
+          {traineeTask.map((task) => (
+            <div className="flex items-center w-full my-6 -ml-1.5">
+              <div className="w-1/12 z-10">
+                <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
+              </div>
+              <div className="w-11/12">
+                <Typography variant="body1" className="text-sm">
+                  {task.name}
+                </Typography>
+                <Typography variant="caption" className="text-xs text-gray-500">
+                  Thời gian hoàn thành: {fDateTime(task.finishTime)}
+                </Typography>
+              </div>
             </div>
-            <div className="w-11/12">
-              <Typography variant="body1" className="text-sm">
-                Profile information changed.
-              </Typography>
-              <Typography variant="caption" className="text-xs text-gray-500">
-                3 min ago
-              </Typography>
-            </div>
-          </div>
-          {/* End Timeline item */}
-
-          {/* Timeline item */}
-          <div className="flex items-center w-full my-6 -ml-1.5">
-            <div className="w-1/12 z-10">
-              <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-            </div>
-            <div className="w-11/12">
-              <Typography variant="body1" className="text-sm">
-                Connected with{" "}
-                <Link href="#" className="text-blue-600 font-bold">
-                  Colby Covington
-                </Link>
-                .
-              </Typography>
-              <Typography variant="caption" className="text-xs text-gray-500">
-                15 min ago
-              </Typography>
-            </div>
-          </div>
-          {/* End Timeline item */}
-
-          {/* Timeline item */}
-          <div className="flex items-center w-full my-6 -ml-1.5">
-            <div className="w-1/12 z-10">
-              <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-            </div>
-            <div className="w-11/12">
-              <Typography variant="body1" className="text-sm">
-                Invoice{" "}
-                <Link href="#" className="text-blue-600 font-bold">
-                  #4563
-                </Link>{" "}
-                was created.
-              </Typography>
-              <Typography variant="caption" className="text-xs text-gray-500">
-                57 min ago
-              </Typography>
-            </div>
-          </div>
-          {/* End Timeline item */}
-
-          {/* Timeline item */}
-          <div className="flex items-center w-full my-6 -ml-1.5">
-            <div className="w-1/12 z-10">
-              <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-            </div>
-            <div className="w-11/12">
-              <Typography variant="body1" className="text-sm">
-                Message received from{" "}
-                <Link href="#" className="text-blue-600 font-bold">
-                  Cecilia Hendric
-                </Link>
-                .
-              </Typography>
-              <Typography variant="caption" className="text-xs text-gray-500">
-                1 hour ago
-              </Typography>
-            </div>
-          </div>
-          {/* End Timeline item */}
-
-          {/* Timeline item */}
-          <div className="flex items-center w-full my-6 -ml-1.5">
-            <div className="w-1/12 z-10">
-              <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-            </div>
-            <div className="w-11/12">
-              <Typography variant="body1" className="text-sm">
-                New order received{" "}
-                <Link href="#" className="text-blue-600 font-bold">
-                  #OR9653
-                </Link>
-                .
-              </Typography>
-              <Typography variant="caption" className="text-xs text-gray-500">
-                2 hours ago
-              </Typography>
-            </div>
-          </div>
-          {/* End Timeline item */}
-
-          {/* Timeline item */}
-          <div className="flex items-center w-full my-6 -ml-1.5">
-            <div className="w-1/12 z-10">
-              <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-            </div>
-            <div className="w-11/12">
-              <Typography variant="body1" className="text-sm">
-                Message received from{" "}
-                <Link href="#" className="text-blue-600 font-bold">
-                  Jane Stillman
-                </Link>
-                .
-              </Typography>
-              <Typography variant="caption" className="text-xs text-gray-500">
-                2 hours ago
-              </Typography>
-            </div>
-          </div>
+          ))}
           {/* End Timeline item */}
         </div>
       </Paper>
