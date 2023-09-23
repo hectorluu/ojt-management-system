@@ -18,8 +18,14 @@ import { storage } from "logic/config/firebase/firebase";
 import { courseNoti } from "logic/constants/notification";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
-import { Autocomplete, IconButton, Stack, TextField, TextareaAutosize } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
+import {
+  Autocomplete,
+  IconButton,
+  Stack,
+  TextField,
+  TextareaAutosize,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { courseValid } from "logic/utils/validateUtils";
 
 const CreateNewCoursePage = () => {
@@ -98,10 +104,10 @@ const CreateNewCoursePage = () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-        "?PageSize=" +
-        100000 +
-        "&PageIndex=" +
-        1
+          "?PageSize=" +
+          100000 +
+          "&PageIndex=" +
+          1
       );
       setPositionList(response.data.data);
       setFilteredPositionList(response.data.data);
@@ -152,7 +158,7 @@ const CreateNewCoursePage = () => {
       link,
       coursePosition,
       courseSkills,
-    }
+    };
     const valid = courseValid(course);
     setError(valid);
     if (Object.keys(valid).length > 0) {
@@ -163,7 +169,7 @@ const CreateNewCoursePage = () => {
             await getDownloadURL(snapshot.ref).then(async (downloadURL) => {
               await setImageURL(downloadURL);
               console.log(imageURL);
-            })
+            });
           });
         } catch (e) {
           toast.error(e);
@@ -171,7 +177,7 @@ const CreateNewCoursePage = () => {
       } else {
         setImageURL(defaultCourseImage);
       }
-    };
+    }
   }
 
   const handleAddSkillField = () => {
@@ -232,7 +238,8 @@ const CreateNewCoursePage = () => {
                   placeholder="Ex: Object-oriented programming"
                   onChange={(e) => setName(e.target.value)}
                   onBlur={(e) => setName(e.target.value)}
-                  inputProps={{ maxLength: 100 }} />
+                  inputProps={{ maxLength: 100 }}
+                />
               </FormGroup>
               <FormGroup>
                 <Label>Nền tảng (*)</Label>
@@ -243,7 +250,8 @@ const CreateNewCoursePage = () => {
                   placeholder="Ex: Udemy"
                   onChange={(e) => setPlatformName(e.target.value)}
                   onBlur={(e) => setPlatformName(e.target.value)}
-                  inputProps={{ maxLength: 100 }} />
+                  inputProps={{ maxLength: 100 }}
+                />
               </FormGroup>
             </FormRow>
             <FormGroup>
@@ -255,7 +263,8 @@ const CreateNewCoursePage = () => {
                 placeholder="Ex: Udemy"
                 onChange={(e) => setLink(e.target.value)}
                 onBlur={(e) => setLink(e.target.value)}
-                inputProps={{ maxLength: 500 }} />
+                inputProps={{ maxLength: 500 }}
+              />
             </FormGroup>
             <FormGroup>
               <Label>Mô tả khóa học *</Label>
@@ -273,7 +282,7 @@ const CreateNewCoursePage = () => {
                     placeholder: "Viết mô tả về khóa học....",
                     onChange: (e) => setDescription(e.target.value),
                     onKeyDown: (e) => setDescription(e.target.value),
-                  }
+                  },
                 }}
               />
             </FormGroup>
@@ -309,24 +318,34 @@ const CreateNewCoursePage = () => {
                       disablePortal={false}
                       options={filteredPositionList}
                       getOptionLabel={(option) => option.name}
-                      renderInput={(params) => <TextField {...params} placeholder="Chọn vị trí"
-                        error={error?.coursePosition?.[index]?.positionId ? true : false} helperText={error?.coursePosition?.[index]?.positionId} />}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="Chọn vị trí"
+                          error={
+                            error?.coursePosition?.[index]?.positionId
+                              ? true
+                              : false
+                          }
+                          helperText={
+                            error?.coursePosition?.[index]?.positionId
+                          }
+                        />
+                      )}
                       onChange={(event, newValue) => {
                         if (newValue) {
                           handleSelectDropdownOption(
                             index,
                             "positionId",
                             newValue.id
-                          )
+                          );
                         } else {
-                          handleSelectDropdownOption(
-                            index,
-                            "positionId",
-                            ""
-                          )
+                          handleSelectDropdownOption(index, "positionId", "");
                         }
                       }}
-                      isOptionEqualToValue={(option, value) => option.id === value.id}
+                      isOptionEqualToValue={(option, value) =>
+                        option.id === value.id
+                      }
                     />
                   </FormGroup>
                   <FormGroup>
@@ -334,21 +353,29 @@ const CreateNewCoursePage = () => {
                     <Autocomplete
                       disablePortal={false}
                       options={courseOptions}
-                      renderInput={(params) => <TextField {...params} placeholder="Lựa chọn"
-                        error={error?.coursePosition?.[index]?.isCompulsory ? true : false} helperText={error?.coursePosition?.[index]?.isCompulsory} />}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="Lựa chọn"
+                          error={
+                            error?.coursePosition?.[index]?.isCompulsory
+                              ? true
+                              : false
+                          }
+                          helperText={
+                            error?.coursePosition?.[index]?.isCompulsory
+                          }
+                        />
+                      )}
                       onChange={(event, newValue) => {
                         if (newValue) {
                           handleSelectDropdownOption(
                             index,
                             "isCompulsory",
                             newValue.value
-                          )
+                          );
                         } else {
-                          handleSelectDropdownOption(
-                            index,
-                            "isCompulsory",
-                            ""
-                          )
+                          handleSelectDropdownOption(index, "isCompulsory", "");
                         }
                       }}
                     />
@@ -356,11 +383,24 @@ const CreateNewCoursePage = () => {
                 </FormRow>
               </div>
             ))}
-            <Stack direction="row" spacing={1} justifyContent="center">
-              <IconButton color="error" aria-label="delete" onClick={() => handleRemovePositionField()}>
+            <Stack
+              direction="row"
+              spacing={1}
+              justifyContent="center"
+              className="mb-2"
+            >
+              <IconButton
+                color="error"
+                aria-label="delete"
+                onClick={() => handleRemovePositionField()}
+              >
                 <DeleteIcon />
               </IconButton>
-              <IconButton color="primary" aria-label="delete" onClick={() => handleAddPositionField()}>
+              <IconButton
+                color="primary"
+                aria-label="delete"
+                onClick={() => handleAddPositionField()}
+              >
                 <AddIcon />
               </IconButton>
             </Stack>
@@ -373,8 +413,16 @@ const CreateNewCoursePage = () => {
                     disablePortal={false}
                     options={filteredSkillList}
                     getOptionLabel={(option) => option.name}
-                    renderInput={(params) => <TextField {...params} placeholder="Chọn kỹ năng"
-                      error={error?.courseSkills?.[index]?.skillId ? true : false} helperText={error?.courseSkills?.[index]?.skillId} />}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        placeholder="Chọn kỹ năng"
+                        error={
+                          error?.courseSkills?.[index]?.skillId ? true : false
+                        }
+                        helperText={error?.courseSkills?.[index]?.skillId}
+                      />
+                    )}
                     onChange={(event, newValue) => {
                       if (newValue) {
                         onChangeCourseSkill(index, "skillId", newValue.id);
@@ -382,7 +430,9 @@ const CreateNewCoursePage = () => {
                         onChangeCourseSkill(index, "skillId", "");
                       }
                     }}
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    isOptionEqualToValue={(option, value) =>
+                      option.id === value.id
+                    }
                   />
                 </FormGroup>
                 <FormRow>
@@ -391,11 +441,27 @@ const CreateNewCoursePage = () => {
                     <Autocomplete
                       disablePortal={false}
                       options={skillLevel}
-                      renderInput={(params) => <TextField {...params} placeholder="Lựa chọn"
-                        error={error?.courseSkills?.[index]?.recommendedLevel ? true : false} helperText={error?.courseSkills?.[index]?.recommendedLevel} />}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="Lựa chọn"
+                          error={
+                            error?.courseSkills?.[index]?.recommendedLevel
+                              ? true
+                              : false
+                          }
+                          helperText={
+                            error?.courseSkills?.[index]?.recommendedLevel
+                          }
+                        />
+                      )}
                       onChange={(event, newValue) => {
                         if (newValue) {
-                          onChangeCourseSkill(index, "recommendedLevel", newValue.value);
+                          onChangeCourseSkill(
+                            index,
+                            "recommendedLevel",
+                            newValue.value
+                          );
                         } else {
                           onChangeCourseSkill(index, "recommendedLevel", "");
                         }
@@ -407,11 +473,27 @@ const CreateNewCoursePage = () => {
                     <Autocomplete
                       disablePortal={false}
                       options={skillLevel}
-                      renderInput={(params) => <TextField {...params} placeholder="Lựa chọn"
-                        error={error?.courseSkills?.[index]?.afterwardLevel ? true : false} helperText={error?.courseSkills?.[index]?.afterwardLevel} />}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="Lựa chọn"
+                          error={
+                            error?.courseSkills?.[index]?.afterwardLevel
+                              ? true
+                              : false
+                          }
+                          helperText={
+                            error?.courseSkills?.[index]?.afterwardLevel
+                          }
+                        />
+                      )}
                       onChange={(event, newValue) => {
                         if (newValue) {
-                          onChangeCourseSkill(index, "afterwardLevel", newValue.value);
+                          onChangeCourseSkill(
+                            index,
+                            "afterwardLevel",
+                            newValue.value
+                          );
                         } else {
                           onChangeCourseSkill(index, "afterwardLevel", "");
                         }
@@ -422,10 +504,18 @@ const CreateNewCoursePage = () => {
               </div>
             ))}
             <Stack direction="row" spacing={1} justifyContent="center">
-              <IconButton color="error" aria-label="delete" onClick={() => handleRemoveSkillField()}>
+              <IconButton
+                color="error"
+                aria-label="delete"
+                onClick={() => handleRemoveSkillField()}
+              >
                 <DeleteIcon />
               </IconButton>
-              <IconButton color="primary" aria-label="delete" onClick={() => handleAddSkillField()}>
+              <IconButton
+                color="primary"
+                aria-label="delete"
+                onClick={() => handleAddSkillField()}
+              >
                 <AddIcon />
               </IconButton>
             </Stack>

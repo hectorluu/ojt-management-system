@@ -35,6 +35,7 @@ const ModalSkillDetailAdmin = ({
       setSkill(response.data);
       setName(response.data.name);
       setIsLoading(false);
+      console.log(skill);
     } catch (error) {
       console.log(error);
       setIsLoading(false);

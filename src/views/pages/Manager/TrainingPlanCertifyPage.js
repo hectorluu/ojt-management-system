@@ -1,12 +1,15 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { useEffect, useState } from "react";
 import {
+  Button,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  useTheme,
 } from "@mui/material";
 import {
   defaultPageSize,
@@ -14,12 +17,12 @@ import {
   trainingPlanStatus,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
-import { Button } from "views/components/button";
 import { trainingPlanPath } from "logic/api/apiUrl";
 import MainCard from "views/components/cards/MainCard";
 import SubCard from "views/components/cards/SubCard";
 import StyledTableCell from "views/modules/table/StyledTableCell";
 import ModalTrainingPlanCertifyManager from "views/components/modal/ModalTrainingPlanCertifyManager";
+import { fDate } from "logic/utils/formatTime";
 
 const TrainingPlanCertifyPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -27,9 +30,12 @@ const TrainingPlanCertifyPage = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [trainingplans, setTrainingplans] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // New loading state
+
   useEffect(() => {
     async function fetchTrainingPlans() {
       try {
+        setIsLoading(true);
         const response = await axiosPrivate.get(
           trainingPlanPath.GET_TRAINING_PLAN_LIST +
             "?PageIndex=" +
@@ -41,10 +47,10 @@ const TrainingPlanCertifyPage = () => {
         );
         setTrainingplans(response.data.data);
         setTotalItem(response.data.totalItem);
-        // setPage(response.data.pageIndex);
-        // console.log("fetchUsers ~ response", response);
+        setIsLoading(false); // Set loading to false after fetching data
       } catch (error) {
         console.log("fetchTrainingPlans ~ error", error);
+        setIsLoading(false); // Set loading to false after fetching data
       }
     }
     fetchTrainingPlans();
@@ -63,11 +69,15 @@ const TrainingPlanCertifyPage = () => {
   const [isTraingingPlanCertifyModalOpen, setIsTrainingPlanCertifyModalOpen] =
     useState(false);
 
+  const theme = useTheme();
+  const [selectedItem, setSelectedItem] = useState(null);
+
   return (
     <MainCard title="Phê duyệt kế hoạch đào tạo">
       <ModalTrainingPlanCertifyManager
         isOpen={isTraingingPlanCertifyModalOpen}
         onRequestClose={() => setIsTrainingPlanCertifyModalOpen(false)}
+        selectedTrainingPlan={selectedItem}
       ></ModalTrainingPlanCertifyManager>
 
       <SubCard>
@@ -75,36 +85,102 @@ const TrainingPlanCertifyPage = () => {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <StyledTableCell align="left" width={"25%"}>
+                <StyledTableCell align="left" width={"40%"}>
                   Tên kế hoạch
                 </StyledTableCell>
                 <StyledTableCell align="left" width={"25%"}>
                   Người tạo
                 </StyledTableCell>
                 <StyledTableCell align="center" width={"20%"}>
-                  Ngày gửi
+                  Ngày tạo
                 </StyledTableCell>
-                <StyledTableCell align="right" width={"10%"}></StyledTableCell>
+                <StyledTableCell align="right" width={"15%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {trainingplans.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell align="right" width={"10%"}>
-                    <Button
-                      className=""
-                      type="button"
-                      kind="ghost"
-                      onClick={() => setIsTrainingPlanCertifyModalOpen(true)}
-                    >
-                      Chi tiết
-                    </Button>
+              {isLoading ? (
+                <>
+                  <TableRow>
+                    <TableCell width={"40%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"40%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"40%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                </>
+              ) : trainingplans.length !== 0 ? (
+                trainingplans.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell align="left">{item.name}</TableCell>
+                    <TableCell align="left">
+                      {item.firstName + " " + item.lastName}
+                    </TableCell>
+                    <TableCell align="center">
+                      {fDate(item.createDate)}
+                    </TableCell>
+                    <TableCell align="right" width={"15%"}>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          backgroundColor: theme.palette.primary.main,
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.dark, // Color on hover
+                          },
+                        }}
+                        component="label"
+                        className="flex items-center justify-center cursor-pointer w-3/4 h-8 text-text1 rounded-md"
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setIsTrainingPlanCertifyModalOpen(true);
+                        }}
+                      >
+                        <span className="text-white">Chi tiết</span>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    Không có kế hoạch đào tạo nào để duyệt.
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
           <TablePagination

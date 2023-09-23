@@ -6,14 +6,13 @@ import NavGroup from "./NavGroup";
 
 import { IconDashboard } from "@tabler/icons";
 import FaceIcon from "@mui/icons-material/Face";
-import AssignmentIcon from "@mui/icons-material/Assignment";
 import PeopleIcon from "@mui/icons-material/People";
 import ApprovalIcon from "@mui/icons-material/Approval";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import GradingIcon from "@mui/icons-material/Grading";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import SendIcon from "@mui/icons-material/Send";
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 
 //items
 const iconsDaskboard = { IconDashboard };
@@ -35,7 +34,6 @@ const dashboard = {
 
 const iconsPages = {
   FaceIcon,
-  AssignmentIcon,
   PeopleIcon,
   ApprovalIcon,
   CalendarMonthIcon,
@@ -62,14 +60,6 @@ const pages = {
           type: "item",
           url: "/assigned-trainee-list",
           icon: iconsPages.PeopleIcon,
-          breadcrumbs: false,
-        },
-        {
-          id: "assigned-trainee-task-list",
-          title: "Công việc",
-          type: "item",
-          url: "/assigned-trainee-task-list",
-          icon: iconsPages.AssignmentIcon,
           breadcrumbs: false,
         },
         {

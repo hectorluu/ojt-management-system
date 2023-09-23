@@ -8,7 +8,6 @@ import {
   Divider,
   TextField,
   Typography,
-  SvgIcon,
   TablePagination,
   TextareaAutosize,
 } from "@mui/material";
@@ -24,16 +23,19 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { coursePath, ojtBatchPath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
-import { generalNoti, ojtBatchNoti, universityNoti } from "logic/constants/notification";
+import {
+  generalNoti,
+  ojtBatchNoti,
+  universityNoti,
+} from "logic/constants/notification";
 import { toast } from "react-toastify";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "logic/config/firebase/firebase";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import ProfileSkeleton from "views/modules/account/ProfileSkeleton";
-import AddIcon from "@mui/icons-material/Add";
 import SubCard from "views/components/cards/SubCard";
-import { ojtBatchValid, universityValid, updateCourseValid } from "logic/utils/validateUtils";
+import { ojtBatchValid, updateCourseValid } from "logic/utils/validateUtils";
 
 const CourseDetailPage = () => {
   const { courseId } = useParams();
@@ -62,9 +64,7 @@ const CourseDetailPage = () => {
   const fetchCourseDetail = async () => {
     try {
       setIsFetchingLoading(true);
-      const response = await axiosPrivate.get(
-        coursePath.GET_COURSE + courseId
-      );
+      const response = await axiosPrivate.get(coursePath.GET_COURSE + courseId);
       setName(response.data.name);
       setPlatformName(response.data.platformName);
       setDescription(response.data.description);
@@ -136,7 +136,7 @@ const CourseDetailPage = () => {
       }
     }
     setIsLoading(false);
-  };
+  }
 
   const handleUpdateBatch = async (data) => {
     const valid = ojtBatchValid(data);
@@ -155,7 +155,7 @@ const CourseDetailPage = () => {
       } catch (e) {
         console.log(e);
       }
-    };
+    }
   };
 
   const handleOpenMenu = (id) => {
@@ -190,22 +190,22 @@ const CourseDetailPage = () => {
   return (
     <MainCard
       title="Thông tin khoá học"
-    // secondary={
-    //   <Button
-    //     startIcon={
-    //       <SvgIcon fontSize="small">
-    //         <AddIcon />
-    //       </SvgIcon>
-    //     }
-    //     component={Link}
-    //     to={`/create-new-ojt-batch/${universityId}`}
-    //     variant="contained"
-    //     size="medium"
-    //     sx={{ borderRadius: "10px" }}
-    //   >
-    //     Thêm đợt thực tập mới
-    //   </Button>
-    // }
+      // secondary={
+      //   <Button
+      //     startIcon={
+      //       <SvgIcon fontSize="small">
+      //         <AddIcon />
+      //       </SvgIcon>
+      //     }
+      //     component={Link}
+      //     to={`/create-new-ojt-batch/${universityId}`}
+      //     variant="contained"
+      //     size="medium"
+      //     sx={{ borderRadius: "10px" }}
+      //   >
+      //     Thêm đợt thực tập mới
+      //   </Button>
+      // }
     >
       {/* <ModalEditOJTBatch
         isOpen={isModalOpen}
@@ -221,8 +221,13 @@ const CourseDetailPage = () => {
         <>
           <Card>
             <div className="relative w-full h-[300px] overflow-hidden">
-              <img className="w-full h-full object-cover object-scale-down" src={url} alt="courseImg"
-                onError={(e) => { e.target.src = defaultCourseImage }}
+              <img
+                className="w-full h-full object-cover object-scale-down"
+                src={url}
+                alt="courseImg"
+                onError={(e) => {
+                  e.target.src = defaultCourseImage;
+                }}
               />
             </div>
             <div className="flex flex-col items-center">
@@ -305,7 +310,7 @@ const CourseDetailPage = () => {
                       placeholder: "Viết mô tả về khóa học....",
                       onChange: (e) => setDescription(e.target.value),
                       onKeyDown: (e) => setDescription(e.target.value),
-                    }
+                    },
                   }}
                 />
               </FormGroup>
@@ -326,41 +331,47 @@ const CourseDetailPage = () => {
           <Card>
             <CardHeader sx={{ mb: -2 }} title="Đợt thực tập" />
             <SubCard>
-              {ojtBatch.length > 0 ? ojtBatch.map((item) => (
-                <Card
-                  sx={{ display: "flex" }}
-                  className="rounded-2xl border-0 py-3 pb-1 hover:shadow-xl transition duration-500 ease-in-out border-solid border-2 border-slate-200"
-                  key={item.id}
-                >
-                  <div className="flex items-center space-x-96 gap-x-6 ml-5 w-full">
-                    <div className="flex-1">
-                      <h1 className="text-[22px] font-semibold mb-2">
-                        {item.name}
-                      </h1>
-                      <p className="mb-2 text-sm text-text2">University</p>
-                      <p className="mb-2 text-sm text-text2">
-                        Thời gian thực tập: {item.startTime} - {item.endTime}
-                      </p>
+              {ojtBatch.length > 0 ? (
+                ojtBatch.map((item) => (
+                  <Card
+                    sx={{ display: "flex" }}
+                    className="rounded-2xl border-0 py-3 pb-1 hover:shadow-xl transition duration-500 ease-in-out border-solid border-2 border-slate-200"
+                    key={item.id}
+                  >
+                    <div className="flex items-center space-x-96 gap-x-6 ml-5 w-full">
+                      <div className="flex-1">
+                        <h1 className="text-[22px] font-semibold mb-2">
+                          {item.name}
+                        </h1>
+                        <p className="mb-2 text-sm text-text2">University</p>
+                        <p className="mb-2 text-sm text-text2">
+                          Thời gian thực tập: {item.startTime} - {item.endTime}
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-center text-white rounded-full w-fit bg-opacity-60">
+                        <Button
+                          variant="outlined"
+                          component="label"
+                          className="mr-3"
+                          onClick={() => handleOpenMenu(item.id)}
+                        >
+                          Chọn
+                        </Button>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-center text-white rounded-full w-fit bg-opacity-60">
-                      <Button
-                        variant="outlined"
-                        component="label"
-                        className="mr-3"
-                        onClick={() => handleOpenMenu(item.id)}
-                      >
-                        Chọn
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              )) :
+                  </Card>
+                ))
+              ) : (
                 <>
-                  <Typography variant="h3" color="text.secondary" sx={{ mb: 2 }}>
+                  <Typography
+                    variant="h3"
+                    color="text.secondary"
+                    sx={{ mb: 2 }}
+                  >
                     Chưa có đợt thực tập nào
                   </Typography>
                 </>
-              }
+              )}
               <TablePagination
                 labelRowsPerPage="Số dòng"
                 component="div"

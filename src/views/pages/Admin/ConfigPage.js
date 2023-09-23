@@ -1,9 +1,6 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
-import {
-  configOptions,
-  signalRMessage,
-} from "logic/constants/global";
+import { configOptions, signalRMessage } from "logic/constants/global";
 
 import signalRService from "logic/utils/signalRService";
 import MainCard from "views/components/cards/MainCard";
@@ -12,8 +9,8 @@ import { FormGroup, Skeleton, SvgIcon } from "@mui/material";
 import Gap from "views/components/common/Gap";
 import { configPath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";
-import TextField from '@mui/material/TextField';
-import SaveIcon from '@mui/icons-material/Save';
+import TextField from "@mui/material/TextField";
+import SaveIcon from "@mui/icons-material/Save";
 import { LoadingButton } from "@mui/lab";
 import { configValid } from "logic/utils/validateUtils";
 
@@ -27,9 +24,7 @@ const ConfigPage = () => {
   const fetchConfigs = async () => {
     try {
       setIsLoading(true);
-      let response = await axiosPrivate.get(
-        configPath.GET_CONFIG_LIST
-      );
+      let response = await axiosPrivate.get(configPath.GET_CONFIG_LIST);
       setConfigs(response.data);
       setIsLoading(false);
     } catch (error) {
@@ -72,14 +67,14 @@ const ConfigPage = () => {
   const onSave = async () => {
     setIsSubmitLoading(true);
     const valid = configValid(configs);
-    if(valid){
+    if (valid) {
       try {
         await axiosPrivate.put(configPath.UPDATE_CONFIG, configs);
         fetchConfigs();
       } catch (error) {
         console.log("onSave ~ error", error);
       }
-    };
+    }
     setIsSubmitLoading(false);
   };
 
@@ -115,28 +110,47 @@ const ConfigPage = () => {
           <>
             {configs.map((config) => (
               <div key={config.id}>
-                <FormRow key={config.id}>
+                <FormRow key={config.id} className="flex">
                   <FormGroup>
-                    <span className="font-bold text-2xl">{configOptions.find((label) => label.value === config.name)?.label}</span>
+                    <span className="font-bold text-xl mt-3">
+                      {
+                        configOptions.find(
+                          (label) => label.value === config.name
+                        )?.label
+                      }
+                    </span>
                   </FormGroup>
                   <FormGroup>
-                    <TextField id="outlined-basic" variant="outlined" defaultValue={config.value} type="number"
+                    <TextField
+                      id="outlined-basic"
+                      variant="outlined"
+                      defaultValue={config.value}
+                      type="number"
                       inputProps={{
                         min: 1, // Set the minimum value here
-                        max: configOptions.find((label) => label.value === config.name)?.maxValue
+                        max: configOptions.find(
+                          (label) => label.value === config.name
+                        )?.maxValue,
                       }}
                       onChange={(e) => onChange(config.id, e.target.value)}
                       disabled={isSubmitLoading}
-                      error={config.value < 1 || config.value > configOptions.find((label) => label.value === config.name)?.maxValue} />
+                      error={
+                        config.value < 1 ||
+                        config.value >
+                          configOptions.find(
+                            (label) => label.value === config.name
+                          )?.maxValue
+                      }
+                    />
                   </FormGroup>
                 </FormRow>
                 <Gap />
               </div>
             ))}
           </>
-        ) :
+        ) : (
           <>Không có mục cài đặt nào được tìm thấy.</>
-        }
+        )}
       </SubCard>
     </MainCard>
   );

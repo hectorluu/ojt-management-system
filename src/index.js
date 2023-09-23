@@ -116,9 +116,6 @@ const ManagerProfilePage = lazy(() =>
 const AssignedTraineeListPage = lazy(() =>
   import("views/pages/Trainer/AssignedTraineeListPage")
 );
-const AssignedTraineeTaskListPage = lazy(() =>
-  import("views/pages/Trainer/AssignedTraineeTaskListPage")
-);
 const CertificateCertifyPage = lazy(() =>
   import("views/pages/Trainer/CertificateCertifyPage")
 );
@@ -149,8 +146,12 @@ const TrainerRoleTraineeDetailPage = lazy(() =>
 const AssignTrainingPlanPage = lazy(() =>
   import("views/pages/Trainer/AssignTrainingPlanPage")
 );
-const TrainerTaskCertifyPage = lazy(() => import("views/pages/Trainer/TrainerTaskCertifyPage"));
-const TrainerCourseDetailPage = lazy(() => import("views/pages/Trainer/TrainerCourseDetailPage"));
+const TrainerTaskCertifyPage = lazy(() =>
+  import("views/pages/Trainer/TrainerTaskCertifyPage")
+);
+const TrainerCourseDetailPage = lazy(() =>
+  import("views/pages/Trainer/TrainerCourseDetailPage")
+);
 
 // Trainee Page
 const TraineeCourseDetailPage = lazy(() =>
@@ -366,12 +367,6 @@ const router = createBrowserRouter([
             element: <AssignedTraineeListPage></AssignedTraineeListPage>,
           },
           {
-            path: "/assigned-trainee-task-list",
-            element: (
-              <AssignedTraineeTaskListPage></AssignedTraineeTaskListPage>
-            ),
-          },
-          {
             path: "/certificate-certify",
             element: <CertificateCertifyPage></CertificateCertifyPage>,
           },
@@ -412,7 +407,7 @@ const router = createBrowserRouter([
           {
             path: "/trainer-course-detail/:courseId",
             element: <TrainerCourseDetailPage></TrainerCourseDetailPage>,
-          }
+          },
         ],
       },
     ],

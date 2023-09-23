@@ -1,9 +1,11 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Card,
   InputAdornment,
   OutlinedInput,
+  Skeleton,
   SvgIcon,
   Table,
   TableBody,
@@ -11,10 +13,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  useTheme,
 } from "@mui/material";
-import { defaultPageSize, defaultPageIndex } from "logic/constants/global";
+import {
+  defaultPageSize,
+  defaultPageIndex,
+  trainingPlanStatus,
+} from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
-import { Button } from "views/components/button";
 import ModalTrainingPlanDetailManager from "views/components/modal/ModalTrainingPlanDetailManager";
 import { trainingPlanPath } from "logic/api/apiUrl";
 import MainCard from "views/components/cards/MainCard";
@@ -22,6 +28,7 @@ import SubCard from "views/components/cards/SubCard";
 import StyledTableCell from "views/modules/table/StyledTableCell";
 import SearchIcon from "@mui/icons-material/Search";
 import useOnChange from "logic/hooks/useOnChange";
+import { fDate } from "logic/utils/formatTime";
 
 const TrainingPlanListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -31,10 +38,12 @@ const TrainingPlanListPage = () => {
   const [trainingplans, setTrainingplans] = useState([]);
   const [totalTrainingPlans, setTotalTrainingPlans] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
+  const [isLoading, setIsLoading] = useState(true); // New loading state
 
   useEffect(() => {
     async function fetchTrainingPlans() {
       try {
+        setIsLoading(true);
         const response = await axiosPrivate.get(
           trainingPlanPath.GET_TRAINING_PLAN_LIST +
             "?PageIndex=" +
@@ -42,12 +51,16 @@ const TrainingPlanListPage = () => {
             "&PageSize=" +
             rowsPerPage +
             "&nameSearch=" +
-            `${searchTerm === null ? "" : searchTerm}`
+            `${searchTerm === null ? "" : searchTerm}` +
+            "&status=" +
+            trainingPlanStatus.ACTIVE
         );
         setTrainingplans(response.data.data);
         setTotalItem(response.data.totalItem);
+        setIsLoading(false); // Set loading to false after fetching data
       } catch (error) {
         console.log("fetchTrainingPlans ~ error", error);
+        setIsLoading(false); // Set loading to false after fetching data
       }
     }
     fetchTrainingPlans();
@@ -78,6 +91,10 @@ const TrainingPlanListPage = () => {
   const [isTraingingPlanDetailModalOpen, setIsTrainingPlanDetailModalOpen] =
     useState(false);
 
+  const theme = useTheme();
+
+  const [selectedItem, setSelectedItem] = useState(null);
+
   return (
     <MainCard
       title={`Danh sách kế hoạch đào tạo (${totalTrainingPlans.length})`}
@@ -85,6 +102,7 @@ const TrainingPlanListPage = () => {
       <ModalTrainingPlanDetailManager
         isOpen={isTraingingPlanDetailModalOpen}
         onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
+        selectedTrainingPlan={selectedItem}
       ></ModalTrainingPlanDetailManager>
 
       <SubCard>
@@ -111,36 +129,102 @@ const TrainingPlanListPage = () => {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <StyledTableCell align="left" width={"25%"}>
+                <StyledTableCell align="left" width={"40%"}>
                   Tên kế hoạch
                 </StyledTableCell>
                 <StyledTableCell align="left" width={"25%"}>
                   Người tạo
                 </StyledTableCell>
                 <StyledTableCell align="center" width={"20%"}>
-                  Ngày gửi
+                  Ngày sửa đổi
                 </StyledTableCell>
-                <StyledTableCell align="right" width={"10%"}></StyledTableCell>
+                <StyledTableCell align="right" width={"15%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {trainingplans.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell align="right" width={"10%"}>
-                    <Button
-                      className=""
-                      type="button"
-                      kind="ghost"
-                      onClick={() => setIsTrainingPlanDetailModalOpen(true)}
-                    >
-                      Chi tiết
-                    </Button>
+              {isLoading ? (
+                <>
+                  <TableRow>
+                    <TableCell width={"40%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"40%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"40%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"25%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                  </TableRow>
+                </>
+              ) : trainingplans.length !== 0 ? (
+                trainingplans.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell align="left">{item.name}</TableCell>
+                    <TableCell align="left">
+                      {item.firstName + " " + item.lastName}
+                    </TableCell>
+                    <TableCell align="center">
+                      {fDate(item.updateDate)}
+                    </TableCell>
+                    <TableCell align="right" width={"15%"}>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          backgroundColor: theme.palette.primary.main,
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.dark, // Color on hover
+                          },
+                        }}
+                        component="label"
+                        className="flex items-center justify-center cursor-pointer w-3/4 h-8 text-text1 rounded-md"
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setIsTrainingPlanDetailModalOpen(true);
+                        }}
+                      >
+                        <span className="text-white">Chi tiết</span>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    Không có kế hoạch đào tạo nào được tìm thấy.
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
           <TablePagination

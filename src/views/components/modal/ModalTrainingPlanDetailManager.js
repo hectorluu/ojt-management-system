@@ -1,7 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Modal } from "@mui/material";
+import { fDate } from "logic/utils/formatTime";
+import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
+import { trainingPlanPath } from "logic/api/apiUrl";
+import PerfectScrollbar from "react-perfect-scrollbar";
 
-const ModalTrainingPlanDetailManager = ({ isOpen, onRequestClose }) => {
+const ModalTrainingPlanDetailManager = ({
+  isOpen,
+  onRequestClose,
+  selectedTrainingPlan,
+}) => {
+  const axiosPrivate = useAxiosPrivate();
+  const [, setIsLoading] = useState(true); // New loading state
+  const [trainingPlanDetails, setTrainingPlanDetails] = useState([]);
+
+  useEffect(() => {
+    async function fetchDetails() {
+      try {
+        setIsLoading(true);
+        const response = await axiosPrivate.get(
+          trainingPlanPath.GET_TRAINING_PLAN_DETAIL + selectedTrainingPlan.id
+        );
+        setTrainingPlanDetails(response.data.details);
+        setIsLoading(false); // Set loading to false after fetching data
+      } catch (error) {
+        console.log("fetchUsers ~ error", error);
+        setIsLoading(false); // Set loading to false after fetching data
+      }
+    }
+    fetchDetails();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTrainingPlan]);
+
   return (
     <Modal open={isOpen} onClose={onRequestClose}>
       <Box
@@ -12,7 +43,7 @@ const ModalTrainingPlanDetailManager = ({ isOpen, onRequestClose }) => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 1000,
-          height: 650,
+          height: "40.625rem",
           bgcolor: "background.paper",
           border: "2px solid #000",
           boxShadow: 24,
@@ -41,23 +72,67 @@ const ModalTrainingPlanDetailManager = ({ isOpen, onRequestClose }) => {
         <h2 className="font-bold text-[25px] mb-10 text-center">
           Thông tin chi tiết kế hoạch đào tạo
         </h2>
-        <div>
-          <div className="bg-white shadow-1 rounded-xl">
-            <div className="p-5">
-              <div className="flex items-center mb-4 gap-x-3">
-                <span className="text-xl font-bold text-text1">$2,724 USD</span>
+        <PerfectScrollbar
+          style={{
+            height: "100%",
+            maxHeight: "calc(100% - 4.5rem)",
+            overflowX: "hidden",
+          }}
+        >
+          <div>
+            <div className="bg-white shadow-1 rounded-xl">
+              <div className="p-5">
+                <div className="flex items-center mb-3 gap-x-3">
+                  <span className="text-xl font-bold text-text1">
+                    {selectedTrainingPlan?.name}
+                  </span>
+                </div>
+                <div className="mb-2">
+                  <strong className="font-semi">Ngày thay đổi: </strong>
+                  <span className="text-text2">
+                    {fDate(selectedTrainingPlan?.updateDate)}
+                  </span>
+                </div>
+                <div className="mb-2">
+                  <strong className="font-semi">Người tạo: </strong>
+                  <span className="text-text2">
+                    {selectedTrainingPlan?.firstName +
+                      " " +
+                      selectedTrainingPlan?.lastName}
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col mb-4 gap-y-1">
-                <strong>Estimated Shipping</strong>{" "}
-                <span className="text-text2">October 2022</span>
+
+              <div className="p-5">
+                <div className="flex items-center mb-4 gap-x-3">
+                  <span className="text-xl font-bold text-text1">Chi tiết</span>
+                </div>
+                {trainingPlanDetails.length > 0 ? (
+                  trainingPlanDetails.map((detail, index) => (
+                    <div className="mb-6">
+                      <p className="mb-2 text-text2">
+                        <strong className="text-text1">
+                          {index + 1}
+                          {")"} {detail.name}
+                        </strong>
+                      </p>
+                      <p className="text-text2 pl-4 mb-2">
+                        {detail?.description}
+                      </p>
+                      <p className="text-text2 pl-4">
+                        {fDate(detail?.startTime) +
+                          " - " +
+                          fDate(detail?.endTime)}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <div>Chưa có chi tiết được tạo.</div>
+                )}
               </div>
-              <p className="mb-4 text-text2">
-                <strong className="text-text1">05</strong> claimed
-              </p>
-              <p className="text-text2">Ships worldwide</p>
             </div>
           </div>
-        </div>
+        </PerfectScrollbar>
       </Box>
     </Modal>
   );
