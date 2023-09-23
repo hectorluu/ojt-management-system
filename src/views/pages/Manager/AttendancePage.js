@@ -1,31 +1,37 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
-import { Button, SvgIcon } from "@mui/material";
+import {
+  Box,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  Modal,
+  SvgIcon,
+  Typography,
+} from "@mui/material";
 
 import { attendancePath } from "logic/api/apiUrl";
-import { defaultPageSize, defaultPageIndex } from "logic/constants/global";
+import PerfectScrollbar from "react-perfect-scrollbar";
 
 import MainCard from "views/components/cards/MainCard";
 
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
-import SubCard from "views/components/cards/SubCard";
 
 const AttendancePage = () => {
-  const [page, setPage] = useState(defaultPageIndex);
-  const [totalItem, setTotalItem] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
-  const [attendance, setAttendance] = useState([]);
+  const moment = require("moment");
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
+  // Fetch attendance file
+  const [attendance, setAttendance] = useState([]);
   const fetchAttendanceFile = async () => {
     try {
       setIsLoading(true);
       let response = await axiosPrivate.get(attendancePath.GET_ATTENDANCE_FILE);
       setAttendance(response.data.data);
-      setTotalItem(response.data.totalItem);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
       console.log("error", error);
@@ -33,10 +39,43 @@ const AttendancePage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchAttendanceFile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowsPerPage, page]);
+  // Fetch attendance by month
+  const [attendanceByMonth, setAttendanceByMonth] = useState([]); // New loading state
+
+  const fetchAttendanceByMonth = async () => {
+    try {
+      setIsLoading(true);
+      let response = await axiosPrivate.get(
+        attendancePath.GET_ATTENDANCE_BY_MONTH + (month + 1) + "/" + year
+      );
+      setAttendanceByMonth(response.data);
+      console.log("attendanceByMonth", attendanceByMonth);
+      setIsLoading(false); // Set loading to false after fetching data
+    } catch (error) {
+      console.log("error", error);
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  };
+
+  // Fetch attendance by day
+  const [attendanceByDay, setAttendanceByDay] = useState([]); // New loading state
+  const [selectedDate, setSelectedDate] = useState(new Date()); // New loading state
+
+  const fetchAttendanceByDay = async () => {
+    try {
+      setIsLoading(true);
+      let response = await axiosPrivate.get(
+        attendancePath.GET_ATTENDANCE_BY_DATE +
+          moment(selectedDate).format("YYYY-MM-DD")
+      );
+      console.log("attendanceByDay", response.data);
+      setAttendanceByDay(response.data.attendanceUsers);
+      setIsLoading(false); // Set loading to false after fetching data
+    } catch (error) {
+      console.log("error", error);
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  };
 
   // Calendar
   const MONTH_NAMES = [
@@ -67,15 +106,6 @@ const AttendancePage = () => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [no_of_days, setNoOfDays] = useState([]);
   const [blankdays, setBlankdays] = useState([]);
-  // const [days, setDays] = useState([
-  //   "Sun",
-  //   "Mon",
-  //   "Tue",
-  //   "Wed",
-  //   "Thu",
-  //   "Fri",
-  //   "Sat",
-  // ]);
 
   const [event_title, setEventTitle] = useState("");
   const [event_date, setEventDate] = useState("");
@@ -136,28 +166,6 @@ const AttendancePage = () => {
     setEventDate(new Date(year, month, date).toDateString());
   };
 
-  const addEvent = () => {
-    if (event_title === "") {
-      return;
-    }
-
-    setEvents([
-      ...events,
-      {
-        event_date: event_date,
-        event_title: event_title,
-        event_theme: event_theme,
-      },
-    ]);
-
-    console.log(events);
-
-    setEventTitle("");
-    setEventDate("");
-    setEventTheme("blue");
-    setOpenEventModal(false);
-  };
-
   const getNoOfDays = () => {
     let daysInMonth = new Date(year, month + 1, 0).getDate();
     let dayOfWeek = new Date(year, month).getDay();
@@ -173,9 +181,29 @@ const AttendancePage = () => {
   };
 
   useEffect(() => {
-    initializeCalendar(); // Call the initialization function when month changes
+    // Get the current date values
+    const currentDate = moment(new Date()).format("YYYY/MM/DD");
+    // Set the selectedDay, selectedMonth, and selectedYear states
+    setSelectedDate(currentDate);
+    //eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    initializeCalendar();
     //eslint-disable-next-line
   }, [month, year]);
+
+  useEffect(() => {
+    if (month !== 0) fetchAttendanceByMonth();
+
+    //eslint-disable-next-line
+  }, [month]);
+
+  useEffect(() => {
+    fetchAttendanceByDay();
+
+    //eslint-disable-next-line
+  }, [selectedDate]);
 
   return (
     <MainCard
@@ -197,258 +225,285 @@ const AttendancePage = () => {
         </Button>
       }
     >
-      <SubCard>
-        {/*Calendar*/}
-        <div className="antialiased font-mono h-fit">
-          <div x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak>
-            <div className="container mx-auto px-4 py-2">
-              <div className="bg-white rounded-lg shadow overflow-hidden">
-                <div className="flex items-center justify-between py-4 px-6">
-                  <div>
-                    <span className="text-lg font-bold text-gray-800">
-                      {MONTH_NAMES[month]}
-                    </span>
-                    <span className="ml-1 text-lg text-gray-600 font-normal">
-                      &nbsp; Năm {year}
-                    </span>
-                  </div>
-                  <div
-                    className="border rounded-lg px-1"
-                    style={{ paddingTop: "2px" }}
-                  >
-                    <button
-                      type="button"
-                      className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex cursor-pointer hover:bg-gray-200 p-1 items-center`}
-                      onClick={() => {
-                        const newMonth = month === 0 ? 11 : month - 1;
-                        const newYear = month === 0 ? year - 1 : year;
-                        setMonth(newMonth);
-                        setYear(newYear);
-                        getNoOfDays();
-                      }}
-                    >
-                      <svg
-                        className="h-6 w-6 text-gray-500 inline-flex leading-none"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M15 19l-7-7 7-7"
-                        />
-                      </svg>
-                    </button>
-                    <div className="border-r inline-flex h-6"></div>
-                    <button
-                      type="button"
-                      className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex items-center cursor-pointer hover:bg-gray-200 p-1`}
-                      onClick={() => {
-                        const newMonth = month === 11 ? 0 : month + 1;
-                        const newYear = month === 11 ? year + 1 : year;
-                        setMonth(newMonth);
-                        setYear(newYear);
-                        getNoOfDays();
-                      }}
-                    >
-                      <svg
-                        className="h-6 w-6 text-gray-500 inline-flex leading-none"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </button>
-                  </div>
+      {/*Calendar*/}
+      <div className="antialiased font-mono h-fit">
+        <div x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak>
+          <div className="container mx-auto px-4 py-2">
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="flex items-center justify-between py-4 px-6">
+                <div>
+                  <span className="text-lg font-bold text-gray-800">
+                    {MONTH_NAMES[month]}
+                  </span>
+                  <span className="ml-1 text-lg text-gray-600 font-normal">
+                    &nbsp; Năm {year}
+                  </span>
                 </div>
-                <div className="-mx-1 -mb-1">
-                  <div
-                    className="flex flex-wrap"
-                    style={{ marginBottom: "-40px" }}
+                <div
+                  className="border rounded-lg px-1"
+                  style={{ paddingTop: "2px" }}
+                >
+                  <button
+                    type="button"
+                    className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex cursor-pointer hover:bg-gray-200 p-1 items-center`}
+                    onClick={() => {
+                      const newMonth = month === 0 ? 11 : month - 1;
+                      const newYear = month === 0 ? year - 1 : year;
+                      setMonth(newMonth);
+                      setYear(newYear);
+                      getNoOfDays();
+                    }}
                   >
-                    {DAYS.map((day, index) => (
-                      <div
-                        key={index}
-                        style={{ width: "14.26%" }}
-                        className="px-2 py-2"
-                      >
-                        <div className="text-gray-600 text-sm uppercase tracking-wide font-bold text-center">
-                          {day}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="flex flex-wrap border-t border-l">
-                    {blankdays.map((blankday, index) => (
-                      <div
-                        key={index}
-                        style={{ width: "14.28%", height: "120px" }}
-                        className="text-center border-r border-b px-4 pt-2"
-                      ></div>
-                    ))}
-                    {no_of_days.map((date, dateIndex) => (
-                      <div
-                        key={dateIndex}
-                        style={{ width: "14.28%", height: "120px" }}
-                        className="px-4 pt-2 border-r border-b relative"
-                      >
-                        <div
-                          onClick={() => showEventModal(date)}
-                          className={`inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100 ${
-                            isToday(date)
-                              ? "bg-blue-500 text-white"
-                              : "text-gray-700 hover:bg-blue-200"
-                          }`}
-                        >
-                          {date}
-                        </div>
-                        <div
-                          style={{ height: "80px" }}
-                          className="overflow-y-auto mt-1"
-                        >
-                          {/* Event rendering */}
-                          {events
-                            .filter(
-                              (event) =>
-                                new Date(event.event_date).toDateString() ===
-                                new Date(year, month, date).toDateString()
-                            )
-                            .map((event, eventIndex) => (
-                              <div
-                                key={eventIndex}
-                                className={`px-2 py-1 rounded-lg mt-1 overflow-hidden border ${
-                                  event.event_theme === "blue"
-                                    ? "border-blue-200 text-blue-800 bg-blue-100"
-                                    : event.event_theme === "red"
-                                    ? "border-red-200 text-red-800 bg-red-100"
-                                    : event.event_theme === "yellow"
-                                    ? "border-yellow-200 text-yellow-800 bg-yellow-100"
-                                    : event.event_theme === "green"
-                                    ? "border-green-200 text-green-800 bg-green-100"
-                                    : event.event_theme === "purple"
-                                    ? "border-purple-200 text-purple-800 bg-purple-100"
-                                    : ""
-                                }`}
-                              >
-                                <p className="text-sm truncate leading-tight">
-                                  {event.event_title}
-                                </p>
-                              </div>
-                            ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                    <svg
+                      className="h-6 w-6 text-gray-500 inline-flex leading-none"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                  </button>
+                  <div className="border-r inline-flex h-6"></div>
+                  <button
+                    type="button"
+                    className={`leading-none rounded-lg transition ease-in-out duration-100 inline-flex items-center cursor-pointer hover:bg-gray-200 p-1`}
+                    onClick={() => {
+                      const newMonth = month === 11 ? 0 : month + 1;
+                      const newYear = month === 11 ? year + 1 : year;
+                      setMonth(newMonth);
+                      setYear(newYear);
+                      getNoOfDays();
+                    }}
+                  >
+                    <svg
+                      className="h-6 w-6 text-gray-500 inline-flex leading-none"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
-            </div>
-
-            {/* Modal */}
-            <div
-              style={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
-              className={`fixed z-40 top-0 right-0 left-0 bottom-0 h-full w-full ${
-                openEventModal ? "block" : "hidden"
-              }`}
-            >
-              <div className="p-4 max-w-xl mx-auto relative absolute left-0 right-0 overflow-hidden mt-24">
-                <div className="shadow absolute right-0 top-0 w-10 h-10 rounded-full bg-white text-gray-500 hover:text-gray-800 inline-flex items-center justify-center cursor-pointer">
-                  <svg
-                    className="fill-current w-6 h-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M16.192 6.344L11.949 10.586 7.707 6.344 6.293 7.758 10.535 12 6.293 16.242 7.707 17.656 11.949 13.414 16.192 17.656 17.606 16.242 13.364 12 17.606 7.758z" />
-                  </svg>
-                </div>
-
-                <div className="shadow rounded-lg bg-white overflow-hidden w-full block p-8">
-                  <h2 className="font-bold text-2xl mb-6 text-gray-800 border-b pb-2">
-                    Add Event Details
-                  </h2>
-
-                  <div className="mb-4">
-                    <label className="text-gray-800 block mb-1 font-bold text-sm tracking-wide">
-                      Event title
-                    </label>
-                    <input
-                      className="bg-gray-200 appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
-                      type="text"
-                      value={event_title}
-                      onChange={(e) => setEventTitle(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="mb-4">
-                    <label className="text-gray-800 block mb-1 font-bold text-sm tracking-wide">
-                      Event date
-                    </label>
-                    <input
-                      className="bg-gray-200 appearance-none border-2 border-gray-200 rounded-lg w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
-                      type="text"
-                      value={event_date}
-                      readOnly
-                    />
-                  </div>
-
-                  <div className="inline-block w-64 mb-4">
-                    <label className="text-gray-800 block mb-1 font-bold text-sm tracking-wide">
-                      Select a theme
-                    </label>
-                    <div className="relative">
-                      <select
-                        onChange={(e) => setEventTheme(e.target.value)}
-                        value={event_theme}
-                        className="block appearance-none w-full bg-gray-200 border-2 border-gray-200 hover:border-gray-500 px-4 py-2 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-blue-500 text-gray-700"
-                      >
-                        {themes.map((theme, index) => (
-                          <option key={index} value={theme.value}>
-                            {theme.label}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <svg
-                          className="fill-current h-4 w-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                        </svg>
+              <div className="-mx-1 -mb-1">
+                <div
+                  className="flex flex-wrap"
+                  style={{ marginBottom: "-40px" }}
+                >
+                  {DAYS.map((day, index) => (
+                    <div
+                      key={index}
+                      style={{ width: "14.26%" }}
+                      className="px-2 py-2"
+                    >
+                      <div className="text-gray-600 text-sm uppercase tracking-wide font-bold text-center font-sans">
+                        {day}
                       </div>
                     </div>
-                  </div>
+                  ))}
+                </div>
 
-                  <div className="mt-8 text-right">
-                    <button
-                      type="button"
-                      className="bg-white hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm mr-2"
-                      onClick={() => setOpenEventModal(!openEventModal)}
+                <div className="flex flex-wrap border-t border-l">
+                  {blankdays.map((blankday, index) => (
+                    <div
+                      key={index}
+                      style={{ width: "14.28%", height: "120px" }}
+                      className="text-center border-r border-b px-4 pt-2"
+                    ></div>
+                  ))}
+                  {no_of_days.map((date, dateIndex) => (
+                    <div
+                      key={dateIndex}
+                      style={{ width: "14.28%", height: "120px" }}
+                      className="px-4 pt-2 border-r border-b relative"
                     >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      className="bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 px-4 border border-gray-700 rounded-lg shadow-sm"
-                      onClick={addEvent}
-                    >
-                      Save Event
-                    </button>
-                  </div>
+                      <div
+                        onClick={() => {
+                          const selectedFullDate = new Date(year, month, date);
+                          setSelectedDate(selectedFullDate);
+                          console.log("selectedDate laaa", selectedDate);
+                          showEventModal(date);
+                        }}
+                        className={`inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100 ${
+                          isToday(date)
+                            ? "bg-blue-500 text-white"
+                            : "text-gray-700 hover:bg-blue-200"
+                        }`}
+                      >
+                        {date}
+                      </div>
+                      <div
+                        style={{ height: "80px" }}
+                        className="overflow-y-auto mt-1"
+                      >
+                        {/* Event rendering */}
+                        {/* {events
+                          .filter(
+                            (event) =>
+                              new Date(event.event_date).toDateString() ===
+                              new Date(year, month, date).toDateString()
+                          )
+                          .map((event, eventIndex) => (
+                            <div
+                              key={eventIndex}
+                              className={`px-2 py-1 rounded-lg mt-1 overflow-hidden border ${
+                                event.event_theme === "blue"
+                                  ? "border-blue-200 text-blue-800 bg-blue-100"
+                                  : event.event_theme === "red"
+                                  ? "border-red-200 text-red-800 bg-red-100"
+                                  : event.event_theme === "yellow"
+                                  ? "border-yellow-200 text-yellow-800 bg-yellow-100"
+                                  : event.event_theme === "green"
+                                  ? "border-green-200 text-green-800 bg-green-100"
+                                  : event.event_theme === "purple"
+                                  ? "border-purple-200 text-purple-800 bg-purple-100"
+                                  : ""
+                              }`}
+                            >
+                              <p className="text-sm truncate leading-tight">
+                                {event.event_title}
+                              </p>
+                            </div>
+                          ))} */}
+                        {/* Event rendering */}
+                        {attendanceByMonth.attendanceInMonth &&
+                          attendanceByMonth.attendanceInMonth.map(
+                            (attendanceData, eventIndex) => {
+                              if (attendanceData.day === date) {
+                                const totalRecords =
+                                  attendanceData.totalRecords;
+                                return (
+                                  <div
+                                    key={eventIndex}
+                                    className={`px-2 py-1 rounded-lg mt-1 overflow-hidden border ${
+                                      totalRecords > 0
+                                        ? "border-green-200 text-green-800 bg-green-100"
+                                        : ""
+                                    }`}
+                                  >
+                                    {totalRecords > 0 && (
+                                      <p className="text-sm truncate leading-tight font-sans">
+                                        Điểm danh: {totalRecords}
+                                      </p>
+                                    )}
+                                  </div>
+                                );
+                              }
+                              return null;
+                            }
+                          )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Modal */}
+          <Modal open={openEventModal}>
+            <Box
+              sx={{
+                borderRadius: "0.5rem",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 700,
+                height: "35rem",
+                bgcolor: "background.paper",
+                border: "2px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <button
+                className="absolute z-10 flex items-center justify-center cursor-pointer w-11 h-11 right-3 top-3 text-text1"
+                onClick={() => setOpenEventModal(false)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-6 h-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              <PerfectScrollbar
+                style={{
+                  height: "100%",
+                  maxHeight: "calc(100vh - 30px)",
+                  overflowX: "hidden",
+                }}
+              >
+                <h2 className="font-bold text-2xl mb-6 text-gray-800 pb-2">
+                  Chi tiết điểm danh
+                </h2>
+
+                {attendanceByDay.length > 0 ? (
+                  attendanceByDay.map((item, index) => (
+                    <List className="text-gray-700">
+                      <ListItem className="flex space-between" sx={{ mt: -2 }}>
+                        <div className="w-1/2 flex items-center">
+                          <Typography className="font-bold w-24">
+                            {index + 1}
+                            {")"} Họ và tên:
+                          </Typography>
+                          <ListItemText
+                            primary={item?.firstName + " " + item?.lastName}
+                          />
+                        </div>
+                        <div className="w-1/4 flex items-center">
+                          <Typography className="font-bold w-24">
+                            Email:
+                          </Typography>
+                          <ListItemText primary={item?.email} />
+                        </div>{" "}
+                      </ListItem>
+                      <ListItem className="flex space-between" sx={{ mt: -2 }}>
+                        <div className="w-1/2 flex items-center">
+                          <Typography className="font-bold w-24">
+                            &nbsp; &nbsp; MSNV:
+                          </Typography>
+                          <ListItemText primary={item?.rollNumber} />
+                        </div>
+                        <div className="w-1/2 flex items-center">
+                          <Typography className="font-bold w-24">
+                            Tổng giờ làm:
+                          </Typography>
+                          <ListItemText primary={item?.totalWorkingHours} />
+                        </div>{" "}
+                      </ListItem>
+                    </List>
+                  ))
+                ) : (
+                  <p className="text-gray-800 block mb-1 font-bold text-sm ">
+                    Không có dữ liệu được ghi nhận
+                  </p>
+                )}
+              </PerfectScrollbar>
+            </Box>
+          </Modal>
         </div>
-      </SubCard>
+      </div>
     </MainCard>
   );
 };
