@@ -239,6 +239,7 @@ export const configNoti = {
 export const certificateNoti = {
   SUCCESS: {
     SUBMIT: "Thành công nộp chứng chỉ!!!",
+    CERTIFY: "Thành công duyệt chứng chỉ!!!",
   },
   ERROR: {
     BLANK_LINK: "Đường dẫn không được để trống!!!",
@@ -259,7 +260,7 @@ export const assignNoti = {
 
 export const taskNoti = {
   SUCCESS: {
-    APPROVE: "!!!",
+    CERTIFY: "Thành công duyệt công việc!!!",
   },
   ERROR: {
     DUPPLICATED: "Thực tập sinh đã tồn tại trong danh sách!!!",

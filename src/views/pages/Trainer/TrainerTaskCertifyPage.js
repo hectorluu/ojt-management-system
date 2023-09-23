@@ -86,7 +86,7 @@ const TrainerTaskCertifyPage = () => {
   // Modal Delete
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleCloseDeleteModal = () => {
+  const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
@@ -95,6 +95,7 @@ const TrainerTaskCertifyPage = () => {
     setIsApprove(isApprove);
     setIsModalOpen(true);
   };
+  
   const handleCertify = async (item) => {
     console.log(item);
     console.log(isApprove);
@@ -118,7 +119,7 @@ const TrainerTaskCertifyPage = () => {
     <MainCard
       title={`Duyệt công việc`}
     >
-      <Modal open={isModalOpen} onClose={handleCloseDeleteModal}>
+      <Modal open={isModalOpen} onClose={handleCloseModal}>
         <Box
           sx={{
             borderRadius: "0.5rem",
@@ -136,7 +137,7 @@ const TrainerTaskCertifyPage = () => {
         >
           <button
             className="absolute z-10 flex items-center justify-center cursor-pointer w-11 h-11 right-1 top-1 text-text1"
-            onClick={handleCloseDeleteModal}
+            onClick={handleCloseModal}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -180,7 +181,7 @@ const TrainerTaskCertifyPage = () => {
               }}
               component="label"
               className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
-              onClick={handleCloseDeleteModal}
+              onClick={handleCloseModal}
             >
               <span className="text-white">Hủy</span>
             </Button>
