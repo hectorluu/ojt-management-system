@@ -272,3 +272,9 @@ export const taskNoti = {
     BLANK_TRAINEE: "Vui lòng chọn thực tập sinh !",
   },
 };
+
+export const attendanceNoti = {
+  SUCCESS: {
+    IMPORT: "Thành công nhập dữ liệu điểm danh !!!",
+  }
+};

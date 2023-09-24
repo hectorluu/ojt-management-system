@@ -87,6 +87,7 @@ const AdminDashBoardPage = () => {
       data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     },
   ]);
+  // eslint-disable-next-line no-unused-vars
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const tempChartBatchAndTraineeLabels = [
     "01/01/2003",
