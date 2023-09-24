@@ -47,7 +47,7 @@ export const UniversityCard = (props) => {
               cursor: "pointer",
             }}
             variant="square"
-            className="w-full h-[150px] border-4 border-white"
+            className="w-fit h-[10rem] border-4 border-white"
           />
         </Box>
         <Typography align="center" gutterBottom variant="h5">

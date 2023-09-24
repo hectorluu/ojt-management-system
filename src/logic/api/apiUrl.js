@@ -178,4 +178,10 @@ export const trainerTaskPath = {
   GET_TRAINEE_LIST_TASK: "/task-process/trainee/",
 };
 
+export const chartPath = {
+  GET_BATCH_AND_TRAINEE: "/chart/batch-and-trainee/",
+  GET_TRAINER_AND_TOTAL_TRAINEES: "/chart/trainer-with-most-trainees/",
+  GET_TRAINEE_WITH_POSITION: "/chart/trainee-position",
+};
+
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

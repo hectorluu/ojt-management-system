@@ -42,7 +42,7 @@ export const CourseCard = (props) => {
               mx: -2,
             }}
             variant="square"
-            className="w-full h-[10rem] border-4 border-white pointer-events-none"
+            className="w-fit h-[10rem] border-4 border-white pointer-events-none"
           />
         </Box>
         <Typography
