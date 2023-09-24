@@ -53,7 +53,6 @@ const TraineeTaskListPage = () => {
       );
       setTaskList(response.data.data);
       setTotalItem(response.data.totalItem);
-      console.log(response.data);
       setIsLoading(false);
     } catch (error) {
       toast.error(error.response.data);

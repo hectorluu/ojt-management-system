@@ -77,7 +77,7 @@ const ManagerProfilePage = () => {
       setUrl(response.data.avatarURL);
       setIsFetchingLoading(false);
     } catch (error) {
-      console.log("error", error);
+      toast.error(error.response.data);
       setIsFetchingLoading(false);
     }
   }
@@ -100,8 +100,7 @@ const ManagerProfilePage = () => {
       setIsLoading(false);
       navigate("/trainer-dashboard");
     } catch (error) {
-      console.log("error", error);
-      toast.error(error);
+      toast.error(error.response.data);
       setIsLoading(false);
     }
   };
@@ -164,19 +163,12 @@ const ManagerProfilePage = () => {
         dispatch(authUpdateUser({}));
         setIsLoading(false);
       } catch (error) {
-        console.log("error", error);
         toast.error(error.response.data);
         setIsLoading(false);
       }
     }
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    if (birthday) {
-      console.log(moment(birthday));
-    }
-  });
 
   const onImageChange = (file) => {
     setUrl(URL.createObjectURL(file));

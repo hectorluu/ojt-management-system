@@ -13,6 +13,7 @@ import TextField from "@mui/material/TextField";
 import SaveIcon from "@mui/icons-material/Save";
 import { LoadingButton } from "@mui/lab";
 import { configValid } from "logic/utils/validateUtils";
+import { toast } from "react-toastify";
 
 const ConfigPage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -28,7 +29,7 @@ const ConfigPage = () => {
       setConfigs(response.data);
       setIsLoading(false);
     } catch (error) {
-      console.log("fetchConfigs ~ error", error);
+      toast.error(error.response.data);
       setIsLoading(false);
     }
   };
@@ -72,7 +73,7 @@ const ConfigPage = () => {
         await axiosPrivate.put(configPath.UPDATE_CONFIG, configs);
         fetchConfigs();
       } catch (error) {
-        console.log("onSave ~ error", error);
+        toast.error(error.response.data);
       }
     }
     setIsSubmitLoading(false);

@@ -116,7 +116,7 @@ const CreateNewAccountPage = () => {
       setSkillList(response.data.data);
       setFilteredSkillList(response.data.data);
     } catch (error) {
-      console.log("fetchSkills ~ error", error);
+      toast.error(error.response.data);
     }
   };
 
@@ -130,9 +130,8 @@ const CreateNewAccountPage = () => {
         1
       );
       setPositionList(response.data.data);
-      console.log("fetchPositions ~ success", response);
     } catch (error) {
-      console.log("fetchSkills ~ error", error);
+      toast.error(error.response.data);
     }
   };
 
@@ -149,7 +148,7 @@ const CreateNewAccountPage = () => {
       );
       setOjtBatchList(response.data.data);
     } catch (error) {
-      console.log("fetchBatchs ~ error", error);
+      toast.error(error.response.data);
     }
   };
 
@@ -159,9 +158,8 @@ const CreateNewAccountPage = () => {
         universityPath.GET_UNIVERSITY_LIST + "?id=" + universityId
       );
       setUniversityList(response.data.data);
-      console.log("fetchUniversities ~ success", response);
     } catch (error) {
-      console.log("fetchUniversities ~ error", error);
+      toast.error(error.response.data);
     }
   };
 
@@ -251,8 +249,7 @@ const CreateNewAccountPage = () => {
       setIsLoading(false);
       navigate("/account-list");
     } catch (error) {
-      console.log("error", error);
-      toast.error(error);
+      toast.error(error.response.data);
       setIsLoading(false);
     }
   };

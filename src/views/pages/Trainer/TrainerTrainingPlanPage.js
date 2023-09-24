@@ -34,6 +34,7 @@ import { Link } from "react-router-dom";
 import ModalTrainingPlanDetailTrainer from "views/components/modal/ModalTrainingPlanDetailTrainer";
 import { fDate } from "logic/utils/formatTime";
 import Chip from "views/components/chip/Chip";
+import { toast } from "react-toastify";
 
 const TrainerTrainingPlanPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -61,7 +62,7 @@ const TrainerTrainingPlanPage = () => {
         setTotalItem(response.data.totalItem);
         setIsLoading(false); // Set loading to false after fetching data
       } catch (error) {
-        console.log("fetchTrainingPlans ~ error", error);
+        toast.error(error.response.data);
         setIsLoading(false); // Set loading to false after fetching data
       }
     }

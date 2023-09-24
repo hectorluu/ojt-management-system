@@ -105,15 +105,13 @@ const TrainerTaskCertifyPage = () => {
   const handleCertify = async (item) => {
     try {
       if (isApprove) {
-        const response = await axiosPrivate.put(
+        await axiosPrivate.put(
           trainerTaskPath.APPROVE_TASK + item.id
         );
-        console.log(response);
       } else {
-        const response = await axiosPrivate.put(
+        await axiosPrivate.put(
           trainerTaskPath.REJECT_TASK + item.id
         );
-        console.log(response);
       }
       fetchAccomplishedTask();
       setIsModalOpen(false);

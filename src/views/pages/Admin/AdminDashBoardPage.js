@@ -169,7 +169,6 @@ const AdminDashBoardPage = () => {
       const response = await axiosPrivate.get(
         chartPath.GET_TRAINEE_WITH_POSITION
       );
-      console.log(response.data);
       setTraineeWithPosition(response.data);
       setIsLoading(false);
     } catch (error) {

@@ -27,6 +27,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import SubCard from "views/components/cards/SubCard";
 import TraineeCourseCardDisplay from "views/modules/course/TraineeCourseCardDisplay";
+import { toast } from "react-toastify";
 
 const TraineeCourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -97,11 +98,10 @@ const TraineeCourseListPage = () => {
           rowsPerPage
         );
       }
-      console.log(response.data);
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
-      console.log("fetchCourses ~ error", error);
+      toast.error(error.response.data);
     } finally {
       setIsLoading(false); // Set loading to false after fetching data
     }
@@ -120,7 +120,7 @@ const TraineeCourseListPage = () => {
       );
       setSkillList(response.data.data);
     } catch (error) {
-      console.log("fetchSkills ~ error", error);
+      toast.error(error.response.data);
     }
   };
 

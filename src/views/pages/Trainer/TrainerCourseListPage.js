@@ -73,7 +73,6 @@ const TrainerCourseListPage = () => {
           "&filterSkill=" +
           `${skill === null ? "" : skill}`
         );
-      console.log(response.data);
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
@@ -96,7 +95,7 @@ const TrainerCourseListPage = () => {
       );
       setSkillList(response.data.data);
     } catch (error) {
-      console.log("fetchSkills ~ error", error);
+      toast.error(error.response.data);
     }
   };
 

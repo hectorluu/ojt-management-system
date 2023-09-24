@@ -25,6 +25,7 @@ import StyledTableCell from "views/modules/table/StyledTableCell";
 // import useOnChange from "logic/hooks/useOnChange";
 import { trainerPath } from "logic/api/apiUrl";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AssignedTraineeListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -32,7 +33,6 @@ const AssignedTraineeListPage = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState([]);
-  const [totalUsers, setTotalUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
   useEffect(() => {
@@ -51,26 +51,11 @@ const AssignedTraineeListPage = () => {
         setTotalItem(response.data.totalItem);
         setIsLoading(false); // Set loading to false after fetching data
       } catch (error) {
-        console.log("fetchUsers ~ error", error);
+        toast.error(error.response.data);
         setIsLoading(false); // Set loading to false after fetching data
       }
     }
     fetchUsers();
-
-    async function fetchTotalUsers() {
-      try {
-        const response = await axiosPrivate.get(
-          trainerPath.GET_TRAINEE_LIST + "?PageSize=" + 1000000
-        );
-
-        setTotalUsers(response.data.data);
-        // setPage(response.data.pageIndex);
-        // console.log("fetchUsers ~ response", response);
-      } catch (error) {
-        console.log("Error", error);
-      }
-    }
-    fetchTotalUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -91,7 +76,7 @@ const AssignedTraineeListPage = () => {
 
   return (
     <MainCard
-      title={`Thực tập sinh${!isLoading ? ` (${totalUsers.length})` : ""}`}
+      title={`Thực tập sinh`}
     >
       {/* <ModalTraineeDetailManager
         isOpen={isTraineeDetailModalOpen}

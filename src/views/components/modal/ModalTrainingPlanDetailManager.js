@@ -4,6 +4,7 @@ import { fDate } from "logic/utils/formatTime";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { trainingPlanPath } from "logic/api/apiUrl";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import { toast } from "react-toastify";
 
 const ModalTrainingPlanDetailManager = ({
   isOpen,
@@ -24,7 +25,7 @@ const ModalTrainingPlanDetailManager = ({
         setTrainingPlanDetails(response.data.details);
         setIsLoading(false); // Set loading to false after fetching data
       } catch (error) {
-        console.log("fetchUsers ~ error", error);
+        toast.error(error.response.data);
         setIsLoading(false); // Set loading to false after fetching data
       }
     }
