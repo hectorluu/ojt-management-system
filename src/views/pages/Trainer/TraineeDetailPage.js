@@ -34,7 +34,7 @@ const TraineeDetailPage = () => {
           userPath.GET_TRAINEE_BY_ID + traineeId
         );
         setTrainee(response.data);
-      } catch (error) {}
+      } catch (error) { }
     }
     fetchTraineeDetail();
 
@@ -45,7 +45,7 @@ const TraineeDetailPage = () => {
         );
         // Get 6 task
         setTraineeTask(response.data.data).slice(0, 6);
-      } catch (error) {}
+      } catch (error) { }
     }
     fetchTraineeTask();
 
@@ -56,7 +56,7 @@ const TraineeDetailPage = () => {
         );
 
         setCertList(response.data.data);
-      } catch (error) {}
+      } catch (error) { }
     }
     fetchTraineeCert();
 
@@ -278,10 +278,10 @@ const TraineeDetailPage = () => {
 
           {/* Timeline item */}
           {traineeTask.length > 0 &&
-            traineeTask.map((task) => (
+            traineeTask.map((task, index) => (
               <div
                 className="flex items-center w-full my-6 -ml-1.5"
-                key={task.id}
+                key={index}
               >
                 <div className="w-1/12 z-10">
                   <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
@@ -324,10 +324,10 @@ const TraineeDetailPage = () => {
 
           {/* Timeline item */}
           {certList.length > 0 &&
-            certList.map((cert) => (
+            certList.map((cert, index) => (
               <div
                 className="flex items-center w-full my-6 -ml-1.5"
-                key={cert.id}
+                key={index}
               >
                 <div className="w-1/12 z-10">
                   <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>

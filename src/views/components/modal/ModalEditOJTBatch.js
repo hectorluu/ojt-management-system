@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ReactModal from "react-modal";
 import { Button } from "views/components/button";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { ojtBatchPath, templatePath } from "logic/api/apiUrl";
@@ -8,7 +7,7 @@ import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
 import FormRow from "../common/FormRow";
 import { DatePicker } from "@mui/x-date-pickers";
-import { Box, Modal, Skeleton, TextField } from "@mui/material";
+import { Autocomplete, Box, Modal, Skeleton, TextField } from "@mui/material";
 
 const ModalEditOJTBatch = ({
   isOpen,
@@ -141,14 +140,21 @@ const ModalEditOJTBatch = ({
                   {isLoading ? (
                     <Skeleton height={60} animation="wave" />
                   ) : (
-                    <TextField
-                      value={
-                        templateList.find(
-                          (template) => template.id === templateId
-                        )?.name
-                      }
-                      name="template"
-                      inputProps={{ readOnly: true }}
+                    <Autocomplete
+                      value={templateList.find((x) => x.id === templateId)}
+                      disablePortal={false}
+                      id="combo-box-demo"
+                      options={templateList}
+                      getOptionLabel={(option) => option.name}
+                      renderInput={(params) => <TextField {...params} placeholder="Chọn mẫu đánh giá" error={error?.templateId ? true : false} helperText={error?.templateId} />}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          setTemplateId(newValue.id);
+                        } else {
+                          setTemplateId("");
+                        }
+                      }}
+                      isOptionEqualToValue={(option, value) => option.id === value.id}
                     />
                   )}
                 </FormGroup>
