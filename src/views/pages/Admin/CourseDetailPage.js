@@ -10,14 +10,17 @@ import {
   Typography,
   TablePagination,
   TextareaAutosize,
+  Stack,
+  Rating,
+  Autocomplete,
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
 import { Label } from "views/components/label";
 import {
+  courseOptions,
   defaultCourseImage,
   defaultPageIndex,
   defaultPageSize,
-  defaultUniversityImage,
 } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { coursePath, ojtBatchPath } from "logic/api/apiUrl";
@@ -36,6 +39,7 @@ import { LoadingButton } from "@mui/lab";
 import ProfileSkeleton from "views/modules/account/ProfileSkeleton";
 import SubCard from "views/components/cards/SubCard";
 import { ojtBatchValid, updateCourseValid } from "logic/utils/validateUtils";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 const CourseDetailPage = () => {
   const { courseId } = useParams();
@@ -60,6 +64,8 @@ const CourseDetailPage = () => {
   const [link, setLink] = useState("");
   const [platformName, setPlatformName] = useState("");
   const [description, setDescription] = useState("");
+  const [coursePositions, setCoursePositions] = useState([]);
+  const [courseSkills, setCourseSkills] = useState([]);
 
   const fetchCourseDetail = async () => {
     try {
@@ -71,6 +77,8 @@ const CourseDetailPage = () => {
       setLink(response.data.link);
       setUrl(response.data.imageURL);
       setStatus(response.data.status);
+      setCoursePositions(response.data.coursePositions);
+      setCourseSkills(response.data.courseSkills);
       setIsFetchingLoading(false);
     } catch (error) {
       console.log(error);
@@ -88,19 +96,10 @@ const CourseDetailPage = () => {
 
   useEffect(() => {
     if (imgURL) {
-      handleUpdateUniversity();
+      handleUpdateCourse();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imgURL]);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage + 1);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(1);
-  };
 
   const onImageChange = (file) => {
     setUrl(URL.createObjectURL(file));
@@ -132,7 +131,7 @@ const CourseDetailPage = () => {
           toast.error(generalNoti.ERROR.UPLOAD_FAIL);
         }
       } else {
-        setImgURL(defaultUniversityImage);
+        setImgURL(defaultCourseImage);
       }
     }
     setIsLoading(false);
@@ -163,7 +162,7 @@ const CourseDetailPage = () => {
     setIsModalOpen(true);
   };
 
-  const handleUpdateUniversity = async () => {
+  const handleUpdateCourse = async () => {
     try {
       setIsSubmitLoading(true);
       const course = {
@@ -190,22 +189,6 @@ const CourseDetailPage = () => {
   return (
     <MainCard
       title="Thông tin khoá học"
-      // secondary={
-      //   <Button
-      //     startIcon={
-      //       <SvgIcon fontSize="small">
-      //         <AddIcon />
-      //       </SvgIcon>
-      //     }
-      //     component={Link}
-      //     to={`/create-new-ojt-batch/${universityId}`}
-      //     variant="contained"
-      //     size="medium"
-      //     sx={{ borderRadius: "10px" }}
-      //   >
-      //     Thêm đợt thực tập mới
-      //   </Button>
-      // }
     >
       {/* <ModalEditOJTBatch
         isOpen={isModalOpen}
@@ -329,37 +312,24 @@ const CourseDetailPage = () => {
           </Card>
           <Divider />
           <Card>
-            <CardHeader sx={{ mb: -2 }} title="Đợt thực tập" />
+            <CardHeader sx={{ mb: -2 }} title="Chi tiết kĩ năng" />
             <SubCard>
-              {ojtBatch.length > 0 ? (
-                ojtBatch.map((item) => (
-                  <Card
-                    sx={{ display: "flex" }}
-                    className="rounded-2xl border-0 py-3 pb-1 hover:shadow-xl transition duration-500 ease-in-out border-solid border-2 border-slate-200"
-                    key={item.id}
-                  >
-                    <div className="flex items-center space-x-96 gap-x-6 ml-5 w-full">
-                      <div className="flex-1">
-                        <h1 className="text-[22px] font-semibold mb-2">
-                          {item.name}
-                        </h1>
-                        <p className="mb-2 text-sm text-text2">University</p>
-                        <p className="mb-2 text-sm text-text2">
-                          Thời gian thực tập: {item.startTime} - {item.endTime}
-                        </p>
-                      </div>
-                      <div className="flex items-center justify-center text-white rounded-full w-fit bg-opacity-60">
-                        <Button
-                          variant="outlined"
-                          component="label"
-                          className="mr-3"
-                          onClick={() => handleOpenMenu(item.id)}
-                        >
-                          Chọn
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
+              {courseSkills.length !== 0 ? (
+                courseSkills.map((item, index) => (
+                  <Stack key={index} direction="row" spacing={2}>
+                    <Typography variant="h3" color="text.secondary">
+                      {item.skillName}
+                    </Typography>
+                    <Rating
+                      name="read-only"
+                      value={item.recommendedLevel}
+                    />
+                    <ArrowForwardIcon />
+                    <Rating
+                      name="read-only"
+                      value={item.afterwardLevel}
+                    />
+                  </Stack>
                 ))
               ) : (
                 <>
@@ -368,22 +338,66 @@ const CourseDetailPage = () => {
                     color="text.secondary"
                     sx={{ mb: 2 }}
                   >
-                    Chưa có đợt thực tập nào
+                    Khoá học không yêu cầu kĩ năng
                   </Typography>
                 </>
               )}
-              <TablePagination
-                labelRowsPerPage="Số dòng"
-                component="div"
-                count={totalItem}
-                page={page - 1}
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                labelDisplayedRows={({ from, to, count }) =>
-                  `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
-                }
-              />
+            </SubCard>
+          </Card>
+          <Divider />
+          <Card>
+            <CardHeader sx={{ mb: -2 }} title="Vị trí khuyến nghị" />
+            <SubCard>
+              {coursePositions.length !== 0 ? (
+                coursePositions.map((item, index) => (
+                  <Stack key={index} direction="row" spacing={2}>
+                    <Typography
+                      variant="h3"
+                      color="text.secondary"
+                      sx={{ pt: 2 }}
+                    >
+                      {item.positionName}:{" "}
+                    </Typography>
+                    <Autocomplete
+                      value={courseOptions.find((item) => item.value === item.isCompulsory)}
+                      sx={{ width: 300 }}
+                      disablePortal={false}
+                      options={courseOptions}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="Lựa chọn"
+                          error={
+                            error?.coursePosition?.[index]?.isCompulsory
+                              ? true
+                              : false
+                          }
+                          helperText={
+                            error?.coursePosition?.[index]?.isCompulsory
+                          }
+                        />
+                      )}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          console.log(
+                            newValue.value
+                          );
+                        }
+                      }}
+                    />
+                  </Stack>
+                ))
+              ) : (
+                <>
+                  <Typography
+                    variant="h3"
+                    color="text.secondary"
+                    sx={{ mb: 2 }}
+                  >
+                    Khoá học không yêu cầu vị trí
+                  </Typography>
+                </>
+              )}
             </SubCard>
           </Card>
         </>
