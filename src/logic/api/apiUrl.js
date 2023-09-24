@@ -161,6 +161,7 @@ export const configPath = {
 export const certificatePath = {
   GET_CERTIFICATE_LIST: "/certificate",
   GET_CERTIFICATE_DETAIL: "/certificate/",
+  GET_LIST_CERTIFICATE_OF_TRAINEE: "/certificate/trainer/",
   SUBMIT_CERTIFICATE: "/certificate/submition-certificate",
   RE_SUBMIT_CERTIFICATE: "/certificate/resubmition-certificate",
   GET_PENDING_CERTIFICATE: "/certificate/trainer/pending-certificate",

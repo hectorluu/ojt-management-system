@@ -12,9 +12,7 @@ import {
   Avatar,
   IconButton,
   CircularProgress,
-  Paper,
   Typography,
-  Divider,
 } from "@mui/material";
 import { trainingPlanPath, userPath } from "logic/api/apiUrl";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
@@ -23,8 +21,7 @@ import { LoadingButton } from "@mui/lab";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { assignNoti, trainingPlanNoti } from "logic/constants/notification";
 import { trainingPlanAssignValid } from "logic/utils/validateUtils";
-import TrainingPlanTimeline from "views/components/timeline/TrainingPlanTimeline";
-import { fDate, fDateTime } from "logic/utils/formatTime";
+import { fDate } from "logic/utils/formatTime";
 
 const AssignTrainingPlanPage = () => {
   const handleTrainingPlanAssignment = async () => {
