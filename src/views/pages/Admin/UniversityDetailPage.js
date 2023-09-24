@@ -158,6 +158,7 @@ const UniversityDetailPage = () => {
   };
 
   const handleUpdateBatch = async (data) => {
+    setIsSubmitLoading(true);
     const valid = ojtBatchValid(data);
     setError(valid);
     if (Object.keys(valid).length === 0) {
@@ -174,8 +175,10 @@ const UniversityDetailPage = () => {
         fetchOJTBatchs();
       } catch (e) {
         console.log(e);
+        setIsSubmitLoading(false);
       }
     };
+    setIsSubmitLoading(false);
   };
 
   const handleOpenMenu = (id) => {

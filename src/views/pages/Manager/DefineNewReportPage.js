@@ -188,6 +188,9 @@ function DefineNewReportPage() {
     if (newArray[index].isCriteria === false) {
       newArray[index].formulaId = undefined;
     }
+    if (newArray[index].isCriteria === true) {
+      newArray[index].matchedAttribute = "Point";
+    }
     newArray[index].totalPoint = "";
     setTemplateHeaders(newArray);
   };

@@ -22,14 +22,6 @@ const EvaluateExcelPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(data);
-    console.log("header", headers);
-    console.log("batchid", ojtBatchId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
-
-  useEffect(() => {
-    console.log(action);
     if (ojtBatchId === undefined || ojtBatchId === null) {
       navigate("/login");
     };
@@ -53,7 +45,7 @@ const EvaluateExcelPage = () => {
       const point = processResponseData(response.data);
       setData(point);
     } catch (error) {
-      console.log("fetchPoints ~ error", error);
+      toast.error(error.response.data);
     }
   };
 
@@ -124,7 +116,7 @@ const EvaluateExcelPage = () => {
       setHeaders(columns);
       setTimeout(() => { });
     } catch (error) {
-      console.log("fetchHeaders ~ error", error);
+      toast.error(error.response.data);
     }
   };
 
@@ -146,7 +138,6 @@ const EvaluateExcelPage = () => {
     };
     setIsLoading(true);
     const req = processRequestData(data);
-    console.log("req", req);
     handleEvaluate(req);
   };
 

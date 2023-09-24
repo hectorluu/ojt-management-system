@@ -157,7 +157,6 @@ export function accountValid(account) {
       };
     };
   };
-  console.log(error);
   return error;
 };
 

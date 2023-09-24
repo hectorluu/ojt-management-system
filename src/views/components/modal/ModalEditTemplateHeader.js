@@ -8,6 +8,7 @@ import FormRow from "../common/FormRow";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { formulaPath } from "logic/api/apiUrl";
 import { isCriteriaOptions, notCriteriaOptions } from "logic/constants/global";
+import { toast } from "react-toastify";
 
 const ModalEditTemplateHeader = ({
   header,
@@ -79,9 +80,8 @@ const ModalEditTemplateHeader = ({
         2
       );
       setFormulaList(response.data.data);
-      console.log("fetchFormula ~ success", response);
     } catch (error) {
-      console.log("fetchFormula ~ error", error);
+      toast.error(error.response.data);
     }
   };
 
