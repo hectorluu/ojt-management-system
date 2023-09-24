@@ -90,7 +90,9 @@ const AssignedTraineeListPage = () => {
   const theme = useTheme();
 
   return (
-    <MainCard title={`Thực tập sinh (${totalUsers.length})`}>
+    <MainCard
+      title={`Thực tập sinh${!isLoading ? ` (${totalUsers.length})` : ""}`}
+    >
       {/* <ModalTraineeDetailManager
         isOpen={isTraineeDetailModalOpen}
         onRequestClose={() => setIsTraineeDetailModalOpen(false)}

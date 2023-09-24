@@ -454,9 +454,13 @@ const AttendancePage = () => {
                   overflowX: "hidden",
                 }}
               >
-                <h2 className="font-bold text-2xl mb-6 text-gray-800 pb-2">
+                <h2 className="font-bold text-2xl mb-2 text-gray-800 pb-2">
                   Chi tiết điểm danh
                 </h2>
+                <p className="text-gray-800 block mb-5 text-left">
+                  <span className="font-bold text-base">Ngày: </span>{" "}
+                  {moment(selectedDate).format("DD/MM/YYYY")}
+                </p>
 
                 {attendanceByDay?.length > 0 ? (
                   attendanceByDay.map((item, index) => (

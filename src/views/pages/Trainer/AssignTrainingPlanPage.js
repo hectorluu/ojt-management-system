@@ -12,6 +12,9 @@ import {
   Avatar,
   IconButton,
   CircularProgress,
+  Paper,
+  Typography,
+  Divider,
 } from "@mui/material";
 import { trainingPlanPath, userPath } from "logic/api/apiUrl";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
@@ -21,6 +24,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { assignNoti, trainingPlanNoti } from "logic/constants/notification";
 import { trainingPlanAssignValid } from "logic/utils/validateUtils";
 import TrainingPlanTimeline from "views/components/timeline/TrainingPlanTimeline";
+import { fDate, fDateTime } from "logic/utils/formatTime";
 
 const AssignTrainingPlanPage = () => {
   const handleTrainingPlanAssignment = async () => {
@@ -173,24 +177,57 @@ const AssignTrainingPlanPage = () => {
                 {isFetchingLoading ? (
                   <CircularProgress />
                 ) : (
-                  <>
-                    <h4 className="text-xl text-gray-900 font-bold text-left ml-2">
+                  <div className="text-left">
+                    <h4 className="text-xl text-gray-900 font-bold text-left ml-2 mb-2">
                       Thông tin kế hoạch đào tạo
                     </h4>
                     {Object.keys(selectedPlan).length !== 0 && (
-                      <SubCard>
-                        <TrainingPlanTimeline
-                          title={selectedPlan?.name}
-                          list={selectedPlan?.details?.map((item, index) => ({
-                            title: item.name,
-                            description: item.description,
-                            startDay: new Date(item.startTime),
-                            endDay: new Date(item.endTime),
-                          }))}
-                        />
-                      </SubCard>
+                      <>
+                        <Typography
+                          variant="h4"
+                          className="text-xl font-bold mt-5 text-center"
+                        >
+                          {selectedPlan?.name}
+                        </Typography>
+                        <div className="relative px-4">
+                          <div className="absolute h-full border border-dashed border-opacity-60 border-secondary"></div>
+
+                          {/* Timeline item */}
+                          {selectedPlan?.details?.map((task) => (
+                            <div
+                              className="flex items-center w-full my-6 -ml-1.5"
+                              key={task.id}
+                            >
+                              <div className="w-1/12 z-10">
+                                <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
+                              </div>
+                              <div className="w-11/12">
+                                <Typography
+                                  variant="body1"
+                                  className="text-sm font-semibold"
+                                >
+                                  {task.name}
+                                </Typography>
+                                <Typography variant="body2" className="text-sm">
+                                  {task.description}
+                                </Typography>
+                                <Typography
+                                  variant="caption"
+                                  className="text-xs text-gray-500"
+                                >
+                                  Thời hạn :{" "}
+                                  {fDate(task.startTime) +
+                                    " - " +
+                                    fDate(task.endTime)}
+                                </Typography>
+                              </div>
+                            </div>
+                          ))}
+                          {/* End Timeline item */}
+                        </div>
+                      </>
                     )}
-                  </>
+                  </div>
                 )}
               </SubCard>
             </FormGroup>
@@ -225,7 +262,7 @@ const AssignTrainingPlanPage = () => {
               />
 
               <SubCard>
-                <Stack>
+                <Stack spacing={2}>
                   {trainees.map((trainee, index) => (
                     <Tooltip
                       title={trainee.email + " " + trainee.positionName}
@@ -245,7 +282,7 @@ const AssignTrainingPlanPage = () => {
                         <Chip
                           key={trainee}
                           variant="contained"
-                          sx={{ p: 1 }}
+                          sx={{ p: 1, mb: 2 }}
                           label={trainee.firstName + " " + trainee.lastName}
                           icon={
                             <Avatar
