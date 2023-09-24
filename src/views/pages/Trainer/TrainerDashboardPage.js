@@ -13,15 +13,44 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import HorizontalLineChart from "views/components/chart/HorizontalLineChart";
 import PieChart from "views/components/chart/PieChart";
+import { chartPath } from "logic/api/apiUrl";
 
 const TrainerDashboardPage = () => {
-  // const axiosPrivate = useAxiosPrivate();
+  const axiosPrivate = useAxiosPrivate();
   // const navigate = useNavigate();
   const theme = useTheme();
 
   const [isLoading, setIsLoading] = useState(true);
+
+  // Get Trainee and Task Chart
+  const [traineesWithMostTasksDone, setTraineesWithMostTasksDone] = useState(
+    []
+  );
+  const fetchTraineesWithMostTasksDone = async () => {
+    try {
+      setIsLoading(true);
+      // Get at most 10 trainers
+      const response = await axiosPrivate.get(
+        chartPath.GET_TRAINEE_WITH_TOP_TASKDONE
+      );
+
+      setTraineesWithMostTasksDone(
+        response.data.map((trainee) => ({
+          label: trainee.traineeName,
+          value: trainee.totalApprovedTask,
+        }))
+      );
+
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    setIsLoading(false);
+    fetchTraineesWithMostTasksDone();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -161,39 +190,15 @@ const TrainerDashboardPage = () => {
 
       {/* ... Line Chart Part and Pie Chart Part */}
       <Grid container sx={{ mt: 2 }} spacing={3}>
-        <Grid item xs={12} md={6} lg={8}>
+        <Grid item xs={12} md={12}>
           <HorizontalLineChart
-            title="Conversion Rates"
-            subheader="(+43%) than last year"
-            chartData={[
-              { label: "Italy", value: 400 },
-              { label: "Japan", value: 430 },
-              { label: "China", value: 448 },
-              { label: "Canada", value: 470 },
-              { label: "France", value: 540 },
-              { label: "Germany", value: 580 },
-              { label: "South Korea", value: 690 },
-              { label: "Netherlands", value: 1100 },
-              { label: "United States", value: 1200 },
-              { label: "United Kingdom", value: 1380 },
-            ]}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={6} lg={4}>
-          <PieChart
-            title="Vị trí nhân viên"
-            chartData={[
-              { label: "Frontend Dev", value: 4344 },
-              { label: "Backend Dev", value: 5435 },
-              { label: "DevOps", value: 1443 },
-            ]}
-            chartColors={[
-              theme.palette.primary.main,
-              theme.palette.info.main,
-              theme.palette.warning.main,
-              theme.palette.error.main,
-            ]}
+            isLoading={isLoading}
+            title={
+              <span className="text-xl font-bold">
+                Thực tập sinh hoàn thành công việc nhiều nhất
+              </span>
+            }
+            chartData={traineesWithMostTasksDone}
           />
         </Grid>
       </Grid>
