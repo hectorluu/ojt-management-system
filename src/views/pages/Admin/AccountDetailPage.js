@@ -72,7 +72,7 @@ const AccountDetailPage = () => {
           <Button
             variant="outlined"
             onClick={handleEditClick}
-            className="absolute top-4 right-4 p-2 rounded flex items-center bg-white"
+            className="absolute top-4 right-4 p-2 px-4 flex items-center bg-black text-white hover:bg-slate-800"
             startIcon={<BorderColorIcon />}
           >
             <span className="mx-auto">Chỉnh sửa hồ sơ</span>

@@ -35,9 +35,13 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
 
   return (
-    <LayoutAuthentication heading="KNS OJT Management">
+    <LayoutAuthentication
+      heading={<span className="font-bold text-3xl">KNS OJT Management</span>}
+    >
       <FormGroup>
-        <Label htmlFor="email">Email *</Label>
+        <Label htmlFor="email">
+          <span className="font-semibold text-black">Email *</span>
+        </Label>
         <TextField
           error={error.email ? true : false}
           helperText={error.email}
@@ -48,7 +52,9 @@ const SignInPage = () => {
         />
       </FormGroup>
       <FormGroup>
-        <Label htmlFor="password">Mật khẩu *</Label>
+        <Label htmlFor="password">
+          <span className="font-semibold text-black">Mật khẩu *</span>
+        </Label>
         <TextField
           error={error.password ? true : false}
           helperText={error.password}
