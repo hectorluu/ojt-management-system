@@ -13,6 +13,7 @@ import GradingIcon from "@mui/icons-material/Grading";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import SendIcon from "@mui/icons-material/Send";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import DvrIcon from "@mui/icons-material/Dvr";
 
 //items
 const iconsDaskboard = { IconDashboard };
@@ -41,6 +42,7 @@ const iconsPages = {
   AnalyticsIcon,
   SendIcon,
   AssignmentTurnedInIcon,
+  DvrIcon
 };
 
 const pages = {
@@ -96,7 +98,14 @@ const pages = {
       icon: iconsPages.CalendarMonthIcon,
       breadcrumbs: false,
     },
-
+    {
+      id: "course-list",
+      title: "Khóa học",
+      type: "item",
+      url: "/trainer-course-list",
+      icon: iconsPages.DvrIcon,
+      breadcrumbs: false,
+    },
     {
       id: "ojt-evaluation",
       title: "Đánh giá OJT",

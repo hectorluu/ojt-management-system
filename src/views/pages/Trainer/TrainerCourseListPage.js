@@ -1,14 +1,12 @@
 import Gap from "views/components/common/Gap";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
-import { coursePath, positionPath, skillPath } from "logic/api/apiUrl";
+import { coursePath, skillPath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
   defaultPageIndex,
   signalRMessage,
   skillStatus,
-  traineeCourseOptions,
-  positionStatus,
 } from "logic/constants/global";
 import CourseGrid from "views/modules/course/CourseGrid";
 import TablePagination from "@mui/material/TablePagination";
@@ -28,6 +26,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import SubCard from "views/components/cards/SubCard";
 import TrainerCourseCardDisplay from "views/modules/course/TrainerCourseCardDisplay";
+import { toast } from "react-toastify";
 
 const TrainerCourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -38,9 +37,6 @@ const TrainerCourseListPage = () => {
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [skill, setSkill] = useState("");
   const [skillList, setSkillList] = useState([]);
-  const [courseOption, setCourseOption] = useState(1);
-  const [position, setPosition] = useState("");
-  const [positionList, setPositionList] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
@@ -63,44 +59,11 @@ const TrainerCourseListPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchPositions = async () => {
-    try {
-      const response = await axiosPrivate.get(
-        positionPath.GET_POSITION_LIST +
-        "?PageIndex=" +
-        1 +
-        "&PageSize=" +
-        100000 +
-        "&filterStatus=" +
-        positionStatus.ACTIVE
-      );
-      setPositionList(response.data.data);
-    } catch (error) {
-      console.log("fetchSkills ~ error", error);
-    }
-  };
-
   const fetchCourses = async () => {
     try {
       setIsLoading(true); // Set loading to true before fetching data)
-      let response = {};
-      if (courseOption === 3) {
-        response = await axiosPrivate.get(
-          coursePath.GET_TRAINEE_COURSE_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&searchTerm=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&filterSkill=" +
-          `${skill === null ? "" : skill}` +
-          "&filterPosition=" +
-          `${position === null ? "" : position}`
-        );
-      } else if (courseOption === 1) {
-        response = await axiosPrivate.get(
-          coursePath.GET_RECOMMENDED_LIST +
+      const  response = await axiosPrivate.get(
+          coursePath.GET_TRAINER_COURSE_LIST +
           "?PageIndex=" +
           page +
           "&PageSize=" +
@@ -110,20 +73,11 @@ const TrainerCourseListPage = () => {
           "&filterSkill=" +
           `${skill === null ? "" : skill}`
         );
-      } else {
-        response = await axiosPrivate.get(
-          coursePath.GET_COMPULSORY_COURSE_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage
-        );
-      }
       console.log(response.data);
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
-      console.log("fetchCourses ~ error", error);
+      toast.error(error.response.data);
     } finally {
       setIsLoading(false); // Set loading to false after fetching data
     }
@@ -149,9 +103,8 @@ const TrainerCourseListPage = () => {
   useEffect(() => {
     fetchCourses();
     fetchSkills();
-    fetchPositions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm, skill, rowsPerPage, page, courseOption]);
+  }, [searchTerm, skill, rowsPerPage, page]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -189,24 +142,6 @@ const TrainerCourseListPage = () => {
             <Autocomplete
               disablePortal={false}
               id="combo-box-demo"
-              options={positionList}
-              getOptionLabel={(option) => option.name}
-              sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} label="Vị trí" />}
-              onChange={(event, newValue) => {
-                if (newValue) {
-                  setPosition(newValue.id);
-                } else {
-                  setPosition("");
-                }
-              }}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
-            />
-          </div>
-          <div className="flex flex-wrap items-start max-w-[200px] w-full">
-            <Autocomplete
-              disablePortal={false}
-              id="combo-box-demo"
               options={skillList}
               getOptionLabel={(option) => option.name}
               sx={{ width: 300 }}
@@ -219,22 +154,6 @@ const TrainerCourseListPage = () => {
                 }
               }}
               isOptionEqualToValue={(option, value) => option.id === value.id}
-            />
-          </div>
-          <div className="flex flex-wrap items-start max-w-[200px] w-full">
-            <Autocomplete
-              disablePortal={false}
-              id="combo-box-demo"
-              options={traineeCourseOptions}
-              sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} label="Lựa chọn" />}
-              onChange={(event, newValue) => {
-                if (newValue) {
-                  setCourseOption(newValue.value);
-                } else {
-                  setCourseOption("");
-                }
-              }}
             />
           </div>
         </div>

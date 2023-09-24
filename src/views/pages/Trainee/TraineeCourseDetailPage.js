@@ -97,6 +97,7 @@ const TraineeCourseDetailPage = () => {
       console.log(response);
       toast.success(universityNoti.SUCCESS.UPDATE);
       setIsLoading(false);
+      navigate("/trainee-course-list");
     } catch (error) {
       toast.error(error.response.data);
       setIsLoading(false);
