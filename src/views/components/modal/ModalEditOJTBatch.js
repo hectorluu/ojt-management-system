@@ -8,6 +8,7 @@ import { Label } from "views/components/label";
 import FormRow from "../common/FormRow";
 import { DatePicker } from "@mui/x-date-pickers";
 import { Autocomplete, Box, Modal, Skeleton, TextField } from "@mui/material";
+import { toast } from "react-toastify";
 
 const ModalEditOJTBatch = ({
   isOpen,
@@ -35,14 +36,13 @@ const ModalEditOJTBatch = ({
       const response = await axiosPrivate.get(
         ojtBatchPath.GET_BATCH_DETAIL + idClicked
       );
-      console.log(response.data);
       setName(response.data.name);
       setStartTime(response.data.startTime);
       setEndTime(response.data.endTime);
       setTemplateId(response.data.templateId);
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data);
       setIsLoading(false);
     }
   };
@@ -54,7 +54,7 @@ const ModalEditOJTBatch = ({
       );
       setTemplateList(response.data);
     } catch (error) {
-      console.log("fetchTemplateList ~ error", error);
+      toast.error(error.response.data);
     }
   };
 
