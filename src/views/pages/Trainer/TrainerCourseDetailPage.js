@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
 import { Label } from "views/components/label";
-import { defaultCourseImage, defaultImage } from "logic/constants/global";
+import { defaultCourseImage } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { coursePath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";

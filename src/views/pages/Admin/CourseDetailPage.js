@@ -127,7 +127,7 @@ const CourseDetailPage = () => {
           toast.error(generalNoti.ERROR.UPLOAD_FAIL);
         }
       } else {
-        setImgURL(defaultCourseImage);
+        setImgURL(url);
       }
     }
     setIsLoading(false);
@@ -158,6 +158,7 @@ const CourseDetailPage = () => {
       );
       toast.success(courseNoti.SUCCESS.UPDATE);
       setIsSubmitLoading(false);
+      navigate("/course-list");
     } catch (e) {
       toast.error(e.response.data);
       setIsSubmitLoading(false);
