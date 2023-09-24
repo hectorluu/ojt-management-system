@@ -39,6 +39,7 @@ import {
   notiOptionsVaue,
   signalRMessage,
 } from "logic/constants/global";
+import { toast } from "react-toastify";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -143,8 +144,8 @@ export default function NotificationSection() {
       );
       setNotiList(res.data);
       setIsLoading(false);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      toast.error(error.response.data);
       setIsLoading(false);
     }
   };
@@ -154,7 +155,7 @@ export default function NotificationSection() {
       await axiosPrivate.put(notificationPath.MARK_ALL_AS_READ);
       fetchNotifications();
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data);
     }
   };
 
@@ -165,7 +166,7 @@ export default function NotificationSection() {
         fetchNotifications();
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data);
     }
   };
 

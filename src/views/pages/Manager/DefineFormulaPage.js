@@ -109,7 +109,7 @@ const DefineFormulaPage = () => {
       );
       setKeyList(response.data);
     } catch (error) {
-      console.log("fetchKeys ~ error", error);
+      toast.error(error.response.data);
     } finally {
       setIsLoading(false); // Set loading to false after fetching data
     }

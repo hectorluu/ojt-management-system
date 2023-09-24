@@ -31,6 +31,7 @@ import SubCard from "views/components/cards/SubCard";
 import StyledTableCell from "views/modules/table/StyledTableCell";
 import SearchIcon from "@mui/icons-material/Search";
 import useOnChange from "logic/hooks/useOnChange";
+import { toast } from "react-toastify";
 
 const TrainerListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -57,7 +58,7 @@ const TrainerListPage = () => {
       );
       setPositionList(response.data.data);
     } catch (error) {
-      console.log("fetchSkills ~ error", error);
+      toast.error(error.response.data);
     }
   };
 
@@ -82,7 +83,7 @@ const TrainerListPage = () => {
       setTotalItem(response.data.totalItem);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
-      console.log("fetchUsers ~ error", error);
+      toast.error(error.response.data);
       setIsLoading(false); // Set loading to false after fetching data
     }
   };

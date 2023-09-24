@@ -17,6 +17,7 @@ import TrainingPlanTable from "views/components/table/TrainingPlanTable";
 import SkillChart from "views/components/chart/SkillChart";
 import { chartPath } from "logic/api/apiUrl";
 import { processSkillChart } from "logic/utils/chartUtils";
+import { toast } from "react-toastify";
 
 const TraineeDashboardPage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -35,7 +36,7 @@ const TraineeDashboardPage = () => {
       const response = await axiosPrivate.get(chartPath.GET_TRAINEE_WITH_TOP_SKILL);
       setSkillChartData(processSkillChart(response.data));
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data);
     }
   };
 

@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
 import FormGroup from "views/components/common/FormGroup";
 import { useForm } from "react-hook-form";
 import { Label } from "views/components/label";
 import { Button } from "views/components/button";
 import { Box, Modal, TextField } from "@mui/material";
+import { useState } from "react";
 
 const ModalAddSkillAdmin = ({
   isOpen,
@@ -18,8 +18,6 @@ const ModalAddSkillAdmin = ({
   const handleClick = async () => {
     await handleAddNewSkill({name});
   };
-
-  useEffect(() => { console.log(name) }, [name]);
 
   return (
     <Modal open={isOpen} onClose={onRequestClose}>

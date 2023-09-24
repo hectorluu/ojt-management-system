@@ -50,7 +50,6 @@ const ManagerReportListPage = () => {
       setIsLoading(false);
     } catch (error) {
       toast.error(generalNoti.ERROR.SERVER_ERROR);
-      console.log(error);
       setIsLoading(false);
     }
   };
@@ -87,7 +86,6 @@ const ManagerReportListPage = () => {
         .catch((error) => {
           toast.error(generalNoti.ERROR.SERVER_ERROR);
           setExportLoading(false);
-          console.log(error);
         });
     } else {
       try {
@@ -97,7 +95,6 @@ const ManagerReportListPage = () => {
       } catch (error) {
         toast.error(generalNoti.ERROR.SERVER_ERROR);
         setExportLoading(false);
-        console.log(error);
       }
     }
   };

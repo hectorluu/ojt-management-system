@@ -98,7 +98,7 @@ const ListFormulaPage = () => {
       setIsLoading(false);
       // setPage(response.data.pageIndex);
     } catch (error) {
-      console.log("fetchSkill ~ error", error);
+      toast.error(error.response.data);
     }
   }
 

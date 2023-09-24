@@ -100,7 +100,7 @@ const PositionListPage = () => {
       setIsLoading(false);
       // setPage(response.data.pageIndex);
     } catch (error) {
-      console.log("fetchPosition ~ error", error);
+      toast.error(error.response.data);
       setIsLoading(false);
     }
   };

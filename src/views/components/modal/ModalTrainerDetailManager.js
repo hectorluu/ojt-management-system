@@ -15,6 +15,7 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { fDate } from "logic/utils/formatTime";
 import React, { useEffect, useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import { toast } from "react-toastify";
 
 const ModalTrainerDetailManager = ({
   isOpen,
@@ -41,7 +42,7 @@ const ModalTrainerDetailManager = ({
         setListEmployee(response.data.data);
         setIsLoading(false); // Set loading to false after fetching data
       } catch (error) {
-        console.log("fetchUsers ~ error", error);
+        toast.error(error.response.data);
         setIsLoading(false); // Set loading to false after fetching data
       }
     }
