@@ -61,9 +61,8 @@ const FormulaDetailPage = () => {
     color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
     background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
     border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
-    box-shadow: 0px 2px 2px ${
-      theme.palette.mode === "dark" ? grey[900] : grey[50]
-    };
+    box-shadow: 0px 2px 2px ${theme.palette.mode === "dark" ? grey[900] : grey[50]
+      };
   
     &:hover {
       border-color: ${blue[400]};
@@ -71,8 +70,7 @@ const FormulaDetailPage = () => {
   
     &:focus {
       border-color: ${blue[400]};
-      box-shadow: 0 0 0 3px ${
-        theme.palette.mode === "dark" ? blue[500] : blue[200]
+      box-shadow: 0 0 0 3px ${theme.palette.mode === "dark" ? blue[500] : blue[200]
       };
     }
   
@@ -134,8 +132,8 @@ const FormulaDetailPage = () => {
       setIsLoading(true);
       let response = await axiosPrivate.get(
         formulaPath.GET_KEY_LIST +
-          "?category=" +
-          `${selectedCategory === null ? "" : selectedCategory}`
+        "?category=" +
+        `${selectedCategory === null ? "" : selectedCategory}`
       );
       setKeyList(response.data);
     } catch (error) {
@@ -167,7 +165,7 @@ const FormulaDetailPage = () => {
     setCalculation(newValue);
   };
 
-  const handleTextareaKeyDown = (event) => {};
+  const handleTextareaKeyDown = (event) => { };
 
   const { handleSubmit } = useForm();
 
@@ -220,6 +218,7 @@ const FormulaDetailPage = () => {
                 placeholder="Nhập tên công thức"
                 onChange={(e) => setName(e.target.value)}
                 onBlur={(e) => setName(e.target.value)}
+                inputProps={{ maxLength: 100 }}
               />
             )}
           </FormGroup>
@@ -305,6 +304,7 @@ const FormulaDetailPage = () => {
                   inputComponent: StyledTextarea,
                   inputProps: {
                     minRows: 5,
+                    maxLength: 700,
                     maxRows: 8,
                     placeholder: "Điền công thức tính",
                     value: calculation,

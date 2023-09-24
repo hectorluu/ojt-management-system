@@ -22,8 +22,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Chip, Grid, Skeleton, Stack, TextField, Tooltip } from "@mui/material";
 import SubCard from "views/components/cards/SubCard";
 import ModalAddTemplateHeader from "views/components/modal/ModalAddTemplateHeader";
-
-
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 
 function TemplateDetailPage() {
   const { templateId } = useParams();
@@ -132,18 +131,6 @@ function TemplateDetailPage() {
     }
   };
 
-  const handleAddField = () => {
-    const newField = {
-      name: "",
-      formulaId: undefined,
-      matchedAttribute: "",
-      totalPoint: undefined,
-      isCriteria: false,
-      order: templateHeaders.length + 1
-    };
-    setTemplateHeaders([...templateHeaders, newField]);
-  };
-
   async function uploadFile() {
     if (file) {
       try {
@@ -206,7 +193,15 @@ function TemplateDetailPage() {
     if (Object.keys(valid).length === 0) {
       try {
         setIsSubmitLoading(true);
-        await axiosPrivate.post(templatePath.CREATE_SKILL, values);
+        await axiosPrivate.post(templatePath.ADD_TEMPLATE_HEADER + templateId, {
+          name: values.name,
+          totalPoint: values.totalPoint,
+          matchedAttribute: values.matchedAttribute,
+          isCriteria: values.isCriteria,
+          formulaId: values.formulaId,
+          order: templateHeaders?.[templateHeaders.length - 1]?.order + 1
+        });
+        fetchTemplateDetail();
         setIsSubmitLoading(false);
         setIsAddTemplateHeaderModalOpen(false);
         toast.success(templateNoti.SUCCESS.CREATE);
@@ -300,13 +295,22 @@ function TemplateDetailPage() {
                       sx={{ mb: 0.5 }}
                     >
                       <Stack direction="row" spacing={1} alignItems="center">
-                        <IconButton
-                          aria-label="delete"
-                          size="small"
-                          onClick={() => console.log("click")}
-                        >
-                          <DeleteIcon fontSize="inherit" />
-                        </IconButton>
+                        {header.status === 2 ?
+                          <IconButton
+                            aria-label="delete"
+                            size="small"
+                            onClick={() => console.log("click")}
+                          >
+                            <DeleteIcon fontSize="inherit" color="error"/>
+                          </IconButton> :
+                          <IconButton
+                            aria-label="delete"
+                            size="small"
+                            onClick={() => console.log("click")}
+                          >
+                            <ToggleOnIcon fontSize="inherit" color="success"/>
+                          </IconButton>}
+
                         <Chip
                           key={index}
                           variant="contained"
@@ -319,7 +323,7 @@ function TemplateDetailPage() {
                 ))}
               </Grid>
               <Stack direction="row" spacing={1} justifyContent="center">
-                <IconButton color="primary" aria-label="delete" onClick={() => handleAddField()}>
+                <IconButton color="primary" aria-label="delete" onClick={() => setIsAddTemplateHeaderModalOpen(true)}>
                   <AddIcon />
                 </IconButton>
               </Stack>
