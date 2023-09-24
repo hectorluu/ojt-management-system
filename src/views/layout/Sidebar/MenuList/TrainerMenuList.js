@@ -71,6 +71,14 @@ const pages = {
           breadcrumbs: false,
         },
         {
+          id: "task-certify",
+          title: "Duyệt công việc",
+          type: "item",
+          url: "/task-certify",
+          icon: iconsPages.AssignmentTurnedInIcon,
+          breadcrumbs: false,
+        },
+        {
           id: "assign-training-plan",
           title: "Phân kế hoạch",
           type: "item",
@@ -88,14 +96,7 @@ const pages = {
       icon: iconsPages.CalendarMonthIcon,
       breadcrumbs: false,
     },
-    {
-      id: "task-certify",
-      title: "Duyệt công việc",
-      type: "item",
-      url: "/task-certify",
-      icon: iconsPages.AssignmentTurnedInIcon,
-      breadcrumbs: false,
-    },
+
     {
       id: "ojt-evaluation",
       title: "Đánh giá OJT",

@@ -96,9 +96,7 @@ const TrainingPlanListPage = () => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   return (
-    <MainCard
-      title={`Danh sách kế hoạch đào tạo (${totalTrainingPlans.length})`}
-    >
+    <MainCard title={`Danh sách kế hoạch đào tạo `}>
       <ModalTrainingPlanDetailManager
         isOpen={isTraingingPlanDetailModalOpen}
         onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
