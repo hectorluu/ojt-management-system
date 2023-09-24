@@ -495,4 +495,12 @@ export function courseSkillValid(skill) {
     };
   };
   return error;
-}
+};
+
+export function assignCourseValid(trainee) {
+  let error = {};
+  if (trainee.traineeId === ""|| trainee.traineeId === null || trainee.traineeId === undefined) {
+    error["traineeId"] = assignNoti.ERROR.BLANK_TRAINEE;
+  };
+  return error;
+};

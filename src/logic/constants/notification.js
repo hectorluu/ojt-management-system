@@ -58,6 +58,7 @@ export const courseNoti = {
   SUCCESS: {
     CREATE: "Tạo khoá học thành công !!!",
     UPDATE: "Cập nhật khoá học thành công !!!",
+    ASSIGN: "Giao khoá học thành công !!!",
   },
 
   ERROR: {

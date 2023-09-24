@@ -43,10 +43,10 @@ const CertificateCertifyPage = () => {
     try {
       const response = await axiosPrivate.get(
         certificatePath.GET_PENDING_CERTIFICATE +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage
       );
       setTaskList(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -199,10 +199,10 @@ const CertificateCertifyPage = () => {
               <CertificateSkeleton />
             </>
           ) : taskList.length !== 0 ? (
-            taskList.map((item) => (
+            taskList.map((item, index) => (
               <CertificateCardCertify
                 certificate={item}
-                key={item.id}
+                key={index}
                 onClickProcess={handleOpenModal}
               />
             ))
