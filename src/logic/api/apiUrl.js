@@ -22,7 +22,7 @@ export const coursePath = {
   CREATE_COURSE_SKILL: "/course/courseskill/",
   UPDATE_COURSE_POSITION: "/course/courseposition/",
   CREATE_COURSE_POSITION: "/course/courseposition/",
-  ASSIGN_COURSE: "/course/assign-course/{traineeId}/{courseId}"
+  ASSIGN_COURSE: "/course/assign-course/{traineeId}/{courseId}",
 };
 
 export const criteriaPath = {
@@ -183,6 +183,8 @@ export const chartPath = {
   GET_BATCH_AND_TRAINEE: "/chart/batch-and-trainee/",
   GET_TRAINER_AND_TOTAL_TRAINEES: "/chart/trainer-with-most-trainees/",
   GET_TRAINEE_WITH_POSITION: "/chart/trainee-position",
+  GET_TRAINEE_WITH_TOP_SKILL: "/chart/trainee-top-skill",
+  GET_TRAINEE_WITH_TOP_TASKDONE: "/chart/trainee-top-done-task",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;
