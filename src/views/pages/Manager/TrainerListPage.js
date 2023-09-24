@@ -1,6 +1,7 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { useEffect, useState } from "react";
 import {
+  Autocomplete,
   Button,
   Card,
   InputAdornment,
@@ -13,13 +14,15 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   useTheme,
 } from "@mui/material";
-import { userPath } from "logic/api/apiUrl";
+import { positionPath, userPath } from "logic/api/apiUrl";
 import {
   defaultPageSize,
   defaultPageIndex,
   defaultUserIcon,
+  positionStatus,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import ModalTrainerDetailManager from "views/components/modal/ModalTrainerDetailManager";
@@ -38,34 +41,57 @@ const TrainerListPage = () => {
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
+  const [position, setPosition] = useState("");
+  const [positionList, setPositionList] = useState([]);
+
+  const fetchPositions = async () => {
+    try {
+      const response = await axiosPrivate.get(
+        positionPath.GET_POSITION_LIST +
+          "?PageIndex=" +
+          1 +
+          "&PageSize=" +
+          100000 +
+          "&filterStatus=" +
+          positionStatus.ACTIVE
+      );
+      setPositionList(response.data.data);
+    } catch (error) {
+      console.log("fetchSkills ~ error", error);
+    }
+  };
+
   const [isTrainerDetailModalOpen, setIsTrainerDetailModalOpen] =
     useState(false);
 
-  useEffect(() => {
-    async function fetchUsers() {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.get(
-          userPath.GET_TRAINER_LIST +
-            "?PageIndex=" +
-            page +
-            "&PageSize=" +
-            rowsPerPage +
-            "&keyword=" +
-            `${searchTerm === null ? "" : searchTerm}`
-        );
-        setUsers(response.data.data);
-        setTotalItem(response.data.totalItem);
-        setIsLoading(false); // Set loading to false after fetching data
-      } catch (error) {
-        console.log("fetchUsers ~ error", error);
-        setIsLoading(false); // Set loading to false after fetching data
-      }
+  const fetchUsers = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        userPath.GET_TRAINER_LIST +
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&keyword=" +
+          `${searchTerm === null ? "" : searchTerm}` +
+          "&position=" +
+          `${position === null ? "" : position}`
+      );
+      setUsers(response.data.data);
+      setTotalItem(response.data.totalItem);
+      setIsLoading(false); // Set loading to false after fetching data
+    } catch (error) {
+      console.log("fetchUsers ~ error", error);
+      setIsLoading(false); // Set loading to false after fetching data
     }
-    fetchUsers();
+  };
 
+  useEffect(() => {
+    fetchUsers();
+    fetchPositions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, [searchTerm, position, rowsPerPage, page]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -107,6 +133,24 @@ const TrainerListPage = () => {
               onChange={setSearchTerm}
             />
           </Card>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              id="combo-box-demo"
+              options={positionList}
+              getOptionLabel={(option) => option.name}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Vị trí" />}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setPosition(newValue.id);
+                } else {
+                  setPosition("");
+                }
+              }}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+            />
+          </div>
         </div>
 
         <TableContainer sx={{ width: 1, mt: 2, mb: -2, borderRadius: 4 }}>

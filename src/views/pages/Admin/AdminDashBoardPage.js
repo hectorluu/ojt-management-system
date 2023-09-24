@@ -8,9 +8,8 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import TotalGrowthBarChart from "views/components/chart/TotalGrowthBarChart";
 import { UniversityCard } from "views/components/cards/UniversityCard";
-import { coursePath, universityPath } from "logic/api/apiUrl";
+import { chartPath, coursePath, universityPath } from "logic/api/apiUrl";
 import { courseStatus, defaultPageIndex } from "logic/constants/global";
 import MainCard from "views/components/cards/MainCard";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -18,6 +17,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { CourseCard } from "views/components/cards/CourseCard";
 import HorizontalLineChart from "views/components/chart/HorizontalLineChart";
 import PieChart from "views/components/chart/PieChart";
+import ColumnAndLineChart from "views/components/chart/ColumnAndLineChart";
 
 const AdminDashBoardPage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -71,11 +71,121 @@ const AdminDashBoardPage = () => {
     }
   };
 
+  /// Chart Part
+  // Get Batch And Trainee Chart
+  const [batchAndTrainee, setBatchAndTrainee] = useState([
+    {
+      name: "Thực tập sinh",
+      type: "column",
+      fill: "solid",
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    },
+    {
+      name: "Đợt OJT",
+      type: "line",
+      fill: "solid",
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    },
+  ]);
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const tempChartBatchAndTraineeLabels = [
+    "01/01/2003",
+    "01/02/2003",
+    "01/03/2003",
+    "01/04/2003",
+    "01/05/2003",
+    "01/06/2003",
+    "01/07/2003",
+    "01/08/2003",
+    "01/09/2003",
+    "01/10/2003",
+    "01/11/2003",
+    "01/12/2003",
+  ];
+
+  // Replace the year part in each label with the currentYear using string manipulation
+  const chartBatchAndTraineeLabels = tempChartBatchAndTraineeLabels.map(
+    (label) => {
+      // Assuming the date format is always "DD/MM/YYYY"
+      const yearIndex = label.lastIndexOf("/") + 1; // Find the index of the last '/'
+      return label.substring(0, yearIndex) + currentYear;
+    }
+  );
+
+  const fetchBatchAndTrainee = async () => {
+    try {
+      setIsLoading(true);
+      // First get data of current year
+      const response = await axiosPrivate.get(
+        chartPath.GET_BATCH_AND_TRAINEE + currentYear
+      );
+      // Get 5 courses
+
+      // turn it into the format that chart can read
+      setBatchAndTrainee([
+        {
+          name: "Thực tập sinh",
+          type: "column",
+          fill: "solid",
+          data: response.data.numberofTrainees,
+        },
+        {
+          name: "Đợt OJT",
+          type: "line",
+          fill: "solid",
+          data: response.data.numberOfOjtBatches,
+        },
+      ]);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+  // Get Batch And Trainee Chart
+  const [trainerAndTotalTrainees, setTrainerAndTotalTrainees] = useState([]);
+  const fetchTrainerAndTotalTrainees = async () => {
+    try {
+      setIsLoading(true);
+      // Get at most 10 trainers
+      const response = await axiosPrivate.get(
+        chartPath.GET_TRAINER_AND_TOTAL_TRAINEES + 10
+      );
+
+      setTrainerAndTotalTrainees(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+  // Get Batch And Trainee Chart
+  const [traineeWithPosition, setTraineeWithPosition] = useState([]);
+  const fetchTraineeWithPosition = async () => {
+    try {
+      setIsLoading(true);
+      // Get at most 10 trainers
+      const response = await axiosPrivate.get(
+        chartPath.GET_TRAINEE_WITH_POSITION
+      );
+      console.log(response.data);
+      setTraineeWithPosition(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchUniversities();
     fetchCourses();
+
+    // Fetch chart
+    fetchBatchAndTrainee();
+    fetchTrainerAndTotalTrainees();
+    fetchTraineeWithPosition();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentYear]);
 
   return (
     <Fragment>
@@ -146,38 +256,35 @@ const AdminDashBoardPage = () => {
 
         {/* ... Chart Part */}
         <Grid item xs={12} md={12}>
-          <TotalGrowthBarChart isLoading={isLoading} />
+          <ColumnAndLineChart
+            isLoading={isLoading}
+            title={
+              <span className="text-xl font-bold">
+                Tổng đợt OJT và thực tập sinh theo tháng
+              </span>
+            }
+            chartLabels={chartBatchAndTraineeLabels}
+            chartData={batchAndTrainee}
+          />
         </Grid>
 
         {/* ... Line Chart Part */}
         <Grid item xs={12} md={6} lg={8}>
           <HorizontalLineChart
-            title={<span className="text-xl font-bold">Đào tạo viên</span>}
-            chartData={[
-              { label: "Italy", value: 400 },
-              { label: "Japan", value: 430 },
-              { label: "China", value: 448 },
-              { label: "Canada", value: 470 },
-              { label: "France", value: 540 },
-              { label: "Germany", value: 580 },
-              { label: "South Korea", value: 690 },
-              { label: "Netherlands", value: 1100 },
-              { label: "United States", value: 1200 },
-              { label: "United Kingdom", value: 1380 },
-            ]}
+            title={
+              <span className="text-xl font-bold">
+                Đào tạo viên với số thực tập sinh nhiều nhất
+              </span>
+            }
+            chartData={trainerAndTotalTrainees}
           />
         </Grid>
 
         {/* ... Pie Chart Part */}
         <Grid item xs={12} md={6} lg={4}>
           <PieChart
-            title="Current Visits"
-            chartData={[
-              { label: "America", value: 4344 },
-              { label: "Asia", value: 5435 },
-              { label: "Europe", value: 1443 },
-              { label: "Africa", value: 4443 },
-            ]}
+            title={<span className="text-xl font-bold">Vị trí thực tập</span>}
+            chartData={traineeWithPosition}
             chartColors={[
               theme.palette.primary.main,
               theme.palette.info.main,

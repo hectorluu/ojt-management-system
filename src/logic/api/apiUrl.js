@@ -163,6 +163,7 @@ export const configPath = {
 export const certificatePath = {
   GET_CERTIFICATE_LIST: "/certificate",
   GET_CERTIFICATE_DETAIL: "/certificate/",
+  GET_LIST_CERTIFICATE_OF_TRAINEE: "/certificate/trainer/",
   SUBMIT_CERTIFICATE: "/certificate/submition-certificate",
   RE_SUBMIT_CERTIFICATE: "/certificate/resubmition-certificate",
   GET_PENDING_CERTIFICATE: "/certificate/trainer/pending-certificate",
@@ -177,6 +178,12 @@ export const trainerTaskPath = {
   APPROVE_TASK: "/task-process/task-accept/",
   REJECT_TASK: "/task-process/task-reject/",
   GET_TRAINEE_LIST_TASK: "/task-process/trainee/",
+};
+
+export const chartPath = {
+  GET_BATCH_AND_TRAINEE: "/chart/batch-and-trainee/",
+  GET_TRAINER_AND_TOTAL_TRAINEES: "/chart/trainer-with-most-trainees/",
+  GET_TRAINEE_WITH_POSITION: "/chart/trainee-position",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

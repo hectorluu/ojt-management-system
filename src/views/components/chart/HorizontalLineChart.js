@@ -29,7 +29,7 @@ export default function HorizontalLineChart({
     tooltip: {
       marker: { show: false },
       y: {
-        formatter: (seriesName) => fNumber(seriesName),
+        formatter: (seriesName) => `${fNumber(seriesName)} thực tập sinh`,
         title: {
           formatter: () => "",
         },
