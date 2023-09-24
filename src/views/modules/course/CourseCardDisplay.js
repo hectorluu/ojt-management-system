@@ -34,10 +34,10 @@ export default function CourseCardDisplay(course) {
       >
         <div className="flex items-center gap-x-[5px] w-full">
           <CourseImage
-            className="h-[266px] flex-1"
+            className="h-[266px] flex-1 w-full"
             image={course.course.imageURL || defaultCourseImage}
           ></CourseImage>
-          <div className="flex-auto max-w-[600px]">
+          <div className="flex-auto w-[400px]">
             <CourseCategory
               text={coursePosition(course)}
               className="text-sm"

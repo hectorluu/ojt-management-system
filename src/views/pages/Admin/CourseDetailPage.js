@@ -8,28 +8,26 @@ import {
   Divider,
   TextField,
   Typography,
-  TablePagination,
   TextareaAutosize,
   Stack,
   Rating,
   Autocomplete,
+  IconButton,
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
+import AddIcon from '@mui/icons-material/Add';
 import { Label } from "views/components/label";
 import {
   courseOptions,
   defaultCourseImage,
-  defaultPageIndex,
-  defaultPageSize,
 } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { coursePath, ojtBatchPath } from "logic/api/apiUrl";
+import { coursePath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
 import {
+  courseNoti,
   generalNoti,
-  ojtBatchNoti,
-  universityNoti,
 } from "logic/constants/notification";
 import { toast } from "react-toastify";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -38,17 +36,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import ProfileSkeleton from "views/modules/account/ProfileSkeleton";
 import SubCard from "views/components/cards/SubCard";
-import { ojtBatchValid, updateCourseValid } from "logic/utils/validateUtils";
+import { coursePositionValid, courseSkillValid, updateCourseValid } from "logic/utils/validateUtils";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ModalAddCoursePosition from "views/components/modal/ModalAddCoursePosition";
+import ModalAddCourseSkill from "views/components/modal/ModalAddCourseSkill";
 
 const CourseDetailPage = () => {
   const { courseId } = useParams();
 
   const axiosPrivate = useAxiosPrivate();
-  const [ojtBatch, setOjtBatchs] = useState([]);
-  const [page, setPage] = useState(defaultPageIndex);
-  const [rowsPerPage, setRowsPerPage] = useState(defaultPageSize);
-  const [totalItem, setTotalItem] = useState(0);
   const [isFetchingLoading, setIsFetchingLoading] = useState(false);
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
@@ -58,8 +54,8 @@ const CourseDetailPage = () => {
   const [imgURL, setImgURL] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [clickedId, setClickedId] = useState(0);
+  const [isModalOpenPosition, setIsModalOpenPosition] = useState(false);
+  const [isModalOpenSkill, setIsModalOpenSkill] = useState(false);
   const [status, setStatus] = useState(0);
   const [link, setLink] = useState("");
   const [platformName, setPlatformName] = useState("");
@@ -81,7 +77,7 @@ const CourseDetailPage = () => {
       setCourseSkills(response.data.courseSkills);
       setIsFetchingLoading(false);
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data);
       setIsFetchingLoading(false);
     }
   };
@@ -137,29 +133,12 @@ const CourseDetailPage = () => {
     setIsLoading(false);
   }
 
-  const handleUpdateBatch = async (data) => {
-    const valid = ojtBatchValid(data);
-    setError(valid);
-    if (Object.keys(valid).length === 0) {
-      try {
-        setIsSubmitLoading(true);
-        const response = await axiosPrivate.put(
-          ojtBatchPath.UPDATE_BATCH + clickedId,
-          data
-        );
-        console.log(response);
-        toast.success(ojtBatchNoti.SUCCESS.UPDATE);
-        setIsSubmitLoading(false);
-        setIsModalOpen(false);
-      } catch (e) {
-        console.log(e);
-      }
-    }
+  const handleOpenPosition = (id) => {
+    setIsModalOpenPosition(true);
   };
 
-  const handleOpenMenu = (id) => {
-    setClickedId(id);
-    setIsModalOpen(true);
+  const handleOpenSkill = (id) => {
+    setIsModalOpenSkill(true);
   };
 
   const handleUpdateCourse = async () => {
@@ -173,31 +152,131 @@ const CourseDetailPage = () => {
         imageURL: imgURL,
         status,
       };
-      const response = await axiosPrivate.put(
+      await axiosPrivate.put(
         coursePath.UPDATE_COURSE + courseId,
         course
       );
-      console.log(response);
-      toast.success(universityNoti.SUCCESS.UPDATE);
+      toast.success(courseNoti.SUCCESS.UPDATE);
       setIsSubmitLoading(false);
     } catch (e) {
-      console.log(e);
+      toast.error(e.response.data);
       setIsSubmitLoading(false);
     }
+  };
+
+  const handleUpdateSkill = async (skillId, before, after) => {
+    try {
+      setIsFetchingLoading(true);
+      const courseSkill = {
+        skillId: skillId,
+        recommendedLevel: before,
+        afterwardLevel: after,
+      };
+      if (after < before) {
+        toast.error(courseNoti.ERROR.AFTERWARD_LEVEL_TOO_LOW);
+        setIsFetchingLoading(false);
+        return;
+      }
+      await axiosPrivate.put(
+        coursePath.UPDATE_COURSE_SKILL + courseId,
+        courseSkill
+      );
+      toast.success(courseNoti.SUCCESS.UPDATE);
+      fetchCourseDetail();
+      setIsFetchingLoading(false);
+    } catch (e) {
+      toast.error(e.response.data);
+      setIsFetchingLoading(false);
+    }
+  }
+
+  const handleUpdatePosition = async (positionId, isCompulsory) => {
+    try {
+      setIsFetchingLoading(true);
+      const coursePosition = {
+        positionId: positionId,
+        isCompulsory: isCompulsory,
+      };
+      await axiosPrivate.put(
+        coursePath.UPDATE_COURSE_POSITION + courseId,
+        coursePosition
+      );
+      toast.success(courseNoti.SUCCESS.UPDATE);
+      fetchCourseDetail();
+      setIsFetchingLoading(false);
+    } catch (e) {
+      toast.error(e.response.data);
+      setIsFetchingLoading(false);
+    }
+  };
+
+  const handleAddNewCoursePosition = async (item) => {
+    setIsSubmitLoading(true);
+    const position = {
+      positionId: item.positionId,
+      isCompulsory: item.isCompulsory,
+    };
+    const valid = coursePositionValid(position);
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
+      try {
+        await axiosPrivate.post(coursePath.CREATE_COURSE_POSITION + courseId, position);
+        toast.success(courseNoti.SUCCESS.UPDATE);
+        fetchCourseDetail();
+        setIsSubmitLoading(false);
+        setIsModalOpenPosition(false);
+      } catch (e) {
+        toast.error(e.response.data);
+        setIsSubmitLoading(false);
+        setIsModalOpenPosition(false);
+      }
+    };
+    setIsSubmitLoading(false);
+  };
+
+  const handleAddNewCourseSkill = async (item) => {
+    setIsSubmitLoading(true);
+    const skill = {
+      skillId: item.skillId,
+      recommendedLevel: item.recommendedLevel,
+      afterwardLevel: item.afterwardLevel,
+    };
+    const valid = courseSkillValid(skill);
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
+      try {
+        await axiosPrivate.post(coursePath.CREATE_COURSE_SKILL + courseId, skill);
+        toast.success(courseNoti.SUCCESS.UPDATE);
+        fetchCourseDetail();
+        setIsSubmitLoading(false);
+        setIsModalOpenSkill(false);
+      } catch (e) {
+        toast.error(e.response.data);
+        setIsSubmitLoading(false);
+        setIsModalOpenSkill(false);
+      }
+    };
+    setIsSubmitLoading(false);
   };
 
   return (
     <MainCard
       title="Thông tin khoá học"
     >
-      {/* <ModalEditOJTBatch
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        idClicked={clickedId}
-        handleUpdateBatch={handleUpdateBatch}
+      <ModalAddCoursePosition
+        isOpen={isModalOpenPosition}
+        onRequestClose={() => setIsModalOpenPosition(false)}
+        handleAddNewCoursePosition={handleAddNewCoursePosition}
         isSubmitLoading={isSubmitLoading}
         error={error}
-      ></ModalEditOJTBatch> */}
+      ></ModalAddCoursePosition>
+      <ModalAddCourseSkill
+        isOpen={isModalOpenSkill}
+        onRequestClose={() => setIsModalOpenSkill(false)}
+        handleAddNewCourseSkill={handleAddNewCourseSkill}
+        isSubmitLoading={isSubmitLoading}
+        error={error}
+      ></ModalAddCourseSkill>
       {isFetchingLoading ? (
         <ProfileSkeleton />
       ) : (
@@ -323,11 +402,17 @@ const CourseDetailPage = () => {
                     <Rating
                       name="read-only"
                       value={item.recommendedLevel}
+                      onChange={(event, newValue) => {
+                        handleUpdateSkill(item.skillId, newValue, item.afterwardLevel);
+                      }}
                     />
                     <ArrowForwardIcon />
                     <Rating
                       name="read-only"
                       value={item.afterwardLevel}
+                      onChange={(event, newValue) => {
+                        handleUpdateSkill(item.skillId, item.recommendedLevel, newValue);
+                      }}
                     />
                   </Stack>
                 ))
@@ -342,6 +427,11 @@ const CourseDetailPage = () => {
                   </Typography>
                 </>
               )}
+              <Stack direction="row" spacing={1} justifyContent="center">
+                <IconButton color="primary" aria-label="delete" onClick={() => handleOpenSkill()}>
+                  <AddIcon />
+                </IconButton>
+              </Stack>
             </SubCard>
           </Card>
           <Divider />
@@ -359,7 +449,7 @@ const CourseDetailPage = () => {
                       {item.positionName}:{" "}
                     </Typography>
                     <Autocomplete
-                      value={courseOptions.find((item) => item.value === item.isCompulsory)}
+                      value={courseOptions.find((label) => label.value === item.isCompulsory)}
                       sx={{ width: 300 }}
                       disablePortal={false}
                       options={courseOptions}
@@ -367,21 +457,11 @@ const CourseDetailPage = () => {
                         <TextField
                           {...params}
                           placeholder="Lựa chọn"
-                          error={
-                            error?.coursePosition?.[index]?.isCompulsory
-                              ? true
-                              : false
-                          }
-                          helperText={
-                            error?.coursePosition?.[index]?.isCompulsory
-                          }
                         />
                       )}
                       onChange={(event, newValue) => {
                         if (newValue) {
-                          console.log(
-                            newValue.value
-                          );
+                          handleUpdatePosition(item.positionId, newValue.value);
                         }
                       }}
                     />
@@ -398,6 +478,11 @@ const CourseDetailPage = () => {
                   </Typography>
                 </>
               )}
+              <Stack direction="row" spacing={1} justifyContent="center">
+                <IconButton color="primary" aria-label="delete" onClick={() => handleOpenPosition()}>
+                  <AddIcon />
+                </IconButton>
+              </Stack>
             </SubCard>
           </Card>
         </>

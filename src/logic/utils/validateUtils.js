@@ -467,3 +467,32 @@ export function trainingPlanAssignValid(assign) {
   }
   return error;
 };
+
+export function coursePositionValid(position) {
+  let error = {};
+  if (position.positionId === "" || position.positionId === undefined || position.positionId === null) {
+    error["positionId"] = courseNoti.ERROR.BLANK_COURSE_POSITION;
+  };
+  if (position.isCompulsory === "" || position.isCompulsory === null || position.isCompulsory === undefined) {
+    error["isCompulsory"] = courseNoti.ERROR.BLANK_IS_COMPULSORY;
+  }
+  return error;
+}
+
+export function courseSkillValid(skill) {
+  let error = {};
+  if (skill.skillId === "" || skill.skillId === null || skill.skillId === undefined) {
+    error["skillId"] = courseNoti.ERROR.BLANK_COURSE_SKILL;
+  };
+  if (skill.recommendedLevel === "" || skill.recommendedLevel === null || skill.recommendedLevel === undefined) {
+    error["recommendedLevel"] = courseNoti.ERROR.BLANK_RECOMMEND_LEVEL;
+  };
+  if (skill.afterwardLevel === "" || skill.afterwardLevel === null || skill.afterwardLevel === undefined) {
+    error["afterwardLevel"] = courseNoti.ERROR.BLANK_AFTERWARD_LEVEL;
+  } else {
+    if (skill.afterwardLevel <= skill.recommendedLevel) {
+      error["afterwardLevel"] = courseNoti.ERROR.AFTERWARD_LEVEL_TOO_LOW;
+    };
+  };
+  return error;
+}

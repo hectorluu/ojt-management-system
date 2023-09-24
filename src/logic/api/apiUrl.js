@@ -18,6 +18,10 @@ export const coursePath = {
   GET_TRAINEE_COURSE_LIST: "course/list-course-trainee",
   GET_COMPULSORY_COURSE_LIST: "course/compulsory-courses",
   ENROLL_COURSE: "/course/course-participation/",
+  UPDATE_COURSE_SKILL: "/course/courseskill/",
+  CREATE_COURSE_SKILL: "/course/courseskill/",
+  UPDATE_COURSE_POSITION: "/course/courseposition/",
+  CREATE_COURSE_POSITION: "/course/courseposition/",
 };
 
 export const criteriaPath = {
