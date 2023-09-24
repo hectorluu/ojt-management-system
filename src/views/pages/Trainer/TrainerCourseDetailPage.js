@@ -11,6 +11,7 @@ import {
   Rating,
   Button,
   SvgIcon,
+  CardActions,
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
 import { Label } from "views/components/label";
@@ -24,6 +25,10 @@ import ProfileSkeleton from "views/modules/account/ProfileSkeleton";
 import SubCard from "views/components/cards/SubCard";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
+import ModalAssignCourse from "views/components/modal/ModalAssignCourse";
+import { LoadingButton } from "@mui/lab";
+import { assignCourseValid } from "logic/utils/validateUtils";
+import { toast } from "react-toastify";
 
 const TrainerCourseDetailPage = () => {
   const { courseId } = useParams();
@@ -38,6 +43,9 @@ const TrainerCourseDetailPage = () => {
   const [description, setDescription] = useState("");
   const [courseSkills, setCourseSkills] = useState([]);
   const [coursePositions, setCoursePositions] = useState([]);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchCourseDetail = async () => {
     try {
@@ -66,6 +74,30 @@ const TrainerCourseDetailPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleAssign = async (values) => {
+    setIsLoading(true);
+    const valid = assignCourseValid(values);
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
+      try {
+        await axiosPrivate.post(
+          coursePath.ASSIGN_COURSE.replace("{traineeId}", values.traineeId).replace("{courseId}", courseId)
+        );
+        setIsLoading(false);
+        setIsModalOpen(false);
+        toast.success("Giao khoá học thành công");
+      } catch (error) {
+        setIsLoading(false);
+        toast.error(error.response.data);
+      }
+    }
+    setIsLoading(false);
+  };
+
+  const onRequestClose = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <MainCard
       title="Thông tin khoá học"
@@ -86,6 +118,12 @@ const TrainerCourseDetailPage = () => {
         </Button>
       }
     >
+      <ModalAssignCourse
+        error={error}
+        handleAssign={handleAssign}
+        isLoading={isLoading}
+        isOpen={isModalOpen}
+        onRequestClose={onRequestClose} />
       {isFetchingLoading ? (
         <ProfileSkeleton />
       ) : (
@@ -145,6 +183,16 @@ const TrainerCourseDetailPage = () => {
                 />
               </FormGroup>
             </CardContent>
+            <CardActions sx={{ justifyContent: "flex-end", mt: -4 }}>
+              <LoadingButton
+                variant="contained"
+                component={"label"}
+                onClick={() => setIsModalOpen(true)}
+                loading={isLoading}
+              >
+                Giao khoá học
+              </LoadingButton>
+            </CardActions>
           </Card>
           <Divider />
           <Card>

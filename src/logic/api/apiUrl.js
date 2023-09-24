@@ -22,6 +22,7 @@ export const coursePath = {
   CREATE_COURSE_SKILL: "/course/courseskill/",
   UPDATE_COURSE_POSITION: "/course/courseposition/",
   CREATE_COURSE_POSITION: "/course/courseposition/",
+  ASSIGN_COURSE: "/course/assign-course/{traineeId}/{courseId}"
 };
 
 export const criteriaPath = {
