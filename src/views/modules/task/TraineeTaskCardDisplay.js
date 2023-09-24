@@ -46,7 +46,7 @@ export default function TraineeTaskCardDisplay({ task }) {
           !expanded ? "text-ellipsis overflow-hidden whitespace-nowrap" : ""
         }
         // titleTypographyProps={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
-        title={task?.name}
+        title={<span className="text-2xl font-bold">{task?.name}</span>}
         subheader={
           "Ngày hoàn thành:" + moment(task?.finishTime).format("DD/MM/YYYY")
         }
@@ -59,7 +59,7 @@ export default function TraineeTaskCardDisplay({ task }) {
               color="text.secondary"
               className="line-clamp-3 overflow-hidden"
             >
-              {task?.description}
+              <span className="text-md font-semibold">{task?.description}</span>
             </Typography>
           </CardContent>
           <CardActions disableSpacing>
@@ -71,7 +71,6 @@ export default function TraineeTaskCardDisplay({ task }) {
                   ? "success"
                   : "error"
               }
-              sx={{ marginLeft: "22px" }}
               startIcon={
                 task.processStatus === 1 ? (
                   <HourglassTopIcon />
@@ -102,12 +101,16 @@ export default function TraineeTaskCardDisplay({ task }) {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>
-            Ngày tạo: {moment(task?.startTime).format("DD/MM/YYYY")}
+            <span className="text-base font-semibold">Ngày tạo: </span>
+            {moment(task?.startTime).format("DD/MM/YYYY")}
           </Typography>
           <Typography paragraph>
-            Hạn chót: {moment(task?.endTime).format("DD/MM/YYYY")}
+            <span className="text-base font-semibold">Hạn chót: </span>
+            {moment(task?.endTime).format("DD/MM/YYYY")}
           </Typography>
-          <Typography paragraph>Mô tả công việc:</Typography>
+          <Typography paragraph>
+            <span className="text-base font-semibold">Mô tả công việc: </span>
+          </Typography>
           <Typography paragraph>{task?.description}</Typography>
         </CardContent>
         <CardActions disableSpacing>
@@ -119,7 +122,6 @@ export default function TraineeTaskCardDisplay({ task }) {
                 ? "success"
                 : "error"
             }
-            sx={{ marginLeft: "22px" }}
             startIcon={
               task.processStatus === 1 ? (
                 <HourglassTopIcon />

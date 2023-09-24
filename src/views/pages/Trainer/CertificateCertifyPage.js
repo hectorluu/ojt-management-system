@@ -1,17 +1,10 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
 import { certificatePath } from "logic/api/apiUrl";
-import {
-  defaultPageSize,
-  defaultPageIndex,
-} from "logic/constants/global";
+import { defaultPageSize, defaultPageIndex } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import MainCard from "views/components/cards/MainCard";
-import {
-  Box,
-  Button,
-  Modal,
-} from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import SubCard from "views/components/cards/SubCard";
 import { toast } from "react-toastify";
 import { useTheme } from "@emotion/react";
@@ -48,14 +41,16 @@ const CertificateCertifyPage = () => {
   const fetchPendingCertificate = async () => {
     setIsLoading(true);
     try {
-      const response = await axiosPrivate.get(certificatePath.GET_PENDING_CERTIFICATE +
+      const response = await axiosPrivate.get(
+        certificatePath.GET_PENDING_CERTIFICATE +
         "?PageIndex=" +
         page +
         "&PageSize=" +
-        rowsPerPage);
+        rowsPerPage
+      );
       setTaskList(response.data.data);
       setTotalItem(response.data.totalItem);
-      console.log(response.data)
+      console.log(response.data);
       setIsLoading(false);
     } catch (error) {
       toast.error(error.response.data);
@@ -80,18 +75,16 @@ const CertificateCertifyPage = () => {
     console.log(isApprove);
     try {
       if (isApprove) {
-        await axiosPrivate.put(certificatePath.VALID_CERTIFICATE,
-          {
-            courseId: item.courseId,
-            userId: item.userId
-          });
+        await axiosPrivate.put(certificatePath.VALID_CERTIFICATE, {
+          courseId: item.courseId,
+          userId: item.userId,
+        });
         toast.success(certificateNoti.SUCCESS.CERTIFY);
       } else {
-        await axiosPrivate.put(certificatePath.INVALID_CERTIFICATE,
-          {
-            courseId: item.courseId,
-            userId: item.userId
-          });
+        await axiosPrivate.put(certificatePath.INVALID_CERTIFICATE, {
+          courseId: item.courseId,
+          userId: item.userId,
+        });
         toast.success(certificateNoti.SUCCESS.CERTIFY);
       }
       fetchPendingCertificate();
@@ -103,9 +96,7 @@ const CertificateCertifyPage = () => {
   const theme = useTheme();
 
   return (
-    <MainCard
-      title={`Duyệt chứng chỉ`}
-    >
+    <MainCard title={`Duyệt chứng chỉ`}>
       <Modal open={isModalOpen} onClose={handleCloseModal}>
         <Box
           sx={{
@@ -145,10 +136,13 @@ const CertificateCertifyPage = () => {
             <h2 className="font-bold text-[25px]">Duyệt chứng chỉ</h2>
 
             <div className="text-text1 text-base flex justify-center my-auto h-24 items-center">
-              Bạn có chắc muốn {isApprove ? "chấp thuận" : "huỷ bỏ"} chứng chỉ &nbsp;
+              Bạn có chắc muốn {isApprove ? "chấp thuận" : "huỷ bỏ"} chứng chỉ
+              &nbsp;
               <strong className="text-text1">{selected.courseName}</strong>
               &nbsp; của &nbsp;
-              <strong className="text-text1">{selected.lastName + " " + selected.firstName}</strong>
+              <strong className="text-text1">
+                {selected.lastName + " " + selected.firstName}
+              </strong>
               &nbsp; ?
             </div>
           </div>
@@ -177,9 +171,13 @@ const CertificateCertifyPage = () => {
             <Button
               variant="contained"
               sx={{
-                backgroundColor: theme.palette.error.main,
+                backgroundColor: isApprove
+                  ? theme.palette.success.dark // Use success color when isApprove is true
+                  : theme.palette.error.main, // Use error color when isApprove is false
                 "&:hover": {
-                  backgroundColor: theme.palette.error.dark, // Color on hover
+                  backgroundColor: isApprove
+                    ? "#009e47" // Hover color for success
+                    : theme.palette.error.dark, // Hover color for error
                 },
               }}
               component="label"
@@ -201,8 +199,12 @@ const CertificateCertifyPage = () => {
               <CertificateSkeleton />
             </>
           ) : taskList.length !== 0 ? (
-            taskList.map((item) => (
-              <CertificateCardCertify certificate={item} key={item.id} onClickProcess={handleOpenModal} />
+            taskList.map((item, index) => (
+              <CertificateCardCertify
+                certificate={item}
+                key={index}
+                onClickProcess={handleOpenModal}
+              />
             ))
           ) : (
             <>Không có chứng chỉ nào cần được duyệt.</>

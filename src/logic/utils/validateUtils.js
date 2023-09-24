@@ -44,7 +44,7 @@ export function reportValid(report) {
         }
       };
     } else {
-      if (!report.templateHeaders[i].name || !report.templateHeaders[i].totalPoint) {
+      if (!report.templateHeaders[i].name) {
         if (!error["templateHeaders"]) {
           error["templateHeaders"] = [{ name: "", totalPoint: "" }];
         } else {
@@ -176,34 +176,34 @@ export function courseValid(course) {
     error["link"] = courseNoti.ERROR.BLANK_LINK;
   };
   for (let i = 0; i < course.coursePosition.length; i++) {
-    if (!course.coursePosition[i].positionId || !course.coursePosition[i].isCompulsory) {
+    if (course.coursePosition[i].positionId === "" || course.coursePosition[i].positionId === null || course.coursePosition[i].positionId === undefined || course.coursePosition[i].isCompulsory === "" || course.coursePosition[i].isCompulsory === null || course.coursePosition[i].isCompulsory === undefined) {
       if (!error["coursePosition"]) {
         error["coursePosition"] = [{ positionId: "", isCompulsory: "" }];
       } else {
         error["coursePosition"] = [...error["coursePosition"], { positionId: "", isCompulsory: "" }];
       }
-      if (!course.coursePosition[i].positionId) {
+      if (course.coursePosition[i].positionId === "" || course.coursePosition[i].positionId === null || course.coursePosition[i].positionId === undefined) {
         error["coursePosition"][i]["positionId"] = courseNoti.ERROR.BLANK_COURSE_POSITION;
       }
-      if (!course.coursePosition[i].isCompulsory) {
+      if (course.coursePosition[i].isCompulsory === "" || course.coursePosition[i].isCompulsory === null || course.coursePosition[i].isCompulsory === undefined) {
         error["coursePosition"][i]["isCompulsory"] = courseNoti.ERROR.BLANK_IS_COMPULSORY;
       }
     };
   };
   for (let i = 0; i < course.courseSkills.length; i++) {
-    if (!course.courseSkills[i].skillId || !course.courseSkills[i].recommendedLevel || !course.courseSkills[i].afterwardLevel) {
+    if (course.courseSkills[i].skillId === "" || course.courseSkills[i].skillId === null || course.courseSkills[i].skillId === undefined || course.courseSkills[i].recommendedLevel === "" || course.courseSkills[i].recommendedLevel === null || course.courseSkills[i].recommendedLevel === undefined || course.courseSkills[i].afterwardLevel === "" || course.courseSkills[i].afterwardLevel === null || course.courseSkills[i].afterwardLevel === undefined) {
       if (!error["courseSkills"]) {
         error["courseSkills"] = [{ skillId: "", recommendedLevel: "", afterwardLevel: "" }];
       } else {
         error["courseSkills"] = [...error["courseSkills"], { skillId: "", recommendedLevel: "", afterwardLevel: "" }];
       };
-      if (!course.courseSkills[i].skillId) {
+      if (course.courseSkills[i].skillId === "" || course.courseSkills[i].skillId === null || course.courseSkills[i].skillId === undefined) {
         error["courseSkills"][i]["skillId"] = courseNoti.ERROR.BLANK_COURSE_SKILL;
       };
-      if (!course.courseSkills[i].recommendedLevel) {
+      if (course.courseSkills[i].recommendedLevel === "" || course.courseSkills[i].recommendedLevel === null || course.courseSkills[i].recommendedLevel === undefined) {
         error["courseSkills"][i]["recommendedLevel"] = courseNoti.ERROR.BLANK_RECOMMEND_LEVEL;
       };
-      if (!course.courseSkills[i].afterwardLevel) {
+      if (course.courseSkills[i].afterwardLevel === "" || course.courseSkills[i].afterwardLevel === null || course.courseSkills[i].afterwardLevel === undefined) {
         error["courseSkills"][i]["afterwardLevel"] = courseNoti.ERROR.BLANK_AFTERWARD_LEVEL;
       } else {
         if (course.courseSkills[i].afterwardLevel <= course.courseSkills[i].recommendedLevel) {
@@ -465,5 +465,42 @@ export function trainingPlanAssignValid(assign) {
   if (assign.trainees.length === 0) {
     error["trainees"] = trainingPlanNoti.ERROR.BLANK_TRAINEE;
   }
+  return error;
+};
+
+export function coursePositionValid(position) {
+  let error = {};
+  if (position.positionId === "" || position.positionId === undefined || position.positionId === null) {
+    error["positionId"] = courseNoti.ERROR.BLANK_COURSE_POSITION;
+  };
+  if (position.isCompulsory === "" || position.isCompulsory === null || position.isCompulsory === undefined) {
+    error["isCompulsory"] = courseNoti.ERROR.BLANK_IS_COMPULSORY;
+  }
+  return error;
+}
+
+export function courseSkillValid(skill) {
+  let error = {};
+  if (skill.skillId === "" || skill.skillId === null || skill.skillId === undefined) {
+    error["skillId"] = courseNoti.ERROR.BLANK_COURSE_SKILL;
+  };
+  if (skill.recommendedLevel === "" || skill.recommendedLevel === null || skill.recommendedLevel === undefined) {
+    error["recommendedLevel"] = courseNoti.ERROR.BLANK_RECOMMEND_LEVEL;
+  };
+  if (skill.afterwardLevel === "" || skill.afterwardLevel === null || skill.afterwardLevel === undefined) {
+    error["afterwardLevel"] = courseNoti.ERROR.BLANK_AFTERWARD_LEVEL;
+  } else {
+    if (skill.afterwardLevel <= skill.recommendedLevel) {
+      error["afterwardLevel"] = courseNoti.ERROR.AFTERWARD_LEVEL_TOO_LOW;
+    };
+  };
+  return error;
+};
+
+export function assignCourseValid(trainee) {
+  let error = {};
+  if (trainee.traineeId === ""|| trainee.traineeId === null || trainee.traineeId === undefined) {
+    error["traineeId"] = assignNoti.ERROR.BLANK_TRAINEE;
+  };
   return error;
 };

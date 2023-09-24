@@ -1,8 +1,10 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
 import {
+  Backdrop,
   Box,
   Button,
+  CircularProgress,
   List,
   ListItem,
   ListItemText,
@@ -17,7 +19,8 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import MainCard from "views/components/cards/MainCard";
 
 import AddIcon from "@mui/icons-material/Add";
-import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { attendanceNoti } from "logic/constants/notification";
 
 const AttendancePage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -25,19 +28,6 @@ const AttendancePage = () => {
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
-  // Fetch attendance file
-  const [attendance, setAttendance] = useState([]);
-  const fetchAttendanceFile = async () => {
-    try {
-      setIsLoading(true);
-      let response = await axiosPrivate.get(attendancePath.GET_ATTENDANCE_FILE);
-      setAttendance(response.data.data);
-      setIsLoading(false); // Set loading to false after fetching data
-    } catch (error) {
-      console.log("error", error);
-      setIsLoading(false); // Set loading to false after fetching data
-    }
-  };
 
   // Fetch attendance by month
   const [attendanceByMonth, setAttendanceByMonth] = useState([]); // New loading state
@@ -66,7 +56,7 @@ const AttendancePage = () => {
       setIsLoading(true);
       let response = await axiosPrivate.get(
         attendancePath.GET_ATTENDANCE_BY_DATE +
-          moment(selectedDate).format("YYYY-MM-DD")
+        moment(selectedDate).format("YYYY-MM-DD")
       );
       console.log("attendanceByDay", response.data);
       setAttendanceByDay(response.data.attendanceUsers);
@@ -107,51 +97,8 @@ const AttendancePage = () => {
   const [no_of_days, setNoOfDays] = useState([]);
   const [blankdays, setBlankdays] = useState([]);
 
-  const [event_title, setEventTitle] = useState("");
-  const [event_date, setEventDate] = useState("");
-  const [event_theme, setEventTheme] = useState("blue");
-
-  const themes = [
-    {
-      value: "blue",
-      label: "Blue Theme",
-    },
-    {
-      value: "red",
-      label: "Red Theme",
-    },
-    {
-      value: "yellow",
-      label: "Yellow Theme",
-    },
-    {
-      value: "green",
-      label: "Green Theme",
-    },
-    {
-      value: "purple",
-      label: "Purple Theme",
-    },
-  ];
-
-  // example event day
-  const [events, setEvents] = useState([
-    {
-      event_date: new Date(2023, 3, 1),
-      event_title: "April Fool's Day",
-      event_theme: "blue",
-    },
-    {
-      event_date: new Date(2023, 3, 10),
-      event_title: "Birthday",
-      event_theme: "red",
-    },
-    {
-      event_date: new Date(2023, 3, 16),
-      event_title: "Upcoming Event",
-      event_theme: "green",
-    },
-  ]);
+  // eslint-disable-next-line no-unused-vars
+  const [eventDate, setEventDate] = useState("");
 
   const [openEventModal, setOpenEventModal] = useState(false);
 
@@ -205,6 +152,26 @@ const AttendancePage = () => {
     //eslint-disable-next-line
   }, [selectedDate]);
 
+  const onFileChange = async (file) => {
+    try {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      console.log(formData);
+      await axiosPrivate.post(attendancePath.GET_ATTENDANCE_FILE, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      toast.success(attendanceNoti.SUCCESS.IMPORT);
+      fetchAttendanceByMonth();
+      setIsLoading(false);
+    } catch (error) {
+      console.log("error", error);
+      setIsLoading(false);
+    }
+  };
+
   return (
     <MainCard
       title="Điểm danh"
@@ -215,16 +182,31 @@ const AttendancePage = () => {
               <AddIcon />
             </SvgIcon>
           }
-          component={Link}
-          to="/create-new-account"
+          component="label"
           variant="contained"
           size="medium"
           sx={{ borderRadius: "10px" }}
+          onClick={() => {
+            document.getElementById("file-updload").click();
+          }}
         >
           Tải lên file điểm danh
         </Button>
       }
     >
+      <input
+        id="file-updload"
+        type="file"
+        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        onChange={(e) => onFileChange(e.target.files[0])}
+        className="hidden"
+      />
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       {/*Calendar*/}
       <div className="antialiased font-mono h-fit">
         <div x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak>
@@ -335,11 +317,10 @@ const AttendancePage = () => {
                           console.log("selectedDate laaa", selectedDate);
                           showEventModal(date);
                         }}
-                        className={`inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100 ${
-                          isToday(date)
-                            ? "bg-blue-500 text-white"
-                            : "text-gray-700 hover:bg-blue-200"
-                        }`}
+                        className={`inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100 ${isToday(date)
+                          ? "bg-blue-500 text-white"
+                          : "text-gray-700 hover:bg-blue-200"
+                          }`}
                       >
                         {date}
                       </div>
@@ -386,11 +367,10 @@ const AttendancePage = () => {
                                 return (
                                   <div
                                     key={eventIndex}
-                                    className={`px-2 py-1 rounded-lg mt-1 overflow-hidden border ${
-                                      totalRecords > 0
-                                        ? "border-green-200 text-green-800 bg-green-100"
-                                        : ""
-                                    }`}
+                                    className={`px-2 py-1 rounded-lg mt-1 overflow-hidden border ${totalRecords > 0
+                                      ? "border-green-200 text-green-800 bg-green-100"
+                                      : ""
+                                      }`}
                                   >
                                     {totalRecords > 0 && (
                                       <p className="text-sm truncate leading-tight font-sans">
@@ -421,7 +401,7 @@ const AttendancePage = () => {
                 left: "50%",
                 transform: "translate(-50%, -50%)",
                 width: 700,
-                height: "35rem",
+                height: "fit",
                 bgcolor: "background.paper",
                 border: "2px solid #000",
                 boxShadow: 24,
@@ -454,13 +434,17 @@ const AttendancePage = () => {
                   overflowX: "hidden",
                 }}
               >
-                <h2 className="font-bold text-2xl mb-6 text-gray-800 pb-2">
+                <h2 className="font-bold text-2xl mb-2 text-gray-800 pb-2">
                   Chi tiết điểm danh
                 </h2>
+                <p className="text-gray-800 block mb-5 text-left">
+                  <span className="font-bold text-base">Ngày: </span>{" "}
+                  {moment(selectedDate).format("DD/MM/YYYY")}
+                </p>
 
-                {attendanceByDay.length > 0 ? (
+                {attendanceByDay?.length > 0 ? (
                   attendanceByDay.map((item, index) => (
-                    <List className="text-gray-700">
+                    <List className="text-gray-700" key={item.id}>
                       <ListItem className="flex space-between" sx={{ mt: -2 }}>
                         <div className="w-1/2 flex items-center">
                           <Typography className="font-bold w-24">
@@ -495,7 +479,7 @@ const AttendancePage = () => {
                     </List>
                   ))
                 ) : (
-                  <p className="text-gray-800 block mb-1 font-bold text-sm ">
+                  <p className="text-gray-800 block mb-1 font-bold text-xl text-center">
                     Không có dữ liệu được ghi nhận
                   </p>
                 )}

@@ -8,25 +8,26 @@ import {
   Divider,
   TextField,
   Typography,
-  TablePagination,
   TextareaAutosize,
+  Stack,
+  Rating,
+  Autocomplete,
+  IconButton,
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
+import AddIcon from '@mui/icons-material/Add';
 import { Label } from "views/components/label";
 import {
+  courseOptions,
   defaultCourseImage,
-  defaultPageIndex,
-  defaultPageSize,
-  defaultUniversityImage,
 } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { coursePath, ojtBatchPath } from "logic/api/apiUrl";
+import { coursePath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
 import {
+  courseNoti,
   generalNoti,
-  ojtBatchNoti,
-  universityNoti,
 } from "logic/constants/notification";
 import { toast } from "react-toastify";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -35,16 +36,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 import ProfileSkeleton from "views/modules/account/ProfileSkeleton";
 import SubCard from "views/components/cards/SubCard";
-import { ojtBatchValid, updateCourseValid } from "logic/utils/validateUtils";
+import { coursePositionValid, courseSkillValid, updateCourseValid } from "logic/utils/validateUtils";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ModalAddCoursePosition from "views/components/modal/ModalAddCoursePosition";
+import ModalAddCourseSkill from "views/components/modal/ModalAddCourseSkill";
 
 const CourseDetailPage = () => {
   const { courseId } = useParams();
 
   const axiosPrivate = useAxiosPrivate();
-  const [ojtBatch, setOjtBatchs] = useState([]);
-  const [page, setPage] = useState(defaultPageIndex);
-  const [rowsPerPage, setRowsPerPage] = useState(defaultPageSize);
-  const [totalItem, setTotalItem] = useState(0);
   const [isFetchingLoading, setIsFetchingLoading] = useState(false);
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
@@ -54,12 +54,14 @@ const CourseDetailPage = () => {
   const [imgURL, setImgURL] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [clickedId, setClickedId] = useState(0);
+  const [isModalOpenPosition, setIsModalOpenPosition] = useState(false);
+  const [isModalOpenSkill, setIsModalOpenSkill] = useState(false);
   const [status, setStatus] = useState(0);
   const [link, setLink] = useState("");
   const [platformName, setPlatformName] = useState("");
   const [description, setDescription] = useState("");
+  const [coursePositions, setCoursePositions] = useState([]);
+  const [courseSkills, setCourseSkills] = useState([]);
 
   const fetchCourseDetail = async () => {
     try {
@@ -71,9 +73,11 @@ const CourseDetailPage = () => {
       setLink(response.data.link);
       setUrl(response.data.imageURL);
       setStatus(response.data.status);
+      setCoursePositions(response.data.coursePositions);
+      setCourseSkills(response.data.courseSkills);
       setIsFetchingLoading(false);
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data);
       setIsFetchingLoading(false);
     }
   };
@@ -88,19 +92,10 @@ const CourseDetailPage = () => {
 
   useEffect(() => {
     if (imgURL) {
-      handleUpdateUniversity();
+      handleUpdateCourse();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imgURL]);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage + 1);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(1);
-  };
 
   const onImageChange = (file) => {
     setUrl(URL.createObjectURL(file));
@@ -132,38 +127,21 @@ const CourseDetailPage = () => {
           toast.error(generalNoti.ERROR.UPLOAD_FAIL);
         }
       } else {
-        setImgURL(defaultUniversityImage);
+        setImgURL(url);
       }
     }
     setIsLoading(false);
   }
 
-  const handleUpdateBatch = async (data) => {
-    const valid = ojtBatchValid(data);
-    setError(valid);
-    if (Object.keys(valid).length === 0) {
-      try {
-        setIsSubmitLoading(true);
-        const response = await axiosPrivate.put(
-          ojtBatchPath.UPDATE_BATCH + clickedId,
-          data
-        );
-        console.log(response);
-        toast.success(ojtBatchNoti.SUCCESS.UPDATE);
-        setIsSubmitLoading(false);
-        setIsModalOpen(false);
-      } catch (e) {
-        console.log(e);
-      }
-    }
+  const handleOpenPosition = (id) => {
+    setIsModalOpenPosition(true);
   };
 
-  const handleOpenMenu = (id) => {
-    setClickedId(id);
-    setIsModalOpen(true);
+  const handleOpenSkill = (id) => {
+    setIsModalOpenSkill(true);
   };
 
-  const handleUpdateUniversity = async () => {
+  const handleUpdateCourse = async () => {
     try {
       setIsSubmitLoading(true);
       const course = {
@@ -174,47 +152,132 @@ const CourseDetailPage = () => {
         imageURL: imgURL,
         status,
       };
-      const response = await axiosPrivate.put(
+      await axiosPrivate.put(
         coursePath.UPDATE_COURSE + courseId,
         course
       );
-      console.log(response);
-      toast.success(universityNoti.SUCCESS.UPDATE);
+      toast.success(courseNoti.SUCCESS.UPDATE);
       setIsSubmitLoading(false);
+      navigate("/course-list");
     } catch (e) {
-      console.log(e);
+      toast.error(e.response.data);
       setIsSubmitLoading(false);
     }
+  };
+
+  const handleUpdateSkill = async (skillId, before, after) => {
+    try {
+      setIsFetchingLoading(true);
+      const courseSkill = {
+        skillId: skillId,
+        recommendedLevel: before,
+        afterwardLevel: after,
+      };
+      if (after < before) {
+        toast.error(courseNoti.ERROR.AFTERWARD_LEVEL_TOO_LOW);
+        setIsFetchingLoading(false);
+        return;
+      }
+      await axiosPrivate.put(
+        coursePath.UPDATE_COURSE_SKILL + courseId,
+        courseSkill
+      );
+      toast.success(courseNoti.SUCCESS.UPDATE);
+      fetchCourseDetail();
+      setIsFetchingLoading(false);
+    } catch (e) {
+      toast.error(e.response.data);
+      setIsFetchingLoading(false);
+    }
+  }
+
+  const handleUpdatePosition = async (positionId, isCompulsory) => {
+    try {
+      setIsFetchingLoading(true);
+      const coursePosition = {
+        positionId: positionId,
+        isCompulsory: isCompulsory,
+      };
+      await axiosPrivate.put(
+        coursePath.UPDATE_COURSE_POSITION + courseId,
+        coursePosition
+      );
+      toast.success(courseNoti.SUCCESS.UPDATE);
+      fetchCourseDetail();
+      setIsFetchingLoading(false);
+    } catch (e) {
+      toast.error(e.response.data);
+      setIsFetchingLoading(false);
+    }
+  };
+
+  const handleAddNewCoursePosition = async (item) => {
+    setIsSubmitLoading(true);
+    const position = {
+      positionId: item.positionId,
+      isCompulsory: item.isCompulsory,
+    };
+    const valid = coursePositionValid(position);
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
+      try {
+        await axiosPrivate.post(coursePath.CREATE_COURSE_POSITION + courseId, position);
+        toast.success(courseNoti.SUCCESS.UPDATE);
+        fetchCourseDetail();
+        setIsSubmitLoading(false);
+        setIsModalOpenPosition(false);
+      } catch (e) {
+        toast.error(e.response.data);
+        setIsSubmitLoading(false);
+        setIsModalOpenPosition(false);
+      }
+    };
+    setIsSubmitLoading(false);
+  };
+
+  const handleAddNewCourseSkill = async (item) => {
+    setIsSubmitLoading(true);
+    const skill = {
+      skillId: item.skillId,
+      recommendedLevel: item.recommendedLevel,
+      afterwardLevel: item.afterwardLevel,
+    };
+    const valid = courseSkillValid(skill);
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
+      try {
+        await axiosPrivate.post(coursePath.CREATE_COURSE_SKILL + courseId, skill);
+        toast.success(courseNoti.SUCCESS.UPDATE);
+        fetchCourseDetail();
+        setIsSubmitLoading(false);
+        setIsModalOpenSkill(false);
+      } catch (e) {
+        toast.error(e.response.data);
+        setIsSubmitLoading(false);
+        setIsModalOpenSkill(false);
+      }
+    };
+    setIsSubmitLoading(false);
   };
 
   return (
     <MainCard
       title="Thông tin khoá học"
-      // secondary={
-      //   <Button
-      //     startIcon={
-      //       <SvgIcon fontSize="small">
-      //         <AddIcon />
-      //       </SvgIcon>
-      //     }
-      //     component={Link}
-      //     to={`/create-new-ojt-batch/${universityId}`}
-      //     variant="contained"
-      //     size="medium"
-      //     sx={{ borderRadius: "10px" }}
-      //   >
-      //     Thêm đợt thực tập mới
-      //   </Button>
-      // }
     >
-      {/* <ModalEditOJTBatch
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        idClicked={clickedId}
-        handleUpdateBatch={handleUpdateBatch}
+      <ModalAddCoursePosition
+        isOpen={isModalOpenPosition}
+        onRequestClose={() => setIsModalOpenPosition(false)}
+        handleAddNewCoursePosition={handleAddNewCoursePosition}
         isSubmitLoading={isSubmitLoading}
         error={error}
-      ></ModalEditOJTBatch> */}
+      ></ModalAddCoursePosition>
+      <ModalAddCourseSkill
+        isOpen={isModalOpenSkill}
+        onRequestClose={() => setIsModalOpenSkill(false)}
+        handleAddNewCourseSkill={handleAddNewCourseSkill}
+        isSubmitLoading={isSubmitLoading}
+        error={error}
+      ></ModalAddCourseSkill>
       {isFetchingLoading ? (
         <ProfileSkeleton />
       ) : (
@@ -329,37 +392,30 @@ const CourseDetailPage = () => {
           </Card>
           <Divider />
           <Card>
-            <CardHeader sx={{ mb: -2 }} title="Đợt thực tập" />
+            <CardHeader sx={{ mb: -2 }} title="Chi tiết kĩ năng" />
             <SubCard>
-              {ojtBatch.length > 0 ? (
-                ojtBatch.map((item) => (
-                  <Card
-                    sx={{ display: "flex" }}
-                    className="rounded-2xl border-0 py-3 pb-1 hover:shadow-xl transition duration-500 ease-in-out border-solid border-2 border-slate-200"
-                    key={item.id}
-                  >
-                    <div className="flex items-center space-x-96 gap-x-6 ml-5 w-full">
-                      <div className="flex-1">
-                        <h1 className="text-[22px] font-semibold mb-2">
-                          {item.name}
-                        </h1>
-                        <p className="mb-2 text-sm text-text2">University</p>
-                        <p className="mb-2 text-sm text-text2">
-                          Thời gian thực tập: {item.startTime} - {item.endTime}
-                        </p>
-                      </div>
-                      <div className="flex items-center justify-center text-white rounded-full w-fit bg-opacity-60">
-                        <Button
-                          variant="outlined"
-                          component="label"
-                          className="mr-3"
-                          onClick={() => handleOpenMenu(item.id)}
-                        >
-                          Chọn
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
+              {courseSkills.length !== 0 ? (
+                courseSkills.map((item, index) => (
+                  <Stack key={index} direction="row" spacing={2}>
+                    <Typography variant="h3" color="text.secondary">
+                      {item.skillName}
+                    </Typography>
+                    <Rating
+                      name="read-only"
+                      value={item.recommendedLevel}
+                      onChange={(event, newValue) => {
+                        handleUpdateSkill(item.skillId, newValue, item.afterwardLevel);
+                      }}
+                    />
+                    <ArrowForwardIcon />
+                    <Rating
+                      name="read-only"
+                      value={item.afterwardLevel}
+                      onChange={(event, newValue) => {
+                        handleUpdateSkill(item.skillId, item.recommendedLevel, newValue);
+                      }}
+                    />
+                  </Stack>
                 ))
               ) : (
                 <>
@@ -368,22 +424,66 @@ const CourseDetailPage = () => {
                     color="text.secondary"
                     sx={{ mb: 2 }}
                   >
-                    Chưa có đợt thực tập nào
+                    Khoá học không yêu cầu kĩ năng
                   </Typography>
                 </>
               )}
-              <TablePagination
-                labelRowsPerPage="Số dòng"
-                component="div"
-                count={totalItem}
-                page={page - 1}
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                labelDisplayedRows={({ from, to, count }) =>
-                  `${from}–${to} trong ${count !== -1 ? count : `hơn ${to}`}`
-                }
-              />
+              <Stack direction="row" spacing={1} justifyContent="center">
+                <IconButton color="primary" aria-label="delete" onClick={() => handleOpenSkill()}>
+                  <AddIcon />
+                </IconButton>
+              </Stack>
+            </SubCard>
+          </Card>
+          <Divider />
+          <Card>
+            <CardHeader sx={{ mb: -2 }} title="Vị trí khuyến nghị" />
+            <SubCard>
+              {coursePositions.length !== 0 ? (
+                coursePositions.map((item, index) => (
+                  <Stack key={index} direction="row" spacing={2}>
+                    <Typography
+                      variant="h3"
+                      color="text.secondary"
+                      sx={{ pt: 2 }}
+                    >
+                      {item.positionName}:{" "}
+                    </Typography>
+                    <Autocomplete
+                      value={courseOptions.find((label) => label.value === item.isCompulsory)}
+                      sx={{ width: 300 }}
+                      disablePortal={false}
+                      options={courseOptions}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="Lựa chọn"
+                        />
+                      )}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          handleUpdatePosition(item.positionId, newValue.value);
+                        }
+                      }}
+                    />
+                  </Stack>
+                ))
+              ) : (
+                <>
+                  <Typography
+                    variant="h3"
+                    color="text.secondary"
+                    sx={{ mb: 2 }}
+                  >
+                    Khoá học không yêu cầu vị trí
+                  </Typography>
+                </>
+              )}
+              <Stack direction="row" spacing={1} justifyContent="center">
+                <IconButton color="primary" aria-label="delete" onClick={() => handleOpenPosition()}>
+                  <AddIcon />
+                </IconButton>
+              </Stack>
             </SubCard>
           </Card>
         </>

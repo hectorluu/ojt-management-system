@@ -13,6 +13,7 @@ import GradingIcon from "@mui/icons-material/Grading";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import SendIcon from "@mui/icons-material/Send";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import DvrIcon from "@mui/icons-material/Dvr";
 
 //items
 const iconsDaskboard = { IconDashboard };
@@ -41,6 +42,7 @@ const iconsPages = {
   AnalyticsIcon,
   SendIcon,
   AssignmentTurnedInIcon,
+  DvrIcon
 };
 
 const pages = {
@@ -71,6 +73,14 @@ const pages = {
           breadcrumbs: false,
         },
         {
+          id: "task-certify",
+          title: "Duyệt công việc",
+          type: "item",
+          url: "/task-certify",
+          icon: iconsPages.AssignmentTurnedInIcon,
+          breadcrumbs: false,
+        },
+        {
           id: "assign-training-plan",
           title: "Phân kế hoạch",
           type: "item",
@@ -89,11 +99,11 @@ const pages = {
       breadcrumbs: false,
     },
     {
-      id: "task-certify",
-      title: "Duyệt công việc",
+      id: "course-list",
+      title: "Khóa học",
       type: "item",
-      url: "/task-certify",
-      icon: iconsPages.AssignmentTurnedInIcon,
+      url: "/trainer-course-list",
+      icon: iconsPages.DvrIcon,
       breadcrumbs: false,
     },
     {

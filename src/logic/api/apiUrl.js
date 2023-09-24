@@ -18,6 +18,12 @@ export const coursePath = {
   GET_TRAINEE_COURSE_LIST: "course/list-course-trainee",
   GET_COMPULSORY_COURSE_LIST: "course/compulsory-courses",
   ENROLL_COURSE: "/course/course-participation/",
+  UPDATE_COURSE_SKILL: "/course/courseskill/",
+  CREATE_COURSE_SKILL: "/course/courseskill/",
+  UPDATE_COURSE_POSITION: "/course/courseposition/",
+  CREATE_COURSE_POSITION: "/course/courseposition/",
+  ASSIGN_COURSE: "/course/assign-course/{traineeId}/{courseId}",
+  GET_TRAINER_COURSE_LIST: "/course/list-course-trainer",
 };
 
 export const criteriaPath = {
@@ -52,6 +58,7 @@ export const trainingPlanPath = {
   ASSIGN_TRAINING_PLAN: "/training-plan/assign-trainee",
   APPROVE_PLAN: "/training-plan/verification-accept/",
   DENY_PLAN: "/training-plan/verification-deny/",
+  GET_PERSONAL_TRAINING_PLAN: "/training-plan/personal-trainee",
 };
 
 export const userPath = {
@@ -156,6 +163,7 @@ export const configPath = {
 export const certificatePath = {
   GET_CERTIFICATE_LIST: "/certificate",
   GET_CERTIFICATE_DETAIL: "/certificate/",
+  GET_LIST_CERTIFICATE_OF_TRAINEE: "/certificate/trainer/",
   SUBMIT_CERTIFICATE: "/certificate/submition-certificate",
   RE_SUBMIT_CERTIFICATE: "/certificate/resubmition-certificate",
   GET_PENDING_CERTIFICATE: "/certificate/trainer/pending-certificate",
@@ -170,6 +178,14 @@ export const trainerTaskPath = {
   APPROVE_TASK: "/task-process/task-accept/",
   REJECT_TASK: "/task-process/task-reject/",
   GET_TRAINEE_LIST_TASK: "/task-process/trainee/",
+};
+
+export const chartPath = {
+  GET_BATCH_AND_TRAINEE: "/chart/batch-and-trainee/",
+  GET_TRAINER_AND_TOTAL_TRAINEES: "/chart/trainer-with-most-trainees/",
+  GET_TRAINEE_WITH_POSITION: "/chart/trainee-position",
+  GET_TRAINEE_WITH_TOP_SKILL: "/chart/trainee-top-skill",
+  GET_TRAINEE_WITH_TOP_TASKDONE: "/chart/trainee-top-done-task",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;
