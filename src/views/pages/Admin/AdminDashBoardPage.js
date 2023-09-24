@@ -271,6 +271,7 @@ const AdminDashBoardPage = () => {
         {/* ... Line Chart Part */}
         <Grid item xs={12} md={6} lg={8}>
           <HorizontalLineChart
+            isLoading={isLoading}
             title={
               <span className="text-xl font-bold">
                 Đào tạo viên với số thực tập sinh nhiều nhất
