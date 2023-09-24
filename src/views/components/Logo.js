@@ -18,7 +18,7 @@ const Logo = () => {
      * <img src={logo} alt="Berry" width="100" />
      *
      */
-    <img src="logoDera.png" alt="logo" width="100" />
+    <img srcSet="deralogo.png 9x" alt="logo" height="100%" />
   );
 };
 

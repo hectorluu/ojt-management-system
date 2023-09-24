@@ -48,6 +48,7 @@ const CreateNewCoursePage = () => {
   const [platformName, setPlatformName] = useState("");
   const [link, setLink] = useState("");
   const [description, setDescription] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -96,7 +97,7 @@ const CreateNewCoursePage = () => {
       setSkillList(response.data.data);
       setFilteredSkillList(response.data.data);
     } catch (error) {
-      console.log("fetchSkills ~ error", error);
+      toast.error(error.response.data);
     }
   };
 
@@ -104,16 +105,15 @@ const CreateNewCoursePage = () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-          "?PageSize=" +
-          100000 +
-          "&PageIndex=" +
-          1
+        "?PageSize=" +
+        100000 +
+        "&PageIndex=" +
+        1
       );
       setPositionList(response.data.data);
       setFilteredPositionList(response.data.data);
-      console.log("fetchPositions ~ success", response);
     } catch (error) {
-      console.log("fetchSkills ~ error", error);
+      toast.error(error.response.data);
     }
   };
 
@@ -129,9 +129,11 @@ const CreateNewCoursePage = () => {
         courseSkills,
       });
       toast.success(courseNoti.SUCCESS.CREATE);
+      setIsLoading(false);
       navigate("/course-list");
     } catch (error) {
-      toast.error(error);
+      toast.error(error.response.data);
+      setIsLoading(false);
     }
   };
 
@@ -151,6 +153,7 @@ const CreateNewCoursePage = () => {
   };
 
   async function uploadFile() {
+    setIsLoading(true);
     const course = {
       name,
       platformName,
@@ -161,14 +164,13 @@ const CreateNewCoursePage = () => {
     };
     const valid = courseValid(course);
     setError(valid);
-    if (Object.keys(valid).length > 0) {
+    if (Object.keys(valid).length === 0) {
       if (coursePic) {
         try {
           const imageRef = ref(storage, "images/courses/" + coursePic.name);
           await uploadBytes(imageRef, coursePic).then(async (snapshot) => {
             await getDownloadURL(snapshot.ref).then(async (downloadURL) => {
               await setImageURL(downloadURL);
-              console.log(imageURL);
             });
           });
         } catch (e) {
@@ -178,6 +180,7 @@ const CreateNewCoursePage = () => {
         setImageURL(defaultCourseImage);
       }
     }
+    setIsLoading(false);
   }
 
   const handleAddSkillField = () => {
@@ -523,6 +526,7 @@ const CreateNewCoursePage = () => {
               <Button
                 type="submit"
                 className="px-10 mx-auto text-white bg-primary"
+                isLoading={isLoading}
               >
                 Bước tiếp theo{" "}
               </Button>

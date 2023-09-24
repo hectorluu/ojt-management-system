@@ -35,19 +35,26 @@ const SignInPage = () => {
   const [password, setPassword] = useState("");
 
   return (
-    <LayoutAuthentication heading="KNS OJT Management">
+    <LayoutAuthentication
+      heading={<span className="font-bold text-3xl">KNS OJT Management</span>}
+    >
       <FormGroup>
-        <Label htmlFor="email">Email *</Label>
+        <Label htmlFor="email">
+          <span className="font-semibold text-black">Email *</span>
+        </Label>
         <TextField
           error={error.email ? true : false}
           helperText={error.email}
           name="email"
           placeholder="example@gmail.com"
           onChange={(e) => setEmail(e.target.value)}
-          onBlur={(e) => setEmail(e.target.value)} />
+          onBlur={(e) => setEmail(e.target.value)}
+        />
       </FormGroup>
       <FormGroup>
-        <Label htmlFor="password">Mật khẩu *</Label>
+        <Label htmlFor="password">
+          <span className="font-semibold text-black">Mật khẩu *</span>
+        </Label>
         <TextField
           error={error.password ? true : false}
           helperText={error.password}
@@ -63,11 +70,17 @@ const SignInPage = () => {
                 onClick={handleTogglePassword}
               ></IconEyeToggle>
             ),
-          }} />
+          }}
+        />
       </FormGroup>
       <FormGroup>
         <div className="text-right">
-          <a href="/reset-password" className="inline-block text-sm font-medium text-primary underline hover:underline-offset-2">Quên mật khẩu?</a>
+          <a
+            href="/reset-password"
+            className="inline-block text-sm font-medium text-primary underline hover:underline-offset-2"
+          >
+            Quên mật khẩu?
+          </a>
         </div>
       </FormGroup>
       <FormGroup>
@@ -76,7 +89,7 @@ const SignInPage = () => {
           loading={isLoading}
           onClick={() => handleSignIn()}
           variant="contained"
-          color="success"
+          className="bg-green-500 hover:bg-green-600"
           sx={{ height: "50px" }}
         >
           Đăng nhập

@@ -109,7 +109,7 @@ const ModalTrainingPlanDetailTrainer = ({
                 </div>
                 {trainingPlanDetails.length > 0 ? (
                   trainingPlanDetails.map((detail, index) => (
-                    <div className="mb-6">
+                    <div className="mb-6" key={index}>
                       <p className="mb-2 text-text2">
                         <strong className="text-text1">
                           {index + 1}

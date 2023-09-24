@@ -36,7 +36,6 @@ const TrainingPlanListPage = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [trainingplans, setTrainingplans] = useState([]);
-  const [totalTrainingPlans, setTotalTrainingPlans] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
@@ -64,18 +63,6 @@ const TrainingPlanListPage = () => {
       }
     }
     fetchTrainingPlans();
-
-    async function fetchTotalTrainingPlans() {
-      try {
-        const response = await axiosPrivate.get(
-          trainingPlanPath.GET_TRAINING_PLAN_LIST + "?PageSize=" + 1000000
-        );
-        setTotalTrainingPlans(response.data.data);
-      } catch (error) {
-        console.log("fetchTrainingPlans ~ error", error);
-      }
-    }
-    fetchTotalTrainingPlans();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
@@ -96,9 +83,7 @@ const TrainingPlanListPage = () => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   return (
-    <MainCard
-      title={`Danh sách kế hoạch đào tạo (${totalTrainingPlans.length})`}
-    >
+    <MainCard title={`Danh sách kế hoạch đào tạo `}>
       <ModalTrainingPlanDetailManager
         isOpen={isTraingingPlanDetailModalOpen}
         onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}

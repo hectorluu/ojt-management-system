@@ -9,7 +9,7 @@ import CoursePlatform from "./part/CoursePlatform";
 import { useNavigate } from "react-router-dom";
 import { defaultCourseImage } from "logic/constants/global";
 
-export default function CourseCardDisplay(course) {
+export default function TrainerCourseCardDisplay(course) {
   const coursePosition = (course) => {
     let text = course.course.coursePositions[0]?.positionName;
     for (let i = 1; i < course.course.coursePositions.length; i++) {
@@ -29,15 +29,15 @@ export default function CourseCardDisplay(course) {
         sx={{ display: "flex" }}
         size="small"
         onClick={() => {
-          navigate("/course-list/" + course.course.id);
+          navigate("/trainer-course-detail/" + course.course.id);
         }}
       >
         <div className="flex items-center gap-x-[5px] w-full">
           <CourseImage
-            className="h-[266px] flex-1 w-full"
+            className="h-[266px] flex-1"
             image={course.course.imageURL || defaultCourseImage}
           ></CourseImage>
-          <div className="flex-auto w-[400px]">
+          <div className="flex-auto max-w-[600px]">
             <CourseCategory
               text={coursePosition(course)}
               className="text-sm"
