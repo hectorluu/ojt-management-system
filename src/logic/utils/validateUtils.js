@@ -44,7 +44,7 @@ export function reportValid(report) {
         }
       };
     } else {
-      if (!report.templateHeaders[i].name || !report.templateHeaders[i].totalPoint) {
+      if (!report.templateHeaders[i].name) {
         if (!error["templateHeaders"]) {
           error["templateHeaders"] = [{ name: "", totalPoint: "" }];
         } else {
