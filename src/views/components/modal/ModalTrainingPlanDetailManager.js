@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Modal } from "@mui/material";
+import { Box, CircularProgress, Modal } from "@mui/material";
 import { fDate } from "logic/utils/formatTime";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { trainingPlanPath } from "logic/api/apiUrl";
@@ -11,7 +11,7 @@ const ModalTrainingPlanDetailManager = ({
   selectedTrainingPlan,
 }) => {
   const axiosPrivate = useAxiosPrivate();
-  const [, setIsLoading] = useState(true); // New loading state
+  const [isLoading, setIsLoading] = useState(true); // New loading state
   const [trainingPlanDetails, setTrainingPlanDetails] = useState([]);
 
   useEffect(() => {
@@ -27,7 +27,8 @@ const ModalTrainingPlanDetailManager = ({
       const response = await axiosPrivate.get(
         trainingPlanPath.GET_TRAINING_PLAN_DETAIL + selectedTrainingPlan.id
       );
-      setTrainingPlanDetails(response.data.details);
+      setTrainingPlanDetails(response.data);
+      console.log(response.data);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
       toast.error(error.response.data);
@@ -81,58 +82,59 @@ const ModalTrainingPlanDetailManager = ({
             overflowX: "hidden",
           }}
         >
-          <div>
-            <div className="bg-white shadow-1 rounded-xl">
-              <div className="p-5">
-                <div className="flex items-center mb-3 gap-x-3">
-                  <span className="text-xl font-bold text-text1">
-                    {selectedTrainingPlan?.name}
-                  </span>
+          <div style={isLoading ? { display: 'flex', justifyContent: 'center', alignItems: 'center' } : {}}>
+            {isLoading ? <CircularProgress /> :
+              <div className="bg-white shadow-1 rounded-xl">
+                <div className="p-5">
+                  <div className="flex items-center mb-3 gap-x-3">
+                    <span className="text-xl font-bold text-text1">
+                      {trainingPlanDetails?.name}
+                    </span>
+                  </div>
+                  <div className="mb-2">
+                    <strong className="font-semi">Ngày tạo: </strong>
+                    <span className="text-text2">
+                      {fDate(trainingPlanDetails?.createDate)}
+                    </span>
+                  </div>
+                  <div className="mb-2">
+                    <strong className="font-semi">Người tạo: </strong>
+                    <span className="text-text2">
+                      {trainingPlanDetails?.firstName +
+                        " " +
+                        trainingPlanDetails?.lastName}
+                    </span>
+                  </div>
                 </div>
-                <div className="mb-2">
-                  <strong className="font-semi">Ngày thay đổi: </strong>
-                  <span className="text-text2">
-                    {fDate(selectedTrainingPlan?.updateDate)}
-                  </span>
-                </div>
-                <div className="mb-2">
-                  <strong className="font-semi">Người tạo: </strong>
-                  <span className="text-text2">
-                    {selectedTrainingPlan?.firstName +
-                      " " +
-                      selectedTrainingPlan?.lastName}
-                  </span>
-                </div>
-              </div>
 
-              <div className="p-5">
-                <div className="flex items-center mb-4 gap-x-3">
-                  <span className="text-xl font-bold text-text1">Chi tiết</span>
+                <div className="p-5">
+                  <div className="flex items-center mb-4 gap-x-3">
+                    <span className="text-xl font-bold text-text1">Chi tiết</span>
+                  </div>
+                  {trainingPlanDetails?.details?.length > 0 ? (
+                    trainingPlanDetails?.details?.map((detail, index) => (
+                      <div className="mb-6" key={index}>
+                        <p className="mb-2 text-text2">
+                          <strong className="text-text1">
+                            {index + 1}
+                            {")"} {detail.name}
+                          </strong>
+                        </p>
+                        <p className="text-text2 pl-4 mb-2">
+                          {detail?.description}
+                        </p>
+                        <p className="text-text2 pl-4">
+                          {fDate(detail?.startTime) +
+                            " - " +
+                            fDate(detail?.endTime)}
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <div>Chưa có chi tiết được tạo.</div>
+                  )}
                 </div>
-                {trainingPlanDetails.length > 0 ? (
-                  trainingPlanDetails.map((detail, index) => (
-                    <div className="mb-6" key={index}>
-                      <p className="mb-2 text-text2">
-                        <strong className="text-text1">
-                          {index + 1}
-                          {")"} {detail.name}
-                        </strong>
-                      </p>
-                      <p className="text-text2 pl-4 mb-2">
-                        {detail?.description}
-                      </p>
-                      <p className="text-text2 pl-4">
-                        {fDate(detail?.startTime) +
-                          " - " +
-                          fDate(detail?.endTime)}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <div>Chưa có chi tiết được tạo.</div>
-                )}
-              </div>
-            </div>
+              </div>}
           </div>
         </PerfectScrollbar>
       </Box>

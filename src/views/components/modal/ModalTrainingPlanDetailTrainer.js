@@ -27,7 +27,7 @@ const ModalTrainingPlanDetailTrainer = ({
       const response = await axiosPrivate.get(
         trainingPlanPath.GET_TRAINING_PLAN_DETAIL + selectedTrainingPlan.id
       );
-      setTrainingPlanDetails(response.data.details);
+      setTrainingPlanDetails(response.data);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
       toast.error(error.response.data);
@@ -85,13 +85,13 @@ const ModalTrainingPlanDetailTrainer = ({
               <div className="p-5">
                 <div className="flex items-center mb-3 gap-x-3">
                   <span className="text-xl font-bold text-text1">
-                    {selectedTrainingPlan?.name}
+                    {trainingPlanDetails?.name}
                   </span>
                 </div>
                 <div className="mb-2">
                   <strong className="font-semi">Ngày thay đổi: </strong>
                   <span className="text-text2">
-                    {fDate(selectedTrainingPlan?.updateDate)}
+                    {fDate(trainingPlanDetails?.createDate)}
                   </span>
                 </div>
               </div>
@@ -100,8 +100,8 @@ const ModalTrainingPlanDetailTrainer = ({
                 <div className="flex items-center mb-4 gap-x-3">
                   <span className="text-xl font-bold text-text1">Chi tiết</span>
                 </div>
-                {trainingPlanDetails.length > 0 ? (
-                  trainingPlanDetails.map((detail, index) => (
+                {trainingPlanDetails?.details?.length > 0 ? (
+                  trainingPlanDetails?.details?.map((detail, index) => (
                     <div className="mb-6" key={index}>
                       <p className="mb-2 text-text2">
                         <strong className="text-text1">
