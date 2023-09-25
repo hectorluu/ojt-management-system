@@ -15,6 +15,12 @@ import CheckIcon from '@mui/icons-material/Check';
 export default function CertificateCardDisplay({ certificate, onClickSubmit, isLoading, error }) {
   const [link, setLink] = React.useState("");
 
+  React.useEffect(() => {
+    if (certificate) {
+      setLink(certificate?.linkCertificate || "");
+    };
+  }, [certificate]);
+
   return (
     <Card
       sx={{ display: "flex" }}
@@ -27,6 +33,7 @@ export default function CertificateCardDisplay({ certificate, onClickSubmit, isL
             {certificate?.courseName}
           </CertificateName>
           <TextField
+            value={link}
             fullWidth
             error={error ? true : false}
             helperText={error}

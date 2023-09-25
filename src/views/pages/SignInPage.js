@@ -36,7 +36,7 @@ const SignInPage = () => {
 
   return (
     <LayoutAuthentication
-      heading={<span className="font-bold text-3xl">KNS OJT Management</span>}
+      heading="KNS OJT Management"
     >
       <FormGroup>
         <Label htmlFor="email">

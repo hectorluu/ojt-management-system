@@ -264,20 +264,22 @@ const CourseDetailPage = () => {
     <MainCard
       title="Thông tin khoá học"
     >
-      <ModalAddCoursePosition
-        isOpen={isModalOpenPosition}
-        onRequestClose={() => setIsModalOpenPosition(false)}
-        handleAddNewCoursePosition={handleAddNewCoursePosition}
-        isSubmitLoading={isSubmitLoading}
-        error={error}
-      ></ModalAddCoursePosition>
-      <ModalAddCourseSkill
-        isOpen={isModalOpenSkill}
-        onRequestClose={() => setIsModalOpenSkill(false)}
-        handleAddNewCourseSkill={handleAddNewCourseSkill}
-        isSubmitLoading={isSubmitLoading}
-        error={error}
-      ></ModalAddCourseSkill>
+      {isModalOpenPosition ?
+        <ModalAddCoursePosition
+          onRequestClose={() => setIsModalOpenPosition(false)}
+          handleAddNewCoursePosition={handleAddNewCoursePosition}
+          isSubmitLoading={isSubmitLoading}
+          error={error}
+        ></ModalAddCoursePosition>
+        : null}
+      {isModalOpenSkill ?
+        <ModalAddCourseSkill
+          onRequestClose={() => setIsModalOpenSkill(false)}
+          handleAddNewCourseSkill={handleAddNewCourseSkill}
+          isSubmitLoading={isSubmitLoading}
+          error={error}
+        ></ModalAddCourseSkill>
+        : null}
       {isFetchingLoading ? (
         <ProfileSkeleton />
       ) : (

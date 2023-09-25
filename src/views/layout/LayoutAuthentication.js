@@ -47,7 +47,7 @@ const LayoutAuthentication = (props) => {
         />
       </Link>
       <div className="w-full max-w-[556px] bg-white dark:bg-darkSecondary rounded-xl px-5 py-8 lg:px-16 lg:py-12 mx-auto">
-        <h1 className="mb-1 text-lg font-semibold text-center lg:text-xl lg:mb-3 text-text1 dark:text-white">
+        <h1 className="mb-1 text-lg font-bold text-center lg:text-xl lg:mb-3 text-text1 dark:text-white text-3xl">
           {heading}
         </h1>
         {children}
