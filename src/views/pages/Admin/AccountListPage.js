@@ -148,6 +148,7 @@ const AccountListPage = () => {
   const navigate = useNavigate();
 
   const handleDeactiveUser = async () => {
+    setOpen(null);
     try {
       setIsLoading(true);
       const response = await axiosPrivate.put(userPath.DISABLE_USER + userSelected.id);
@@ -162,6 +163,7 @@ const AccountListPage = () => {
   };
 
   const handleActiveUser = async () => {
+    setOpen(null);
     try {
       setIsLoading(true);
       const response = await axiosPrivate.put(userPath.ACTIVE_USER + userSelected.id);
@@ -303,7 +305,7 @@ const AccountListPage = () => {
           <ModeEditOutlineIcon sx={{ mr: 2 }} />
           Sửa
         </MenuItem>
-        {userSelected.status === 2 ? (
+        {userSelected?.status === 2 ? (
           <MenuItem onClick={() => handleOpenDeleteModal(userSelected)}>
             <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
             <span style={{ color: theme.palette.error.main }}>Vô hiệu</span>

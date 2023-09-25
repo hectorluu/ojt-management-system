@@ -1,6 +1,7 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { useEffect, useState } from "react";
 import {
+  Autocomplete,
   Button,
   Card,
   InputAdornment,
@@ -13,6 +14,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   useTheme,
 } from "@mui/material";
 import {
@@ -44,6 +46,7 @@ const TrainerTrainingPlanPage = () => {
   const [trainingplans, setTrainingplans] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isLoading, setIsLoading] = useState(true); // New loading state
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     async function fetchTrainingPlans() {
@@ -56,7 +59,9 @@ const TrainerTrainingPlanPage = () => {
           "&PageSize=" +
           rowsPerPage +
           "&nameSearch=" +
-          `${searchTerm === null ? "" : searchTerm}`
+          `${searchTerm === null ? "" : searchTerm}` +
+          "&status=" +
+          status
         );
         setTrainingplans(response.data.data);
         setTotalItem(response.data.totalItem);
@@ -69,7 +74,7 @@ const TrainerTrainingPlanPage = () => {
     fetchTrainingPlans();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, [searchTerm, page, rowsPerPage, status]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -77,7 +82,7 @@ const TrainerTrainingPlanPage = () => {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
 
   const [isTraingingPlanDetailModalOpen, setIsTrainingPlanDetailModalOpen] =
@@ -131,6 +136,23 @@ const TrainerTrainingPlanPage = () => {
               onChange={setSearchTerm}
             />
           </Card>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              options={trainingPlanStatusOptions}
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Trạng thái" />
+              )}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setStatus(newValue.value);
+                } else {
+                  setStatus("");
+                }
+              }}
+            />
+          </div>
         </div>
         <TableContainer sx={{ width: 1, mt: 2, mb: -2, borderRadius: 4 }}>
           <Table stickyHeader>
