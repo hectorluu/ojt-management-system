@@ -20,7 +20,7 @@ const CertificateCertifyPage = () => {
   const axiosPrivate = useAxiosPrivate();
   const [isApprove, setIsApprove] = useState(false);
   const [selected, setSelected] = useState({}); // New selected state
-  const [taskList, setTaskList] = useState([]); // New task list state
+  const [certList, setCertList] = useState([]); // New task list state
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
@@ -48,7 +48,7 @@ const CertificateCertifyPage = () => {
         "&PageSize=" +
         rowsPerPage
       );
-      setTaskList(response.data.data);
+      setCertList(response.data.data);
       setTotalItem(response.data.totalItem);
       setIsLoading(false);
     } catch (error) {
@@ -195,8 +195,8 @@ const CertificateCertifyPage = () => {
               <CertificateSkeleton />
               <CertificateSkeleton />
             </>
-          ) : taskList.length !== 0 ? (
-            taskList.map((item, index) => (
+          ) : certList.length !== 0 ? (
+            certList.map((item, index) => (
               <CertificateCardCertify
                 certificate={item}
                 key={index}
