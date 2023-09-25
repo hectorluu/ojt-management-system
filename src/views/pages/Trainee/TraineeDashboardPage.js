@@ -40,7 +40,6 @@ const TraineeDashboardPage = () => {
       toast.error(error.response.data);
     }
   };
-
   return (
     <Fragment>
       <Grid container spacing={3}>
