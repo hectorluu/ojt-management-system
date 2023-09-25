@@ -16,8 +16,6 @@ import TablePagination from "@mui/material/TablePagination";
 import MainCard from "views/components/cards/MainCard";
 import SubCard from "views/components/cards/SubCard";
 import StyledTableCell from "views/modules/table/StyledTableCell";
-// import SearchIcon from "@mui/icons-material/Search";
-// import useOnChange from "logic/hooks/useOnChange";
 import { trainerPath } from "logic/api/apiUrl";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -123,13 +121,15 @@ const AssignedTraineeListPage = () => {
                     </TableCell>
                     <TableCell align="left" width={"25%"}>{item.email}</TableCell>
                     <TableCell align="center" width={"15%"}>{item.positionName}</TableCell>
-                    <Chip color={item.status === 1 ? "warning" : "success"}>
-                      {
-                        traineeWorkingStatus.find(
-                          (label) => label.value === item.status
-                        ).label
-                      }
-                    </Chip>
+                    <TableCell align="center" width={"15%"}>
+                      <Chip color={item.status === 1 ? "warning" : "success"}>
+                        {
+                          traineeWorkingStatus.find(
+                            (label) => label.value === item.status
+                          ).label
+                        }
+                      </Chip>
+                    </TableCell>
                     <TableCell align="right" width={"10%"}>
                       <Button
                         variant="contained"
