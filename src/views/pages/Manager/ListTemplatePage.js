@@ -80,7 +80,7 @@ const ListTemplatePage = () => {
       setTotalItem(response.data.totalItem);
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data);
       setIsLoading(false);
     }
   }

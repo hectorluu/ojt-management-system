@@ -25,7 +25,6 @@ export class ExcelUtility {
             req.open("GET", url);
             req.responseType = "arraybuffer";
             req.onload = (d) => {
-                console.log(req.response);
                 LuckyExcel.transformExcelToLucky(req.response,
                     function (exportJson, luckysheetfile) {
                         resolve(exportJson);

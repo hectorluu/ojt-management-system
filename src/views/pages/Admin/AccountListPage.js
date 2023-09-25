@@ -47,6 +47,7 @@ import SubCard from "views/components/cards/SubCard";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AccountListSkeleton from "views/modules/account/AccountListSkeleton";
+import { toast } from "react-toastify";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -77,7 +78,7 @@ const AccountListPage = () => {
       setTotalItem(response.data.totalItem);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
-      console.log("fetchUsers ~ error", error);
+      toast.error(error.response.data);
       setIsLoading(false); // Set loading to false after fetching data
     }
   };

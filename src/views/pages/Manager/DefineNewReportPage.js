@@ -72,12 +72,6 @@ function DefineNewReportPage() {
   }, [url]);
 
   useEffect(() => {
-
-    console.log(templateHeaders);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [templateHeaders]);
-
-  useEffect(() => {
     const nothing = [{ value: "", label: "Không" }];
     const notCriteria = notCriteriaOptions.slice();
     notCriteria.unshift(...nothing);
@@ -98,9 +92,8 @@ function DefineNewReportPage() {
         2
       );
       setFormulaList(response.data.data);
-      console.log("fetchFormula ~ success", response);
     } catch (error) {
-      console.log("fetchFormula ~ error", error);
+      toast.error(error.response.data);
     }
   };
 
@@ -116,9 +109,8 @@ function DefineNewReportPage() {
         2
       );
       setUniversityList(response.data.data);
-      console.log("fetchUniversities ~ success", response);
     } catch (error) {
-      console.log("fetchUniversities ~ error", error);
+      toast.error(error.response.data);
     }
   };
 
@@ -187,6 +179,9 @@ function DefineNewReportPage() {
     }
     if (newArray[index].isCriteria === false) {
       newArray[index].formulaId = undefined;
+    }
+    if (newArray[index].isCriteria === true) {
+      newArray[index].matchedAttribute = "Point";
     }
     newArray[index].totalPoint = "";
     setTemplateHeaders(newArray);

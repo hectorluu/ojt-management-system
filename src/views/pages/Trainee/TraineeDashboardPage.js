@@ -14,18 +14,31 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import TrainingPlanTable from "views/components/table/TrainingPlanTable";
-import { faker } from "@faker-js/faker";
 import SkillChart from "views/components/chart/SkillChart";
+import { chartPath } from "logic/api/apiUrl";
+import { processSkillChart } from "logic/utils/chartUtils";
+import { toast } from "react-toastify";
 
 const TraineeDashboardPage = () => {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const theme = useTheme();
+  const [skillChartData, setSkillChartData] = useState({ label: [], init: [], current: [] });
 
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
+    fetchSkillChart();
     setIsLoading(false);
   }, []);
+
+  const fetchSkillChart = async () => {
+    try {
+      const response = await axiosPrivate.get(chartPath.GET_TRAINEE_WITH_TOP_SKILL);
+      setSkillChartData(processSkillChart(response.data));
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  };
 
   return (
     <Fragment>
@@ -315,27 +328,16 @@ const TraineeDashboardPage = () => {
         </Grid>
         <Grid item xs={4} md={4} lg={4} sx={{ mt: 5 }}>
           <SkillChart
-            title="Current Skill"
-            chartLabels={[
-              "English",
-              "History",
-              "Physics",
-              "Geography",
-              "Chinese",
-              "Math",
-            ]}
+            title="Thông tin kỹ năng"
+            chartLabels={skillChartData.label}
             chartData={[
               {
-                name: "Series 1",
-                data: [80, 0, 0, 0, 30, 70],
+                name: "Ban đầu",
+                data: skillChartData.init,
               },
               {
-                name: "Series 2",
-                data: [20, 30, 40, 80, 20, 80],
-              },
-              {
-                name: "Series 3",
-                data: [44, 76, 78, 13, 43, 0],
+                name: "Hiện tại",
+                data: skillChartData.current,
               },
             ]}
             chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}

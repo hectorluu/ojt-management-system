@@ -11,6 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 import Button from "../button/Button";
+import { toast } from "react-toastify";
 
 const ModalEditPositionAdmin = ({
   isOpen,
@@ -35,7 +36,7 @@ const ModalEditPositionAdmin = ({
       setName(response.data.name);
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data);
       setIsLoading(false);
     }
   };

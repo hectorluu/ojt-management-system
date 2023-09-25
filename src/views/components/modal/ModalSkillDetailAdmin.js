@@ -11,6 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 import Button from "../button/Button";
+import { toast } from "react-toastify";
 
 const ModalSkillDetailAdmin = ({
   isOpen,
@@ -35,9 +36,8 @@ const ModalSkillDetailAdmin = ({
       setSkill(response.data);
       setName(response.data.name);
       setIsLoading(false);
-      console.log(skill);
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data);
       setIsLoading(false);
     }
   };

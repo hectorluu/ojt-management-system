@@ -27,6 +27,7 @@ import MainCard from "views/components/cards/MainCard";
 import SearchIcon from "@mui/icons-material/Search";
 import StyledTableCell from "views/modules/table/StyledTableCell";
 import SubCard from "views/components/cards/SubCard";
+import { toast } from "react-toastify";
 
 const AssignedTraineeTaskListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -48,11 +49,10 @@ const AssignedTraineeTaskListPage = () => {
           page
       );
       setTasks(response.data.data);
-      console.log(tasks);
       setTotalItem(response.data.totalItem);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
-      console.log("fetchTasks ~ error", error);
+      toast.error(error.response.data);
       setIsLoading(false); // Set loading to false after fetching data
     }
   };

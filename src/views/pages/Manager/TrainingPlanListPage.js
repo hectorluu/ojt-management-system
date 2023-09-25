@@ -29,6 +29,7 @@ import StyledTableCell from "views/modules/table/StyledTableCell";
 import SearchIcon from "@mui/icons-material/Search";
 import useOnChange from "logic/hooks/useOnChange";
 import { fDate } from "logic/utils/formatTime";
+import { toast } from "react-toastify";
 
 const TrainingPlanListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -58,7 +59,7 @@ const TrainingPlanListPage = () => {
         setTotalItem(response.data.totalItem);
         setIsLoading(false); // Set loading to false after fetching data
       } catch (error) {
-        console.log("fetchTrainingPlans ~ error", error);
+        toast.error(error.response.data);
         setIsLoading(false); // Set loading to false after fetching data
       }
     }

@@ -44,7 +44,6 @@ const ChangPassword = () => {
         dispatch(authUpdateUser({}));
         setIsLoading(false);
       } catch (error) {
-        console.log("error", error);
         toast.error(error.response.data);
         setIsLoading(false);
       }

@@ -77,7 +77,7 @@ const TrainerProfilePage = () => {
       setPositionName(response.data.positionName);
       setIsFetchingLoading(false);
     } catch (error) {
-      console.log("error", error);
+      toast.error(error.response.data);
       setIsFetchingLoading(false);
     }
   }
@@ -100,7 +100,7 @@ const TrainerProfilePage = () => {
       setIsLoading(false);
       navigate("/trainer-dashboard");
     } catch (error) {
-      console.log("error", error);
+      toast.error(error.response.data);
       toast.error(error);
       setIsLoading(false);
     }
@@ -164,20 +164,13 @@ const TrainerProfilePage = () => {
         dispatch(authUpdateUser({}));
         setIsLoading(false);
       } catch (error) {
-        console.log("error", error);
+        toast.error(error.response.data);
         toast.error(error.response.data);
         setIsLoading(false);
       }
     };
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    if (birthday) {
-      console.log(moment(birthday));
-    }
-
-  });
 
   const onImageChange = (file) => {
     setUrl(URL.createObjectURL(file));

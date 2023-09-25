@@ -69,7 +69,6 @@ function TemplateDetailPage() {
         console.error("Workbook Load Error");
       }
     );
-    console.log(templateId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

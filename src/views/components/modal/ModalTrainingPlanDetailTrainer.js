@@ -4,6 +4,7 @@ import { fDate } from "logic/utils/formatTime";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { trainingPlanPath } from "logic/api/apiUrl";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import { toast } from "react-toastify";
 
 const ModalTrainingPlanDetailTrainer = ({
   isOpen,
@@ -15,24 +16,25 @@ const ModalTrainingPlanDetailTrainer = ({
   const [trainingPlanDetails, setTrainingPlanDetails] = useState([]);
 
   useEffect(() => {
-    async function fetchDetails() {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.get(
-          trainingPlanPath.GET_TRAINING_PLAN_DETAIL + selectedTrainingPlan.id
-        );
-        setTrainingPlanDetails(response.data.details);
-        setIsLoading(false); // Set loading to false after fetching data
-      } catch (error) {
-        console.log("fetchUsers ~ error", error);
-        setIsLoading(false); // Set loading to false after fetching data
-      }
+    if (selectedTrainingPlan){
+      fetchDetails();
     }
-    fetchDetails();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTrainingPlan]);
 
+  async function fetchDetails() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        trainingPlanPath.GET_TRAINING_PLAN_DETAIL + selectedTrainingPlan.id
+      );
+      setTrainingPlanDetails(response.data.details);
+      setIsLoading(false); // Set loading to false after fetching data
+    } catch (error) {
+      toast.error(error.response.data);
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  }
   return (
     <Modal open={isOpen} onClose={onRequestClose}>
       <Box

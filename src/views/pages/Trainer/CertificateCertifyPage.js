@@ -50,7 +50,6 @@ const CertificateCertifyPage = () => {
       );
       setTaskList(response.data.data);
       setTotalItem(response.data.totalItem);
-      console.log(response.data);
       setIsLoading(false);
     } catch (error) {
       toast.error(error.response.data);
@@ -71,8 +70,6 @@ const CertificateCertifyPage = () => {
     setIsModalOpen(true);
   };
   const handleCertify = async (item) => {
-    console.log(item);
-    console.log(isApprove);
     try {
       if (isApprove) {
         await axiosPrivate.put(certificatePath.VALID_CERTIFICATE, {

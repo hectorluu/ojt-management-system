@@ -41,7 +41,6 @@ function* handleAuthFetchMe({ payload }) {
   try {
     const response = yield call(requestAuthFetchMe, payload);
     if (response.status === 200) {
-      console.log(response);
       yield put(
         authUpdateUser({
           user: response.data,

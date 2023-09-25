@@ -10,6 +10,7 @@ import { evaluationOptions, evaluationStatus } from "logic/constants/global";
 import Chip from "views/components/chip/Chip";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
+import { toast } from "react-toastify";
 
 const OJTEvaluationPage = () => {
   const [ojtBatch, setOjtBatch] = useState([]);
@@ -27,9 +28,8 @@ const OJTEvaluationPage = () => {
       setIsLoading(true); // Set loading to true before fetching data
       const response = await axiosPrivate.get(ojtBatchPath.GET_TRAINER_BATCHES);
       setOjtBatch(response.data);
-      console.log(response.data);
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data);
     } finally {
       setIsLoading(false); // Set loading to false after fetching data
     }
