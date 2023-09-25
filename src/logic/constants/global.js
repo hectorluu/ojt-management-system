@@ -138,7 +138,6 @@ export const statusColor = {
 };
 
 export const certificateStatusColor = [
-  { value: 1, label: "Đã xóa", color: "bg-gray-500" },
   { value: 2, label: "Đang chờ", color: "bg-yellow-500" },
   { value: 3, label: "Chưa nộp", color: "bg-sky-500" },
   { value: 4, label: "Đã chấp thuận", color: "bg-green-500" },

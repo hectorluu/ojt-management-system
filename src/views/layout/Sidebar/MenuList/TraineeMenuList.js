@@ -81,15 +81,7 @@ const pages = {
           breadcrumbs: false,
         },
       ],
-    },
-    {
-      id: "/trainee-personal-statistics",
-      title: "Thống kê cá nhân",
-      type: "item",
-      url: "/trainee-personal-statistics",
-      icon: iconsPages.AnalyticsIcon,
-      breadcrumbs: false,
-    },
+    }
   ],
 };
 

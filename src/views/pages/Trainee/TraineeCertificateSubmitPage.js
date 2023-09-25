@@ -5,6 +5,7 @@ import {
   defaultPageSize,
   defaultPageIndex,
   signalRMessage,
+  certificateStatusColor,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import signalRService from "logic/utils/signalRService";
@@ -16,6 +17,7 @@ import CertificateSkeleton from "views/modules/certificate/CertificateCardSkelet
 import { toast } from "react-toastify";
 import { certificateNoti } from "logic/constants/notification";
 import { submitCertValid } from "logic/utils/validateUtils";
+import { Autocomplete, TextField } from "@mui/material";
 
 const TraineeCertificateSubmitPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -24,6 +26,7 @@ const TraineeCertificateSubmitPage = () => {
   const axiosPrivate = useAxiosPrivate();
   const [certificates, setCertificates] = useState([]);
   const [error, setError] = useState("");
+  const [status, setStatus] = useState(2);
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
   const [isSubmitLoading, setIsSubmitLoading] = useState(false); // New loading state
@@ -51,7 +54,9 @@ const TraineeCertificateSubmitPage = () => {
         "?PageIndex=" +
         page +
         "&PageSize=" +
-        rowsPerPage
+        rowsPerPage +
+        "&status=" +
+        status
       );
       setCertificates(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -65,7 +70,7 @@ const TraineeCertificateSubmitPage = () => {
   useEffect(() => {
     fetchCertificate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowsPerPage, page]);
+  }, [rowsPerPage, page, status]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -116,6 +121,23 @@ const TraineeCertificateSubmitPage = () => {
       title={`Chứng chỉ`}
     >
       <SubCard>
+        <div className="flex flex-wrap items-start max-w-[200px] w-full">
+          <Autocomplete
+            disablePortal={false}
+            options={certificateStatusColor}
+            sx={{ width: 300 }}
+            renderInput={(params) => (
+              <TextField {...params} label="Trạng thái" />
+            )}
+            onChange={(event, newValue) => {
+              if (newValue) {
+                setStatus(newValue.value);
+              } else {
+                setStatus("");
+              }
+            }}
+          />
+        </div>
         <CertificateGrid type="secondary">
           {isLoading ? ( // Render skeleton loading when loading is true
             // Use the animate-pulse class for skeleton effect
