@@ -8,17 +8,14 @@ import {
   Paper,
   SvgIcon,
   Typography,
-  useTheme,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import HorizontalLineChart from "views/components/chart/HorizontalLineChart";
-import PieChart from "views/components/chart/PieChart";
 import { chartPath } from "logic/api/apiUrl";
 
 const TrainerDashboardPage = () => {
   const axiosPrivate = useAxiosPrivate();
   // const navigate = useNavigate();
-  const theme = useTheme();
 
   const [isLoading, setIsLoading] = useState(true);
 

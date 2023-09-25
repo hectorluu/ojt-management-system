@@ -40,6 +40,7 @@ export const ojtBatchPath = {
   GET_BATCH_EXPORT_STATUS: "/ojtbatch/export-status-batches",
   GET_BATCH_DETAIL: "/ojtbatch/",
   UPDATE_BATCH: "/ojtbatch/",
+  GET_ACTIVE_BATCH: "/ojtbatch/ongoing-batches",
 };
 
 export const universityPath = {

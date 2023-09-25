@@ -1,29 +1,36 @@
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 
 // material-ui
-import { styled, useTheme } from "@mui/material/styles";
+import { useTheme, styled } from "@mui/material/styles";
 import { Avatar, Box, Grid, Typography } from "@mui/material";
 
-// project imports
-
 // assets
-import { EarningSVG } from "logic/constants/global";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import SkeletonEarningCard from "./Skeleton/SkeletonEarningCard";
 import MainCard from "./MainCard";
+import SkeletonEarningCard from "./Skeleton/SkeletonEarningCard";
+import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
+import { useNavigate } from "react-router-dom";
+import { userPath } from "logic/api/apiUrl";
+import { toast } from "react-toastify";
+import FaceIcon from "@mui/icons-material/Face";
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: theme.palette.secondary.dark,
+  backgroundColor: theme.palette.primary.dark,
   color: "#fff",
   overflow: "hidden",
   position: "relative",
+  "&>div": {
+    position: "relative",
+    zIndex: 5,
+  },
   "&:after": {
     content: '""',
     position: "absolute",
     width: 210,
     height: 210,
-    background: theme.palette.secondary[800],
+    background: theme.palette.primary[800],
     borderRadius: "50%",
+    zIndex: 1,
     top: -85,
     right: -95,
     [theme.breakpoints.down("sm")]: {
@@ -34,9 +41,10 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
   "&:before": {
     content: '""',
     position: "absolute",
+    zIndex: 1,
     width: 210,
     height: 210,
-    background: theme.palette.secondary[800],
+    background: theme.palette.primary[800],
     borderRadius: "50%",
     top: -125,
     right: -15,
@@ -48,17 +56,34 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
   },
 }));
 
-// ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
+// ==============================|| DASHBOARD - TOTAL ORDER LINE CHART CARD ||============================== //
 
-const EarningCard = ({ isLoading }) => {
+const TotalTraineeCard = ({ isLoading }) => {
   const theme = useTheme();
+  const axiosProvate = useAxiosPrivate();
+  const [totalTrainee, setTotalTrainee] = useState(0);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getTotalTrainer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getTotalTrainer = async () => {
+    try {
+      const response = await axiosProvate.get(userPath.GET_TRAINEE_LIST + "?PageSize=" + 100000 + "&PageIndex=" + 1);
+      setTotalTrainee(response.data.totalItem);
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  };
 
   return (
     <>
       {isLoading ? (
         <SkeletonEarningCard />
       ) : (
-        <CardWrapper border={false} content={false}>
+        <CardWrapper border={false} content={false} onClick={() => navigate("/trainee-list")}>
           <Box sx={{ p: 2.25 }}>
             <Grid container direction="column">
               <Grid item>
@@ -69,11 +94,11 @@ const EarningCard = ({ isLoading }) => {
                       sx={{
                         ...theme.typography.commonAvatar,
                         ...theme.typography.largeAvatar,
-                        backgroundColor: theme.palette.secondary[800],
+                        backgroundColor: theme.palette.primary[800],
                         mt: 1,
                       }}
                     >
-                      <img src={EarningSVG} alt="Notification" />
+                      <FaceIcon />
                     </Avatar>
                   </Grid>
                 </Grid>
@@ -90,23 +115,8 @@ const EarningCard = ({ isLoading }) => {
                         mb: 0.75,
                       }}
                     >
-                      $500.00
+                      {totalTrainee}
                     </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Avatar
-                      sx={{
-                        cursor: "pointer",
-                        ...theme.typography.smallAvatar,
-                        backgroundColor: theme.palette.secondary[200],
-                        color: theme.palette.secondary.dark,
-                      }}
-                    >
-                      <ArrowUpwardIcon
-                        fontSize="inherit"
-                        sx={{ transform: "rotate3d(1, 1, 1, 45deg)" }}
-                      />
-                    </Avatar>
                   </Grid>
                 </Grid>
               </Grid>
@@ -115,10 +125,10 @@ const EarningCard = ({ isLoading }) => {
                   sx={{
                     fontSize: "1rem",
                     fontWeight: 500,
-                    color: theme.palette.secondary[100],
+                    color: theme.palette.primary[100],
                   }}
                 >
-                  Total Earning
+                  Tổng số thực tập sinh
                 </Typography>
               </Grid>
             </Grid>
@@ -129,8 +139,8 @@ const EarningCard = ({ isLoading }) => {
   );
 };
 
-EarningCard.propTypes = {
+TotalTraineeCard.propTypes = {
   isLoading: PropTypes.bool,
 };
 
-export default EarningCard;
+export default TotalTraineeCard;
