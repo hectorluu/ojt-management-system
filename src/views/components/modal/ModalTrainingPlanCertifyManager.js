@@ -7,7 +7,6 @@ import { fDate } from "logic/utils/formatTime";
 import { toast } from "react-toastify";
 
 const ModalTrainingPlanCertifyManager = ({
-  isOpen,
   onRequestClose,
   selectedTrainingPlan,
   handleApprove,
@@ -41,7 +40,7 @@ const ModalTrainingPlanCertifyManager = ({
   const theme = useTheme();
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",

@@ -14,7 +14,6 @@ import Button from "../button/Button";
 import { toast } from "react-toastify";
 
 const ModalEditPositionAdmin = ({
-  isOpen,
   onRequestClose,
   positionIdClicked,
   isSubmitLoading,
@@ -69,7 +68,7 @@ const ModalEditPositionAdmin = ({
   };
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",

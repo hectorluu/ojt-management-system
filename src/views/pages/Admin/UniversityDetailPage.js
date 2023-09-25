@@ -226,15 +226,16 @@ const UniversityDetailPage = () => {
         </Button>
       }
     >
-      <ModalEditOJTBatch
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        idClicked={clickedId}
-        handleUpdateBatch={handleUpdateBatch}
-        isSubmitLoading={isSubmitLoading}
-        error={error}
-        universityId={universityId}
-      ></ModalEditOJTBatch>
+      {isModalOpen?
+        <ModalEditOJTBatch
+          onRequestClose={() => setIsModalOpen(false)}
+          idClicked={clickedId}
+          handleUpdateBatch={handleUpdateBatch}
+          isSubmitLoading={isSubmitLoading}
+          error={error}
+          universityId={universityId}
+        ></ModalEditOJTBatch>
+      :null}
       {isFetchingLoading ? (
         <ProfileSkeleton />
       ) : (

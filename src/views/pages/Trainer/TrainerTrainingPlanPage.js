@@ -51,12 +51,12 @@ const TrainerTrainingPlanPage = () => {
         setIsLoading(true);
         const response = await axiosPrivate.get(
           trainingPlanPath.GET_TRAINING_PLAN_OF_TRAINER +
-            "?PageIndex=" +
-            page +
-            "&PageSize=" +
-            rowsPerPage +
-            "&nameSearch=" +
-            `${searchTerm === null ? "" : searchTerm}`
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&nameSearch=" +
+          `${searchTerm === null ? "" : searchTerm}`
         );
         setTrainingplans(response.data.data);
         setTotalItem(response.data.totalItem);
@@ -106,12 +106,12 @@ const TrainerTrainingPlanPage = () => {
         </Button>
       }
     >
-      <ModalTrainingPlanDetailTrainer
-        isOpen={isTraingingPlanDetailModalOpen}
-        onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
-        selectedTrainingPlan={selectedItem}
-      ></ModalTrainingPlanDetailTrainer>
-
+      {isTraingingPlanDetailModalOpen ?
+        <ModalTrainingPlanDetailTrainer
+          onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
+          selectedTrainingPlan={selectedItem}
+        ></ModalTrainingPlanDetailTrainer>
+        : null}
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           {/*Custom search bar*/}
@@ -207,8 +207,8 @@ const TrainerTrainingPlanPage = () => {
                           item?.status === trainingPlanStatus.PENDING
                             ? "warning"
                             : item?.status === trainingPlanStatus.ACTIVE
-                            ? "success"
-                            : "error"
+                              ? "success"
+                              : "error"
                         }
                       >
                         {

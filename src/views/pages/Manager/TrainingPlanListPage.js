@@ -46,14 +46,14 @@ const TrainingPlanListPage = () => {
         setIsLoading(true);
         const response = await axiosPrivate.get(
           trainingPlanPath.GET_TRAINING_PLAN_LIST +
-            "?PageIndex=" +
-            page +
-            "&PageSize=" +
-            rowsPerPage +
-            "&nameSearch=" +
-            `${searchTerm === null ? "" : searchTerm}` +
-            "&status=" +
-            trainingPlanStatus.ACTIVE
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&nameSearch=" +
+          `${searchTerm === null ? "" : searchTerm}` +
+          "&status=" +
+          trainingPlanStatus.ACTIVE
         );
         setTrainingplans(response.data.data);
         setTotalItem(response.data.totalItem);
@@ -85,12 +85,12 @@ const TrainingPlanListPage = () => {
 
   return (
     <MainCard title={`Danh sách kế hoạch đào tạo `}>
-      <ModalTrainingPlanDetailManager
-        isOpen={isTraingingPlanDetailModalOpen}
-        onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
-        selectedTrainingPlan={selectedItem}
-      ></ModalTrainingPlanDetailManager>
-
+      {isTraingingPlanDetailModalOpen ?
+        <ModalTrainingPlanDetailManager
+          onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
+          selectedTrainingPlan={selectedItem}
+        ></ModalTrainingPlanDetailManager>
+        : null}
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           {/*Custom search bar*/}

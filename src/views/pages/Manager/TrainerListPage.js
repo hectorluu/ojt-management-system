@@ -49,12 +49,12 @@ const TrainerListPage = () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-          "?PageIndex=" +
-          1 +
-          "&PageSize=" +
-          100000 +
-          "&filterStatus=" +
-          positionStatus.ACTIVE
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        100000 +
+        "&filterStatus=" +
+        positionStatus.ACTIVE
       );
       setPositionList(response.data.data);
     } catch (error) {
@@ -70,14 +70,14 @@ const TrainerListPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         userPath.GET_TRAINER_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&keyword=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&position=" +
-          `${position === null ? "" : position}`
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&keyword=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&position=" +
+        `${position === null ? "" : position}`
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -109,12 +109,12 @@ const TrainerListPage = () => {
 
   return (
     <MainCard title={`Đào tạo viên`}>
-      <ModalTrainerDetailManager
-        isOpen={isTrainerDetailModalOpen}
-        onRequestClose={() => setIsTrainerDetailModalOpen(false)}
-        selectedTrainer={selectedItem}
-      ></ModalTrainerDetailManager>
-
+      {isTrainerDetailModalOpen ?
+        <ModalTrainerDetailManager
+          onRequestClose={() => setIsTrainerDetailModalOpen(false)}
+          selectedTrainer={selectedItem}
+        ></ModalTrainerDetailManager>
+        : null}
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           {/*Custom search bar*/}

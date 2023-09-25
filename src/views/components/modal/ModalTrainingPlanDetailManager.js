@@ -7,7 +7,6 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import { toast } from "react-toastify";
 
 const ModalTrainingPlanDetailManager = ({
-  isOpen,
   onRequestClose,
   selectedTrainingPlan,
 }) => {
@@ -37,7 +36,7 @@ const ModalTrainingPlanDetailManager = ({
   }
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",

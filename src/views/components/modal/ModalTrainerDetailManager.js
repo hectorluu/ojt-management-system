@@ -19,7 +19,6 @@ import { toast } from "react-toastify";
 import ProfileSkeleton from "views/modules/account/ProfileSkeleton";
 
 const ModalTrainerDetailManager = ({
-  isOpen,
   onRequestClose,
   selectedTrainer,
 }) => {
@@ -55,7 +54,7 @@ const ModalTrainerDetailManager = ({
   }
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",

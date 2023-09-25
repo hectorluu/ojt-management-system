@@ -110,12 +110,13 @@ const TraineeListPage = () => {
 
   return (
     <MainCard title={`Thực tập sinh `}>
-      <ModalTraineeDetailManager
-        isOpen={isTraineeDetailModalOpen}
-        onRequestClose={() => setIsTraineeDetailModalOpen(false)}
-        traineeSelected={selectedItem}
-      ></ModalTraineeDetailManager>
-
+      {isTraineeDetailModalOpen ?
+        <ModalTraineeDetailManager
+          isOpen={isTraineeDetailModalOpen}
+          onRequestClose={() => setIsTraineeDetailModalOpen(false)}
+          traineeSelected={selectedItem}
+        ></ModalTraineeDetailManager>
+        : null}
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           {/*Custom search bar*/}

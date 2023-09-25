@@ -117,12 +117,14 @@ const TrainerCourseDetailPage = () => {
         </Button>
       }
     >
-      <ModalAssignCourse
-        error={error}
-        handleAssign={handleAssign}
-        isLoading={isLoading}
-        isOpen={isModalOpen}
-        onRequestClose={onRequestClose} />
+      {isModalOpen ?
+        <ModalAssignCourse
+          error={error}
+          handleAssign={handleAssign}
+          isLoading={isLoading}
+          isOpen={isModalOpen}
+          onRequestClose={onRequestClose} />
+        : null}
       {isFetchingLoading ? (
         <ProfileSkeleton />
       ) : (

@@ -21,7 +21,6 @@ import ProfileSkeleton from "views/modules/account/ProfileSkeleton";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 const ModalTraineeDetailManager = ({
-  isOpen,
   onRequestClose,
   traineeSelected,
 }) => {
@@ -50,7 +49,7 @@ const ModalTraineeDetailManager = ({
   };
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",

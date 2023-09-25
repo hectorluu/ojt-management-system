@@ -11,7 +11,6 @@ import { Autocomplete, Box, Modal, Skeleton, TextField } from "@mui/material";
 import { toast } from "react-toastify";
 
 const ModalEditOJTBatch = ({
-  isOpen,
   onRequestClose,
   idClicked,
   isSubmitLoading,
@@ -40,12 +39,15 @@ const ModalEditOJTBatch = ({
       setStartTime(response.data.startTime);
       setEndTime(response.data.endTime);
       setTemplateId(response.data.templateId);
-      setIsLoading(false);
     } catch (error) {
       toast.error(error.response.data);
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (name && startTime && endTime && templateId && templateList) setIsLoading(false);
+  }, [name, startTime, endTime, templateId, templateList]);
 
   const fetchTemplateList = async () => {
     try {
@@ -79,7 +81,7 @@ const ModalEditOJTBatch = ({
   };
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",
@@ -141,7 +143,7 @@ const ModalEditOJTBatch = ({
                     <Skeleton height={60} animation="wave" />
                   ) : (
                     <Autocomplete
-                      value={templateList.find((x) => x.id === templateId)}
+                      value={templateList.find((x) => x.id === templateId) || null}
                       disablePortal={false}
                       id="combo-box-demo"
                       options={templateList}

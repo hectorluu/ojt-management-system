@@ -9,7 +9,6 @@ import { trainerPath } from "logic/api/apiUrl";
 import { toast } from "react-toastify";
 
 const ModalAssignCourse = ({
-  isOpen,
   onRequestClose,
   handleAssign,
   isLoading,
@@ -44,7 +43,7 @@ const ModalAssignCourse = ({
   }, []);
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",
