@@ -84,7 +84,7 @@ export const skillLevel = [
 ];
 
 export const accountStatus = [
-  { value: 1, label: "Đã khóa" },
+  { value: 3, label: "Đã khóa" },
   { value: 2, label: "Đang hoạt động" },
 ];
 
@@ -111,10 +111,9 @@ export const templateStatusOptions = [
 ];
 
 export const trainingPlanStatusOptions = [
-  { value: 2, label: "Đang được duyệt" },
+  { value: 2, label: "Đang chờ" },
   { value: 3, label: "Đang sử dụng" },
   { value: 4, label: "Bị từ chối" },
-  { value: 5, label: "Đã đóng" },
 ];
 
 export const reportStatusOptions = [
@@ -322,4 +321,9 @@ export const accomplishedTaskStatusOptions = [
   { value: 1, label: "Đang chờ" },
   { value: 2, label: "Đạt" },
   { value: 3, label: "Không đạt" },
+];
+
+export const traineeWorkingStatus = [
+  { value: 1, label: "Đang bận" },
+  { value: 2, label: "Đang rảnh" }
 ];

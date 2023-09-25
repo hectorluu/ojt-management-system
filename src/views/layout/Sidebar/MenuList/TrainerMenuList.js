@@ -114,14 +114,6 @@ const pages = {
       icon: iconsPages.GradingIcon,
       breadcrumbs: false,
     },
-    {
-      id: "ojt-statistics",
-      title: "Thống kê",
-      type: "item",
-      url: "/ojt-statistics",
-      icon: iconsPages.AnalyticsIcon,
-      breadcrumbs: false,
-    },
   ],
 };
 

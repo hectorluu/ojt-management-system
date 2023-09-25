@@ -44,7 +44,7 @@ const TrainingPlanCertifyPage = () => {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
 
   async function fetchTrainingPlans() {
@@ -102,14 +102,14 @@ const TrainingPlanCertifyPage = () => {
 
   return (
     <MainCard title="Phê duyệt kế hoạch đào tạo">
-      <ModalTrainingPlanCertifyManager
-        isOpen={isTraingingPlanCertifyModalOpen}
-        onRequestClose={() => setIsTrainingPlanCertifyModalOpen(false)}
-        selectedTrainingPlan={selectedItem}
-        handleApprove={handleApprovePlan}
-        handleDeny={handleRejectPlan}
-      ></ModalTrainingPlanCertifyManager>
-
+      {isTraingingPlanCertifyModalOpen?
+        <ModalTrainingPlanCertifyManager
+          onRequestClose={() => setIsTrainingPlanCertifyModalOpen(false)}
+          selectedTrainingPlan={selectedItem}
+          handleApprove={handleApprovePlan}
+          handleDeny={handleRejectPlan}
+        ></ModalTrainingPlanCertifyManager>
+      :null}
       <SubCard>
         <TableContainer sx={{ width: 1, mb: -2, borderRadius: 4 }}>
           <Table stickyHeader>

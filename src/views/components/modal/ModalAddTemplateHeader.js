@@ -11,7 +11,6 @@ import { isCriteriaOptions, notCriteriaOptions } from "logic/constants/global";
 import { toast } from "react-toastify";
 
 const ModalAddTemplateHeader = ({
-  isOpen,
   onRequestClose,
   handleAddNewTemplateHeader,
   isLoading,
@@ -84,7 +83,7 @@ const ModalAddTemplateHeader = ({
   };
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",
@@ -128,8 +127,8 @@ const ModalAddTemplateHeader = ({
                 <FormGroup>
                   <Label>Tên cột(*)</Label>
                   <TextField
-                    error={error?.name ? true : false}
-                    helperText={error?.name}
+                    error={error?.headerName ? true : false}
+                    helperText={error?.headerName}
                     name="name"
                     placeholder="Ex: MSSV"
                     onChange={(e) => setName(e.target.value)}

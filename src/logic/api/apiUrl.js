@@ -40,6 +40,7 @@ export const ojtBatchPath = {
   GET_BATCH_EXPORT_STATUS: "/ojtbatch/export-status-batches",
   GET_BATCH_DETAIL: "/ojtbatch/",
   UPDATE_BATCH: "/ojtbatch/",
+  GET_ACTIVE_BATCH: "/ojtbatch/ongoing-batches",
 };
 
 export const universityPath = {
@@ -77,6 +78,8 @@ export const userPath = {
   GET_UNASSIGNED_TRAINEE: "/user/unassigned-trainee",
   ASSIGN_TRAINEES_TO_TRAINER: "/user/trainer/assign-trainees",
   GET_TRAINER_TRAINEE: "/user/trainer/trainee",
+  DISABLE_USER: "/user/disable-user/",
+  ACTIVE_USER: "/user/active-user/",
 };
 
 export const attendancePath = {
@@ -123,7 +126,7 @@ export const templatePath = {
   DELETE_TEMPLATE: "/template/disable-template/",
   ACTIVE_TEMPLATE: "/template/active-template/",
   ADD_TEMPLATE_HEADER: "/template/template-header/",
-  DELETE_TEMPLATE_HEADER: "/template/template-header/",
+  UPDATE_TEMPLATE_HEADER: "/template/template-header/",
 };
 
 export const formulaPath = {
@@ -186,6 +189,7 @@ export const chartPath = {
   GET_TRAINEE_WITH_POSITION: "/chart/trainee-position",
   GET_TRAINEE_WITH_TOP_SKILL: "/chart/trainee-top-skill",
   GET_TRAINEE_WITH_TOP_TASKDONE: "/chart/trainee-top-done-task",
+  GET_TRAINEE_WITH_TOP_SKILL_TRAINEE_DETAIL: "/chart/trainee-top-skill/",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

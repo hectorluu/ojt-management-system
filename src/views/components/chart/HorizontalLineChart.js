@@ -40,6 +40,7 @@ export default function HorizontalLineChart({
     },
     xaxis: {
       categories: chartLabels,
+      tickAmount: 1,
     },
   });
 

@@ -2,51 +2,123 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { Fragment, useState } from "react";
 import { useEffect } from "react";
 import {
-  Button,
-  CardActions,
   Unstable_Grid2 as Grid,
-  Typography,
-  useTheme,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import EarningCard from "views/components/cards/EarningCard";
-import TotalOrderLineChartCard from "views/components/cards/TotalOrderLineChartCard";
-import TotalIncomeDarkCard from "views/components/cards/TotalIncomeDarkCard";
-import TotalIncomeLightCard from "views/components/cards/TotalIncomeLightCard";
-import TotalGrowthBarChart from "views/components/chart/TotalGrowthBarChart";
+import ChartSkeleton from "views/modules/ChartSkeleton";
+import ColumnAndLineChart from "views/components/chart/ColumnAndLineChart";
+import { chartPath } from "logic/api/apiUrl";
+import TotalTrainerCard from "views/components/cards/TotalTrainerCard";
+import TotalTraineeCard from "views/components/cards/TotalTraineeCard";
+import TotalActiveBatchCard from "views/components/cards/TotalActiveBatchCard";
 
 const ManagerDashboardPage = () => {
   const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
-  const theme = useTheme();
+  // eslint-disable-next-line no-unused-vars
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     setIsLoading(false);
   }, []);
 
+  useEffect(() => {
+    // Fetch chart
+    fetchBatchAndTrainee();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentYear]);
+
+  const [batchAndTrainee, setBatchAndTrainee] = useState([
+    {
+      name: "Thực tập sinh",
+      type: "column",
+      fill: "solid",
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    },
+    {
+      name: "Đợt OJT",
+      type: "line",
+      fill: "solid",
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    },
+  ]);
+  const tempChartBatchAndTraineeLabels = [
+    "01/01/2003",
+    "01/02/2003",
+    "01/03/2003",
+    "01/04/2003",
+    "01/05/2003",
+    "01/06/2003",
+    "01/07/2003",
+    "01/08/2003",
+    "01/09/2003",
+    "01/10/2003",
+    "01/11/2003",
+    "01/12/2003",
+  ];
+
+  // Replace the year part in each label with the currentYear using string manipulation
+  const chartBatchAndTraineeLabels = tempChartBatchAndTraineeLabels.map(
+    (label) => {
+      // Assuming the date format is always "DD/MM/YYYY"
+      const yearIndex = label.lastIndexOf("/") + 1; // Find the index of the last '/'
+      return label.substring(0, yearIndex) + currentYear;
+    }
+  );
+
+  const fetchBatchAndTrainee = async () => {
+    try {
+      setIsLoading(true);
+      // First get data of current year
+      const response = await axiosPrivate.get(
+        chartPath.GET_BATCH_AND_TRAINEE + currentYear
+      );
+      // Get 5 courses
+
+      // turn it into the format that chart can read
+      setBatchAndTrainee([
+        {
+          name: "Thực tập sinh",
+          type: "column",
+          fill: "solid",
+          data: response.data.numberofTrainees,
+        },
+        {
+          name: "Đợt OJT",
+          type: "line",
+          fill: "solid",
+          data: response.data.numberOfOjtBatches,
+        },
+      ]);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+
   return (
     <Fragment>
       <Grid container spacing={2}>
         {/* Card Part */}
-        <Grid item lg={4} md={6} sm={6} xs={12}>
-          <EarningCard isLoading={isLoading} />
+        <Grid lg={4} md={6} sm={6} xs={12}>
+          <TotalTrainerCard isLoading={isLoading} />
         </Grid>
-        <Grid item lg={4} md={6} sm={6} xs={12}>
-          <TotalOrderLineChartCard isLoading={isLoading} />
+        <Grid lg={4} md={6} sm={6} xs={12}>
+          <TotalTraineeCard isLoading={isLoading} />
         </Grid>
-        <Grid item lg={4} md={12} sm={12} xs={12}>
-          <Grid item sm={6} xs={12} md={6} lg={12}>
-            <TotalIncomeDarkCard isLoading={isLoading} />
-          </Grid>
-          <Grid item sm={6} xs={12} md={6} lg={12} mt={2}>
-            <TotalIncomeLightCard isLoading={isLoading} />
-          </Grid>
+        <Grid lg={4} md={12} sm={12} xs={12}>
+          <TotalActiveBatchCard isLoading={isLoading} />
         </Grid>
 
-        {/* Chart Part */}
-        <Grid item xs={12} md={12}>
-          <TotalGrowthBarChart isLoading={isLoading} />
+        {/* ... Chart Part */}
+        <Grid xs={12} md={12}>
+          {isLoading ? <ChartSkeleton /> :
+            <ColumnAndLineChart
+              title="Tổng đợt OJT và thực tập sinh theo tháng"
+              chartLabels={chartBatchAndTraineeLabels}
+              chartData={batchAndTrainee}
+            />
+          }
         </Grid>
       </Grid>
     </Fragment>

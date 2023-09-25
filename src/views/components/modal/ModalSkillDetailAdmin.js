@@ -14,7 +14,6 @@ import Button from "../button/Button";
 import { toast } from "react-toastify";
 
 const ModalSkillDetailAdmin = ({
-  isOpen,
   onRequestClose,
   skillIdClicked,
   handleUpdateSkill,
@@ -43,7 +42,7 @@ const ModalSkillDetailAdmin = ({
   };
 
   useEffect(() => {
-    if (skillIdClicked !== 0) {
+    if (skillIdClicked) {
       fetchSkill();
     }
 
@@ -60,7 +59,7 @@ const ModalSkillDetailAdmin = ({
   };
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",
@@ -122,7 +121,7 @@ const ModalSkillDetailAdmin = ({
                 <Button
                   type="submit"
                   className="px-10 mx-auto text-white bg-primary"
-                  isLoading={isLoading}
+                  isLoading={isSubmitLoading}
                 >
                   Chỉnh sửa{" "}
                 </Button>

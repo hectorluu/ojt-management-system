@@ -18,6 +18,8 @@ import { CourseCard } from "views/components/cards/CourseCard";
 import HorizontalLineChart from "views/components/chart/HorizontalLineChart";
 import PieChart from "views/components/chart/PieChart";
 import ColumnAndLineChart from "views/components/chart/ColumnAndLineChart";
+import AdminDashBoardSkeleton from "views/modules/AdminDashboardSkeleton";
+import ChartSkeleton from "views/modules/ChartSkeleton";
 
 const AdminDashBoardPage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -36,10 +38,10 @@ const AdminDashBoardPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         universityPath.GET_UNIVERSITY_LIST +
-          "?PageSize=" +
-          100000 +
-          "&PageIndex=" +
-          defaultPageIndex
+        "?PageSize=" +
+        100000 +
+        "&PageIndex=" +
+        defaultPageIndex
       );
       // Get 3 universities
       setUniversities(response.data.data.slice(0, 3));
@@ -56,12 +58,12 @@ const AdminDashBoardPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         coursePath.GET_COURSE_LIST +
-          "?PageSize=" +
-          100000 +
-          "&PageIndex=" +
-          defaultPageIndex +
-          "&filterStatus" +
-          courseStatus.ACTIVE
+        "?PageSize=" +
+        100000 +
+        "&PageIndex=" +
+        defaultPageIndex +
+        "&filterStatus" +
+        courseStatus.ACTIVE
       );
       // Get 5 courses
       setCourses(response.data.data.slice(0, 3));
@@ -191,20 +193,22 @@ const AdminDashBoardPage = () => {
     <Fragment>
       <Grid container spacing={2}>
         {/* University Part */}
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <MainCard>
             <Typography variant="h3" className="mb-5">
               Trường đại học liên kết
             </Typography>
-
-            <Grid container spacing={3}>
-              {universities.map((university) => (
-                <Grid xs={12} md={6} lg={4} key={university.id}>
-                  <UniversityCard university={university} />
-                </Grid>
-              ))}
-            </Grid>
-
+            {isLoading ?
+              <AdminDashBoardSkeleton />
+              :
+              <Grid container spacing={3}>
+                {universities.map((university) => (
+                  <Grid xs={12} md={6} lg={4} key={university.id}>
+                    <UniversityCard university={university} />
+                  </Grid>
+                ))}
+              </Grid>
+            }
             <CardActions
               sx={{ py: 1.25, pt: 2, mb: -2, justifyContent: "center" }}
             >
@@ -223,20 +227,22 @@ const AdminDashBoardPage = () => {
         </Grid>
 
         {/* Course Part */}
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <MainCard>
             <Typography variant="h3" className="mb-5">
               Khóa học hiện có
             </Typography>
-
-            <Grid container spacing={3}>
-              {courses.map((course) => (
-                <Grid xs={12} md={6} lg={4} key={course.id}>
-                  <CourseCard course={course} />
-                </Grid>
-              ))}
-            </Grid>
-
+            {isLoading ?
+              <AdminDashBoardSkeleton />
+              :
+              <Grid container spacing={3}>
+                {courses.map((course) => (
+                  <Grid xs={12} md={6} lg={4} key={course.id}>
+                    <CourseCard course={course} />
+                  </Grid>
+                ))}
+              </Grid>
+            }
             <CardActions
               sx={{ py: 1.25, pt: 2, mb: -2, justifyContent: "center" }}
             >
@@ -255,44 +261,40 @@ const AdminDashBoardPage = () => {
         </Grid>
 
         {/* ... Chart Part */}
-        <Grid item xs={12} md={12}>
-          <ColumnAndLineChart
-            isLoading={isLoading}
-            title={
-              <span className="text-xl font-bold">
-                Tổng đợt OJT và thực tập sinh theo tháng
-              </span>
-            }
-            chartLabels={chartBatchAndTraineeLabels}
-            chartData={batchAndTrainee}
-          />
+        <Grid xs={12} md={12}>
+          {isLoading ? <ChartSkeleton /> :
+            <ColumnAndLineChart
+              title="Tổng đợt OJT và thực tập sinh theo tháng"
+              chartLabels={chartBatchAndTraineeLabels}
+              chartData={batchAndTrainee}
+            />
+          }
         </Grid>
 
         {/* ... Line Chart Part */}
-        <Grid item xs={12} md={6} lg={8}>
-          <HorizontalLineChart
-            isLoading={isLoading}
-            title={
-              <span className="text-xl font-bold">
-                Đào tạo viên với số thực tập sinh nhiều nhất
-              </span>
-            }
-            chartData={trainerAndTotalTrainees}
-          />
+        <Grid xs={12} md={6} lg={8}>
+          {isLoading ? <ChartSkeleton /> :
+            <HorizontalLineChart
+              title="Đào tạo viên với số thực tập sinh nhiều nhất"
+              chartData={trainerAndTotalTrainees}
+            />
+          }
         </Grid>
 
         {/* ... Pie Chart Part */}
-        <Grid item xs={12} md={6} lg={4}>
-          <PieChart
-            title={<span className="text-xl font-bold">Vị trí thực tập</span>}
-            chartData={traineeWithPosition}
-            chartColors={[
-              theme.palette.primary.main,
-              theme.palette.info.main,
-              theme.palette.warning.main,
-              theme.palette.error.main,
-            ]}
-          />
+        <Grid xs={12} md={6} lg={4}>
+          {isLoading ? <ChartSkeleton /> :
+            <PieChart
+              title="Vị trí thực tập"
+              chartData={traineeWithPosition}
+              chartColors={[
+                theme.palette.primary.main,
+                theme.palette.info.main,
+                theme.palette.warning.main,
+                theme.palette.error.main,
+              ]}
+            />
+          }
         </Grid>
       </Grid>
     </Fragment>

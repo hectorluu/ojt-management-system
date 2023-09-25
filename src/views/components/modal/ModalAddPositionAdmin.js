@@ -6,7 +6,6 @@ import { Box, Modal, TextField } from "@mui/material";
 import { useState } from "react";
 
 const ModalAddPositionAdmin = ({
-  isOpen,
   onRequestClose,
   handleAddNewPosition,
   isSubmitLoading,
@@ -20,7 +19,7 @@ const ModalAddPositionAdmin = ({
   };
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",

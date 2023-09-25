@@ -229,21 +229,25 @@ const SkillListPage = () => {
       }
     >
       {/* Modal and Popover */}
-      <ModalSkillDetailAdmin
-        isOpen={isSkillDetailModalOpen}
-        onRequestClose={() => setIsSkillDetailModalOpen(false)}
-        skillIdClicked={selected.id}
-        handleUpdateSkill={handleUpdateSkill}
-        isSubmitLoading={isSubmitLoading}
-        error={error}
-      ></ModalSkillDetailAdmin>
-      <ModalAddSkillAdmin
-        isOpen={isAddSkillModalOpen}
-        onRequestClose={() => setIsAddSkillModalOpen(false)}
-        isLoading={isSubmitLoading}
-        handleAddNewSkill={handleAddNewSkill}
-        error={error}
-      ></ModalAddSkillAdmin>
+      {isSkillDetailModalOpen ?
+        <ModalSkillDetailAdmin
+          isOpen={isSkillDetailModalOpen}
+          onRequestClose={() => setIsSkillDetailModalOpen(false)}
+          skillIdClicked={selected.id}
+          handleUpdateSkill={handleUpdateSkill}
+          isSubmitLoading={isSubmitLoading}
+          error={error}
+        ></ModalSkillDetailAdmin>
+        : null}
+      {isAddSkillModalOpen ?
+        <ModalAddSkillAdmin
+          isOpen={isAddSkillModalOpen}
+          onRequestClose={() => setIsAddSkillModalOpen(false)}
+          isLoading={isSubmitLoading}
+          handleAddNewSkill={handleAddNewSkill}
+          error={error}
+        ></ModalAddSkillAdmin>
+        : null}
       <Modal open={isModalDeleteOpen} onClose={handleCloseDeleteModal}>
         <Box
           sx={{

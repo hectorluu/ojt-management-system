@@ -206,7 +206,7 @@ const AttendancePage = () => {
       </Backdrop>
       {/*Calendar*/}
       <div className="antialiased font-mono h-fit">
-        <div x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak>
+        <div x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak="true">
           <div className="container mx-auto px-4 py-2">
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="flex items-center justify-between py-4 px-6">
@@ -440,7 +440,7 @@ const AttendancePage = () => {
 
                 {attendanceByDay?.length > 0 ? (
                   attendanceByDay.map((item, index) => (
-                    <List className="text-gray-700" key={item.id}>
+                    <List className="text-gray-700" key={index}>
                       <ListItem className="flex space-between" sx={{ mt: -2 }}>
                         <div className="w-1/2 flex items-center">
                           <Typography className="font-bold w-24">

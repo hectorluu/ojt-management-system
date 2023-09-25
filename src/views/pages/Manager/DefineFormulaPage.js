@@ -1,7 +1,7 @@
 import Gap from "views/components/common/Gap";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
-import { Typography, Paper, Chip, Stack, Card, TextField } from "@mui/material";
+import { Typography, Paper, Chip, Stack, Card, TextField, Tooltip } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -52,9 +52,8 @@ const DefineFormulaPage = () => {
     color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
     background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
     border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
-    box-shadow: 0px 2px 2px ${
-      theme.palette.mode === "dark" ? grey[900] : grey[50]
-    };
+    box-shadow: 0px 2px 2px ${theme.palette.mode === "dark" ? grey[900] : grey[50]
+      };
   
     &:hover {
       border-color: ${blue[400]};
@@ -62,8 +61,7 @@ const DefineFormulaPage = () => {
   
     &:focus {
       border-color: ${blue[400]};
-      box-shadow: 0 0 0 3px ${
-        theme.palette.mode === "dark" ? blue[500] : blue[200]
+      box-shadow: 0 0 0 3px ${theme.palette.mode === "dark" ? blue[500] : blue[200]
       };
     }
   
@@ -104,8 +102,8 @@ const DefineFormulaPage = () => {
       setIsLoading(true);
       let response = await axiosPrivate.get(
         formulaPath.GET_KEY_LIST +
-          "?category=" +
-          `${selectedCategory === null ? "" : selectedCategory}`
+        "?category=" +
+        `${selectedCategory === null ? "" : selectedCategory}`
       );
       setKeyList(response.data);
     } catch (error) {
@@ -137,7 +135,7 @@ const DefineFormulaPage = () => {
     setCalculation(newValue);
   };
 
-  const handleTextareaKeyDown = (event) => {};
+  const handleTextareaKeyDown = (event) => { };
 
   const { handleSubmit } = useForm();
 
@@ -243,10 +241,17 @@ const DefineFormulaPage = () => {
               {keyList.length !== 0 ? (
                 keyList?.map((key) => (
                   <ListItem key={key.key}>
-                    <Chip
-                      label={key.name}
-                      onClick={() => handleChipClick(key)}
-                    />
+                    <Tooltip
+                      title={key.description}
+                      placement="top"
+                      className="w-fit"
+                      sx={{ mb: 0.5 }}
+                    >
+                      <Chip
+                        label={key.name}
+                        onClick={() => handleChipClick(key)}
+                      />
+                    </Tooltip>
                   </ListItem>
                 ))
               ) : (
