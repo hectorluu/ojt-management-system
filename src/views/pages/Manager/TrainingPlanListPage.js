@@ -76,7 +76,7 @@ const TrainingPlanListPage = () => {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
 
   const [isTraingingPlanDetailModalOpen, setIsTrainingPlanDetailModalOpen] =
