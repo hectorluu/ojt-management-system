@@ -198,7 +198,7 @@ const TrainerAssignmentPage = () => {
                 id="combo-box-demo"
                 options={unassigned}
                 getOptionLabel={(option) =>
-                  option.firstName + " " + option.lastName + " " + option.email
+                  option.firstName + " " + option.lastName + " " + option.email + " " + option.positionName
                 }
                 renderInput={(params) => (
                   <TextField

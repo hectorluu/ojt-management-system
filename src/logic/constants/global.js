@@ -323,3 +323,8 @@ export const accomplishedTaskStatusOptions = [
   { value: 2, label: "Đạt" },
   { value: 3, label: "Không đạt" },
 ];
+
+export const traineeWorkingStatus = [
+  { value: 1, label: "Đang bận" },
+  { value: 2, label: "Đang rảnh" }
+];
