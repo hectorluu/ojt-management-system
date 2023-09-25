@@ -23,6 +23,7 @@ import { Chip, Grid, Skeleton, Stack, TextField, Tooltip } from "@mui/material";
 import SubCard from "views/components/cards/SubCard";
 import ModalAddTemplateHeader from "views/components/modal/ModalAddTemplateHeader";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import ModalEditTemplateHeader from "views/components/modal/ModalEditTemplateHeader";
 
 function TemplateDetailPage() {
   const { templateId } = useParams();
@@ -43,6 +44,8 @@ function TemplateDetailPage() {
   const [newUrl, setNewUrl] = useState("");
   const [universityName, setUniversityName] = useState("");
   const [isAddTemplateHeaderModalOpen, setIsAddTemplateHeaderModalOpen] = useState(false);
+  const [selectedHeader, setSelectedHeader] = useState({});
+  const [isEditTemplateHeaderModalOpen, setIsEditTemplateHeaderModalOpen] = useState(false);
   const navigate = useNavigate();
 
 
@@ -212,6 +215,40 @@ function TemplateDetailPage() {
     setIsSubmitLoading(false);
   };
 
+  const handleUpdateNewTemplateHeader = async (values) => {
+    const valid = templateHeaderValid(values);
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
+      try {
+        setIsSubmitLoading(true);
+        console.log({
+          name: values.name,
+          totalPoint: values.totalPoint,
+          matchedAttribute: values.matchedAttribute,
+          isCriteria: values.isCriteria,
+          formulaId: values.formulaId,
+          order: values.order
+        })
+        // await axiosPrivate.put(templatePath.UPDATE_TEMPLATE_HEADER + templateId, {
+        //   name: values.name,
+        //   totalPoint: values.totalPoint,
+        //   matchedAttribute: values.matchedAttribute,
+        //   isCriteria: values.isCriteria,
+        //   formulaId: values.formulaId,
+        //   order: values.order
+        // });
+        fetchTemplateDetail();
+        setIsSubmitLoading(false);
+        setIsEditTemplateHeaderModalOpen(false);
+        toast.success(templateNoti.SUCCESS.CREATE);
+      } catch (error) {
+        setIsSubmitLoading(false);
+        toast.error(error.response.data);
+      }
+    }
+    setIsSubmitLoading(false);
+  };
+
   return (
     <Fragment>
       <div className="bg-white rounded-xl py-10 px-[66px]">
@@ -219,14 +256,23 @@ function TemplateDetailPage() {
           <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
             Chỉnh sửa phiếu đánh giá
           </h1>
-          <ModalAddTemplateHeader
-            isOpen={isAddTemplateHeaderModalOpen}
-            onRequestClose={() => setIsAddTemplateHeaderModalOpen(false)}
-            isLoading={isSubmitLoading}
-            handleAddNewTemplateHeader={handleAddNewTemplateHeader}
-            error={error}
-          />
-
+          {isAddTemplateHeaderModalOpen ?
+            <ModalAddTemplateHeader
+              onRequestClose={() => setIsAddTemplateHeaderModalOpen(false)}
+              isLoading={isSubmitLoading}
+              handleAddNewTemplateHeader={handleAddNewTemplateHeader}
+              error={error}
+            />
+            : null}
+          {isEditTemplateHeaderModalOpen ?
+            <ModalEditTemplateHeader
+              header={selectedHeader}
+              onRequestClose={() => setIsEditTemplateHeaderModalOpen(false)}
+              isLoading={isSubmitLoading}
+              handleAddNewTemplateHeader={handleUpdateNewTemplateHeader}
+              error={error}
+            />
+            : null}
           <form onSubmit={handleSubmit(onClickSubmit)}>
             <FormGroup>
               <Label>Tên phiếu đánh giá (*)</Label>
@@ -300,14 +346,14 @@ function TemplateDetailPage() {
                             size="small"
                             onClick={() => console.log("click")}
                           >
-                            <DeleteIcon fontSize="inherit" color="error"/>
+                            <DeleteIcon fontSize="inherit" color="error" />
                           </IconButton> :
                           <IconButton
                             aria-label="delete"
                             size="small"
                             onClick={() => console.log("click")}
                           >
-                            <ToggleOnIcon fontSize="inherit" color="success"/>
+                            <ToggleOnIcon fontSize="inherit" color="success" />
                           </IconButton>}
 
                         <Chip
@@ -315,6 +361,10 @@ function TemplateDetailPage() {
                           variant="contained"
                           sx={{ p: 1 }}
                           label={(index + 1) + ") " + header.name}
+                          onClick={() => {
+                            setSelectedHeader(header);
+                            setIsEditTemplateHeaderModalOpen(true);
+                          }}
                         ></Chip>
                       </Stack>
                     </Tooltip>

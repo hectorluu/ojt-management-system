@@ -176,7 +176,7 @@ const ModalTrainerDetailManager = ({
               <List className="mt-2 text-gray-700">
                 {listEmployee.length > 0 ? (
                   listEmployee.map((item, index) => (
-                    <ListItem className="flex border-y py-2 justify-between">
+                    <ListItem className="flex border-y py-2 justify-between" key={index}>
                       <div className="w-3/4 flex items-center">
                         <Typography className="font-bold w-24">
                           {index + 1}

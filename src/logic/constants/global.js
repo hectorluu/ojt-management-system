@@ -84,7 +84,7 @@ export const skillLevel = [
 ];
 
 export const accountStatus = [
-  { value: 1, label: "Đã khóa" },
+  { value: 3, label: "Đã khóa" },
   { value: 2, label: "Đang hoạt động" },
 ];
 

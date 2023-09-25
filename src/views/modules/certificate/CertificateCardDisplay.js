@@ -16,7 +16,6 @@ export default function CertificateCardDisplay({ certificate, onClickSubmit, isL
   const [link, setLink] = React.useState("");
 
   React.useEffect(() => {
-    console.log(certificate);
     if (certificate) {
       setLink(certificate?.linkCertificate || "");
     };

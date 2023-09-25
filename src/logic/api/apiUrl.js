@@ -77,6 +77,8 @@ export const userPath = {
   GET_UNASSIGNED_TRAINEE: "/user/unassigned-trainee",
   ASSIGN_TRAINEES_TO_TRAINER: "/user/trainer/assign-trainees",
   GET_TRAINER_TRAINEE: "/user/trainer/trainee",
+  DISABLE_USER: "/user/disable-user/",
+  ACTIVE_USER: "/user/active-user/",
 };
 
 export const attendancePath = {
@@ -123,7 +125,7 @@ export const templatePath = {
   DELETE_TEMPLATE: "/template/disable-template/",
   ACTIVE_TEMPLATE: "/template/active-template/",
   ADD_TEMPLATE_HEADER: "/template/template-header/",
-  DELETE_TEMPLATE_HEADER: "/template/template-header/",
+  UPDATE_TEMPLATE_HEADER: "/template/template-header/",
 };
 
 export const formulaPath = {

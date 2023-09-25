@@ -29,23 +29,23 @@ const ManagerDashboardPage = () => {
     <Fragment>
       <Grid container spacing={2}>
         {/* Card Part */}
-        <Grid item lg={4} md={6} sm={6} xs={12}>
+        <Grid lg={4} md={6} sm={6} xs={12}>
           <EarningCard isLoading={isLoading} />
         </Grid>
-        <Grid item lg={4} md={6} sm={6} xs={12}>
+        <Grid lg={4} md={6} sm={6} xs={12}>
           <TotalOrderLineChartCard isLoading={isLoading} />
         </Grid>
-        <Grid item lg={4} md={12} sm={12} xs={12}>
-          <Grid item sm={6} xs={12} md={6} lg={12}>
+        <Grid lg={4} md={12} sm={12} xs={12}>
+          <Grid sm={6} xs={12} md={6} lg={12}>
             <TotalIncomeDarkCard isLoading={isLoading} />
           </Grid>
-          <Grid item sm={6} xs={12} md={6} lg={12} mt={2}>
+          <Grid sm={6} xs={12} md={6} lg={12} mt={2}>
             <TotalIncomeLightCard isLoading={isLoading} />
           </Grid>
         </Grid>
 
         {/* Chart Part */}
-        <Grid item xs={12} md={12}>
+        <Grid xs={12} md={12}>
           <TotalGrowthBarChart isLoading={isLoading} />
         </Grid>
       </Grid>

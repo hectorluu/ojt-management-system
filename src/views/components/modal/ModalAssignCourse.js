@@ -34,7 +34,6 @@ const ModalAssignCourse = ({
           "&PageSize=" +
           1000000
         );
-
         setTraineeList(response.data.data);
       } catch (error) {
         toast.error(error.response.data);
@@ -90,7 +89,7 @@ const ModalAssignCourse = ({
                 <Autocomplete
                   disablePortal={false}
                   options={traineeList}
-                  getOptionLabel={(option) => option.lastName + " " + option.firstName + " " + option.email}
+                  getOptionLabel={(option) => option.lastName + " " + option.firstName + " " + option.email + " " + option.positionName}
                   renderInput={(params) => (
                     <TextField
                       {...params}

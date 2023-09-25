@@ -58,6 +58,7 @@ const ModalTraineeDetailManager = ({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
+          height: 650,
           width: 700,
           bgcolor: "background.paper",
           border: "2px solid #000",

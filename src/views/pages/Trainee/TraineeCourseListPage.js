@@ -193,8 +193,6 @@ const TraineeCourseListPage = () => {
               sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Lựa chọn" />}
               onChange={(event, newValue) => {
-                console.log(courseOption);
-                console.log(newValue);
                 if (newValue) {
                   setCourseOption(newValue);
                 } else {
