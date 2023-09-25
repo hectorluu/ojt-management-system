@@ -69,9 +69,6 @@ const ManagerDashboardPage = lazy(() =>
 const ManagerReportListPage = lazy(() =>
   import("views/pages/Manager/ManagerReportListPage")
 );
-const ManagerRoleTraineeDetailPage = lazy(() =>
-  import("views/pages/Manager/TraineeDetailPage")
-);
 const TraineeListPage = lazy(() =>
   import("views/pages/Manager/TraineeListPage")
 );
@@ -288,12 +285,6 @@ const router = createBrowserRouter([
           {
             path: "/manager-define-new-report",
             element: <DefineNewReportPage></DefineNewReportPage>,
-          },
-          {
-            path: "/trainee-list/:traineeId",
-            element: (
-              <ManagerRoleTraineeDetailPage></ManagerRoleTraineeDetailPage>
-            ),
           },
           {
             path: "/trainee-list",

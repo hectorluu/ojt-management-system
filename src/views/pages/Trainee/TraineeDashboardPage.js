@@ -18,6 +18,7 @@ import SkillChart from "views/components/chart/SkillChart";
 import { chartPath } from "logic/api/apiUrl";
 import { processSkillChart } from "logic/utils/chartUtils";
 import { toast } from "react-toastify";
+import ChartSkeleton from "views/modules/ChartSkeleton";
 
 const TraineeDashboardPage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -45,7 +46,7 @@ const TraineeDashboardPage = () => {
       <Grid container spacing={3}>
         {/* Card Part */}
 
-        <Grid  xs={4} lg={4}>
+        <Grid xs={4} lg={4}>
           <Card className="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl">
             <CardContent>
               <div className="flex items-center justify-between">
@@ -88,7 +89,7 @@ const TraineeDashboardPage = () => {
           </Card>
         </Grid>
 
-        <Grid  xs={4} lg={4}>
+        <Grid xs={4} lg={4}>
           <Card className="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl">
             <CardContent>
               <div className="flex items-center justify-between">
@@ -131,7 +132,7 @@ const TraineeDashboardPage = () => {
           </Card>
         </Grid>
 
-        <Grid  xs={4} lg={4}>
+        <Grid xs={4} lg={4}>
           <Card className="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl">
             <CardContent>
               <div className="flex items-center justify-between">
@@ -179,7 +180,7 @@ const TraineeDashboardPage = () => {
 
       {/* Activity Part and User Part */}
       <Grid container sx={{ mt: -3 }} spacing={3}>
-        <Grid  xs={8} lg={8}>
+        <Grid xs={8} lg={8}>
           <Paper className="flex-1 bg-white rounded-lg shadow-xl mt-10 px-6 py-3">
             <Typography
               variant="h4"
@@ -326,23 +327,25 @@ const TraineeDashboardPage = () => {
             </div>
           </Paper>
         </Grid>
-        <Grid  xs={4} md={4} lg={4} sx={{ mt: 5 }}>
-          <SkillChart
-            title="Thông tin kỹ năng"
-            chartLabels={skillChartData.label}
-            chartData={[
-              {
-                name: "Ban đầu",
-                data: skillChartData.init,
-              },
-              {
-                name: "Hiện tại",
-                data: skillChartData.current,
-              },
-            ]}
-            chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
-            sx={{ px: -5 }}
-          />
+        <Grid xs={4} md={4} lg={4} sx={{ mt: 5 }}>
+          {isLoading ? <ChartSkeleton /> :
+            <SkillChart
+              title="Thông tin kỹ năng"
+              chartLabels={skillChartData.label}
+              chartData={[
+                {
+                  name: "Ban đầu",
+                  data: skillChartData.init,
+                },
+                {
+                  name: "Hiện tại",
+                  data: skillChartData.current,
+                },
+              ]}
+              chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
+              sx={{ px: -5 }}
+            />
+          }
         </Grid>
       </Grid>
     </Fragment>

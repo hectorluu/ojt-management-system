@@ -9,18 +9,21 @@ import {
   Grid,
   Card,
   CardContent,
-  SvgIcon,
   Avatar,
   useTheme,
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { certificatePath, trainerTaskPath, userPath } from "logic/api/apiUrl";
+import { certificatePath, chartPath, trainerTaskPath, userPath } from "logic/api/apiUrl";
 import { defaultUserIcon, genderOptions } from "logic/constants/global";
 import { fDate, fDateTime } from "logic/utils/formatTime";
 import { useParams } from "react-router-dom";
 import ProfileSkeleton from "views/modules/account/ProfileSkeleton";
 import { toast } from "react-toastify";
+import SkillChart from "views/components/chart/SkillChart";
+import { processSkillChart } from "logic/utils/chartUtils";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import DvrIcon from "@mui/icons-material/Dvr";
 
 const TraineeDetailPage = () => {
   const { traineeId } = useParams();
@@ -29,6 +32,21 @@ const TraineeDetailPage = () => {
   const [traineeTask, setTraineeTask] = useState([]);
   const [certList, setCertList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [skillChartData, setSkillChartData] = useState({ label: [], init: [], current: [] });
+  useEffect(() => {
+    fetchSkillChart();
+    setIsLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchSkillChart = async () => {
+    try {
+      const response = await axiosPrivate.get(chartPath.GET_TRAINEE_WITH_TOP_SKILL_TRAINEE_DETAIL + traineeId);
+      setSkillChartData(processSkillChart(response.data));
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  };
 
   useEffect(() => {
     async function fetchTraineeDetail() {
@@ -38,6 +56,7 @@ const TraineeDetailPage = () => {
           userPath.GET_TRAINEE_BY_ID + traineeId
         );
         setTrainee(response.data);
+        console.log(response.data)
         setIsLoading(false);
       } catch (error) {
         toast.error(error.response.data);
@@ -50,10 +69,10 @@ const TraineeDetailPage = () => {
       try {
         setIsLoading(true);
         const response = await axiosPrivate.get(
-          trainerTaskPath.GET_TRAINEE_LIST_TASK + traineeId + "?status=" + 1
+          trainerTaskPath.GET_TRAINEE_LIST_TASK + traineeId + "?status=" + 2 + "&PageIndex=" + 1 + "&PageSize=" + 6
         );
         // Get 6 task
-        setTraineeTask(response.data.data.slice(0, 6));
+        setTraineeTask(response.data.data);
         setIsLoading(false);
       } catch (error) {
         toast.error(error.response.data);
@@ -66,7 +85,7 @@ const TraineeDetailPage = () => {
       try {
         setIsLoading(true);
         const response = await axiosPrivate.get(
-          certificatePath.GET_LIST_CERTIFICATE_OF_TRAINEE + traineeId
+          certificatePath.GET_LIST_CERTIFICATE_OF_TRAINEE + traineeId + "?status=" + 4 + "&PageIndex=" + 1 + "&PageSize=" + 100000
         );
         setCertList(response.data.data);
         setIsLoading(false);
@@ -161,25 +180,12 @@ const TraineeDetailPage = () => {
                       variant="subtitle1"
                       className="font-bold text-indigo-600"
                     >
-                      Công việc hoàn thành
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      className="text-xs bg-gray-200 hover:bg-gray-500 text-gray-500 hover:text-gray-200 px-2 py-1 rounded-lg transition duration-200 cursor-default"
-                    >
-                      7 days
+                      Công việc đã làm
                     </Typography>
                   </div>
                   <div className="flex items-center justify-between mt-6">
                     <div>
-                      <SvgIcon className="w-12 h-12 p-2.5 bg-indigo-400 bg-opacity-20 rounded-full text-indigo-600 border border-indigo-600">
-                        <path
-                          stroke="currentColor"
-                          strokeWidth="1"
-                          fill="none"
-                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </SvgIcon>
+                      <AssignmentTurnedInIcon />
                     </div>
                     <div className="flex flex-col">
                       <div className="flex items-end">
@@ -187,7 +193,7 @@ const TraineeDetailPage = () => {
                           variant="h6"
                           className="text-2xl 2xl:text-3xl font-bold"
                         >
-                          8,141
+                          12
                         </Typography>
                       </div>
                     </div>
@@ -204,25 +210,12 @@ const TraineeDetailPage = () => {
                       variant="subtitle1"
                       className="font-bold text-sm text-green-600"
                     >
-                      Khóa học hoàn thành
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      className="text-xs bg-gray-200 hover:bg-gray-500 text-gray-500 hover:text-gray-200 px-2 py-1 rounded-lg transition duration-200 cursor-default"
-                    >
-                      7 days
+                      Khóa học đã tham gia
                     </Typography>
                   </div>
                   <div className="flex items-center justify-between mt-6">
                     <div>
-                      <SvgIcon className="w-12 h-12 p-2.5 bg-green-400 bg-opacity-20 rounded-full text-green-600 border border-green-600">
-                        <path
-                          stroke="currentColor"
-                          strokeWidth="1"
-                          fill="none"
-                          d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                        />
-                      </SvgIcon>
+                      <DvrIcon />
                     </div>
                     <div className="flex flex-col">
                       <div className="flex items-end">
@@ -230,7 +223,7 @@ const TraineeDetailPage = () => {
                           variant="h6"
                           className="text-2xl 2xl:text-3xl font-bold"
                         >
-                          217
+                          20
                         </Typography>
                       </div>
                     </div>
@@ -240,46 +233,22 @@ const TraineeDetailPage = () => {
             </Grid>
 
             <Grid item xs={12} lg={4}>
-              <Card className="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl">
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <Typography
-                      variant="subtitle1"
-                      className="font-bold text-sm text-blue-600"
-                    >
-                      Kỹ năng nhận thêm
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      className="text-xs bg-gray-200 hover:bg-gray-500 text-gray-500 hover:text-gray-200 px-2 py-1 rounded-lg transition duration-200 cursor-default"
-                    >
-                      7 days
-                    </Typography>
-                  </div>
-                  <div className="flex items-center justify-between mt-6">
-                    <div>
-                      <SvgIcon className="w-12 h-12 p-2.5 bg-blue-400 bg-opacity-20 rounded-full text-blue-600 border border-blue-600">
-                        <path
-                          stroke="currentColor"
-                          strokeWidth="1"
-                          fill="none"
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                        />
-                      </SvgIcon>
-                    </div>
-                    <div className="flex flex-col">
-                      <div className="flex items-end">
-                        <Typography
-                          variant="h6"
-                          className="text-2xl 2xl:text-3xl font-bold"
-                        >
-                          54
-                        </Typography>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <SkillChart
+                title="Thông tin kỹ năng"
+                chartLabels={skillChartData.label}
+                chartData={[
+                  {
+                    name: "Ban đầu",
+                    data: skillChartData.init,
+                  },
+                  {
+                    name: "Hiện tại",
+                    data: skillChartData.current,
+                  },
+                ]}
+                chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
+                sx={{ px: -5 }}
+              />
             </Grid>
           </Grid>
 

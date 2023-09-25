@@ -189,6 +189,7 @@ export const chartPath = {
   GET_TRAINEE_WITH_POSITION: "/chart/trainee-position",
   GET_TRAINEE_WITH_TOP_SKILL: "/chart/trainee-top-skill",
   GET_TRAINEE_WITH_TOP_TASKDONE: "/chart/trainee-top-done-task",
+  GET_TRAINEE_WITH_TOP_SKILL_TRAINEE_DETAIL: "/chart/trainee-top-skill/",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;
