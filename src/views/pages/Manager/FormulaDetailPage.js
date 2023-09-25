@@ -10,6 +10,7 @@ import {
   TextField,
   Skeleton,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
@@ -279,10 +280,17 @@ const FormulaDetailPage = () => {
               ) : keyList.length !== 0 ? (
                 keyList?.map((key) => (
                   <ListItem key={key.key}>
-                    <Chip
-                      label={key.name}
-                      onClick={() => handleChipClick(key)}
-                    />
+                    <Tooltip
+                      title={key.description}
+                      placement="top"
+                      className="w-fit"
+                      sx={{ mb: 0.5 }}
+                    >
+                      <Chip
+                        label={key.name}
+                        onClick={() => handleChipClick(key)}
+                      />
+                    </Tooltip>
                   </ListItem>
                 ))
               ) : (
