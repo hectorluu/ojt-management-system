@@ -111,10 +111,9 @@ export const templateStatusOptions = [
 ];
 
 export const trainingPlanStatusOptions = [
-  { value: 2, label: "Đang được duyệt" },
+  { value: 2, label: "Đang chờ" },
   { value: 3, label: "Đang sử dụng" },
   { value: 4, label: "Bị từ chối" },
-  { value: 5, label: "Đã đóng" },
 ];
 
 export const reportStatusOptions = [

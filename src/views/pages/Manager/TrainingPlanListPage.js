@@ -1,6 +1,7 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { useEffect, useState } from "react";
 import {
+  Autocomplete,
   Button,
   Card,
   InputAdornment,
@@ -13,12 +14,13 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   useTheme,
 } from "@mui/material";
 import {
   defaultPageSize,
   defaultPageIndex,
-  trainingPlanStatus,
+  trainingPlanStatusOptions,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import ModalTrainingPlanDetailManager from "views/components/modal/ModalTrainingPlanDetailManager";
@@ -39,6 +41,7 @@ const TrainingPlanListPage = () => {
   const [trainingplans, setTrainingplans] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isLoading, setIsLoading] = useState(true); // New loading state
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
     async function fetchTrainingPlans() {
@@ -53,7 +56,7 @@ const TrainingPlanListPage = () => {
           "&nameSearch=" +
           `${searchTerm === null ? "" : searchTerm}` +
           "&status=" +
-          trainingPlanStatus.ACTIVE
+          status
         );
         setTrainingplans(response.data.data);
         setTotalItem(response.data.totalItem);
@@ -65,7 +68,7 @@ const TrainingPlanListPage = () => {
     }
     fetchTrainingPlans();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, [searchTerm, page, rowsPerPage, status]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -110,6 +113,23 @@ const TrainingPlanListPage = () => {
               onChange={setSearchTerm}
             />
           </Card>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              options={trainingPlanStatusOptions}
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Trạng thái" />
+              )}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setStatus(newValue.value);
+                } else {
+                  setStatus("");
+                }
+              }}
+            />
+          </div>
         </div>
         <TableContainer sx={{ width: 1, mt: 2, mb: -2, borderRadius: 4 }}>
           <Table stickyHeader>

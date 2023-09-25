@@ -18,6 +18,8 @@ import { CourseCard } from "views/components/cards/CourseCard";
 import HorizontalLineChart from "views/components/chart/HorizontalLineChart";
 import PieChart from "views/components/chart/PieChart";
 import ColumnAndLineChart from "views/components/chart/ColumnAndLineChart";
+import AdminDashBoardSkeleton from "views/modules/AdminDashboardSkeleton";
+import ChartSkeleton from "views/modules/ChartSkeleton";
 
 const AdminDashBoardPage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -196,15 +198,17 @@ const AdminDashBoardPage = () => {
             <Typography variant="h3" className="mb-5">
               Trường đại học liên kết
             </Typography>
-
-            <Grid container spacing={3}>
-              {universities.map((university) => (
-                <Grid xs={12} md={6} lg={4} key={university.id}>
-                  <UniversityCard university={university} />
-                </Grid>
-              ))}
-            </Grid>
-
+            {isLoading ?
+              <AdminDashBoardSkeleton />
+              :
+              <Grid container spacing={3}>
+                {universities.map((university) => (
+                  <Grid xs={12} md={6} lg={4} key={university.id}>
+                    <UniversityCard university={university} />
+                  </Grid>
+                ))}
+              </Grid>
+            }
             <CardActions
               sx={{ py: 1.25, pt: 2, mb: -2, justifyContent: "center" }}
             >
@@ -228,15 +232,17 @@ const AdminDashBoardPage = () => {
             <Typography variant="h3" className="mb-5">
               Khóa học hiện có
             </Typography>
-
-            <Grid container spacing={3}>
-              {courses.map((course) => (
-                <Grid xs={12} md={6} lg={4} key={course.id}>
-                  <CourseCard course={course} />
-                </Grid>
-              ))}
-            </Grid>
-
+            {isLoading ?
+              <AdminDashBoardSkeleton />
+              :
+              <Grid container spacing={3}>
+                {courses.map((course) => (
+                  <Grid xs={12} md={6} lg={4} key={course.id}>
+                    <CourseCard course={course} />
+                  </Grid>
+                ))}
+              </Grid>
+            }
             <CardActions
               sx={{ py: 1.25, pt: 2, mb: -2, justifyContent: "center" }}
             >
@@ -256,33 +262,39 @@ const AdminDashBoardPage = () => {
 
         {/* ... Chart Part */}
         <Grid xs={12} md={12}>
-          <ColumnAndLineChart
-            title="Tổng đợt OJT và thực tập sinh theo tháng"
-            chartLabels={chartBatchAndTraineeLabels}
-            chartData={batchAndTrainee}
-          />
+          {isLoading ? <ChartSkeleton /> :
+            <ColumnAndLineChart
+              title="Tổng đợt OJT và thực tập sinh theo tháng"
+              chartLabels={chartBatchAndTraineeLabels}
+              chartData={batchAndTrainee}
+            />
+          }
         </Grid>
 
         {/* ... Line Chart Part */}
         <Grid xs={12} md={6} lg={8}>
-          <HorizontalLineChart
-            title="Đào tạo viên với số thực tập sinh nhiều nhất"
-            chartData={trainerAndTotalTrainees}
-          />
+          {isLoading ? <ChartSkeleton /> :
+            <HorizontalLineChart
+              title="Đào tạo viên với số thực tập sinh nhiều nhất"
+              chartData={trainerAndTotalTrainees}
+            />
+          }
         </Grid>
 
         {/* ... Pie Chart Part */}
         <Grid xs={12} md={6} lg={4}>
-          <PieChart
-            title="Vị trí thực tập"
-            chartData={traineeWithPosition}
-            chartColors={[
-              theme.palette.primary.main,
-              theme.palette.info.main,
-              theme.palette.warning.main,
-              theme.palette.error.main,
-            ]}
-          />
+          {isLoading ? <ChartSkeleton /> :
+            <PieChart
+              title="Vị trí thực tập"
+              chartData={traineeWithPosition}
+              chartColors={[
+                theme.palette.primary.main,
+                theme.palette.info.main,
+                theme.palette.warning.main,
+                theme.palette.error.main,
+              ]}
+            />
+          }
         </Grid>
       </Grid>
     </Fragment>
