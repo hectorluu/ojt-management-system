@@ -95,7 +95,7 @@ const ModalTrainingPlanCertifyManager = ({
                     </span>
                   </div>
                   <div className="mb-2">
-                    <strong className="font-semi">Ngày thay đổi: </strong>
+                    <strong className="font-semi">Ngày chỉnh sửa: </strong>
                     <span className="text-text2">
                       {fDate(selectedTrainingPlan?.updateDate)}
                     </span>

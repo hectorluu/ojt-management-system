@@ -21,6 +21,7 @@ import {
   defaultPageSize,
   defaultPageIndex,
   trainingPlanStatusOptions,
+  trainingPlanStatus,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import ModalTrainingPlanDetailManager from "views/components/modal/ModalTrainingPlanDetailManager";
@@ -32,6 +33,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import useOnChange from "logic/hooks/useOnChange";
 import { fDate } from "logic/utils/formatTime";
 import { toast } from "react-toastify";
+import Chip from "views/components/chip/Chip";
 
 const TrainingPlanListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -135,14 +137,17 @@ const TrainingPlanListPage = () => {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <StyledTableCell align="left" width={"40%"}>
+                <StyledTableCell align="left" width={"30%"}>
                   Tên kế hoạch
                 </StyledTableCell>
-                <StyledTableCell align="left" width={"25%"}>
+                <StyledTableCell align="left" width={"20%"}>
                   Người tạo
                 </StyledTableCell>
                 <StyledTableCell align="center" width={"20%"}>
                   Ngày sửa đổi
+                </StyledTableCell>
+                <StyledTableCell align="center" width={"15%"}>
+                  Trạng thái
                 </StyledTableCell>
                 <StyledTableCell align="right" width={"15%"}></StyledTableCell>
               </TableRow>
@@ -151,10 +156,10 @@ const TrainingPlanListPage = () => {
               {isLoading ? (
                 <>
                   <TableRow>
-                    <TableCell width={"40%"} animation="wave">
+                    <TableCell width={"30%"} animation="wave">
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"25%"} animation="wave">
+                    <TableCell width={"20%"} animation="wave">
                       <Skeleton />
                     </TableCell>
                     <TableCell width={"20%"} animation="wave">
@@ -163,12 +168,15 @@ const TrainingPlanListPage = () => {
                     <TableCell width={"15%"} animation="wave">
                       <Skeleton />
                     </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell width={"40%"} animation="wave">
+                    <TableCell width={"15%"} animation="wave">
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"25%"} animation="wave">
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"30%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"} animation="wave">
                       <Skeleton />
                     </TableCell>
                     <TableCell width={"20%"} animation="wave">
@@ -177,15 +185,21 @@ const TrainingPlanListPage = () => {
                     <TableCell width={"15%"} animation="wave">
                       <Skeleton />
                     </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell width={"40%"} animation="wave">
+                    <TableCell width={"15%"} animation="wave">
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"25%"} animation="wave">
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"30%"} animation="wave">
                       <Skeleton />
                     </TableCell>
                     <TableCell width={"20%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
                       <Skeleton />
                     </TableCell>
                     <TableCell width={"15%"} animation="wave">
@@ -202,6 +216,23 @@ const TrainingPlanListPage = () => {
                     </TableCell>
                     <TableCell align="center">
                       {fDate(item.updateDate)}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Chip
+                        color={
+                          item?.status === trainingPlanStatus.PENDING
+                            ? "warning"
+                            : item?.status === trainingPlanStatus.ACTIVE
+                              ? "success"
+                              : "error"
+                        }
+                      >
+                        {
+                          trainingPlanStatusOptions.find(
+                            (label) => label.value === item?.status
+                          ).label
+                        }
+                      </Chip>
                     </TableCell>
                     <TableCell align="right" width={"15%"}>
                       <Button

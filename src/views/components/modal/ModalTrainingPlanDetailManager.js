@@ -92,9 +92,9 @@ const ModalTrainingPlanDetailManager = ({
                     </span>
                   </div>
                   <div className="mb-2">
-                    <strong className="font-semi">Ngày tạo: </strong>
+                    <strong className="font-semi">Ngày chỉnh sửa: </strong>
                     <span className="text-text2">
-                      {fDate(trainingPlanDetails?.createDate)}
+                      {fDate(trainingPlanDetails?.updateDate)}
                     </span>
                   </div>
                   <div className="mb-2">
