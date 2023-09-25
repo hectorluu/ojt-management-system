@@ -42,7 +42,7 @@ const iconsPages = {
   AnalyticsIcon,
   SendIcon,
   AssignmentTurnedInIcon,
-  DvrIcon
+  DvrIcon,
 };
 
 const pages = {
@@ -52,7 +52,7 @@ const pages = {
   children: [
     {
       id: "icons",
-      title: "Đào tạo viên",
+      title: "Thực tập sinh",
       type: "collapse",
       icon: iconsPages.FaceIcon,
       children: [
