@@ -18,23 +18,25 @@ const ModalTrainingPlanCertifyManager = ({
   const [trainingPlanDetails, setTrainingPlanDetails] = useState([]);
 
   useEffect(() => {
-    async function fetchDetails() {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.get(
-          trainingPlanPath.GET_TRAINING_PLAN_DETAIL + selectedTrainingPlan.id
-        );
-        setTrainingPlanDetails(response.data.details);
-        setIsLoading(false); // Set loading to false after fetching data
-      } catch (error) {
-        toast.error(error.response.data);
-        setIsLoading(false); // Set loading to false after fetching data
-      }
-    }
-    fetchDetails();
-
+    if (selectedTrainingPlan) {
+      fetchDetails();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTrainingPlan]);
+
+  async function fetchDetails() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        trainingPlanPath.GET_TRAINING_PLAN_DETAIL + selectedTrainingPlan.id
+      );
+      setTrainingPlanDetails(response.data.details);
+      setIsLoading(false); // Set loading to false after fetching data
+    } catch (error) {
+      toast.error(error.response.data);
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  }
 
   const theme = useTheme();
 
