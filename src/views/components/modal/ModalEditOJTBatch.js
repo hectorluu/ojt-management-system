@@ -61,7 +61,7 @@ const ModalEditOJTBatch = ({
   };
 
   useEffect(() => {
-    if (idClicked !== 0) {
+    if (idClicked) {
       fetchBatch();
       fetchTemplateList();
     }

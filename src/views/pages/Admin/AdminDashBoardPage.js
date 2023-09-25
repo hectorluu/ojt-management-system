@@ -36,10 +36,10 @@ const AdminDashBoardPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         universityPath.GET_UNIVERSITY_LIST +
-          "?PageSize=" +
-          100000 +
-          "&PageIndex=" +
-          defaultPageIndex
+        "?PageSize=" +
+        100000 +
+        "&PageIndex=" +
+        defaultPageIndex
       );
       // Get 3 universities
       setUniversities(response.data.data.slice(0, 3));
@@ -56,12 +56,12 @@ const AdminDashBoardPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         coursePath.GET_COURSE_LIST +
-          "?PageSize=" +
-          100000 +
-          "&PageIndex=" +
-          defaultPageIndex +
-          "&filterStatus" +
-          courseStatus.ACTIVE
+        "?PageSize=" +
+        100000 +
+        "&PageIndex=" +
+        defaultPageIndex +
+        "&filterStatus" +
+        courseStatus.ACTIVE
       );
       // Get 5 courses
       setCourses(response.data.data.slice(0, 3));
@@ -191,7 +191,7 @@ const AdminDashBoardPage = () => {
     <Fragment>
       <Grid container spacing={2}>
         {/* University Part */}
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <MainCard>
             <Typography variant="h3" className="mb-5">
               Trường đại học liên kết
@@ -223,7 +223,7 @@ const AdminDashBoardPage = () => {
         </Grid>
 
         {/* Course Part */}
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <MainCard>
             <Typography variant="h3" className="mb-5">
               Khóa học hiện có
@@ -255,36 +255,26 @@ const AdminDashBoardPage = () => {
         </Grid>
 
         {/* ... Chart Part */}
-        <Grid item xs={12} md={12}>
+        <Grid xs={12} md={12}>
           <ColumnAndLineChart
-            isLoading={isLoading}
-            title={
-              <span className="text-xl font-bold">
-                Tổng đợt OJT và thực tập sinh theo tháng
-              </span>
-            }
+            title="Tổng đợt OJT và thực tập sinh theo tháng"
             chartLabels={chartBatchAndTraineeLabels}
             chartData={batchAndTrainee}
           />
         </Grid>
 
         {/* ... Line Chart Part */}
-        <Grid item xs={12} md={6} lg={8}>
+        <Grid xs={12} md={6} lg={8}>
           <HorizontalLineChart
-            isLoading={isLoading}
-            title={
-              <span className="text-xl font-bold">
-                Đào tạo viên với số thực tập sinh nhiều nhất
-              </span>
-            }
+            title="Đào tạo viên với số thực tập sinh nhiều nhất"
             chartData={trainerAndTotalTrainees}
           />
         </Grid>
 
         {/* ... Pie Chart Part */}
-        <Grid item xs={12} md={6} lg={4}>
+        <Grid xs={12} md={6} lg={4}>
           <PieChart
-            title={<span className="text-xl font-bold">Vị trí thực tập</span>}
+            title="Vị trí thực tập"
             chartData={traineeWithPosition}
             chartColors={[
               theme.palette.primary.main,

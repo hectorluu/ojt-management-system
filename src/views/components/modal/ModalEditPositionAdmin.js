@@ -41,7 +41,7 @@ const ModalEditPositionAdmin = ({
   };
 
   useEffect(() => {
-    if (positionIdClicked !== 0) {
+    if (positionIdClicked) {
       fetchPosition();
     }
 

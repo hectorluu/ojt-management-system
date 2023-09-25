@@ -42,7 +42,7 @@ const ModalSkillDetailAdmin = ({
   };
 
   useEffect(() => {
-    if (skillIdClicked !== 0) {
+    if (skillIdClicked) {
       fetchSkill();
     }
 
