@@ -38,7 +38,7 @@ const TraineeCourseListPage = () => {
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [skill, setSkill] = useState("");
   const [skillList, setSkillList] = useState([]);
-  const [courseOption, setCourseOption] = useState(1);
+  const [courseOption, setCourseOption] = useState({ value: 2, label: "Bắt buộc" });
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
@@ -65,7 +65,7 @@ const TraineeCourseListPage = () => {
     try {
       setIsLoading(true); // Set loading to true before fetching data)
       let response = {};
-      if (courseOption === 3) {
+      if (courseOption.value === 3) {
         response = await axiosPrivate.get(
           coursePath.GET_TRAINEE_COURSE_LIST +
           "?PageIndex=" +
@@ -77,7 +77,7 @@ const TraineeCourseListPage = () => {
           "&filterSkill=" +
           `${skill === null ? "" : skill}`
         );
-      } else if (courseOption === 1) {
+      } else if (courseOption.value === 1) {
         response = await axiosPrivate.get(
           coursePath.GET_RECOMMENDED_LIST +
           "?PageIndex=" +
@@ -146,7 +146,7 @@ const TraineeCourseListPage = () => {
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           {/*Custom search bar*/}
-          {courseOption !== 2 ?
+          {courseOption.value !== 2 ?
             <>
               <Card className="w-2/5">
                 <OutlinedInput
@@ -186,16 +186,19 @@ const TraineeCourseListPage = () => {
             : null}
           <div className="flex flex-wrap items-start max-w-[200px] w-full">
             <Autocomplete
+              value={courseOption}
               disablePortal={false}
               id="combo-box-demo"
               options={traineeCourseOptions}
               sx={{ width: 300 }}
               renderInput={(params) => <TextField {...params} label="Lựa chọn" />}
               onChange={(event, newValue) => {
+                console.log(courseOption);
+                console.log(newValue);
                 if (newValue) {
-                  setCourseOption(newValue.value);
+                  setCourseOption(newValue);
                 } else {
-                  setCourseOption("");
+                  setCourseOption({ value: 2, label: "Bắt buộc" });
                 }
               }}
             />

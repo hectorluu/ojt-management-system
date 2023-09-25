@@ -10,12 +10,13 @@ import { formulaPath } from "logic/api/apiUrl";
 import { isCriteriaOptions, notCriteriaOptions } from "logic/constants/global";
 import { toast } from "react-toastify";
 
-const ModalAddTemplateHeader = ({
+const ModalTemplateHeaderDetail = ({
   isOpen,
   onRequestClose,
-  handleAddNewTemplateHeader,
+  handleUpdateTemplateHeader,
   isLoading,
   error,
+  selectedHeader,
 }) => {
   const { handleSubmit } = useForm();
   const [name, setName] = useState("");
@@ -57,7 +58,7 @@ const ModalAddTemplateHeader = ({
   }, []);
 
   const handleClick = async () => {
-    await handleAddNewTemplateHeader({
+    await handleUpdateTemplateHeader({
       name: name,
       totalPoint: totalPoint,
       matchedAttribute: matchedAttribute,
@@ -223,4 +224,4 @@ const ModalAddTemplateHeader = ({
   );
 };
 
-export default ModalAddTemplateHeader;
+export default ModalTemplateHeaderDetail;

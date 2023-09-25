@@ -20,7 +20,7 @@ const TraineeTrainingPlanPage = () => {
 
         setTrainingPlan(response.data);
         setTrainingPlanDetails(response.data.details);
-      } catch (error) {}
+      } catch (error) { }
     }
 
     fetchTraineeTrainingPlan();
@@ -49,8 +49,8 @@ const TraineeTrainingPlanPage = () => {
           <div className="absolute h-full border border-dashed border-opacity-60 border-secondary"></div>
 
           {/* Timeline item */}
-          {trainingPlanDetails.map((task) => (
-            <div className="flex items-center w-full my-6 -ml-1.5">
+          {trainingPlanDetails.map((task, index) => (
+            <div className="flex items-center w-full my-6 -ml-1.5" key={index}>
               <div className="w-1/12 z-10">
                 <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
               </div>

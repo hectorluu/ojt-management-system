@@ -122,7 +122,7 @@ const ModalSkillDetailAdmin = ({
                 <Button
                   type="submit"
                   className="px-10 mx-auto text-white bg-primary"
-                  isLoading={isLoading}
+                  isLoading={isSubmitLoading}
                 >
                   Chỉnh sửa{" "}
                 </Button>

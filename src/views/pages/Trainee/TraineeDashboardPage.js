@@ -45,7 +45,7 @@ const TraineeDashboardPage = () => {
       <Grid container spacing={3}>
         {/* Card Part */}
 
-        <Grid item xs={4} lg={4}>
+        <Grid  xs={4} lg={4}>
           <Card className="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl">
             <CardContent>
               <div className="flex items-center justify-between">
@@ -88,7 +88,7 @@ const TraineeDashboardPage = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={4} lg={4}>
+        <Grid  xs={4} lg={4}>
           <Card className="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl">
             <CardContent>
               <div className="flex items-center justify-between">
@@ -131,7 +131,7 @@ const TraineeDashboardPage = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={4} lg={4}>
+        <Grid  xs={4} lg={4}>
           <Card className="px-6 py-6 bg-gray-100 border border-gray-300 rounded-lg shadow-xl">
             <CardContent>
               <div className="flex items-center justify-between">
@@ -179,7 +179,7 @@ const TraineeDashboardPage = () => {
 
       {/* Activity Part and User Part */}
       <Grid container sx={{ mt: -3 }} spacing={3}>
-        <Grid item xs={8} lg={8}>
+        <Grid  xs={8} lg={8}>
           <Paper className="flex-1 bg-white rounded-lg shadow-xl mt-10 px-6 py-3">
             <Typography
               variant="h4"
@@ -326,7 +326,7 @@ const TraineeDashboardPage = () => {
             </div>
           </Paper>
         </Grid>
-        <Grid item xs={4} md={4} lg={4} sx={{ mt: 5 }}>
+        <Grid  xs={4} md={4} lg={4} sx={{ mt: 5 }}>
           <SkillChart
             title="Thông tin kỹ năng"
             chartLabels={skillChartData.label}
