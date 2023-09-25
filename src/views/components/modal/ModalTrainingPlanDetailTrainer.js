@@ -95,14 +95,6 @@ const ModalTrainingPlanDetailTrainer = ({
                     {fDate(selectedTrainingPlan?.updateDate)}
                   </span>
                 </div>
-                <div className="mb-2">
-                  <strong className="font-semi">Người tạo: </strong>
-                  <span className="text-text2">
-                    {selectedTrainingPlan?.firstName +
-                      " " +
-                      selectedTrainingPlan?.lastName}
-                  </span>
-                </div>
               </div>
 
               <div className="p-5">
