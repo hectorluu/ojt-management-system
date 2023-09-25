@@ -72,6 +72,7 @@ const ConfigPage = () => {
       try {
         await axiosPrivate.put(configPath.UPDATE_CONFIG, configs);
         fetchConfigs();
+        toast.success("Cập nhật thành công");
       } catch (error) {
         toast.error(error.response.data);
       }
@@ -138,9 +139,9 @@ const ConfigPage = () => {
                       error={
                         config.value < 1 ||
                         config.value >
-                          configOptions.find(
-                            (label) => label.value === config.name
-                          )?.maxValue
+                        configOptions.find(
+                          (label) => label.value === config.name
+                        )?.maxValue
                       }
                     />
                   </FormGroup>

@@ -64,7 +64,7 @@ const AssignTrainingPlanPage = () => {
   // fetch trainers
   useEffect(() => {
     fetchTrainingPlans();
-    fetchUnassignedTrainee();
+    fetchassignedTrainee();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -106,7 +106,7 @@ const AssignTrainingPlanPage = () => {
     }
   }
 
-  const fetchUnassignedTrainee = async () => {
+  const fetchassignedTrainee = async () => {
     try {
       const response = await axiosPrivate.get(
         userPath.GET_TRAINER_TRAINEE + "?PageIndex=" + 1 + "&PageSize=" + 100000
