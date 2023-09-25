@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Modal } from "@mui/material";
+import { Box, CircularProgress, Modal } from "@mui/material";
 import { fDate } from "logic/utils/formatTime";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { trainingPlanPath } from "logic/api/apiUrl";
@@ -11,11 +11,11 @@ const ModalTrainingPlanDetailTrainer = ({
   selectedTrainingPlan,
 }) => {
   const axiosPrivate = useAxiosPrivate();
-  const [, setIsLoading] = useState(true); // New loading state
+  const [isLoading, setIsLoading] = useState(true); // New loading state
   const [trainingPlanDetails, setTrainingPlanDetails] = useState([]);
 
   useEffect(() => {
-    if (selectedTrainingPlan){
+    if (selectedTrainingPlan) {
       fetchDetails();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,50 +80,51 @@ const ModalTrainingPlanDetailTrainer = ({
             overflowX: "hidden",
           }}
         >
-          <div>
-            <div className="bg-white shadow-1 rounded-xl">
-              <div className="p-5">
-                <div className="flex items-center mb-3 gap-x-3">
-                  <span className="text-xl font-bold text-text1">
-                    {trainingPlanDetails?.name}
-                  </span>
+          <div style={isLoading ? { display: 'flex', justifyContent: 'center', alignItems: 'center' } : {}}>
+            {isLoading ? <CircularProgress /> :
+              <div className="bg-white shadow-1 rounded-xl">
+                <div className="p-5">
+                  <div className="flex items-center mb-3 gap-x-3">
+                    <span className="text-xl font-bold text-text1">
+                      {trainingPlanDetails?.name}
+                    </span>
+                  </div>
+                  <div className="mb-2">
+                    <strong className="font-semi">Ngày thay đổi: </strong>
+                    <span className="text-text2">
+                      {fDate(trainingPlanDetails?.createDate)}
+                    </span>
+                  </div>
                 </div>
-                <div className="mb-2">
-                  <strong className="font-semi">Ngày thay đổi: </strong>
-                  <span className="text-text2">
-                    {fDate(trainingPlanDetails?.createDate)}
-                  </span>
-                </div>
-              </div>
 
-              <div className="p-5">
-                <div className="flex items-center mb-4 gap-x-3">
-                  <span className="text-xl font-bold text-text1">Chi tiết</span>
+                <div className="p-5">
+                  <div className="flex items-center mb-4 gap-x-3">
+                    <span className="text-xl font-bold text-text1">Chi tiết</span>
+                  </div>
+                  {trainingPlanDetails?.details?.length > 0 ? (
+                    trainingPlanDetails?.details?.map((detail, index) => (
+                      <div className="mb-6" key={index}>
+                        <p className="mb-2 text-text2">
+                          <strong className="text-text1">
+                            {index + 1}
+                            {")"} {detail.name}
+                          </strong>
+                        </p>
+                        <p className="text-text2 pl-4 mb-2">
+                          {detail?.description}
+                        </p>
+                        <p className="text-text2 pl-4">
+                          {fDate(detail?.startTime) +
+                            " - " +
+                            fDate(detail?.endTime)}
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <div>Chưa có chi tiết được tạo.</div>
+                  )}
                 </div>
-                {trainingPlanDetails?.details?.length > 0 ? (
-                  trainingPlanDetails?.details?.map((detail, index) => (
-                    <div className="mb-6" key={index}>
-                      <p className="mb-2 text-text2">
-                        <strong className="text-text1">
-                          {index + 1}
-                          {")"} {detail.name}
-                        </strong>
-                      </p>
-                      <p className="text-text2 pl-4 mb-2">
-                        {detail?.description}
-                      </p>
-                      <p className="text-text2 pl-4">
-                        {fDate(detail?.startTime) +
-                          " - " +
-                          fDate(detail?.endTime)}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <div>Chưa có chi tiết được tạo.</div>
-                )}
-              </div>
-            </div>
+              </div>}
           </div>
         </PerfectScrollbar>
       </Box>
