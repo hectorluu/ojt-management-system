@@ -77,7 +77,6 @@ const TraineeListPage = () => {
         "&position=" +
         `${position === null ? "" : position}`
       );
-      console.log(response.data.data);
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
       setIsLoading(false); // Set loading to false after fetching data
