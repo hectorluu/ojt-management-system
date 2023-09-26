@@ -201,10 +201,10 @@ const TraineeListPage = () => {
                     <TableCell align="left" width={"25%"}>{item.email}</TableCell>
                     <TableCell align="center" width={"15%"}>{item.positionName}</TableCell>
                     <StyledTableCell align="center" width={"15%"}>
-                      <Chip color={item.status === 1 ? "warning" : "success"}>
+                      <Chip color={item.workStatus === 1 ? "warning" : "success"}>
                         {
                           traineeWorkingStatus.find(
-                            (label) => label.value === item.status
+                            (label) => label.value === item.workStatus
                           ).label
                         }
                       </Chip>
