@@ -2,20 +2,16 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { Fragment, useState } from "react";
 import { useEffect } from "react";
 import {
-  Button,
   Card,
-  CardActions,
   CardContent,
   Unstable_Grid2 as Grid,
   Paper,
-  SvgIcon,
   Typography,
   useTheme,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import TrainingPlanTable from "views/components/table/TrainingPlanTable";
 import SkillChart from "views/components/chart/SkillChart";
-import { chartPath } from "logic/api/apiUrl";
+import { certificatePath, chartPath, traineeTaskPath } from "logic/api/apiUrl";
 import { processSkillChart } from "logic/utils/chartUtils";
 import { toast } from "react-toastify";
 import ChartSkeleton from "views/modules/ChartSkeleton";
@@ -27,6 +23,8 @@ const TraineeDashboardPage = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [skillChartData, setSkillChartData] = useState({ label: [], init: [], current: [] });
+  const [totalCourse, setTotalCourse] = useState(0);
+  const [toalTask, setTotalTask] = useState(0);
 
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -48,8 +46,16 @@ const TraineeDashboardPage = () => {
 
   const fetchTotalCourse = async () => {
     try {
-      const response = await axiosPrivate.get(chartPath.GET_TOTAL_COURSE);
-      setSkillChartData(processSkillChart(response.data));
+      let response = await axiosPrivate.get(
+        certificatePath.GET_CERTIFICATE_LIST +
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        0 +
+        "&status=" +
+        4
+      );;
+      setTotalCourse(response.data.totalItem);
     } catch (error) {
       toast.error(error.response.data);
     }
@@ -57,8 +63,16 @@ const TraineeDashboardPage = () => {
 
   const fetchTotalTask = async () => {
     try {
-      const response = await axiosPrivate.get(chartPath.GET_TOTAL_COURSE);
-      setSkillChartData(processSkillChart(response.data));
+      const response = await axiosPrivate.get(
+        traineeTaskPath.GET_ACCOMPLISHED_TASK_LIST +
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        0 +
+        "&status=" +
+        2
+      );
+      setTotalTask(response.data.totalItem);
     } catch (error) {
       toast.error(error.response.data);
     }
@@ -90,7 +104,7 @@ const TraineeDashboardPage = () => {
                       variant="h6"
                       className="text-2xl 2xl:text-3xl font-bold"
                     >
-                      $8,141
+                      {totalCourse}
                     </Typography>
                   </div>
                 </div>
@@ -120,7 +134,7 @@ const TraineeDashboardPage = () => {
                       variant="h6"
                       className="text-2xl 2xl:text-3xl font-bold"
                     >
-                      217
+                      {toalTask}
                     </Typography>
                   </div>
                 </div>
