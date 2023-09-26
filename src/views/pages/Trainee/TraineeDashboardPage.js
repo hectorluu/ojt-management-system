@@ -24,7 +24,11 @@ const TraineeDashboardPage = () => {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const theme = useTheme();
-  const [skillChartData, setSkillChartData] = useState({ label: [], init: [], current: [] });
+  const [skillChartData, setSkillChartData] = useState({
+    label: [],
+    init: [],
+    current: [],
+  });
 
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -34,7 +38,9 @@ const TraineeDashboardPage = () => {
 
   const fetchSkillChart = async () => {
     try {
-      const response = await axiosPrivate.get(chartPath.GET_TRAINEE_WITH_TOP_SKILL);
+      const response = await axiosPrivate.get(
+        chartPath.GET_TRAINEE_WITH_TOP_SKILL
+      );
       setSkillChartData(processSkillChart(response.data));
     } catch (error) {
       toast.error(error.response.data);
@@ -79,7 +85,7 @@ const TraineeDashboardPage = () => {
                       variant="h6"
                       className="text-2xl 2xl:text-3xl font-bold"
                     >
-                      $8,141
+                      41
                     </Typography>
                   </div>
                 </div>
@@ -327,7 +333,9 @@ const TraineeDashboardPage = () => {
           </Paper>
         </Grid>
         <Grid xs={4} md={4} lg={4} sx={{ mt: 5 }}>
-          {isLoading ? <ChartSkeleton /> :
+          {isLoading ? (
+            <ChartSkeleton />
+          ) : (
             <SkillChart
               title="Thông tin kỹ năng"
               chartLabels={skillChartData.label}
@@ -341,10 +349,12 @@ const TraineeDashboardPage = () => {
                   data: skillChartData.current,
                 },
               ]}
-              chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
+              chartColors={[...Array(6)].map(
+                () => theme.palette.text.secondary
+              )}
               sx={{ px: -5 }}
             />
-          }
+          )}
         </Grid>
       </Grid>
     </Fragment>

@@ -18,6 +18,10 @@ import LayoutTrainee from "views/layout/LayoutTrainee";
 import LayoutTrainer from "views/layout/LayoutTrainer";
 import { permissions } from "logic/constants/permissions";
 
+// Persist reducer
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
+
 const SignInPage = lazy(() => import("views/pages/SignInPage"));
 const UnauthorizePage = lazy(() => import("views/pages/UnauthorizePage"));
 const ResetPasswordPage = lazy(() => import("views/pages/ResetPasswordPage"));
@@ -458,12 +462,16 @@ const router = createBrowserRouter([
   },
 ]);
 
+let persistor = persistStore(store);
+
 createRoot(container).render(
   <Provider store={store}>
     <Suspense fallback={<p></p>}>
-      <App>
-        <RouterProvider router={router}></RouterProvider>
-      </App>
+      <PersistGate persistor={persistor}>
+        <App>
+          <RouterProvider router={router}></RouterProvider>
+        </App>
+      </PersistGate>
     </Suspense>
     <ToastContainer bodyClassName="font-primary text-sm"></ToastContainer>
   </Provider>
