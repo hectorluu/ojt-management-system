@@ -75,9 +75,6 @@ const TraineeListPage = lazy(() =>
 const TrainerAssignmentPage = lazy(() =>
   import("views/pages/Manager/TrainerAssignmentPage")
 );
-const TrainerDetailPage = lazy(() =>
-  import("views/pages/Manager/TrainerDetailPage")
-);
 const TrainerListPage = lazy(() =>
   import("views/pages/Manager/TrainerListPage")
 );
@@ -287,10 +284,6 @@ const router = createBrowserRouter([
           {
             path: "/trainer-assignment",
             element: <TrainerAssignmentPage></TrainerAssignmentPage>,
-          },
-          {
-            path: "/trainer-list/:trainerId",
-            element: <TrainerDetailPage></TrainerDetailPage>,
           },
           {
             path: "/trainer-list",
