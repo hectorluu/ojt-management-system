@@ -37,7 +37,9 @@ const TraineeDashboardPage = () => {
 
   const fetchSkillChart = async () => {
     try {
-      const response = await axiosPrivate.get(chartPath.GET_TRAINEE_WITH_TOP_SKILL);
+      const response = await axiosPrivate.get(
+        chartPath.GET_TRAINEE_WITH_TOP_SKILL
+      );
       setSkillChartData(processSkillChart(response.data));
     } catch (error) {
       toast.error(error.response.data);
@@ -296,7 +298,9 @@ const TraineeDashboardPage = () => {
           </Paper>
         </Grid>
         <Grid xs={4} md={4} lg={4} sx={{ mt: 5 }}>
-          {isLoading ? <ChartSkeleton /> :
+          {isLoading ? (
+            <ChartSkeleton />
+          ) : (
             <SkillChart
               title="Thông tin kỹ năng"
               chartLabels={skillChartData.label}
@@ -310,10 +314,12 @@ const TraineeDashboardPage = () => {
                   data: skillChartData.current,
                 },
               ]}
-              chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
+              chartColors={[...Array(6)].map(
+                () => theme.palette.text.secondary
+              )}
               sx={{ px: -5 }}
             />
-          }
+          )}
         </Grid>
       </Grid>
     </Fragment>
