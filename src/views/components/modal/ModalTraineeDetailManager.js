@@ -41,6 +41,7 @@ const ModalTraineeDetailManager = ({
       setIsLoading(true);
       const response = await axiosPrivate.get(userPath.GET_TRAINEE_BY_ID + traineeSelected?.id);
       setUser(response.data);
+      console.log(response.data);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -161,6 +162,11 @@ const ModalTraineeDetailManager = ({
                 <ListItem className="flex border-b py-2">
                   <Typography className="font-bold w-24">Vị trí:</Typography>
                   <ListItemText primary={user?.positionName} />
+                </ListItem>
+                <ListItem className="flex border-b py-2">
+                  <Typography className="font-bold w-24">Quản lí bởi:</Typography>
+                  <ListItemText primary={user?.trainerName} />
+                  <ListItemText primary={user?.trainerEmail} />
                 </ListItem>
               </List>
 

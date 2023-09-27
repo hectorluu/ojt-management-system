@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -70,6 +71,9 @@ export default function CertificateCardCertify({
           >
             Chi Tiết
           </Button>
+          <IconButton aria-label="open-in-new" color="primary" onClick={() => window.open(certificate.linkCertificate)}>
+            <OpenInNewIcon />
+          </IconButton>
           {!expanded ? (
             <Stack direction="row" sx={{ float: "right", mr: 2 }}>
               <IconButton

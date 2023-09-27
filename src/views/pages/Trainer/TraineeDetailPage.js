@@ -33,6 +33,8 @@ const TraineeDetailPage = () => {
   const [certList, setCertList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [skillChartData, setSkillChartData] = useState({ label: [], init: [], current: [] });
+  const [totalCourse, setTotalCourse] = useState(0);
+  const [totalTask, setTotalTask] = useState(0);
   useEffect(() => {
     fetchSkillChart();
     setIsLoading(false);
@@ -47,55 +49,85 @@ const TraineeDetailPage = () => {
       toast.error(error.response.data);
     }
   };
+  async function fetchTraineeDetail() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        userPath.GET_TRAINEE_BY_ID + traineeId
+      );
+      setTrainee(response.data);
+      console.log(response.data)
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(error.response.data);
+      setIsLoading(false);
+    }
+  }
+
+  async function fetchTraineeTask() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        trainerTaskPath.GET_TRAINEE_LIST_TASK + traineeId + "?status=" + 2 + "&PageIndex=" + 1 + "&PageSize=" + 6
+      );
+      // Get 6 task
+      setTraineeTask(response.data.data);
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(error.response.data);
+      setIsLoading(false);
+    }
+  }
+
+  async function fetchTraineeCert() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        certificatePath.GET_LIST_CERTIFICATE_OF_TRAINEE + traineeId + "?status=" + 4 + "&PageIndex=" + 1 + "&PageSize=" + 100000
+      );
+      setCertList(response.data.data);
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(error.response.data);
+      setIsLoading(false);
+    }
+  }
+
+  async function fetchTotalCourse() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        certificatePath.GET_LIST_CERTIFICATE_OF_TRAINEE + traineeId + "?PageIndex=" + 1 + "&PageSize=" + 1
+      );
+      setTotalCourse(response.data.totalItem);
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(error.response.data);
+      setIsLoading(false);
+    }
+  }
+
+  async function fetchTotalTask() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        trainerTaskPath.GET_TRAINEE_LIST_TASK + traineeId + "?PageIndex=" + 1 + "&PageSize=" + 1
+      );
+      // Get 6 task
+      setTotalTask(response.data.totalItem);
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(error.response.data);
+      setIsLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function fetchTraineeDetail() {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.get(
-          userPath.GET_TRAINEE_BY_ID + traineeId
-        );
-        setTrainee(response.data);
-        console.log(response.data)
-        setIsLoading(false);
-      } catch (error) {
-        toast.error(error.response.data);
-        setIsLoading(false);
-      }
-    }
     fetchTraineeDetail();
-
-    async function fetchTraineeTask() {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.get(
-          trainerTaskPath.GET_TRAINEE_LIST_TASK + traineeId + "?status=" + 2 + "&PageIndex=" + 1 + "&PageSize=" + 6
-        );
-        // Get 6 task
-        setTraineeTask(response.data.data);
-        setIsLoading(false);
-      } catch (error) {
-        toast.error(error.response.data);
-        setIsLoading(false);
-      }
-    }
     fetchTraineeTask();
-
-    async function fetchTraineeCert() {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.get(
-          certificatePath.GET_LIST_CERTIFICATE_OF_TRAINEE + traineeId + "?status=" + 4 + "&PageIndex=" + 1 + "&PageSize=" + 100000
-        );
-        setCertList(response.data.data);
-        setIsLoading(false);
-      } catch (error) {
-        toast.error(error.response.data);
-        setIsLoading(false);
-      }
-    }
     fetchTraineeCert();
-
+    fetchTotalCourse();
+    fetchTotalTask();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -193,7 +225,7 @@ const TraineeDetailPage = () => {
                           variant="h6"
                           className="text-2xl 2xl:text-3xl font-bold"
                         >
-                          12
+                          {totalTask}
                         </Typography>
                       </div>
                     </div>
@@ -223,7 +255,7 @@ const TraineeDetailPage = () => {
                           variant="h6"
                           className="text-2xl 2xl:text-3xl font-bold"
                         >
-                          20
+                          {totalCourse}
                         </Typography>
                       </div>
                     </div>

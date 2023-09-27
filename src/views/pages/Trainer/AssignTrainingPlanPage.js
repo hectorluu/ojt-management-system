@@ -14,7 +14,7 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { trainingPlanPath, userPath } from "logic/api/apiUrl";
+import { trainingPlanPath } from "logic/api/apiUrl";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import SubCard from "views/components/cards/SubCard";
 import { LoadingButton } from "@mui/lab";
@@ -40,6 +40,7 @@ const AssignTrainingPlanPage = () => {
         setSelectedId("");
         setSelectedPlan({});
         setTrainees([]);
+        fetchassignedTrainee();
         setIsLoading(false);
         toast.success(trainingPlanNoti.SUCCESS.ASSIGN);
       } catch (error) {
@@ -109,9 +110,9 @@ const AssignTrainingPlanPage = () => {
   const fetchassignedTrainee = async () => {
     try {
       const response = await axiosPrivate.get(
-        userPath.GET_TRAINER_TRAINEE + "?PageIndex=" + 1 + "&PageSize=" + 100000
+        trainingPlanPath.GET_UNASSIGNED_TRAINEE_LIST
       );
-      setAssignedTraineeList(response.data.data);
+      setAssignedTraineeList(response.data);
     } catch (e) {
       toast.error(e.response.data);
     }
