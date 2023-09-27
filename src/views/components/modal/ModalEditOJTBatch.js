@@ -9,6 +9,8 @@ import FormRow from "../common/FormRow";
 import { DatePicker } from "@mui/x-date-pickers";
 import { Autocomplete, Box, Modal, Skeleton, TextField } from "@mui/material";
 import { toast } from "react-toastify";
+import { signalRMessage } from "logic/constants/global";
+import signalRService from "logic/utils/signalRService";
 
 const ModalEditOJTBatch = ({
   onRequestClose,
@@ -48,6 +50,25 @@ const ModalEditOJTBatch = ({
   useEffect(() => {
     if (name && startTime && endTime && templateId && templateList) setIsLoading(false);
   }, [name, startTime, endTime, templateId, templateList]);
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.TEMPLATE.CREATED, (message) => {
+      fetchTemplateList();
+    });
+    signalRService.on(signalRMessage.TEMPLATE.UPDATED, (message) => {
+      fetchTemplateList();
+    });
+    signalRService.on(signalRMessage.TEMPLATE.DELETED, (message) => {
+      fetchTemplateList();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.TEMPLATE.CREATED);
+      signalRService.off(signalRMessage.TEMPLATE.UPDATED);
+      signalRService.off(signalRMessage.TEMPLATE.DELETED);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchTemplateList = async () => {
     try {

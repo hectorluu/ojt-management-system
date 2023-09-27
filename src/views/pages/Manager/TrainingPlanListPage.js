@@ -22,6 +22,7 @@ import {
   defaultPageIndex,
   trainingPlanStatusOptions,
   trainingPlanStatus,
+  signalRMessage,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import ModalTrainingPlanDetailManager from "views/components/modal/ModalTrainingPlanDetailManager";
@@ -34,6 +35,7 @@ import useOnChange from "logic/hooks/useOnChange";
 import { fDate } from "logic/utils/formatTime";
 import { toast } from "react-toastify";
 import Chip from "views/components/chip/Chip";
+import signalRService from "logic/utils/signalRService";
 
 const TrainingPlanListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -46,31 +48,55 @@ const TrainingPlanListPage = () => {
   const [status, setStatus] = useState("");
 
   useEffect(() => {
-    async function fetchTrainingPlans() {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.get(
-          trainingPlanPath.GET_TRAINING_PLAN_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&nameSearch=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&status=" +
-          status
-        );
-        setTrainingplans(response.data.data);
-        setTotalItem(response.data.totalItem);
-        setIsLoading(false); // Set loading to false after fetching data
-      } catch (error) {
-        toast.error(error.response.data);
-        setIsLoading(false); // Set loading to false after fetching data
-      }
-    }
     fetchTrainingPlans();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, page, rowsPerPage, status]);
+
+  async function fetchTrainingPlans() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        trainingPlanPath.GET_TRAINING_PLAN_LIST +
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&nameSearch=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&status=" +
+        status
+      );
+      setTrainingplans(response.data.data);
+      setTotalItem(response.data.totalItem);
+      setIsLoading(false); // Set loading to false after fetching data
+    } catch (error) {
+      toast.error(error.response.data);
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  }
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.TRAINING_PLAN.CREATE, (message) => {
+      fetchTrainingPlans();
+    });
+    signalRService.on(signalRMessage.TRAINING_PLAN.UPDATE, (message) => {
+      fetchTrainingPlans();
+    });
+    signalRService.on(signalRMessage.TRAINING_PLAN.DELETE, (message) => {
+      fetchTrainingPlans();
+    });
+    signalRService.on(signalRMessage.TRAINING_PLAN.PROCESS, (message) => {
+      fetchTrainingPlans();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.TRAINING_PLAN.CREATE);
+      signalRService.off(signalRMessage.TRAINING_PLAN.UPDATE);
+      signalRService.off(signalRMessage.TRAINING_PLAN.DELETE);
+      signalRService.off(signalRMessage.TRAINING_PLAN.PROCESS);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);

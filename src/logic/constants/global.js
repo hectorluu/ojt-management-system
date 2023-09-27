@@ -247,6 +247,7 @@ export const signalRMessage = {
     CREATED: "New Course Created",
     UPDATED: "New Course Updated",
     DELETED: "New Course Deleted",
+    ASSIGNED: "Trainer assigned Course to Trainee. Load get notification for Trainee.",
   },
   SKILL: {
     CREATED: "New Skill Created",
@@ -256,6 +257,7 @@ export const signalRMessage = {
   USER: {
     CREATE: "New User Created",
     UPDATE: "User Profile Updated",
+    ASSIGNED: "Trainees have been assigned to a Trainer",
   },
   TRAINING_PLAN: {
     CREATE: "New Training Plan Created",

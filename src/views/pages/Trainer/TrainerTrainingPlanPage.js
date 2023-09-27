@@ -22,6 +22,7 @@ import {
   defaultPageIndex,
   trainingPlanStatus,
   trainingPlanStatusOptions,
+  signalRMessage,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 
@@ -37,6 +38,7 @@ import ModalTrainingPlanDetailTrainer from "views/components/modal/ModalTraining
 import { fDate } from "logic/utils/formatTime";
 import Chip from "views/components/chip/Chip";
 import { toast } from "react-toastify";
+import signalRService from "logic/utils/signalRService";
 
 const TrainerTrainingPlanPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -49,32 +51,42 @@ const TrainerTrainingPlanPage = () => {
   const [status, setStatus] = useState("");
 
   useEffect(() => {
-    async function fetchTrainingPlans() {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.get(
-          trainingPlanPath.GET_TRAINING_PLAN_OF_TRAINER +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&nameSearch=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&status=" +
-          status
-        );
-        setTrainingplans(response.data.data);
-        setTotalItem(response.data.totalItem);
-        setIsLoading(false); // Set loading to false after fetching data
-      } catch (error) {
-        toast.error(error.response.data);
-        setIsLoading(false); // Set loading to false after fetching data
-      }
-    }
     fetchTrainingPlans();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, page, rowsPerPage, status]);
+
+  async function fetchTrainingPlans() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        trainingPlanPath.GET_TRAINING_PLAN_OF_TRAINER +
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&nameSearch=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&status=" +
+        status
+      );
+      setTrainingplans(response.data.data);
+      setTotalItem(response.data.totalItem);
+      setIsLoading(false); // Set loading to false after fetching data
+    } catch (error) {
+      toast.error(error.response.data);
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  }
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.TRAINING_PLAN.PROCESS, (message) => {
+      fetchTrainingPlans();
+    });
+    return () => {
+      signalRService.off(signalRMessage.USER.PROCESS);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);

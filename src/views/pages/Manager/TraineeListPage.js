@@ -23,6 +23,7 @@ import {
   defaultUserIcon,
   positionStatus,
   traineeWorkingStatus,
+  signalRMessage,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import ModalTraineeDetailManager from "views/components/modal/ModalTraineeDetailManager";
@@ -34,6 +35,7 @@ import useOnChange from "logic/hooks/useOnChange";
 import { toast } from "react-toastify";
 import Chip from "views/components/chip/Chip";
 import TraineeListSkeleton from "views/modules/TraineeListSkeleton";
+import signalRService from "logic/utils/signalRService";
 
 const TraineeListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -45,6 +47,21 @@ const TraineeListPage = () => {
   const [isLoading, setIsLoading] = useState(true); // New loading state
   const [position, setPosition] = useState("");
   const [positionList, setPositionList] = useState([]);
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.USER.CREATE, (message) => {
+      fetchUsers();
+    });
+    signalRService.on(signalRMessage.USER.UPDATE, (message) => {
+      fetchUsers();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.USER.CREATE);
+      signalRService.off(signalRMessage.USER.UPDATE);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchPositions = async () => {
     try {
