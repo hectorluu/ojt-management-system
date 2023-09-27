@@ -39,10 +39,14 @@ const TraineeCertificateSubmitPage = () => {
     signalRService.on(signalRMessage.CERTIFICATE.UPDATE_PROCESS, (message) => {
       fetchCertificate();
     });
+    signalRService.on(signalRMessage.COURSE.ASSIGNED, (message) => {
+      fetchCertificate();
+    });
 
     return () => {
       signalRService.off(signalRMessage.CERTIFICATE.PROCESS_CERTIFICATE);
       signalRService.off(signalRMessage.CERTIFICATE.UPDATE_PROCESS);
+      signalRService.off(signalRMessage.COURSE.ASSIGNED);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

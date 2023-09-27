@@ -18,6 +18,7 @@ import {
   defaultPageSize,
   defaultPageIndex,
   traineeTaskStatus,
+  signalRMessage,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import moment from "moment";
@@ -28,6 +29,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import StyledTableCell from "views/modules/table/StyledTableCell";
 import SubCard from "views/components/cards/SubCard";
 import { toast } from "react-toastify";
+import signalRService from "logic/utils/signalRService";
 
 const AssignedTraineeTaskListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -56,6 +58,21 @@ const AssignedTraineeTaskListPage = () => {
       setIsLoading(false); // Set loading to false after fetching data
     }
   };
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.TASK.UPDATE_FINISH, (message) => {
+      fetchTasks();
+    });
+    signalRService.on(signalRMessage.TASK.UPDATE_PROCESS, (message) => {
+      fetchTasks();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.TASK.UPDATE_FINISH);
+      signalRService.off(signalRMessage.TASK.UPDATE_PROCESS);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetchTasks();

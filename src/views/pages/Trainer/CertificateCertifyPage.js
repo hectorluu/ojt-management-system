@@ -37,10 +37,14 @@ const CertificateCertifyPage = () => {
     signalRService.on(signalRMessage.CERTIFICATE.UPDATE_PROCESS, (message) => {
       fetchPendingCertificate();
     });
+    signalRService.on(signalRMessage.COURSE.ASSIGNED, (message) => {
+      fetchPendingCertificate();
+    });
 
     return () => {
       signalRService.off(signalRMessage.CERTIFICATE.PROCESS_CERTIFICATE);
       signalRService.off(signalRMessage.CERTIFICATE.UPDATE_PROCESS);
+      signalRService.off(signalRMessage.COURSE.ASSIGNED);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

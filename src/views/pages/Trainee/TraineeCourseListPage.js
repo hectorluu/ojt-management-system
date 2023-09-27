@@ -52,11 +52,15 @@ const TraineeCourseListPage = () => {
     signalRService.on(signalRMessage.COURSE.DELETED, (message) => {
       fetchCourses();
     });
+    signalRService.on(signalRMessage.COURSE.ASSIGNED, (message) => {
+      fetchCourses();
+    });
 
     return () => {
       signalRService.off(signalRMessage.COURSE.CREATED);
       signalRService.off(signalRMessage.COURSE.DELETED);
       signalRService.off(signalRMessage.COURSE.UPDATED);
+      signalRService.off(signalRMessage.COURSE.ASSIGNED);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

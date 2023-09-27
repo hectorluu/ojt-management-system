@@ -17,7 +17,7 @@ export const defaultPageIndex = 1;
 
 export const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
-export const phoneRegex = /^[0-9]{10}$/;
+export const phoneRegex = /^\d{8,15}$/;
 
 //eslint-disable-next-line
 export const passwordRegex =
@@ -144,6 +144,12 @@ export const certificateStatusColor = [
   { value: 5, label: "Không chấp thuận", color: "bg-red-500" },
 ];
 
+export const trelloTaskStatus = [
+  { value: 1, label: "Hoàn Thành", color: "bg-green-500" },
+  { value: 2, label: "Quá Hạn", color: "bg-yellow-500" },
+  { value: 3, label: "Đang Làm", color: "bg-blue-500" },
+];
+
 export const skillStatus = {
   DELETED: 1,
   ACTIVE: 2,
@@ -247,6 +253,7 @@ export const signalRMessage = {
     CREATED: "New Course Created",
     UPDATED: "New Course Updated",
     DELETED: "New Course Deleted",
+    ASSIGNED: "Trainer assigned Course to Trainee. Load get notification for Trainee.",
   },
   SKILL: {
     CREATED: "New Skill Created",
@@ -256,6 +263,7 @@ export const signalRMessage = {
   USER: {
     CREATE: "New User Created",
     UPDATE: "User Profile Updated",
+    ASSIGNED: "Trainees have been assigned to a Trainer",
   },
   TRAINING_PLAN: {
     CREATE: "New Training Plan Created",
@@ -318,9 +326,9 @@ export const traineeCourseOptions = [
 ];
 
 export const accomplishedTaskStatusOptions = [
-  { value: 1, label: "Đang chờ" },
-  { value: 2, label: "Đạt" },
-  { value: 3, label: "Không đạt" },
+  { value: 1, label: "Đang chờ", color: "bg-yellow-500" },
+  { value: 2, label: "Đạt", color: "bg-green-500" },
+  { value: 3, label: "Không đạt", color: "bg-blue-500" },
 ];
 
 export const traineeWorkingStatus = [

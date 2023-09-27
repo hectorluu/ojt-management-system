@@ -9,7 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 import SubCard from "views/components/cards/SubCard";
 import { GridSearchIcon } from "@mui/x-data-grid";
 import StyledTableCell from "views/modules/table/StyledTableCell";
-import { defaultPageIndex, defaultPageSize, templateStatusOptions } from "logic/constants/global";
+import { defaultPageIndex, defaultPageSize, signalRMessage, templateStatusOptions } from "logic/constants/global";
 import Chip from "views/components/chip/Chip";
 import useOnChange from "logic/hooks/useOnChange";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
@@ -19,6 +19,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { toast } from "react-toastify";
 import { templateNoti } from "logic/constants/notification";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import signalRService from "logic/utils/signalRService";
 
 const ListTemplatePage = () => {
   const [templateList, setTemplateList] = useState([]);
@@ -54,6 +55,25 @@ const ListTemplatePage = () => {
     fetchTemplates();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, page, rowsPerPage, status]);
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.TEMPLATE.CREATED, (message) => {
+      fetchTemplates();
+    });
+    signalRService.on(signalRMessage.TEMPLATE.UPDATED, (message) => {
+      fetchTemplates();
+    });
+    signalRService.on(signalRMessage.TEMPLATE.DELETED, (message) => {
+      fetchTemplates();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.TEMPLATE.CREATED);
+      signalRService.off(signalRMessage.TEMPLATE.UPDATED);
+      signalRService.off(signalRMessage.TEMPLATE.DELETED);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);

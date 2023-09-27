@@ -11,7 +11,7 @@ import {
   useTheme,
 } from "@mui/material";
 
-import { defaultPageSize, defaultPageIndex, defaultUserIcon, traineeWorkingStatus } from "logic/constants/global";
+import { defaultPageSize, defaultPageIndex, defaultUserIcon, traineeWorkingStatus, signalRMessage } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import MainCard from "views/components/cards/MainCard";
 import SubCard from "views/components/cards/SubCard";
@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Chip from "views/components/chip/Chip";
 import TraineeListSkeleton from "views/modules/TraineeListSkeleton";
+import signalRService from "logic/utils/signalRService";
 
 const AssignedTraineeListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -31,28 +32,39 @@ const AssignedTraineeListPage = () => {
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
   useEffect(() => {
-    async function fetchUsers() {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.get(
-          trainerPath.GET_TRAINEE_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage
-        );
+    signalRService.on(signalRMessage.USER.ASSIGNED, (message) => {
+      fetchUsers();
+    });
+    return () => {
+      signalRService.off(signalRMessage.USER.ASSIGNED);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-        setUsers(response.data.data);
-        setTotalItem(response.data.totalItem);
-        setIsLoading(false); // Set loading to false after fetching data
-      } catch (error) {
-        toast.error(error.response.data);
-        setIsLoading(false); // Set loading to false after fetching data
-      }
-    }
+  useEffect(() => {
     fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  async function fetchUsers() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        trainerPath.GET_TRAINEE_LIST +
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage
+      );
+
+      setUsers(response.data.data);
+      setTotalItem(response.data.totalItem);
+      setIsLoading(false); // Set loading to false after fetching data
+    } catch (error) {
+      toast.error(error.response.data);
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);

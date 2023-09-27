@@ -6,6 +6,7 @@ import {
   defaultPageSize,
   defaultPageIndex,
   accomplishedTaskStatusOptions,
+  signalRMessage,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import MainCard from "views/components/cards/MainCard";
@@ -15,6 +16,7 @@ import { toast } from "react-toastify";
 import TaskGrid from "views/modules/task/TaskGrid";
 import TaskCardSkeleton from "views/modules/task/TaskCardSkeleton";
 import TraineeTaskCardDisplay from "views/modules/task/TraineeTaskCardDisplay";
+import signalRService from "logic/utils/signalRService";
 
 const TraineeTaskListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -29,6 +31,21 @@ const TraineeTaskListPage = () => {
     fetchAccomplishedTask();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, rowsPerPage, page]);
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.TASK.UPDATE_FINISH, (message) => {
+      fetchAccomplishedTask();
+    });
+    signalRService.on(signalRMessage.TASK.UPDATE_PROCESS, (message) => {
+      fetchAccomplishedTask();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.TASK.UPDATE_FINISH);
+      signalRService.off(signalRMessage.TASK.UPDATE_PROCESS);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);

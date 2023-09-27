@@ -23,6 +23,7 @@ import {
   defaultPageIndex,
   defaultUserIcon,
   positionStatus,
+  signalRMessage,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import ModalTrainerDetailManager from "views/components/modal/ModalTrainerDetailManager";
@@ -32,6 +33,7 @@ import StyledTableCell from "views/modules/table/StyledTableCell";
 import SearchIcon from "@mui/icons-material/Search";
 import useOnChange from "logic/hooks/useOnChange";
 import { toast } from "react-toastify";
+import signalRService from "logic/utils/signalRService";
 
 const TrainerListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -44,6 +46,21 @@ const TrainerListPage = () => {
 
   const [position, setPosition] = useState("");
   const [positionList, setPositionList] = useState([]);
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.USER.CREATE, (message) => {
+      fetchUsers();
+    });
+    signalRService.on(signalRMessage.USER.UPDATE, (message) => {
+      fetchUsers();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.USER.CREATE);
+      signalRService.off(signalRMessage.USER.UPDATE);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchPositions = async () => {
     try {
