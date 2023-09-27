@@ -3,7 +3,6 @@ import customizationReducer from "./customizationReducer";
 import { persistReducer } from "redux-persist";
 import { combineReducers } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
-import { reduce } from "lodash";
 
 const persistConfig = {
   key: "root",

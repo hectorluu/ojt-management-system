@@ -5,21 +5,9 @@ import {
   requestAuthFetchMe,
   requestAuthLogin,
   requestAuthRefreshToken,
-  requestAuthRegister,
 } from "./auth-requests";
 import { authUpdateUser } from "./auth-slice";
 
-export default function* handleAuthRegister(action) {
-  const { payload } = action;
-  try {
-    const response = yield call(requestAuthRegister, payload);
-    if (response.status === 201) {
-      toast.success("Created new account successfully");
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
 function* handleAuthLogin({ payload }) {
   try {
     const response = yield call(requestAuthLogin, payload);

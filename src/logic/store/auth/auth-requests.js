@@ -1,11 +1,6 @@
 import { authPath, commonPath } from "logic/api/apiUrl";
 const { default: axios } = require("logic/api/axios");
 
-export const requestAuthRegister = (data) => {
-  return axios.post("/auth/register", {
-    ...data,
-  });
-};
 export const requestAuthLogin = (data) => {
   return axios.post(authPath.LOGIN, data);
 };
