@@ -5,14 +5,15 @@ import CertificateImage from "./part/CertificateImage";
 import CertificateName from "./part/CertificateName";
 import Gap from "views/components/common/Gap";
 import { LoadingButton } from "@mui/lab";
-import { Button, TextField } from "@mui/material";
+import { Button, IconButton, TextField } from "@mui/material";
 import SaveIcon from '@mui/icons-material/Save';
 import { Link } from "react-router-dom";
 import classNames from "logic/utils/classNames";
 import Chip from "views/components/chip/Chip";
 import CheckIcon from '@mui/icons-material/Check';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
-export default function CertificateCardDisplay({ certificate, onClickSubmit, isLoading, error }) {
+export default function CertificateCardDisplay({ certificate, onClickSubmit, isLoading, error, selected }) {
   const [link, setLink] = React.useState("");
 
   React.useEffect(() => {
@@ -35,8 +36,8 @@ export default function CertificateCardDisplay({ certificate, onClickSubmit, isL
           <TextField
             value={link}
             fullWidth
-            error={error ? true : false}
-            helperText={error}
+            error={certificate?.courseId === selected ? error ? true : false : false}
+            helperText={certificate?.courseId === selected ? error : ""}
             name="link"
             placeholder="https://example.com"
             onChange={(e) => setLink(e.target.value)}
@@ -58,6 +59,9 @@ export default function CertificateCardDisplay({ certificate, onClickSubmit, isL
           >
             Chi Tiết
           </Button>
+          {link ? <IconButton aria-label="open-in-new" color="primary" onClick={() => window.open(link)}>
+            <OpenInNewIcon />
+          </IconButton> : null}
           {certificate?.status === 4 ?
             <Chip
               color="success"
@@ -70,7 +74,7 @@ export default function CertificateCardDisplay({ certificate, onClickSubmit, isL
               component="label"
               variant="contained"
               onClick={() => onClickSubmit(certificate?.courseId, certificate?.status, link)}
-              loading={isLoading}
+              loading={certificate?.courseId === selected ? isLoading : false}
               startIcon={<SaveIcon />}
               sx={{ float: "right" }}
             >

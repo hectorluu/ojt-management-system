@@ -27,6 +27,7 @@ const TraineeCertificateSubmitPage = () => {
   const [certificates, setCertificates] = useState([]);
   const [error, setError] = useState("");
   const [status, setStatus] = useState(2);
+  const [selected, setSelected] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
   const [isSubmitLoading, setIsSubmitLoading] = useState(false); // New loading state
@@ -83,6 +84,7 @@ const TraineeCertificateSubmitPage = () => {
 
   const onSubmitCertificate = async (courseId, status, link) => {
     setIsSubmitLoading(true);
+    setSelected(courseId);
     const valid = submitCertValid(link);
     setError(valid);
     if (valid === "") {
@@ -148,7 +150,7 @@ const TraineeCertificateSubmitPage = () => {
             </>
           ) : certificates.length !== 0 ? (
             certificates.map((item, index) => (
-              <CertificateCardDisplay certificate={item} key={index} onClickSubmit={onSubmitCertificate} isLoading={isSubmitLoading} error={error} />
+              <CertificateCardDisplay certificate={item} key={index} onClickSubmit={onSubmitCertificate} isLoading={isSubmitLoading} error={error} selected={selected} />
             ))
           ) : (
             <>Không có chứng chỉ nào được tìm thấy.</>
