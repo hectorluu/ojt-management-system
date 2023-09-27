@@ -1,7 +1,7 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
 import { certificatePath } from "logic/api/apiUrl";
-import { defaultPageSize, defaultPageIndex } from "logic/constants/global";
+import { defaultPageSize, defaultPageIndex, signalRMessage } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import MainCard from "views/components/cards/MainCard";
 import { Box, Button, Modal } from "@mui/material";
@@ -12,6 +12,7 @@ import CertificateGrid from "views/modules/certificate/Certificategrid";
 import CertificateCardCertify from "views/modules/certificate/CertificateCardCertify";
 import CertificateSkeleton from "views/modules/certificate/CertificateCardSkeleton";
 import { certificateNoti } from "logic/constants/notification";
+import signalRService from "logic/utils/signalRService";
 
 const CertificateCertifyPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -28,6 +29,21 @@ const CertificateCertifyPage = () => {
     fetchPendingCertificate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowsPerPage, page]);
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.CERTIFICATE.PROCESS_CERTIFICATE, (message) => {
+      fetchPendingCertificate();
+    });
+    signalRService.on(signalRMessage.CERTIFICATE.UPDATE_PROCESS, (message) => {
+      fetchPendingCertificate();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.CERTIFICATE.PROCESS_CERTIFICATE);
+      signalRService.off(signalRMessage.CERTIFICATE.UPDATE_PROCESS);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);

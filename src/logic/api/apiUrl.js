@@ -98,11 +98,8 @@ export const skillPath = {
   ACTIVE_SKILL: "/skill/active-skill/",
 };
 
-export const taskPath = {
-  GET_TASK_LIST: "trainee-tasks",
-};
-
 export const traineeTaskPath = {
+  GET__TRELLO_TASK_LIST: "/trainee-tasks",
   GET_TASK_LIST: "/task-process",
   GET_TASK: "/task-process/",
   GET_TASK_OF_TRAINEE: "/task-process/trainee/",

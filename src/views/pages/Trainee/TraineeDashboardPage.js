@@ -25,9 +25,11 @@ const TraineeDashboardPage = () => {
   const [skillChartData, setSkillChartData] = useState({ label: [], init: [], current: [] });
   const [totalCourse, setTotalCourse] = useState(0);
   const [toalTask, setTotalTask] = useState(0);
+  const [trelloTaskList, setTrelloTaskList] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
+    fetchTrelloTask();
     fetchTotalCourse();
     fetchTotalTask();
     fetchSkillChart();
@@ -75,6 +77,16 @@ const TraineeDashboardPage = () => {
         2
       );
       setTotalTask(response.data.totalItem);
+    } catch (error) {
+      toast.error(error.response.data);
+    }
+  };
+
+  const fetchTrelloTask = async () => {
+    try {
+      const response = await axiosPrivate.get(traineeTaskPath.GET__TRELLO_TASK_LIST + "?PageIndex=" + 1 + "&PageSize=" + 6);
+      console.log(response.data.data);
+      setTrelloTaskList(response.data.data);
     } catch (error) {
       toast.error(error.response.data);
     }
