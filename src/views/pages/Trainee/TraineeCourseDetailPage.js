@@ -46,6 +46,7 @@ const TraineeCourseDetailPage = () => {
   const [courseSkills, setCourseSkills] = useState([]);
   const [coursePositions, setCoursePositions] = useState([]);
   const [certificate, setCertificate] = useState({});
+  const moment = require("moment");
 
   const fetchCourseDetail = async () => {
     try {
@@ -182,13 +183,20 @@ const TraineeCourseDetailPage = () => {
 
             <CardActions sx={{ justifyContent: "flex-end", mt: -4 }}>
               {certificate.courseId ? (
-                <Chip
-                  color="success"
-                  sx={{ float: "right" }}
-                  startIcon={<CheckIcon />}
-                >
-                  Đã đăng kí
-                </Chip>
+                <Stack direction="row" spacing={2}>
+                  <Typography>Ngày đăng kí: {moment(certificate.enrollDate).format("DD/MM/YYYY")}</Typography>
+                  {certificate.submitDate ?
+                    <Typography>Ngày nộp: {moment(certificate.submitDate).format("DD/MM/YYYY")}</Typography>
+                    :
+                    null}
+                  <Chip
+                    color="success"
+                    sx={{ float: "right" }}
+                    startIcon={<CheckIcon />}
+                  >
+                    Đã đăng kí
+                  </Chip>
+                </Stack>
               ) : (
                 <LoadingButton
                   variant="contained"
