@@ -78,7 +78,7 @@ export default function CertificateCardDisplay({ certificate, onClickSubmit, isL
               startIcon={<SaveIcon />}
               sx={{ float: "right" }}
             >
-              Nộp chứng chỉ
+              {certificate.status === 5 ? "Nộp lại" : "Nộp chứng chỉ"}
             </LoadingButton>}
         </div>
       </div>

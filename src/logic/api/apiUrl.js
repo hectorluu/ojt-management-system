@@ -128,6 +128,8 @@ export const templatePath = {
   ACTIVE_TEMPLATE: "/template/active-template/",
   ADD_TEMPLATE_HEADER: "/template/template-header/",
   UPDATE_TEMPLATE_HEADER: "/template/template-header/",
+  DISABLE_HEADER: "/template/template-header/disable-template/",
+  ACTIVE_HEADER: "/template/template-header/active-template/",
 };
 
 export const formulaPath = {

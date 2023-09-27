@@ -7,12 +7,12 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { formulaPath, templatePath } from "logic/api/apiUrl";
 import ExcelUpload from "views/modules/file/ExcelUpload";
 import { useForm } from "react-hook-form";
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "logic/config/firebase/firebase";
 import { toast } from "react-toastify";
 import { Button } from "views/components/button";
 import Gap from "views/components/common/Gap";
-import { templateNoti } from "logic/constants/notification";
+import { generalNoti, templateNoti } from "logic/constants/notification";
 import { useNavigate, useParams } from "react-router-dom";
 import Luckysheet from "views/components/Luckysheet/Luckysheet";
 import { reportValid, templateHeaderValid } from "logic/utils/validateUtils";
@@ -64,16 +64,25 @@ function TemplateDetailPage() {
   };
 
   useEffect(() => {
-    const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2FFile%20danh%20gia%20danh%20sach%20sv%20BKU.xlsx?alt=media&token=c7f588f6-9ea3-421a-b649-64d794d944cf";
-    ExcelUtility.loadFromUrl(url).then((w) => {
-      setData(w.sheets);
-    },
-      (e) => {
-        console.error("Workbook Load Error");
-      }
-    );
+    setIsFetchingLoading(true);
+    if (url) {
+      getDownloadURL(ref(storage, url))
+        .then(async (path) => {
+          ExcelUtility.loadFromUrl(path).then((w) => {
+            setData(w.sheets);
+          },
+            (e) => {
+              console.error("Workbook Load Error");
+            }
+          );
+        })
+        .catch((error) => {
+          toast.error(generalNoti.ERROR.SERVER_ERROR);
+        });
+    }
+    setIsFetchingLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [url]);
 
   useEffect(() => {
     if (newUrl) {
@@ -194,6 +203,14 @@ function TemplateDetailPage() {
     setError(valid);
     if (Object.keys(valid).length === 0) {
       try {
+        console.log({
+          name: values.name,
+          totalPoint: values.totalPoint,
+          matchedAttribute: values.matchedAttribute,
+          isCriteria: values.isCriteria,
+          formulaId: values.formulaId,
+          order: templateHeaders?.[templateHeaders.length - 1]?.order + 1
+        });
         setIsSubmitLoading(true);
         await axiosPrivate.post(templatePath.ADD_TEMPLATE_HEADER + templateId, {
           name: values.name,
@@ -215,28 +232,21 @@ function TemplateDetailPage() {
     setIsSubmitLoading(false);
   };
 
-  const handleUpdateNewTemplateHeader = async (values) => {
+  const handleUpdateTemplateHeader = async (values) => {
     const valid = templateHeaderValid(values);
     setError(valid);
     if (Object.keys(valid).length === 0) {
       try {
         setIsSubmitLoading(true);
-        console.log({
+        await axiosPrivate.put(templatePath.UPDATE_TEMPLATE_HEADER + templateId, {
           name: values.name,
           totalPoint: values.totalPoint,
           matchedAttribute: values.matchedAttribute,
           isCriteria: values.isCriteria,
           formulaId: values.formulaId,
-          order: values.order
-        })
-        // await axiosPrivate.put(templatePath.UPDATE_TEMPLATE_HEADER + templateId, {
-        //   name: values.name,
-        //   totalPoint: values.totalPoint,
-        //   matchedAttribute: values.matchedAttribute,
-        //   isCriteria: values.isCriteria,
-        //   formulaId: values.formulaId,
-        //   order: values.order
-        // });
+          order: values.order,
+          status: values.status
+        });
         fetchTemplateDetail();
         setIsSubmitLoading(false);
         setIsEditTemplateHeaderModalOpen(false);
@@ -247,6 +257,31 @@ function TemplateDetailPage() {
       }
     }
     setIsSubmitLoading(false);
+  };
+
+  const handleDisableHeader = async (headerId) => {
+    try {
+      setIsFetchingLoading(true);
+      const response = await axiosPrivate.put(templatePath.DISABLE_HEADER + headerId);
+      toast.success(response.response.data);
+      fetchTemplateDetail();
+      setIsFetchingLoading(false);
+    } catch (error) {
+      toast.error(error.response.data);
+      setIsFetchingLoading(false);
+    };
+  };
+  const handleActiveHeader = async (headerId) => {
+    try {
+      setIsFetchingLoading(true);
+      const response = await axiosPrivate.put(templatePath.ACTIVE_HEADER + headerId);
+      toast.success(response.response.data);
+      fetchTemplateDetail();
+      setIsFetchingLoading(false);
+    } catch (error) {
+      toast.error(error.response.data);
+      setIsFetchingLoading(false);
+    };
   };
 
   return (
@@ -269,7 +304,7 @@ function TemplateDetailPage() {
               header={selectedHeader}
               onRequestClose={() => setIsEditTemplateHeaderModalOpen(false)}
               isLoading={isSubmitLoading}
-              handleAddNewTemplateHeader={handleUpdateNewTemplateHeader}
+              handleUpdateTemplateHeader={handleUpdateTemplateHeader}
               error={error}
             />
             : null}
@@ -344,14 +379,14 @@ function TemplateDetailPage() {
                           <IconButton
                             aria-label="delete"
                             size="small"
-                            onClick={() => console.log("click")}
+                            onClick={() => handleDisableHeader(header.id)}
                           >
                             <DeleteIcon fontSize="inherit" color="error" />
                           </IconButton> :
                           <IconButton
-                            aria-label="delete"
+                            aria-label="active"
                             size="small"
-                            onClick={() => console.log("click")}
+                            onClick={() => handleActiveHeader(header.id)}
                           >
                             <ToggleOnIcon fontSize="inherit" color="success" />
                           </IconButton>}

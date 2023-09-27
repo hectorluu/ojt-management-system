@@ -54,7 +54,6 @@ const TotalActiveBatchCard = ({ isLoading }) => {
     try {
       const response = await axiosProvate.get(ojtBatchPath.GET_ACTIVE_BATCH + "?PageSize=" + 100000 + "&PageIndex=" + 1);
       setTotalBatch(response.data.totalItem);
-      console.log(response);
     } catch (error) {
       toast.error(error.response.data);
     }

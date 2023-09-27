@@ -138,8 +138,7 @@ export default function NotificationSection() {
     try {
       setIsLoading(true);
       const res = await axiosPrivate.get(
-        `${notificationPath.GET_NOTIFICATION_LIST}${
-          value !== notiOptionsVaue.ALL ? "?statusRead=" + value : ""
+        `${notificationPath.GET_NOTIFICATION_LIST}${value !== notiOptionsVaue.ALL ? "?statusRead=" + value : ""
         }`
       );
       setNotiList(res.data);
@@ -183,14 +182,11 @@ export default function NotificationSection() {
       >
         <ButtonBase sx={{ borderRadius: "12px" }}>
           <StyledBadge
-            color={
-              notiList.filter((item) => !item.isRead).length > 0
-                ? "error"
-                : "success"
-            }
+            color="error"
             overlap="circular"
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
             variant="dot"
+            invisible={notiList.filter((item) => !item.isRead).length === 0}
           >
             <Avatar
               variant="rounded"

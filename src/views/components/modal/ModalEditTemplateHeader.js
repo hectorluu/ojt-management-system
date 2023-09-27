@@ -27,6 +27,7 @@ const ModalEditTemplateHeader = ({
   const axiosPrivate = useAxiosPrivate();
   const [isFetchingLoading, setIsFetchingLoading] = useState(true);
   const [notCriteriaList, setNotCriteriaList] = useState(notCriteriaOptions);
+  const [status] = useState(header?.status);
 
   useEffect(() => {
     if (formulaList && notCriteriaList) {
@@ -77,6 +78,7 @@ const ModalEditTemplateHeader = ({
       matchedAttribute: matchedAttribute,
       isCriteria: isCriteria,
       formulaId: formula?.id,
+      status: status,
     });
   };
 

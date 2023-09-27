@@ -28,7 +28,6 @@ const ModalTrainingPlanDetailManager = ({
         trainingPlanPath.GET_TRAINING_PLAN_DETAIL + selectedTrainingPlan.id
       );
       setTrainingPlanDetails(response.data);
-      console.log(response.data);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
       toast.error(error.response.data);

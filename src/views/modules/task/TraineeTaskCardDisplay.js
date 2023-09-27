@@ -3,10 +3,7 @@ import Card from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CheckIcon from "@mui/icons-material/Check";
-import ClearIcon from "@mui/icons-material/Clear";
 import {
-  Avatar,
   CardActions,
   CardContent,
   CardHeader,
