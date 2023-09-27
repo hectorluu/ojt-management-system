@@ -56,7 +56,6 @@ const TraineeDetailPage = () => {
         userPath.GET_TRAINEE_BY_ID + traineeId
       );
       setTrainee(response.data);
-      console.log(response.data)
       setIsLoading(false);
     } catch (error) {
       toast.error(error.response.data);

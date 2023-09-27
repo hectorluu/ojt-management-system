@@ -178,7 +178,6 @@ const TrainerDashboardPage = () => {
             Nhật ký công việc
           </Typography>
           <div className="relative px-4">
-            <div className="absolute h-full border border-dashed border-opacity-60 border-secondary"></div>
 
             {/* Timeline item */}
             <div className="flex items-center w-full my-6 -ml-1.5">

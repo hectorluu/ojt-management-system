@@ -150,7 +150,7 @@ const UniversityDetailPage = () => {
           toast.error(generalNoti.ERROR.UPLOAD_FAIL);
         }
       } else {
-        setImgURL(defaultUniversityImage);
+        setImgURL(url);
       }
     }
     setIsLoading(false);

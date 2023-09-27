@@ -26,7 +26,7 @@ const TraineeCertificateSubmitPage = () => {
   const axiosPrivate = useAxiosPrivate();
   const [certificates, setCertificates] = useState([]);
   const [error, setError] = useState("");
-  const [status, setStatus] = useState(2);
+  const [status, setStatus] = useState();
   const [selected, setSelected] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
@@ -57,7 +57,7 @@ const TraineeCertificateSubmitPage = () => {
         "&PageSize=" +
         rowsPerPage +
         "&status=" +
-        status
+        `${status === undefined ? "" : status}`
       );
       setCertificates(response.data.data);
       setTotalItem(response.data.totalItem);

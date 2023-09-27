@@ -87,7 +87,6 @@ const TraineeProfilePage = () => {
       setSkills(response.data.skills);
       setIsFetchingLoading(false);
       setTrainer(response.data.trainerResponse);
-      console.log(response.data)
     } catch (error) {
       toast.error(error.response.data);
       setIsFetchingLoading(false);

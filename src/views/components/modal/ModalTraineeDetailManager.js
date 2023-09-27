@@ -41,7 +41,6 @@ const ModalTraineeDetailManager = ({
       setIsLoading(true);
       const response = await axiosPrivate.get(userPath.GET_TRAINEE_BY_ID + traineeSelected?.id);
       setUser(response.data);
-      console.log(response.data);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);

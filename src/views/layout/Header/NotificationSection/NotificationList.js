@@ -43,6 +43,7 @@ export default function NotificationList({
   onClickRead = () => {},
 }) {
   const theme = useTheme();
+  const moment = require('moment-timezone');
 
   const chipSX = {
     height: 24,
@@ -266,6 +267,7 @@ export default function NotificationList({
               <Grid container direction="column" className="list-container">
                 <Grid item xs={12} sx={{ pb: 2 }}>
                   <Typography variant="subtitle2">{item.message}</Typography>
+                  <Typography variant="subtitle2">{moment(item.createdAt).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY h:mmA')}</Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Grid container>

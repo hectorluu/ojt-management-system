@@ -187,6 +187,7 @@ export const notCriteriaOptions = [
   { value: "STT", label: "Số thứ tự" },
   { value: "LastName", label: "Họ" },
   { value: "FirstName", label: "Tên" },
+  { value: "FullName", label: "Họ và tên" },
   { value: "Email", label: "Email" },
   { value: "RollNumber", label: "Mã số nhân viên" },
   { value: "Gender", label: "Giới tính" },
