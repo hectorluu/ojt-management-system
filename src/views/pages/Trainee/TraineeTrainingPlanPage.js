@@ -66,28 +66,30 @@ const TraineeTrainingPlanPage = () => {
           <div className="absolute h-full border border-dashed border-opacity-60 border-secondary"></div>
 
           {/* Timeline item */}
-          {trainingPlanDetails.map((task, index) => (
-            <div className="flex items-center w-full my-6 -ml-1.5" key={index}>
-              <div className="w-1/12 z-10">
-                <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
+          {trainingPlanDetails.length !== 0 ?
+            trainingPlanDetails.map((task, index) => (
+              <div className="flex items-center w-full my-6 -ml-1.5" key={index}>
+                <div className="w-1/12 z-10">
+                  <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
+                </div>
+                <div className="w-11/12">
+                  <Typography variant="body1" className="text-sm">
+                    {task.name}
+                  </Typography>
+                  <Typography variant="caption" className="text-xs text-gray-700">
+                    Mô tả: {task.description}
+                  </Typography>
+                  <br />
+                  <Typography variant="caption" className="text-xs text-gray-700">
+                    Thời hạn:{" "}
+                    {fDateTime(task.startTime) +
+                      "  -  " +
+                      fDateTime(task.endTime)}
+                  </Typography>
+                </div>
               </div>
-              <div className="w-11/12">
-                <Typography variant="body1" className="text-sm">
-                  {task.name}
-                </Typography>
-                <Typography variant="caption" className="text-xs text-gray-700">
-                  Mô tả: {task.description}
-                </Typography>
-                <br />
-                <Typography variant="caption" className="text-xs text-gray-700">
-                  Thời hạn:{" "}
-                  {fDateTime(task.startTime) +
-                    "  -  " +
-                    fDateTime(task.endTime)}
-                </Typography>
-              </div>
-            </div>
-          ))}
+            ))
+          :<>Chưa được giao kế hoạch đào tạo</>}
           {/* End Timeline item  */}
         </div>
       </SubCard>

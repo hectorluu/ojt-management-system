@@ -181,6 +181,7 @@ export const trainerTaskPath = {
   APPROVE_TASK: "/task-process/task-accept/",
   REJECT_TASK: "/task-process/task-reject/",
   GET_TRAINEE_LIST_TASK: "/task-process/trainee/",
+  GET_ACCOMPLISHED_TASK_LIST:"/task-process",
 };
 
 export const chartPath = {

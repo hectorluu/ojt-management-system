@@ -9,7 +9,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SkillChart from "views/components/chart/SkillChart";
 import { certificatePath, chartPath, traineeTaskPath } from "logic/api/apiUrl";
 import { processSkillChart } from "logic/utils/chartUtils";
@@ -17,6 +17,8 @@ import { toast } from "react-toastify";
 import ChartSkeleton from "views/modules/ChartSkeleton";
 import DvrIcon from "@mui/icons-material/Dvr";
 import ApprovalIcon from "@mui/icons-material/Approval";
+import classNames from "logic/utils/classNames";
+import { trelloTaskStatus } from "logic/constants/global";
 
 const TraineeDashboardPage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -26,6 +28,7 @@ const TraineeDashboardPage = () => {
   const [totalCourse, setTotalCourse] = useState(0);
   const [toalTask, setTotalTask] = useState(0);
   const [trelloTaskList, setTrelloTaskList] = useState([]);
+  const moment = require('moment-timezone');
 
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -171,141 +174,26 @@ const TraineeDashboardPage = () => {
               Nhật ký công việc
             </Typography>
             <div className="relative px-4">
-              <div className="absolute h-full border border-dashed border-opacity-60 border-secondary"></div>
-
-              {/* Timeline item */}
-              <div className="flex items-center w-full my-6 -ml-1.5">
-                <div className="w-1/12 z-10">
-                  <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-                </div>
-                <div className="w-11/12">
-                  <Typography variant="body1" className="text-sm">
-                    Profile information changed.
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    className="text-xs text-gray-500"
-                  >
-                    3 min ago
-                  </Typography>
-                </div>
-              </div>
-              {/* End Timeline item */}
-
-              {/* Timeline item */}
-              <div className="flex items-center w-full my-6 -ml-1.5">
-                <div className="w-1/12 z-10">
-                  <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-                </div>
-                <div className="w-11/12">
-                  <Typography variant="body1" className="text-sm">
-                    Connected with{" "}
-                    <Link href="#" className="text-blue-600 font-bold">
-                      Colby Covington
-                    </Link>
-                    .
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    className="text-xs text-gray-500"
-                  >
-                    15 min ago
-                  </Typography>
-                </div>
-              </div>
-              {/* End Timeline item */}
-
-              {/* Timeline item */}
-              <div className="flex items-center w-full my-6 -ml-1.5">
-                <div className="w-1/12 z-10">
-                  <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-                </div>
-                <div className="w-11/12">
-                  <Typography variant="body1" className="text-sm">
-                    Invoice{" "}
-                    <Link href="#" className="text-blue-600 font-bold">
-                      #4563
-                    </Link>{" "}
-                    was created.
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    className="text-xs text-gray-500"
-                  >
-                    57 min ago
-                  </Typography>
-                </div>
-              </div>
-              {/* End Timeline item */}
-
-              {/* Timeline item */}
-              <div className="flex items-center w-full my-6 -ml-1.5">
-                <div className="w-1/12 z-10">
-                  <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-                </div>
-                <div className="w-11/12">
-                  <Typography variant="body1" className="text-sm">
-                    Message received from{" "}
-                    <Link href="#" className="text-blue-600 font-bold">
-                      Cecilia Hendric
-                    </Link>
-                    .
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    className="text-xs text-gray-500"
-                  >
-                    1 hour ago
-                  </Typography>
-                </div>
-              </div>
-              {/* End Timeline item */}
-
-              {/* Timeline item */}
-              <div className="flex items-center w-full my-6 -ml-1.5">
-                <div className="w-1/12 z-10">
-                  <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-                </div>
-                <div className="w-11/12">
-                  <Typography variant="body1" className="text-sm">
-                    New order received{" "}
-                    <Link href="#" className="text-blue-600 font-bold">
-                      #OR9653
-                    </Link>
-                    .
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    className="text-xs text-gray-500"
-                  >
-                    2 hours ago
-                  </Typography>
-                </div>
-              </div>
-              {/* End Timeline item */}
-
-              {/* Timeline item */}
-              <div className="flex items-center w-full my-6 -ml-1.5">
-                <div className="w-1/12 z-10">
-                  <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-                </div>
-                <div className="w-11/12">
-                  <Typography variant="body1" className="text-sm">
-                    Message received from{" "}
-                    <Link href="#" className="text-blue-600 font-bold">
-                      Jane Stillman
-                    </Link>
-                    .
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    className="text-xs text-gray-500"
-                  >
-                    2 hours ago
-                  </Typography>
-                </div>
-              </div>
-              {/* End Timeline item */}
+              {trelloTaskList.length !== 0 ?
+                trelloTaskList.map((task, index) => (
+                  <div className="flex items-center w-full my-6 -ml-1.5">
+                    <div className="w-1/12 z-10">
+                      <div className={classNames("w-3.5 h-3.5 rounded-full", trelloTaskStatus.find((item) => item.value === task.status).color)}></div>
+                    </div>
+                    <div className="w-11/12">
+                      <Typography variant="body1" className="text-sm truncate">
+                        {task.name}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        className="text-xs text-gray-500"
+                      >
+                        {moment(task.endTime).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY h:mmA')}
+                      </Typography>
+                    </div>
+                  </div>
+                ))
+                : <>Không có công việc nào</>}
             </div>
           </Paper>
         </Grid>

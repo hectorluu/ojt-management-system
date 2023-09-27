@@ -17,7 +17,7 @@ export const defaultPageIndex = 1;
 
 export const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
-export const phoneRegex = /^[0-9]{10}$/;
+export const phoneRegex = /^\d{8,15}$/;
 
 //eslint-disable-next-line
 export const passwordRegex =
@@ -142,6 +142,12 @@ export const certificateStatusColor = [
   { value: 3, label: "Chưa nộp", color: "bg-sky-500" },
   { value: 4, label: "Đã chấp thuận", color: "bg-green-500" },
   { value: 5, label: "Không chấp thuận", color: "bg-red-500" },
+];
+
+export const trelloTaskStatus = [
+  { value: 1, label: "Hoàn Thành", color: "bg-green-500" },
+  { value: 2, label: "Quá Hạn", color: "bg-yellow-500" },
+  { value: 3, label: "Đang Làm", color: "bg-blue-500" },
 ];
 
 export const skillStatus = {
@@ -320,9 +326,9 @@ export const traineeCourseOptions = [
 ];
 
 export const accomplishedTaskStatusOptions = [
-  { value: 1, label: "Đang chờ" },
-  { value: 2, label: "Đạt" },
-  { value: 3, label: "Không đạt" },
+  { value: 1, label: "Đang chờ", color: "bg-yellow-500" },
+  { value: 2, label: "Đạt", color: "bg-green-500" },
+  { value: 3, label: "Không đạt", color: "bg-blue-500" },
 ];
 
 export const traineeWorkingStatus = [

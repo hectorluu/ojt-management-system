@@ -8,18 +8,22 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import HorizontalLineChart from "views/components/chart/HorizontalLineChart";
-import { certificatePath, chartPath, trainerPath } from "logic/api/apiUrl";
+import { certificatePath, chartPath, trainerPath, trainerTaskPath } from "logic/api/apiUrl";
 import ChartSkeleton from "views/modules/ChartSkeleton";
 import FaceIcon from "@mui/icons-material/Face";
 import ApprovalIcon from "@mui/icons-material/Approval";
+import classNames from "logic/utils/classNames";
+import { accomplishedTaskStatusOptions } from "logic/constants/global";
 
 const TrainerDashboardPage = () => {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const [totalTrainee, setTotalTrainee] = useState(0);
   const [totalCertificate, setTotalCertificate] = useState(0);
+  const [taskList, setTaskList] = useState([]);
+  const moment = require('moment-timezone');
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -85,10 +89,30 @@ const TrainerDashboardPage = () => {
     }
   };
 
+  const fetchAccomplishedTaskList = async () => {
+    try {
+      setIsLoading(true);
+      // Get at most 10 trainers
+      const response = await axiosPrivate.get(
+        trainerTaskPath.GET_ACCOMPLISHED_TASK_LIST +
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        6
+      );
+      console.log(response.data.data);
+      setTaskList(response.data.data);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchTraineesWithMostTasksDone();
     fetchTotalTrainee();
     fetchTotalCertificate();
+    fetchAccomplishedTaskList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -169,7 +193,7 @@ const TrainerDashboardPage = () => {
       </Grid>
 
       {/* Activity Part and User Part */}
-      <Grid container xs={8} lg={8} sx={{ mt: -5 }}>
+      <Grid container xs={12} lg={12} sx={{ mt: -5 }}>
         <Paper className="flex-1 bg-white rounded-lg shadow-xl mt-10 px-6 py-3">
           <Typography
             variant="h4"
@@ -179,121 +203,25 @@ const TrainerDashboardPage = () => {
           </Typography>
           <div className="relative px-4">
 
-            {/* Timeline item */}
-            <div className="flex items-center w-full my-6 -ml-1.5">
-              <div className="w-1/12 z-10">
-                <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-              </div>
-              <div className="w-11/12">
-                <Typography variant="body1" className="text-sm">
-                  Profile information changed.
-                </Typography>
-                <Typography variant="caption" className="text-xs text-gray-500">
-                  3 min ago
-                </Typography>
-              </div>
-            </div>
-            {/* End Timeline item */}
-
-            {/* Timeline item */}
-            <div className="flex items-center w-full my-6 -ml-1.5">
-              <div className="w-1/12 z-10">
-                <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-              </div>
-              <div className="w-11/12">
-                <Typography variant="body1" className="text-sm">
-                  Connected with{" "}
-                  <Link href="#" className="text-blue-600 font-bold">
-                    Colby Covington
-                  </Link>
-                  .
-                </Typography>
-                <Typography variant="caption" className="text-xs text-gray-500">
-                  15 min ago
-                </Typography>
-              </div>
-            </div>
-            {/* End Timeline item */}
-
-            {/* Timeline item */}
-            <div className="flex items-center w-full my-6 -ml-1.5">
-              <div className="w-1/12 z-10">
-                <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-              </div>
-              <div className="w-11/12">
-                <Typography variant="body1" className="text-sm">
-                  Invoice{" "}
-                  <Link href="#" className="text-blue-600 font-bold">
-                    #4563
-                  </Link>{" "}
-                  was created.
-                </Typography>
-                <Typography variant="caption" className="text-xs text-gray-500">
-                  57 min ago
-                </Typography>
-              </div>
-            </div>
-            {/* End Timeline item */}
-
-            {/* Timeline item */}
-            <div className="flex items-center w-full my-6 -ml-1.5">
-              <div className="w-1/12 z-10">
-                <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-              </div>
-              <div className="w-11/12">
-                <Typography variant="body1" className="text-sm">
-                  Message received from{" "}
-                  <Link href="#" className="text-blue-600 font-bold">
-                    Cecilia Hendric
-                  </Link>
-                  .
-                </Typography>
-                <Typography variant="caption" className="text-xs text-gray-500">
-                  1 hour ago
-                </Typography>
-              </div>
-            </div>
-            {/* End Timeline item */}
-
-            {/* Timeline item */}
-            <div className="flex items-center w-full my-6 -ml-1.5">
-              <div className="w-1/12 z-10">
-                <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-              </div>
-              <div className="w-11/12">
-                <Typography variant="body1" className="text-sm">
-                  New order received{" "}
-                  <Link href="#" className="text-blue-600 font-bold">
-                    #OR9653
-                  </Link>
-                  .
-                </Typography>
-                <Typography variant="caption" className="text-xs text-gray-500">
-                  2 hours ago
-                </Typography>
-              </div>
-            </div>
-            {/* End Timeline item */}
-
-            {/* Timeline item */}
-            <div className="flex items-center w-full my-6 -ml-1.5">
-              <div className="w-1/12 z-10">
-                <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
-              </div>
-              <div className="w-11/12">
-                <Typography variant="body1" className="text-sm">
-                  Message received from{" "}
-                  <Link href="#" className="text-blue-600 font-bold">
-                    Jane Stillman
-                  </Link>
-                  .
-                </Typography>
-                <Typography variant="caption" className="text-xs text-gray-500">
-                  2 hours ago
-                </Typography>
-              </div>
-            </div>
-            {/* End Timeline item */}
+            {taskList.length !== 0 ?
+              taskList.map((task) => (
+                <div className="flex items-center w-full my-6 -ml-1.5">
+                  <div className="w-1/12 z-10">
+                    <div className={classNames("w-3.5 h-3.5 rounded-full", accomplishedTaskStatusOptions.find((item) => item.value === task.processStatus).color)}></div>
+                  </div>
+                  <div className="w-11/12">
+                    <Typography variant="body1" className="text-sm">
+                      {task.name}
+                    </Typography>
+                    <Typography variant="caption" className="text-xs text-gray-500">
+                      {task.traineeLastName + " " + task.traineeFirstName}
+                    </Typography>
+                    <Typography variant="caption" className="text-xs text-gray-500">
+                      {moment(task.finishTime).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY h:mmA')}
+                    </Typography>
+                  </div>
+                </div>))
+              : <>Không có công việc nào</>}
           </div>
         </Paper>
       </Grid>

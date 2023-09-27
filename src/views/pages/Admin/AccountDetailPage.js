@@ -17,7 +17,6 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { userPath } from "logic/api/apiUrl";
 import { defaultUserIcon, genderOptions } from "logic/constants/global";
 import { fDate } from "logic/utils/formatTime";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { toast } from "react-toastify";
 
 const AccountDetailPage = () => {
@@ -67,18 +66,6 @@ const AccountDetailPage = () => {
 
   return (
     <MainCard>
-      <div className="relative w-full h-[100px] bg-gray-500 rounded">
-        {isEditing === false && (
-          <Button
-            variant="outlined"
-            onClick={handleEditClick}
-            className="absolute top-4 right-4 p-2 px-4 flex items-center bg-black text-white hover:bg-slate-800"
-            startIcon={<BorderColorIcon />}
-          >
-            <span className="mx-auto">Chỉnh sửa hồ sơ</span>
-          </Button>
-        )}
-      </div>
       <div className="flex flex-col items-center -mt-20">
         <Avatar
           src={userAvatar}

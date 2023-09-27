@@ -220,6 +220,8 @@ const TrainerAssignmentPage = () => {
                 disablePortal={false}
                 id="combo-box-demo"
                 options={unassigned}
+                blurOnSelect={true}
+                clearOnBlur={true}
                 getOptionLabel={(option) =>
                   option.firstName + " " + option.lastName + " " + option.email + " " + option.positionName
                 }
