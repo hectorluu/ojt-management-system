@@ -20,7 +20,12 @@ const TraineeTrainingPlanPage = () => {
     signalRService.on(signalRMessage.TRAINING_PLAN.UPDATE, (message) => {
       fetchTraineeTrainingPlan();
     });
-  });
+    return () => {
+      signalRService.off(signalRMessage.TRAINING_PLAN.ASSIGN);
+      signalRService.off(signalRMessage.TRAINING_PLAN.UPDATE);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetchTraineeTrainingPlan();
@@ -35,7 +40,7 @@ const TraineeTrainingPlanPage = () => {
 
       setTrainingPlan(response.data);
       setTrainingPlanDetails(response.data.details);
-    } catch (error) {}
+    } catch (error) { }
   }
 
   return (
