@@ -20,7 +20,6 @@ const TraineeTrainingPlanPage = () => {
     signalRService.on(signalRMessage.TRAINING_PLAN.UPDATE, (message) => {
       fetchTraineeTrainingPlan();
     });
-
     return () => {
       signalRService.off(signalRMessage.TRAINING_PLAN.ASSIGN);
       signalRService.off(signalRMessage.TRAINING_PLAN.UPDATE);
@@ -63,12 +62,17 @@ const TraineeTrainingPlanPage = () => {
           </div>
         </div>
         <div className="relative px-4">
-          <div className="absolute h-full border border-dashed border-opacity-60 border-secondary"></div>
+          {trainingPlanDetails.length > 0 && (
+            <div className="absolute h-full border border-dashed border-opacity-60 border-secondary"></div>
+          )}
 
           {/* Timeline item */}
-          {trainingPlanDetails.length !== 0 ?
+          {trainingPlanDetails.length !== 0 ? (
             trainingPlanDetails.map((task, index) => (
-              <div className="flex items-center w-full my-6 -ml-1.5" key={index}>
+              <div
+                className="flex items-center w-full my-6 -ml-1.5"
+                key={index}
+              >
                 <div className="w-1/12 z-10">
                   <div className="w-3.5 h-3.5 bg-blue-600 rounded-full"></div>
                 </div>
@@ -76,11 +80,17 @@ const TraineeTrainingPlanPage = () => {
                   <Typography variant="body1" className="text-sm">
                     {task.name}
                   </Typography>
-                  <Typography variant="caption" className="text-xs text-gray-700">
+                  <Typography
+                    variant="caption"
+                    className="text-xs text-gray-700"
+                  >
                     Mô tả: {task.description}
                   </Typography>
                   <br />
-                  <Typography variant="caption" className="text-xs text-gray-700">
+                  <Typography
+                    variant="caption"
+                    className="text-xs text-gray-700"
+                  >
                     Thời hạn:{" "}
                     {fDateTime(task.startTime) +
                       "  -  " +
@@ -89,8 +99,18 @@ const TraineeTrainingPlanPage = () => {
                 </div>
               </div>
             ))
-          :<>Chưa được giao kế hoạch đào tạo</>}
+          ) : (
+            <>Chưa được giao kế hoạch đào tạo</>
+          )}
           {/* End Timeline item  */}
+
+          {trainingPlanDetails.length === 0 && (
+            <div className="flex items-center w-full my-6">
+              <Typography variant="body1" className="text-base font-medium">
+                Thực tập sinh này chưa có kế hoạch thực tập.
+              </Typography>
+            </div>
+          )}
         </div>
       </SubCard>
     </MainCard>
