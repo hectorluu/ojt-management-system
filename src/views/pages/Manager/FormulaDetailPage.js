@@ -137,7 +137,7 @@ const FormulaDetailPage = () => {
       );
       setKeyList(response.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     } finally {
       setIsLoading(false); // Set loading to false after fetching data
     }
@@ -189,7 +189,7 @@ const FormulaDetailPage = () => {
         navigate("/list-formula");
       } catch (error) {
         setIsLoadingSubmit(false);
-        toast.error(error);
+        toast.error(error?.response?.data);
       }
     }
     setIsLoadingSubmit(false);

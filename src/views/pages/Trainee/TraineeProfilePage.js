@@ -23,7 +23,7 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { userPath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
-import { accountNoti } from "logic/constants/notification";
+import { accountNoti, generalNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
 import { changePasswordValid, profileValid } from "logic/utils/validateUtils";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -88,7 +88,7 @@ const TraineeProfilePage = () => {
       setIsFetchingLoading(false);
       setTrainer(response.data.trainerResponse);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   }
@@ -111,8 +111,7 @@ const TraineeProfilePage = () => {
       setIsLoading(false);
       navigate("/trainee-dashboard");
     } catch (error) {
-      toast.error(error.response.data);
-      toast.error(error);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -147,10 +146,10 @@ const TraineeProfilePage = () => {
             });
           });
         } catch (e) {
-          toast.error("Upload img error");
+          toast.error(generalNoti.ERROR.UPLOAD_FAIL);
         }
       } else {
-        setAvatarURL(defaultUserIcon);
+        setAvatarURL(url);
       }
     }
     setIsLoading(false);
@@ -175,8 +174,7 @@ const TraineeProfilePage = () => {
         dispatch(authUpdateUser({}));
         setIsLoading(false);
       } catch (error) {
-        toast.error(error.response.data);
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
         setIsLoading(false);
       }
     };

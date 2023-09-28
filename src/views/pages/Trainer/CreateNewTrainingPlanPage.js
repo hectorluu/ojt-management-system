@@ -68,7 +68,7 @@ const CreateNewTrainingPlanPage = () => {
         navigate("/trainer-training-plan");
         toast.success(trainingPlanNoti.SUCCESS.CREATE);
       } catch (error) {
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
         setIsLoading(false);
       }
     };

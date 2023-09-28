@@ -41,7 +41,7 @@ const AttendancePage = () => {
       setAttendanceByMonth(response.data);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false); // Set loading to false after fetching data
     }
   };
@@ -60,7 +60,7 @@ const AttendancePage = () => {
       setAttendanceByDay(response.data.attendanceUsers);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false); // Set loading to false after fetching data
     }
   };
@@ -164,7 +164,7 @@ const AttendancePage = () => {
       fetchAttendanceByMonth();
       setIsLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };

@@ -74,7 +74,7 @@ const TotalTraineeCard = ({ isLoading }) => {
       const response = await axiosProvate.get(userPath.GET_TRAINEE_LIST + "?PageSize=" + 100000 + "&PageIndex=" + 1);
       setTotalTrainee(response.data.totalItem);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 

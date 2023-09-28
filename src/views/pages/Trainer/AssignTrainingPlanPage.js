@@ -47,7 +47,7 @@ const AssignTrainingPlanPage = () => {
         toast.success(trainingPlanNoti.SUCCESS.ASSIGN);
       } catch (error) {
         setIsLoading(false);
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
       }
     }
     // values
@@ -102,7 +102,7 @@ const AssignTrainingPlanPage = () => {
       setSelectedPlan(response.data);
       setIsFetchingLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   }
@@ -120,7 +120,7 @@ const AssignTrainingPlanPage = () => {
       );
       setTrainingPlanList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   }
 
@@ -131,7 +131,7 @@ const AssignTrainingPlanPage = () => {
       );
       setAssignedTraineeList(response.data);
     } catch (e) {
-      toast.error(e.response.data);
+      toast.error(e?.response?.data);
     }
   };
 

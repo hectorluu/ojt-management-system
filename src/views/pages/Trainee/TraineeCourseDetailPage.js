@@ -61,7 +61,7 @@ const TraineeCourseDetailPage = () => {
       setCoursePositions(response.data.coursePositions);
       setCourseSkills(response.data.courseSkills);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   };
@@ -98,7 +98,7 @@ const TraineeCourseDetailPage = () => {
       setIsLoading(false);
       navigate("/trainee-course-list");
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };

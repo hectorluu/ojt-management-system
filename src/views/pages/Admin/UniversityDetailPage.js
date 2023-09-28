@@ -72,7 +72,7 @@ const UniversityDetailPage = () => {
       setOjtBatchs(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -91,7 +91,7 @@ const UniversityDetailPage = () => {
       // setOjtBatchs(response.data.ojtBatchs);
       setIsFetchingLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   };
@@ -172,7 +172,7 @@ const UniversityDetailPage = () => {
         setIsModalOpen(false);
         fetchOJTBatchs();
       } catch (error) {
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
         setIsSubmitLoading(false);
       }
     };
@@ -202,7 +202,7 @@ const UniversityDetailPage = () => {
       toast.success(universityNoti.SUCCESS.UPDATE);
       setIsSubmitLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsSubmitLoading(false);
     }
   };

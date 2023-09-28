@@ -50,7 +50,7 @@ export default function SyncSection() {
       setBoardList(response.data);
       setIsLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   }
