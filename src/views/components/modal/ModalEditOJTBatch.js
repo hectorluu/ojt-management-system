@@ -42,7 +42,7 @@ const ModalEditOJTBatch = ({
       setEndTime(response.data.endTime);
       setTemplateId(response.data.templateId);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -77,7 +77,7 @@ const ModalEditOJTBatch = ({
       );
       setTemplateList(response.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 

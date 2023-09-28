@@ -144,7 +144,7 @@ export default function NotificationSection() {
       setNotiList(res.data);
       setIsLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -154,7 +154,7 @@ export default function NotificationSection() {
       await axiosPrivate.put(notificationPath.MARK_ALL_AS_READ);
       fetchNotifications();
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -165,7 +165,7 @@ export default function NotificationSection() {
         fetchNotifications();
       }
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 

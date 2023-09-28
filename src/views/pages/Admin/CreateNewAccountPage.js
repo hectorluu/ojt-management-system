@@ -115,7 +115,7 @@ const CreateNewAccountPage = () => {
       setSkillList(response.data.data);
       setFilteredSkillList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -130,7 +130,7 @@ const CreateNewAccountPage = () => {
       );
       setPositionList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -147,7 +147,7 @@ const CreateNewAccountPage = () => {
       );
       setOjtBatchList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -158,7 +158,7 @@ const CreateNewAccountPage = () => {
       );
       setUniversityList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -240,7 +240,7 @@ const CreateNewAccountPage = () => {
       navigate("/account-list");
     } catch (error) {
       reset();
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };

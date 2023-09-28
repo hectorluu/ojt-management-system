@@ -77,7 +77,7 @@ const TrainerProfilePage = () => {
       setPositionName(response.data.positionName);
       setIsFetchingLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   }
@@ -100,8 +100,7 @@ const TrainerProfilePage = () => {
       setIsLoading(false);
       navigate("/trainer-dashboard");
     } catch (error) {
-      toast.error(error.response.data);
-      toast.error(error);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -164,8 +163,7 @@ const TrainerProfilePage = () => {
         dispatch(authUpdateUser({}));
         setIsLoading(false);
       } catch (error) {
-        toast.error(error.response.data);
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
         setIsLoading(false);
       }
     };

@@ -43,7 +43,7 @@ const CreateNewOJTBatch = () => {
       const response = await axiosPrivate.get(templatePath.GET_TEMPLATE_UNIVERSITY + universityId);
       setTemplateList(response.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     };
   };
 
@@ -89,7 +89,7 @@ const CreateNewOJTBatch = () => {
         setIsLoading(false);
         navigate(`/university/${universityId}`);
       } catch (error) {
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
         setIsLoading(false);
       }
     };

@@ -100,7 +100,7 @@ const SkillListPage = () => {
       setIsLoading(false);
       // setPage(response.data.pageIndex);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   }
 
@@ -180,7 +180,7 @@ const SkillListPage = () => {
       fetchSkills();
       toast.success(skillNoti.SUCCESS.DELETE);
     } catch (e) {
-      toast.error(e.response.data);
+      toast.error(e?.response?.data);
     }
   };
 

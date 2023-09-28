@@ -150,7 +150,7 @@ function TemplateDetailPage() {
       } catch (e) {
         setIsLoading(false);
         setNewUrl("");
-        toast.error(e);
+        toast.error(generalNoti.ERROR.UPLOAD_FAIL);
       }
     } else {
       setIsLoading(false);
@@ -174,7 +174,7 @@ function TemplateDetailPage() {
     } catch (error) {
       setIsLoading(false);
       setUrl("");
-      toast.error(error);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -215,7 +215,7 @@ function TemplateDetailPage() {
         toast.success(templateNoti.SUCCESS.UPDATE);
       } catch (error) {
         setIsSubmitLoading(false);
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
       }
     }
     setIsSubmitLoading(false);
@@ -240,7 +240,7 @@ function TemplateDetailPage() {
         toast.success(templateNoti.SUCCESS.UPDATE);
       } catch (error) {
         setIsSubmitLoading(false);
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
       }
     }
     setIsSubmitLoading(false);

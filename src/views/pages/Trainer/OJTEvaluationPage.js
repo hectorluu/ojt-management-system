@@ -29,7 +29,7 @@ const OJTEvaluationPage = () => {
       const response = await axiosPrivate.get(ojtBatchPath.GET_TRAINER_BATCHES);
       setOjtBatch(response.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     } finally {
       setIsLoading(false); // Set loading to false after fetching data
     }

@@ -60,7 +60,7 @@ const TrainerCourseDetailPage = () => {
       setCoursePositions(response.data.coursePositions);
       setCourseSkills(response.data.courseSkills);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   };
@@ -87,7 +87,7 @@ const TrainerCourseDetailPage = () => {
         toast.success("Giao khoá học thành công");
       } catch (error) {
         setIsLoading(false);
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
       }
     }
     setIsLoading(false);

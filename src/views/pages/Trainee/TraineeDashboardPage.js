@@ -47,7 +47,7 @@ const TraineeDashboardPage = () => {
       );
       setSkillChartData(processSkillChart(response.data));
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -64,7 +64,7 @@ const TraineeDashboardPage = () => {
       );;
       setTotalCourse(response.data.totalItem);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -81,7 +81,7 @@ const TraineeDashboardPage = () => {
       );
       setTotalTask(response.data.totalItem);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -91,7 +91,7 @@ const TraineeDashboardPage = () => {
       console.log(response.data.data);
       setTrelloTaskList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 

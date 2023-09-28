@@ -15,7 +15,7 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { coursePath, positionPath, skillPath } from "logic/api/apiUrl";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "logic/config/firebase/firebase";
-import { courseNoti } from "logic/constants/notification";
+import { courseNoti, generalNoti } from "logic/constants/notification";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import {
@@ -97,7 +97,7 @@ const CreateNewCoursePage = () => {
       setSkillList(response.data.data);
       setFilteredSkillList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -113,7 +113,7 @@ const CreateNewCoursePage = () => {
       setPositionList(response.data.data);
       setFilteredPositionList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -132,7 +132,7 @@ const CreateNewCoursePage = () => {
       setIsLoading(false);
       navigate("/course-list");
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -174,7 +174,7 @@ const CreateNewCoursePage = () => {
             });
           });
         } catch (e) {
-          toast.error(e);
+          toast.error(generalNoti.ERROR.UPLOAD_FAIL);
         }
       } else {
         setImageURL(defaultCourseImage);

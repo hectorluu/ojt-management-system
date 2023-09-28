@@ -34,7 +34,7 @@ const SignInPage = () => {
         await axios.post(authPath.RESET_PASSWORD_CODE + email);
         toast.success(authNoti.SUCCESS.RESET_CODE);
       } catch (error) {
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
         toast.error(authNoti.ERROR.RESET_CODE);
         setIsLoading(false);
       }
@@ -71,7 +71,7 @@ const SignInPage = () => {
         });
         navigate("/login");
       } catch (error) {
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
         toast.error(authNoti.ERROR.WRONG_CODE);
         setIsLoading(false);
       }

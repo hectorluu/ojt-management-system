@@ -77,7 +77,7 @@ const ManagerProfilePage = () => {
       setUrl(response.data.avatarURL);
       setIsFetchingLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   }
@@ -100,7 +100,7 @@ const ManagerProfilePage = () => {
       setIsLoading(false);
       navigate("/trainer-dashboard");
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -163,7 +163,7 @@ const ManagerProfilePage = () => {
         dispatch(authUpdateUser({}));
         setIsLoading(false);
       } catch (error) {
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
         setIsLoading(false);
       }
     }

@@ -61,7 +61,7 @@ const AssignedTraineeListPage = () => {
       setTotalItem(response.data.totalItem);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false); // Set loading to false after fetching data
     }
   }

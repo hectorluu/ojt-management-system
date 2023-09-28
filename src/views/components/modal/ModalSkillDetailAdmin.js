@@ -36,7 +36,7 @@ const ModalSkillDetailAdmin = ({
       setName(response.data.name);
       setIsLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };

@@ -88,7 +88,7 @@ const TraineeProfilePage = () => {
       setIsFetchingLoading(false);
       setTrainer(response.data.trainerResponse);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   }
@@ -111,8 +111,7 @@ const TraineeProfilePage = () => {
       setIsLoading(false);
       navigate("/trainee-dashboard");
     } catch (error) {
-      toast.error(error.response.data);
-      toast.error(error);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -175,8 +174,7 @@ const TraineeProfilePage = () => {
         dispatch(authUpdateUser({}));
         setIsLoading(false);
       } catch (error) {
-        toast.error(error.response.data);
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
         setIsLoading(false);
       }
     };

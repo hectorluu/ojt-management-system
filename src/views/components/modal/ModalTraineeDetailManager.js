@@ -44,7 +44,7 @@ const ModalTraineeDetailManager = ({
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 

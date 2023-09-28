@@ -29,7 +29,7 @@ const ConfigPage = () => {
       setConfigs(response.data);
       setIsLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -74,7 +74,7 @@ const ConfigPage = () => {
         fetchConfigs();
         toast.success("Cập nhật thành công");
       } catch (error) {
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
       }
     }
     setIsSubmitLoading(false);
