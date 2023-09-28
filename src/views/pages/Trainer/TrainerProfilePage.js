@@ -19,7 +19,7 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { userPath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
-import { accountNoti } from "logic/constants/notification";
+import { accountNoti, generalNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
 import { changePasswordValid, profileValid } from "logic/utils/validateUtils";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -135,7 +135,7 @@ const TrainerProfilePage = () => {
             });
           });
         } catch (e) {
-          toast.error("Upload img error");
+          toast.error(generalNoti.ERROR.UPLOAD_FAIL);
         }
       } else {
         setAvatarURL(url);
