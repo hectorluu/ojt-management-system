@@ -47,7 +47,7 @@ const ModalAddTemplateHeader = ({
   }, [formula]);
 
   useEffect(() => {
-    const nothing = [{ value: "", label: "Không" }];
+    const nothing = [{ value: null, label: "Không" }];
     const notCriteria = notCriteriaOptions.slice();
     notCriteria.unshift(...nothing);
     setNotCriteriaList(notCriteria);
@@ -78,7 +78,7 @@ const ModalAddTemplateHeader = ({
       );
       setFormulaList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 

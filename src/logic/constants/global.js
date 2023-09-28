@@ -246,6 +246,8 @@ export const notiStyle = {
   CERTIFICATE_TYPE: 1,
   TRAINING_PLAN_TYPE: 2,
   BATCH_TYPE: 3,
+  COURSE_TYPE: 4,
+  TASK_TYPE: 5,
 };
 
 export const signalRMessage = {

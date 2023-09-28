@@ -13,7 +13,7 @@ import { storage } from "logic/config/firebase/firebase";
 import { toast } from "react-toastify";
 import { Button } from "views/components/button";
 import Gap from "views/components/common/Gap";
-import { templateNoti } from "logic/constants/notification";
+import { generalNoti, templateNoti } from "logic/constants/notification";
 import { useNavigate } from "react-router-dom";
 import Luckysheet from "views/components/Luckysheet/Luckysheet";
 import { reportValid } from "logic/utils/validateUtils";
@@ -107,7 +107,7 @@ function DefineNewReportPage() {
       );
       setFormulaList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -124,7 +124,7 @@ function DefineNewReportPage() {
       );
       setUniversityList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -156,7 +156,7 @@ function DefineNewReportPage() {
       } catch (e) {
         setIsLoading(false);
         setUrl("");
-        toast.error(e);
+        toast.error(generalNoti.ERROR.UPLOAD_FAIL);
       }
     } else {
       setIsLoading(false);
@@ -181,7 +181,7 @@ function DefineNewReportPage() {
     } catch (error) {
       setIsLoading(false);
       setUrl("");
-      toast.error(error);
+      toast.error(error?.response?.data);
     }
   };
 

@@ -66,7 +66,7 @@ const TraineeCertificateSubmitPage = () => {
       setCertificates(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     } finally {
       setIsLoading(false); // Set loading to false after fetching data
     }
@@ -114,7 +114,7 @@ const TraineeCertificateSubmitPage = () => {
         setIsSubmitLoading(false);
         fetchCertificate();
       } catch (error) {
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
         setIsSubmitLoading(false);
       }
     }

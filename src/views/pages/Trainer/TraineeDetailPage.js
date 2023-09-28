@@ -46,7 +46,7 @@ const TraineeDetailPage = () => {
       const response = await axiosPrivate.get(chartPath.GET_TRAINEE_WITH_TOP_SKILL_TRAINEE_DETAIL + traineeId);
       setSkillChartData(processSkillChart(response.data));
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
   async function fetchTraineeDetail() {
@@ -58,7 +58,7 @@ const TraineeDetailPage = () => {
       setTrainee(response.data);
       setIsLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   }
@@ -73,7 +73,7 @@ const TraineeDetailPage = () => {
       setTraineeTask(response.data.data);
       setIsLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   }
@@ -87,7 +87,7 @@ const TraineeDetailPage = () => {
       setCertList(response.data.data);
       setIsLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   }
@@ -101,7 +101,7 @@ const TraineeDetailPage = () => {
       setTotalCourse(response.data.totalItem);
       setIsLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   }
@@ -116,7 +116,7 @@ const TraineeDetailPage = () => {
       setTotalTask(response.data.totalItem);
       setIsLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   }

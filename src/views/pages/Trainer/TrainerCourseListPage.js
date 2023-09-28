@@ -76,7 +76,7 @@ const TrainerCourseListPage = () => {
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     } finally {
       setIsLoading(false); // Set loading to false after fetching data
     }
@@ -95,7 +95,7 @@ const TrainerCourseListPage = () => {
       );
       setSkillList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 

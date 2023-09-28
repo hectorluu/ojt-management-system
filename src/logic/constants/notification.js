@@ -94,6 +94,7 @@ export const templateNoti = {
     CREATE: "Thành công tạo mẫu đánh giá !",
     DELETE: "Thành công vô hiệu mẫu đánh giá !",
     ACTIVE: "Thành công kích hoạt mẫu đánh giá !",
+    UPDATE: "Thành công cập nhật mẫu đánh giá !",
   },
 
   ERROR: {

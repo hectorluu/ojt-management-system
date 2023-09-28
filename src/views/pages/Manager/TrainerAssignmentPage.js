@@ -47,7 +47,7 @@ const TrainerAssignmentPage = () => {
         toast.success(assignNoti.SUCCESS.ASSIGN);
       } catch (error) {
         setIsLoading(false);
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
       }
     }
     // values
@@ -99,7 +99,7 @@ const TrainerAssignmentPage = () => {
 
       setTrainers(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   }
 
@@ -108,7 +108,7 @@ const TrainerAssignmentPage = () => {
       const response = await axiosPrivate.get(userPath.GET_UNASSIGNED_TRAINEE);
       setUnassigned(response.data);
     } catch (e) {
-      toast.error(e.response.data);
+      toast.error(e?.response?.data);
     }
   };
 

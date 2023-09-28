@@ -70,7 +70,7 @@ const TotalTrainerCard = ({ isLoading }) => {
       const response = await axiosProvate.get(userPath.GET_TRAINER_LIST + "?PageSize=" + 100000 + "&PageIndex=" + 1);
       setTotalTrainer(response.data.totalItem);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 

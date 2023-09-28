@@ -100,7 +100,7 @@ const PositionListPage = () => {
       setIsLoading(false);
       // setPage(response.data.pageIndex);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -182,7 +182,7 @@ const PositionListPage = () => {
       setIsModalDeleteOpen(false);
       toast.success(positionNoti.SUCCESS.DELETE);
     } catch (e) {
-      toast.error(e.response.data);
+      toast.error(e?.response?.data);
     }
   };
 

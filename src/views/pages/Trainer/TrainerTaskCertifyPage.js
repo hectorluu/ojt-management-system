@@ -92,7 +92,7 @@ const TrainerTaskCertifyPage = () => {
       setTotalItem(response.data.totalItem);
       setIsLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -104,7 +104,7 @@ const TrainerTaskCertifyPage = () => {
       );
       setBoardList(response.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -135,7 +135,7 @@ const TrainerTaskCertifyPage = () => {
       fetchAccomplishedTask();
       setIsModalOpen(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
   const theme = useTheme();

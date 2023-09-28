@@ -45,7 +45,7 @@ const EvaluateExcelPage = () => {
       const point = processResponseData(response.data);
       setData(point);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -116,7 +116,7 @@ const EvaluateExcelPage = () => {
       setHeaders(columns);
       setTimeout(() => { });
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -148,7 +148,7 @@ const EvaluateExcelPage = () => {
       navigate("/ojt-evaluation");
       toast.success(criteraNoti.SUCCESS.CREATE);
     } catch (error) {
-      toast.error(error);
+      toast.error(error?.response?.data);
     }
   };
 
