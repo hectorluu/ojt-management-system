@@ -121,7 +121,7 @@ const TraineeDashboardPage = () => {
                       variant="h6"
                       className="text-2xl 2xl:text-3xl font-bold"
                     >
-                      {totalCourse}
+                      {toalTask}
                     </Typography>
                   </div>
                 </div>
@@ -151,7 +151,7 @@ const TraineeDashboardPage = () => {
                       variant="h6"
                       className="text-2xl 2xl:text-3xl font-bold"
                     >
-                      {toalTask}
+                      {totalCourse}
                     </Typography>
                   </div>
                 </div>

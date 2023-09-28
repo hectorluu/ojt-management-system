@@ -443,7 +443,11 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <UnauthorizePage></UnauthorizePage>,
+    element: <SignInPage></SignInPage>,
+  },
+  {
+    path: "/",
+    element: <SignInPage></SignInPage>,
   },
   {
     path: "/unauthorize",

@@ -135,9 +135,7 @@ function TemplateDetailPage() {
       setTemplateHeaders(response.data.templateHeaders);
       setUniversityName(response.data.universityName);
       setIsFetchingLoading(false);
-      console.log("fetchFormula ~ success", response);
     } catch (error) {
-      console.log("fetchFormula ~ error", error);
       setIsFetchingLoading(false);
     }
   };
@@ -156,8 +154,7 @@ function TemplateDetailPage() {
       }
     } else {
       setIsLoading(false);
-      setNewUrl("");
-      toast.error(templateNoti.ERROR.BLANK_FILE);
+      setNewUrl(url);
     }
   };
 
@@ -203,14 +200,6 @@ function TemplateDetailPage() {
     setError(valid);
     if (Object.keys(valid).length === 0) {
       try {
-        console.log({
-          name: values.name,
-          totalPoint: values.totalPoint,
-          matchedAttribute: values.matchedAttribute,
-          isCriteria: values.isCriteria,
-          formulaId: values.formulaId,
-          order: templateHeaders?.[templateHeaders.length - 1]?.order + 1
-        });
         setIsSubmitLoading(true);
         await axiosPrivate.post(templatePath.ADD_TEMPLATE_HEADER + templateId, {
           name: values.name,
@@ -223,7 +212,7 @@ function TemplateDetailPage() {
         fetchTemplateDetail();
         setIsSubmitLoading(false);
         setIsAddTemplateHeaderModalOpen(false);
-        toast.success(templateNoti.SUCCESS.CREATE);
+        toast.success(templateNoti.SUCCESS.UPDATE);
       } catch (error) {
         setIsSubmitLoading(false);
         toast.error(error.response.data);
@@ -238,19 +227,17 @@ function TemplateDetailPage() {
     if (Object.keys(valid).length === 0) {
       try {
         setIsSubmitLoading(true);
-        await axiosPrivate.put(templatePath.UPDATE_TEMPLATE_HEADER + templateId, {
+        await axiosPrivate.put(templatePath.UPDATE_TEMPLATE_HEADER + selectedHeader.id, {
           name: values.name,
           totalPoint: values.totalPoint,
           matchedAttribute: values.matchedAttribute,
           isCriteria: values.isCriteria,
           formulaId: values.formulaId,
-          order: values.order,
-          status: values.status
         });
         fetchTemplateDetail();
         setIsSubmitLoading(false);
         setIsEditTemplateHeaderModalOpen(false);
-        toast.success(templateNoti.SUCCESS.CREATE);
+        toast.success(templateNoti.SUCCESS.UPDATE);
       } catch (error) {
         setIsSubmitLoading(false);
         toast.error(error.response.data);
@@ -263,11 +250,11 @@ function TemplateDetailPage() {
     try {
       setIsFetchingLoading(true);
       const response = await axiosPrivate.put(templatePath.DISABLE_HEADER + headerId);
-      toast.success(response.response.data);
+      toast.success(response.data);
       fetchTemplateDetail();
       setIsFetchingLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     };
   };
@@ -275,11 +262,11 @@ function TemplateDetailPage() {
     try {
       setIsFetchingLoading(true);
       const response = await axiosPrivate.put(templatePath.ACTIVE_HEADER + headerId);
-      toast.success(response.response.data);
+      toast.success(response.data);
       fetchTemplateDetail();
       setIsFetchingLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     };
   };
