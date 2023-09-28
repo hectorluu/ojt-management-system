@@ -66,14 +66,14 @@ const AccountListPage = () => {
       setIsLoading(true);
       let response = await axiosPrivate.get(
         userPath.GET_USER_LIST +
-        "?PageSize=" +
-        rowsPerPage +
-        "&PageIndex=" +
-        page +
-        "&searchTerm=" +
-        `${searchTerm === null ? "" : searchTerm}` +
-        "&role=" +
-        role
+          "?PageSize=" +
+          rowsPerPage +
+          "&PageIndex=" +
+          page +
+          "&searchTerm=" +
+          `${searchTerm === null ? "" : searchTerm}` +
+          "&role=" +
+          role
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -116,8 +116,8 @@ const AccountListPage = () => {
   // Modal
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
 
-  const handleClickUserDetail = (userId) => {
-    navigate("/account-list/" + userId);
+  const handleClickUserDetail = (user) => {
+    navigate("/account-list/" + user.id);
     setOpen(null);
   };
 
@@ -151,7 +151,9 @@ const AccountListPage = () => {
     setOpen(null);
     try {
       setIsLoading(true);
-      const response = await axiosPrivate.put(userPath.DISABLE_USER + userSelected.id);
+      const response = await axiosPrivate.put(
+        userPath.DISABLE_USER + userSelected.id
+      );
       fetchUsers();
       setIsModalDeleteOpen(false);
       toast.success(response.data);
@@ -166,7 +168,9 @@ const AccountListPage = () => {
     setOpen(null);
     try {
       setIsLoading(true);
-      const response = await axiosPrivate.put(userPath.ACTIVE_USER + userSelected.id);
+      const response = await axiosPrivate.put(
+        userPath.ACTIVE_USER + userSelected.id
+      );
       fetchUsers();
       toast.success(response.data);
       setIsLoading(false);
