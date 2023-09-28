@@ -39,10 +39,15 @@ export default function TraineeTaskCardDisplay({ task }) {
       sx={{ maxWidth: 345, height: "fit-content" }}
     >
       <CardHeader
-        className={
-          !expanded ? "text-ellipsis overflow-hidden whitespace-nowrap" : ""
-        }
-        // titleTypographyProps={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+        sx={!expanded ? {
+          display: "flex",
+          overflow: "hidden",
+          "& .MuiCardHeader-content": {
+            overflow: "hidden"
+          }
+        } : {}}
+        titleTypographyProps={!expanded ? { noWrap: true } : {}}
+        subheaderTypographyProps={!expanded ? { noWrap: true } : {}}
         title={<span className="text-2xl font-bold">{task?.name}</span>}
         subheader={
           "Ngày hoàn thành:" + moment(task?.finishTime).format("DD/MM/YYYY")

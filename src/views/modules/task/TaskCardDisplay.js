@@ -41,10 +41,15 @@ export default function TaskCardDisplay({ task, onClickProcess }) {
       sx={{ maxWidth: 345, height: "fit-content" }}
     >
       <CardHeader
-        className={
-          !expanded ? "text-ellipsis overflow-hidden whitespace-nowrap" : ""
-        }
-        // titleTypographyProps={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}
+        sx={!expanded ? {
+          display: "flex",
+          overflow: "hidden",
+          "& .MuiCardHeader-content": {
+            overflow: "hidden"
+          }
+        } : {}}
+        titleTypographyProps={!expanded ? { noWrap: true } : {}}
+        subheaderTypographyProps={!expanded ? { noWrap: true } : {}}
         avatar={<Avatar src={task.avatarURL} />}
         title={<span className="font-semibold">{task?.name}</span>}
         subheader={
