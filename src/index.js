@@ -182,6 +182,22 @@ const router = createBrowserRouter([
     element: <SignInPage></SignInPage>,
   },
   {
+    path: "*",
+    element: <UnauthorizePage></UnauthorizePage>,
+  },
+  {
+    path: "/",
+    element: <SignInPage></SignInPage>,
+  },
+  {
+    path: "/unauthorize",
+    element: <UnauthorizePage></UnauthorizePage>,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPasswordPage></ResetPasswordPage>,
+  },
+  {
     path: "/",
     element: (
       <RequiredAuthPage allowRole={permissions.ADMIN}></RequiredAuthPage>
@@ -440,22 +456,6 @@ const router = createBrowserRouter([
         ],
       },
     ],
-  },
-  {
-    path: "*",
-    element: <SignInPage></SignInPage>,
-  },
-  {
-    path: "/",
-    element: <SignInPage></SignInPage>,
-  },
-  {
-    path: "/unauthorize",
-    element: <UnauthorizePage></UnauthorizePage>,
-  },
-  {
-    path: "/reset-password",
-    element: <ResetPasswordPage></ResetPasswordPage>,
   },
 ]);
 
