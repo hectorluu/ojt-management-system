@@ -47,7 +47,7 @@ const ModalAddTemplateHeader = ({
   }, [formula]);
 
   useEffect(() => {
-    const nothing = [{ value: "", label: "Không" }];
+    const nothing = [{ value: null, label: "Không" }];
     const notCriteria = notCriteriaOptions.slice();
     notCriteria.unshift(...nothing);
     setNotCriteriaList(notCriteria);

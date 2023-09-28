@@ -20,14 +20,13 @@ const ModalEditTemplateHeader = ({
   const { handleSubmit } = useForm();
   const [name, setName] = useState(header?.name);
   const [formula, setFormula] = useState(undefined);
-  const [matchedAttribute, setMatchedAttribute] = useState(header?.matchedAttribute);
-  const [totalPoint, setTotalpoint] = useState(header?.matchedAttribute);
-  const [isCriteria, setIsCriteria] = useState(header?.isCriteria);
-  const [formulaList, setFormulaList] = useState([]);
+  const [matchedAttribute, setMatchedAttribute] = useState(notCriteriaOptions.find((item) => item.value === header.matchedAttribute) || { value: null, label: "Không" });
+  const [totalPoint, setTotalpoint] = useState(header?.totalPoint);
+  const [isCriteria, setIsCriteria] = useState(header.isCriteria ? isCriteriaOptions[0] : isCriteriaOptions[1]);
+  const [formulaList, setFormulaList] = useState([{ id: 0, name: "Lựa chọn" }]);
   const axiosPrivate = useAxiosPrivate();
   const [isFetchingLoading, setIsFetchingLoading] = useState(true);
   const [notCriteriaList, setNotCriteriaList] = useState(notCriteriaOptions);
-  const [status] = useState(header?.status);
 
   useEffect(() => {
     if (formulaList && notCriteriaList) {
@@ -37,12 +36,27 @@ const ModalEditTemplateHeader = ({
 
   useEffect(() => {
     fetchFormulars();
-    if (isCriteria === false) {
+    console.log(isCriteria);
+    if (isCriteria.value === false) {
       setFormula(undefined);
-    }
+      setMatchedAttribute(notCriteriaOptions.find((item) => item.value === header.matchedAttribute) || { value: null, label: "Không" });
+    } else {
+      setMatchedAttribute({ value: "Point", label: "Điểm" });
+    };
     setTotalpoint("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCriteria]);
+
+  useEffect(() => {
+    console.log({
+      name: name,
+      totalPoint: totalPoint,
+      matchedAttribute: matchedAttribute,
+      isCriteria: isCriteria,
+      formulaId: formula?.id,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
 
   useEffect(() => {
     if (formulaList.length > 0) {
@@ -52,18 +66,21 @@ const ModalEditTemplateHeader = ({
   }, [formulaList]);
 
   useEffect(() => {
-    setTotalpoint("");
+    if (matchedAttribute.value !== "Point") {
+      setTotalpoint("");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchedAttribute]);
 
   useEffect(() => {
-    setTotalpoint("");
-    setMatchedAttribute("Point");
+    if (formula) {
+      setMatchedAttribute({ value: "Point", label: "Điểm" });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formula]);
 
   useEffect(() => {
-    const nothing = [{ value: "", label: "Không" }];
+    const nothing = [{ value: null, label: "Không" }];
     const notCriteria = notCriteriaOptions.slice();
     notCriteria.unshift(...nothing);
     setNotCriteriaList(notCriteria);
@@ -75,10 +92,9 @@ const ModalEditTemplateHeader = ({
     handleUpdateTemplateHeader({
       name: name,
       totalPoint: totalPoint,
-      matchedAttribute: matchedAttribute,
-      isCriteria: isCriteria,
+      matchedAttribute: matchedAttribute?.value || "Point",
+      isCriteria: isCriteria.value,
       formulaId: formula?.id,
-      status: status,
     });
   };
 
@@ -147,7 +163,7 @@ const ModalEditTemplateHeader = ({
                   <Label>Tên cột(*)</Label>
                   {isFetchingLoading ? <Skeleton height={60} animation="wave" /> :
                     <TextField
-                      defaultValue={header.name}
+                      value={name || ""}
                       error={error?.name ? true : false}
                       helperText={error?.name}
                       name="name"
@@ -160,12 +176,13 @@ const ModalEditTemplateHeader = ({
                 <FormGroup>
                   <Label>Tiêu chí hệ thống</Label>
                   {isFetchingLoading ? <Skeleton height={60} animation="wave" /> :
-                    isCriteria ? (
+                    isCriteria.value ? (
                       <Autocomplete
-                        value={formulaList.find((item) => item.id === header.formulaId) || null}
+                        value={formula || null}
                         disablePortal={false}
                         options={formulaList}
                         getOptionLabel={(option) => option.name || ""}
+                        defaultValue={formulaList.find((item) => item.id === header.formulaId) || null}
                         renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
                         onChange={(event, newValue) => {
                           if (newValue) {
@@ -174,20 +191,21 @@ const ModalEditTemplateHeader = ({
                             setFormula(undefined);
                           }
                         }}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        isOptionEqualToValue={(option, value) => option.id === value?.id}
                       />
                     ) : (
                       <Autocomplete
-                        value={notCriteriaList.find((item) => item.value === header.matchedAttribute) || null}
+                        value={matchedAttribute}
                         disablePortal={false}
                         options={notCriteriaList}
-                        getOptionLabel={(option) => option.label || ""}
+                        defaultValue={matchedAttribute}
+                        getOptionLabel={(option) => option.label}
                         renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
                         onChange={(event, newValue) => {
                           if (newValue) {
-                            setMatchedAttribute(newValue.value);
+                            setMatchedAttribute(newValue);
                           } else {
-                            setMatchedAttribute("");
+                            setMatchedAttribute({ value: null, label: "Không" });
                           }
                         }}
                       />
@@ -200,26 +218,27 @@ const ModalEditTemplateHeader = ({
                   <Label>Tiêu chí đánh giá (*)</Label>
                   {isFetchingLoading ? <Skeleton height={60} animation="wave" /> :
                     <Autocomplete
-                      value={header.isCriteria ? isCriteriaOptions[0] : isCriteriaOptions[1] || null}
+                      value={isCriteria}
                       disablePortal={false}
+                      defaultValue={header.isCriteria ? isCriteriaOptions[0] : isCriteriaOptions[1] || null}
                       options={isCriteriaOptions}
                       renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
                       onChange={(event, newValue) => {
-                        if (newValue) {
-                          setIsCriteria(newValue.value);
+                        if (newValue !== "" && newValue !== null && newValue !== undefined) {
+                          setIsCriteria(newValue);
                         } else {
-                          setIsCriteria(false);
+                          setIsCriteria({ value: false, label: "Không" });
                         }
                       }}
                     />
                   }
                 </FormGroup>
                 {isFetchingLoading ? <Skeleton height={60} animation="wave" /> :
-                  isCriteria ? (
+                  isCriteria.value ? (
                     <FormGroup>
                       <Label>Điểm tối đa(*)</Label>
                       <TextField
-                        defaultValue={header.totalPoint}
+                        value={totalPoint || ""}
                         error={error?.totalPoint ? true : false}
                         helperText={error?.totalPoint}
                         type="number"

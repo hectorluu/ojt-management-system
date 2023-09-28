@@ -257,6 +257,8 @@ const AssignTrainingPlanPage = () => {
                 disablePortal={false}
                 id="combo-box-demo"
                 options={assignedTraineeList}
+                blurOnSelect={true}
+                clearOnBlur={true}
                 getOptionLabel={(option) =>
                   option.firstName + " " + option.lastName + " " + option.email
                 }
