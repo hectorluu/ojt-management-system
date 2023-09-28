@@ -3,59 +3,84 @@ import FormGroup from "views/components/common/FormGroup";
 import { useForm } from "react-hook-form";
 import { Label } from "views/components/label";
 import { Button } from "views/components/button";
-import { Autocomplete, Box, Modal, TextField } from "@mui/material";
+import { Autocomplete, Box, Modal, Skeleton, TextField } from "@mui/material";
 import FormRow from "../common/FormRow";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { formulaPath } from "logic/api/apiUrl";
 import { isCriteriaOptions, notCriteriaOptions } from "logic/constants/global";
+import { toast } from "react-toastify";
 
 const ModalEditTemplateHeader = ({
   header,
-  isOpen,
   onRequestClose,
-  handleAddNewTemplateHeader,
+  handleUpdateTemplateHeader,
   isLoading,
   error,
 }) => {
   const { handleSubmit } = useForm();
-  const [name, setName] = useState(header.name);
+  const [name, setName] = useState(header?.name);
   const [formula, setFormula] = useState(undefined);
-  const [matchedAttribute, setMatchedAttribute] = useState(header.matchedAttribute);
-  const [totalPoint, setTotalpoint] = useState(header.totalPoint);
-  const [isCriteria, setIsCriteria] = useState(header.isCriteria);
-  const [formulaList, setFormulaList] = useState([]);
+  const [matchedAttribute, setMatchedAttribute] = useState(notCriteriaOptions.find((item) => item.value === header.matchedAttribute) || { value: null, label: "Không" });
+  const [totalPoint, setTotalpoint] = useState(header?.totalPoint);
+  const [isCriteria, setIsCriteria] = useState(header.isCriteria ? isCriteriaOptions[0] : isCriteriaOptions[1]);
+  const [formulaList, setFormulaList] = useState([{ id: 0, name: "Lựa chọn" }]);
   const axiosPrivate = useAxiosPrivate();
+  const [isFetchingLoading, setIsFetchingLoading] = useState(true);
   const [notCriteriaList, setNotCriteriaList] = useState(notCriteriaOptions);
 
   useEffect(() => {
-    fetchFormulars();
-    if (isCriteria === false) {
-      setFormula(undefined);
+    if (formulaList && notCriteriaList) {
+      setIsFetchingLoading(false);
     }
+  }, [formulaList, notCriteriaList])
+
+  useEffect(() => {
+    fetchFormulars();
+    console.log(isCriteria);
+    if (isCriteria.value === false) {
+      setFormula(undefined);
+      setMatchedAttribute(notCriteriaOptions.find((item) => item.value === header.matchedAttribute) || { value: null, label: "Không" });
+    } else {
+      setMatchedAttribute({ value: "Point", label: "Điểm" });
+    };
     setTotalpoint("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCriteria]);
 
   useEffect(() => {
-    if(formulaList.length > 0){
+    console.log({
+      name: name,
+      totalPoint: totalPoint,
+      matchedAttribute: matchedAttribute,
+      isCriteria: isCriteria,
+      formulaId: formula?.id,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
+
+  useEffect(() => {
+    if (formulaList.length > 0) {
       setFormula(formulaList.find((item) => item.id === header.formulaId));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formulaList]);
 
   useEffect(() => {
-    setTotalpoint("");
+    if (matchedAttribute.value !== "Point") {
+      setTotalpoint("");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchedAttribute]);
 
   useEffect(() => {
-    setTotalpoint("");
-    setMatchedAttribute("Point");
+    if (formula) {
+      setMatchedAttribute({ value: "Point", label: "Điểm" });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formula]);
 
   useEffect(() => {
-    const nothing = [{ value: "", label: "Không" }];
+    const nothing = [{ value: null, label: "Không" }];
     const notCriteria = notCriteriaOptions.slice();
     notCriteria.unshift(...nothing);
     setNotCriteriaList(notCriteria);
@@ -64,11 +89,18 @@ const ModalEditTemplateHeader = ({
   }, []);
 
   const handleClick = async () => {
-    await handleAddNewTemplateHeader({ name });
+    handleUpdateTemplateHeader({
+      name: name,
+      totalPoint: totalPoint,
+      matchedAttribute: matchedAttribute?.value || "Point",
+      isCriteria: isCriteria.value,
+      formulaId: formula?.id,
+    });
   };
 
   const fetchFormulars = async () => {
     try {
+      setIsFetchingLoading(true);
       const response = await axiosPrivate.get(
         formulaPath.GET_FORMULA_LIST +
         "?PageIndex=" +
@@ -79,14 +111,14 @@ const ModalEditTemplateHeader = ({
         2
       );
       setFormulaList(response.data.data);
-      console.log("fetchFormula ~ success", response);
     } catch (error) {
-      console.log("fetchFormula ~ error", error);
+      toast.error(error?.response?.data);
+      setIsFetchingLoading(false);
     }
   };
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",
@@ -129,83 +161,99 @@ const ModalEditTemplateHeader = ({
               <FormRow>
                 <FormGroup>
                   <Label>Tên cột(*)</Label>
-                  <TextField
-                    error={error?.name ? true : false}
-                    helperText={error?.name}
-                    name="name"
-                    placeholder="Ex: MSSV"
-                    onChange={(e) => setName(e.target.value)}
-                    onBlur={(e) => setName(e.target.value)}
-                    inputProps={{ maxLength: 100 }} />
+                  {isFetchingLoading ? <Skeleton height={60} animation="wave" /> :
+                    <TextField
+                      value={name || ""}
+                      error={error?.name ? true : false}
+                      helperText={error?.name}
+                      name="name"
+                      placeholder="Ex: MSSV"
+                      onChange={(e) => setName(e.target.value)}
+                      onBlur={(e) => setName(e.target.value)}
+                      inputProps={{ maxLength: 100 }} />
+                  }
                 </FormGroup>
                 <FormGroup>
                   <Label>Tiêu chí hệ thống</Label>
-                  {isCriteria ? (
-                    <Autocomplete
-                      disablePortal={false}
-                      options={formulaList}
-                      getOptionLabel={(option) => option.name || ""}
-                      renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setFormula(newValue);
-                        } else {
-                          setFormula(undefined);
-                        }
-                      }}
-                      isOptionEqualToValue={(option, value) => option.id === value.id}
-                    />
-                  ) : (
-                    <Autocomplete
-                      disablePortal={false}
-                      options={notCriteriaList}
-                      getOptionLabel={(option) => option.label || ""}
-                      renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setMatchedAttribute(newValue.value);
-                        } else {
-                          setMatchedAttribute("");
-                        }
-                      }}
-                    />
-                  )}
+                  {isFetchingLoading ? <Skeleton height={60} animation="wave" /> :
+                    isCriteria.value ? (
+                      <Autocomplete
+                        value={formula || null}
+                        disablePortal={false}
+                        options={formulaList}
+                        getOptionLabel={(option) => option.name || ""}
+                        defaultValue={formulaList.find((item) => item.id === header.formulaId) || null}
+                        renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setFormula(newValue);
+                          } else {
+                            setFormula(undefined);
+                          }
+                        }}
+                        isOptionEqualToValue={(option, value) => option.id === value?.id}
+                      />
+                    ) : (
+                      <Autocomplete
+                        value={matchedAttribute}
+                        disablePortal={false}
+                        options={notCriteriaList}
+                        defaultValue={matchedAttribute}
+                        getOptionLabel={(option) => option.label}
+                        renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setMatchedAttribute(newValue);
+                          } else {
+                            setMatchedAttribute({ value: null, label: "Không" });
+                          }
+                        }}
+                      />
+                    )
+                  }
                 </FormGroup>
               </FormRow>
               <FormRow>
                 <FormGroup>
                   <Label>Tiêu chí đánh giá (*)</Label>
-                  <Autocomplete
-                    disablePortal={false}
-                    options={isCriteriaOptions}
-                    renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setIsCriteria(newValue.value);
-                      } else {
-                        setIsCriteria(false);
-                      }
-                    }}
-                  />
-                </FormGroup>
-                {isCriteria ? (
-                  <FormGroup>
-                    <Label>Điểm tối đa(*)</Label>
-                    <TextField
-                      error={error?.totalPoint ? true : false}
-                      helperText={error?.totalPoint}
-                      type="number"
-                      name="totalPoint"
-                      placeholder="Ex: 30"
-                      InputProps={{
-                        inputProps: {
-                          min: 0
+                  {isFetchingLoading ? <Skeleton height={60} animation="wave" /> :
+                    <Autocomplete
+                      value={isCriteria}
+                      disablePortal={false}
+                      defaultValue={header.isCriteria ? isCriteriaOptions[0] : isCriteriaOptions[1] || null}
+                      options={isCriteriaOptions}
+                      renderInput={(params) => <TextField {...params} placeholder="Lựa chọn" />}
+                      onChange={(event, newValue) => {
+                        if (newValue !== "" && newValue !== null && newValue !== undefined) {
+                          setIsCriteria(newValue);
+                        } else {
+                          setIsCriteria({ value: false, label: "Không" });
                         }
                       }}
-                      onChange={(e) => setTotalpoint(e.target.value)}
-                      onBlur={(e) => setTotalpoint(e.target.value)} />
-                  </FormGroup>
-                ) : null}
+                    />
+                  }
+                </FormGroup>
+                {isFetchingLoading ? <Skeleton height={60} animation="wave" /> :
+                  isCriteria.value ? (
+                    <FormGroup>
+                      <Label>Điểm tối đa(*)</Label>
+                      <TextField
+                        value={totalPoint || ""}
+                        error={error?.totalPoint ? true : false}
+                        helperText={error?.totalPoint}
+                        type="number"
+                        name="totalPoint"
+                        placeholder="Ex: 30"
+                        InputProps={{
+                          inputProps: {
+                            min: 0
+                          }
+                        }}
+                        onChange={(e) => setTotalpoint(e.target.value)}
+                        onBlur={(e) => setTotalpoint(e.target.value)} />
+                    </FormGroup>
+                  ) : null
+                }
               </FormRow>
 
               <div className="mt-5 text-center">
@@ -214,7 +262,7 @@ const ModalEditTemplateHeader = ({
                   className="px-10 mx-auto text-white bg-primary"
                   isLoading={isLoading}
                 >
-                  Thêm mới{" "}
+                  Chỉnh sửa{" "}
                 </Button>
               </div>
             </form>

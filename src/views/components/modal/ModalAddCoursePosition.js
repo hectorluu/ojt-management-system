@@ -11,7 +11,6 @@ import { positionPath } from "logic/api/apiUrl";
 import { toast } from "react-toastify";
 
 const ModalAddCoursePosition = ({
-  isOpen,
   onRequestClose,
   handleAddNewCoursePosition,
   isSubmitLoading,
@@ -39,7 +38,7 @@ const ModalAddCoursePosition = ({
       );
       setPositionList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -48,7 +47,7 @@ const ModalAddCoursePosition = ({
   };
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",

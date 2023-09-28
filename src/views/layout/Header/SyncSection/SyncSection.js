@@ -25,6 +25,7 @@ import { IconRefresh } from "@tabler/icons";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { taskProcessPath } from "logic/api/apiUrl";
 import SyncBoardList from "./SyncBoardList";
+import { toast } from "react-toastify";
 
 // ==============================|| NOTIFICATION ||============================== //
 
@@ -49,7 +50,7 @@ export default function SyncSection() {
       setBoardList(response.data);
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   }

@@ -11,9 +11,9 @@ import {
   TextField,
 } from "@mui/material";
 import Button from "../button/Button";
+import { toast } from "react-toastify";
 
 const ModalEditPositionAdmin = ({
-  isOpen,
   onRequestClose,
   positionIdClicked,
   isSubmitLoading,
@@ -35,13 +35,13 @@ const ModalEditPositionAdmin = ({
       setName(response.data.name);
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    if (positionIdClicked !== 0) {
+    if (positionIdClicked) {
       fetchPosition();
     }
 
@@ -68,7 +68,7 @@ const ModalEditPositionAdmin = ({
   };
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",

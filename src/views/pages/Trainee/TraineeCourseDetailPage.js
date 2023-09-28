@@ -46,12 +46,12 @@ const TraineeCourseDetailPage = () => {
   const [courseSkills, setCourseSkills] = useState([]);
   const [coursePositions, setCoursePositions] = useState([]);
   const [certificate, setCertificate] = useState({});
+  const moment = require("moment");
 
   const fetchCourseDetail = async () => {
     try {
       setIsFetchingLoading(true);
       const response = await axiosPrivate.get(coursePath.GET_COURSE + courseId);
-      console.log(response.data);
       setName(response.data.name);
       setPlatformName(response.data.platformName);
       setDescription(response.data.description);
@@ -61,7 +61,7 @@ const TraineeCourseDetailPage = () => {
       setCoursePositions(response.data.coursePositions);
       setCourseSkills(response.data.courseSkills);
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   };
@@ -91,15 +91,14 @@ const TraineeCourseDetailPage = () => {
   const enrollCourse = async () => {
     try {
       setIsLoading(true);
-      const response = await axiosPrivate.post(
+      await axiosPrivate.post(
         coursePath.ENROLL_COURSE + courseId
       );
-      console.log(response);
       toast.success(universityNoti.SUCCESS.UPDATE);
       setIsLoading(false);
       navigate("/trainee-course-list");
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -184,13 +183,20 @@ const TraineeCourseDetailPage = () => {
 
             <CardActions sx={{ justifyContent: "flex-end", mt: -4 }}>
               {certificate.courseId ? (
-                <Chip
-                  color="success"
-                  sx={{ float: "right" }}
-                  startIcon={<CheckIcon />}
-                >
-                  Đã đăng kí
-                </Chip>
+                <Stack direction="row" spacing={2}>
+                  <Typography>Ngày đăng kí: {moment(certificate.enrollDate).format("DD/MM/YYYY")}</Typography>
+                  {certificate.submitDate ?
+                    <Typography>Ngày nộp: {moment(certificate.submitDate).format("DD/MM/YYYY")}</Typography>
+                    :
+                    null}
+                  <Chip
+                    color="success"
+                    sx={{ float: "right" }}
+                    startIcon={<CheckIcon />}
+                  >
+                    Đã đăng kí
+                  </Chip>
+                </Stack>
               ) : (
                 <LoadingButton
                   variant="contained"

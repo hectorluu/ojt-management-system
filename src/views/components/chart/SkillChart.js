@@ -60,6 +60,11 @@ export default function SkillChart({
         },
       },
     },
+    yaxis: {
+      min: 0, // Set the minimum value to 0
+      max: 5, // Set the maximum value to 5
+      tickAmount: 5,
+    },
   });
 
   return (

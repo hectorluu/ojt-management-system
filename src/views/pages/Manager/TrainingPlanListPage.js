@@ -1,6 +1,7 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { useEffect, useState } from "react";
 import {
+  Autocomplete,
   Button,
   Card,
   InputAdornment,
@@ -13,12 +14,15 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   useTheme,
 } from "@mui/material";
 import {
   defaultPageSize,
   defaultPageIndex,
+  trainingPlanStatusOptions,
   trainingPlanStatus,
+  signalRMessage,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import ModalTrainingPlanDetailManager from "views/components/modal/ModalTrainingPlanDetailManager";
@@ -29,6 +33,9 @@ import StyledTableCell from "views/modules/table/StyledTableCell";
 import SearchIcon from "@mui/icons-material/Search";
 import useOnChange from "logic/hooks/useOnChange";
 import { fDate } from "logic/utils/formatTime";
+import { toast } from "react-toastify";
+import Chip from "views/components/chip/Chip";
+import signalRService from "logic/utils/signalRService";
 
 const TrainingPlanListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -38,33 +45,58 @@ const TrainingPlanListPage = () => {
   const [trainingplans, setTrainingplans] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isLoading, setIsLoading] = useState(true); // New loading state
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
-    async function fetchTrainingPlans() {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.get(
-          trainingPlanPath.GET_TRAINING_PLAN_LIST +
-            "?PageIndex=" +
-            page +
-            "&PageSize=" +
-            rowsPerPage +
-            "&nameSearch=" +
-            `${searchTerm === null ? "" : searchTerm}` +
-            "&status=" +
-            trainingPlanStatus.ACTIVE
-        );
-        setTrainingplans(response.data.data);
-        setTotalItem(response.data.totalItem);
-        setIsLoading(false); // Set loading to false after fetching data
-      } catch (error) {
-        console.log("fetchTrainingPlans ~ error", error);
-        setIsLoading(false); // Set loading to false after fetching data
-      }
-    }
     fetchTrainingPlans();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, [searchTerm, page, rowsPerPage, status]);
+
+  async function fetchTrainingPlans() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        trainingPlanPath.GET_TRAINING_PLAN_LIST +
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&nameSearch=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&status=" +
+        status
+      );
+      setTrainingplans(response.data.data);
+      setTotalItem(response.data.totalItem);
+      setIsLoading(false); // Set loading to false after fetching data
+    } catch (error) {
+      toast.error(error?.response?.data);
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  }
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.TRAINING_PLAN.CREATE, (message) => {
+      fetchTrainingPlans();
+    });
+    signalRService.on(signalRMessage.TRAINING_PLAN.UPDATE, (message) => {
+      fetchTrainingPlans();
+    });
+    signalRService.on(signalRMessage.TRAINING_PLAN.DELETE, (message) => {
+      fetchTrainingPlans();
+    });
+    signalRService.on(signalRMessage.TRAINING_PLAN.PROCESS, (message) => {
+      fetchTrainingPlans();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.TRAINING_PLAN.CREATE);
+      signalRService.off(signalRMessage.TRAINING_PLAN.UPDATE);
+      signalRService.off(signalRMessage.TRAINING_PLAN.DELETE);
+      signalRService.off(signalRMessage.TRAINING_PLAN.PROCESS);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -72,7 +104,7 @@ const TrainingPlanListPage = () => {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
 
   const [isTraingingPlanDetailModalOpen, setIsTrainingPlanDetailModalOpen] =
@@ -84,12 +116,12 @@ const TrainingPlanListPage = () => {
 
   return (
     <MainCard title={`Danh sách kế hoạch đào tạo `}>
-      <ModalTrainingPlanDetailManager
-        isOpen={isTraingingPlanDetailModalOpen}
-        onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
-        selectedTrainingPlan={selectedItem}
-      ></ModalTrainingPlanDetailManager>
-
+      {isTraingingPlanDetailModalOpen ?
+        <ModalTrainingPlanDetailManager
+          onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
+          selectedTrainingPlan={selectedItem}
+        ></ModalTrainingPlanDetailManager>
+        : null}
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           {/*Custom search bar*/}
@@ -109,19 +141,39 @@ const TrainingPlanListPage = () => {
               onChange={setSearchTerm}
             />
           </Card>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              options={trainingPlanStatusOptions}
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Trạng thái" />
+              )}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setStatus(newValue.value);
+                } else {
+                  setStatus("");
+                }
+              }}
+            />
+          </div>
         </div>
         <TableContainer sx={{ width: 1, mt: 2, mb: -2, borderRadius: 4 }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <StyledTableCell align="left" width={"40%"}>
+                <StyledTableCell align="left" width={"30%"}>
                   Tên kế hoạch
                 </StyledTableCell>
-                <StyledTableCell align="left" width={"25%"}>
+                <StyledTableCell align="left" width={"20%"}>
                   Người tạo
                 </StyledTableCell>
                 <StyledTableCell align="center" width={"20%"}>
                   Ngày sửa đổi
+                </StyledTableCell>
+                <StyledTableCell align="center" width={"15%"}>
+                  Trạng thái
                 </StyledTableCell>
                 <StyledTableCell align="right" width={"15%"}></StyledTableCell>
               </TableRow>
@@ -130,10 +182,10 @@ const TrainingPlanListPage = () => {
               {isLoading ? (
                 <>
                   <TableRow>
-                    <TableCell width={"40%"} animation="wave">
+                    <TableCell width={"30%"} animation="wave">
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"25%"} animation="wave">
+                    <TableCell width={"20%"} animation="wave">
                       <Skeleton />
                     </TableCell>
                     <TableCell width={"20%"} animation="wave">
@@ -142,12 +194,15 @@ const TrainingPlanListPage = () => {
                     <TableCell width={"15%"} animation="wave">
                       <Skeleton />
                     </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell width={"40%"} animation="wave">
+                    <TableCell width={"15%"} animation="wave">
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"25%"} animation="wave">
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"30%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"} animation="wave">
                       <Skeleton />
                     </TableCell>
                     <TableCell width={"20%"} animation="wave">
@@ -156,15 +211,21 @@ const TrainingPlanListPage = () => {
                     <TableCell width={"15%"} animation="wave">
                       <Skeleton />
                     </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell width={"40%"} animation="wave">
+                    <TableCell width={"15%"} animation="wave">
                       <Skeleton />
                     </TableCell>
-                    <TableCell width={"25%"} animation="wave">
+                  </TableRow>
+                  <TableRow>
+                    <TableCell width={"30%"} animation="wave">
                       <Skeleton />
                     </TableCell>
                     <TableCell width={"20%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"20%"} animation="wave">
+                      <Skeleton />
+                    </TableCell>
+                    <TableCell width={"15%"} animation="wave">
                       <Skeleton />
                     </TableCell>
                     <TableCell width={"15%"} animation="wave">
@@ -181,6 +242,23 @@ const TrainingPlanListPage = () => {
                     </TableCell>
                     <TableCell align="center">
                       {fDate(item.updateDate)}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Chip
+                        color={
+                          item?.status === trainingPlanStatus.PENDING
+                            ? "warning"
+                            : item?.status === trainingPlanStatus.ACTIVE
+                              ? "success"
+                              : "error"
+                        }
+                      >
+                        {
+                          trainingPlanStatusOptions.find(
+                            (label) => label.value === item?.status
+                          ).label
+                        }
+                      </Chip>
                     </TableCell>
                     <TableCell align="right" width={"15%"}>
                       <Button

@@ -18,13 +18,14 @@ import {
   IconButton,
 } from "@mui/material";
 import { userPath } from "logic/api/apiUrl";
-import { genderOptions } from "logic/constants/global";
+import { genderOptions, signalRMessage } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import SubCard from "views/components/cards/SubCard";
 import { LoadingButton } from "@mui/lab";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { assignNoti } from "logic/constants/notification";
 import { traineeAssignValid } from "logic/utils/validateUtils";
+import signalRService from "logic/utils/signalRService";
 
 const TrainerAssignmentPage = () => {
   const handleTrainerAssignment = async () => {
@@ -46,12 +47,34 @@ const TrainerAssignmentPage = () => {
         toast.success(assignNoti.SUCCESS.ASSIGN);
       } catch (error) {
         setIsLoading(false);
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
       }
     }
     // values
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.USER.ASSIGNED, (message) => {
+      fetchTrainers();
+      fetchUnassignedTrainee();
+    });
+    signalRService.on(signalRMessage.USER.CREATE, (message) => {
+      fetchTrainers();
+      fetchUnassignedTrainee();
+    });
+    signalRService.on(signalRMessage.USER.UPDATE, (message) => {
+      fetchTrainers();
+      fetchUnassignedTrainee();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.USER.ASSIGNED);
+      signalRService.off(signalRMessage.USER.CREATE);
+      signalRService.off(signalRMessage.USER.UPDATE);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [trainers, setTrainers] = useState([]);
   const [trainees, setTrainees] = useState([]);
@@ -76,7 +99,7 @@ const TrainerAssignmentPage = () => {
 
       setTrainers(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   }
 
@@ -85,7 +108,7 @@ const TrainerAssignmentPage = () => {
       const response = await axiosPrivate.get(userPath.GET_UNASSIGNED_TRAINEE);
       setUnassigned(response.data);
     } catch (e) {
-      toast.error(e.response.data);
+      toast.error(e?.response?.data);
     }
   };
 
@@ -197,8 +220,10 @@ const TrainerAssignmentPage = () => {
                 disablePortal={false}
                 id="combo-box-demo"
                 options={unassigned}
+                blurOnSelect={true}
+                clearOnBlur={true}
                 getOptionLabel={(option) =>
-                  option.firstName + " " + option.lastName + " " + option.email
+                  option.firstName + " " + option.lastName + " " + option.email + " " + option.positionName
                 }
                 renderInput={(params) => (
                   <TextField

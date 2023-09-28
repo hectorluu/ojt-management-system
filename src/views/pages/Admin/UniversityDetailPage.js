@@ -71,9 +71,8 @@ const UniversityDetailPage = () => {
       );
       setOjtBatchs(response.data.data);
       setTotalItem(response.data.totalItem);
-      console.log("fetchOJTBatchs ~ response", response);
     } catch (error) {
-      console.log("fetch ~ error", error);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -92,7 +91,7 @@ const UniversityDetailPage = () => {
       // setOjtBatchs(response.data.ojtBatchs);
       setIsFetchingLoading(false);
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   };
@@ -151,31 +150,33 @@ const UniversityDetailPage = () => {
           toast.error(generalNoti.ERROR.UPLOAD_FAIL);
         }
       } else {
-        setImgURL(defaultUniversityImage);
+        setImgURL(url);
       }
     }
     setIsLoading(false);
   };
 
   const handleUpdateBatch = async (data) => {
+    setIsSubmitLoading(true);
     const valid = ojtBatchValid(data);
     setError(valid);
     if (Object.keys(valid).length === 0) {
       try {
         setIsSubmitLoading(true);
-        const response = await axiosPrivate.put(
+        await axiosPrivate.put(
           ojtBatchPath.UPDATE_BATCH + clickedId,
           data
         );
-        console.log(response);
         toast.success(ojtBatchNoti.SUCCESS.UPDATE);
         setIsSubmitLoading(false);
         setIsModalOpen(false);
         fetchOJTBatchs();
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        toast.error(error?.response?.data);
+        setIsSubmitLoading(false);
       }
     };
+    setIsSubmitLoading(false);
   };
 
   const handleOpenMenu = (id) => {
@@ -194,15 +195,14 @@ const UniversityDetailPage = () => {
         imgURL,
         status
       };
-      const response = await axiosPrivate.put(
+      await axiosPrivate.put(
         universityPath.UPDATE_UNIVERSITY + universityId,
         university
       );
-      console.log(response);
       toast.success(universityNoti.SUCCESS.UPDATE);
       setIsSubmitLoading(false);
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      toast.error(error?.response?.data);
       setIsSubmitLoading(false);
     }
   };
@@ -226,15 +226,16 @@ const UniversityDetailPage = () => {
         </Button>
       }
     >
-      <ModalEditOJTBatch
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        idClicked={clickedId}
-        handleUpdateBatch={handleUpdateBatch}
-        isSubmitLoading={isSubmitLoading}
-        error={error}
-        universityId={universityId}
-      ></ModalEditOJTBatch>
+      {isModalOpen?
+        <ModalEditOJTBatch
+          onRequestClose={() => setIsModalOpen(false)}
+          idClicked={clickedId}
+          handleUpdateBatch={handleUpdateBatch}
+          isSubmitLoading={isSubmitLoading}
+          error={error}
+          universityId={universityId}
+        ></ModalEditOJTBatch>
+      :null}
       {isFetchingLoading ? (
         <ProfileSkeleton />
       ) : (

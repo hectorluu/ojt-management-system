@@ -17,9 +17,11 @@ import {
 // assets
 import {
   IconCertificate,
+  IconCode,
   IconCalendarEvent,
   IconBuildingCommunity,
   IconBellRinging,
+  IconListDetails,
 } from "@tabler/icons";
 import { notiStyle } from "logic/constants/global";
 
@@ -43,6 +45,7 @@ export default function NotificationList({
   onClickRead = () => {},
 }) {
   const theme = useTheme();
+  const moment = require('moment-timezone');
 
   const chipSX = {
     height: 24,
@@ -76,6 +79,10 @@ export default function NotificationList({
         return <IconCalendarEvent stroke={1.5} size="1.3rem" />;
       case notiStyle.BATCH_TYPE:
         return <IconBuildingCommunity stroke={1.5} size="1.3rem" />;
+      case notiStyle.COURSE_TYPE:
+        return <IconCode stroke={1.5} size="1.3rem" />;
+      case notiStyle.TASK_TYPE:
+        return <IconListDetails stroke={1.5} size="1.3rem" />;
       default:
         return <IconBellRinging stroke={1.5} size="1.3rem" />;
     }
@@ -266,6 +273,7 @@ export default function NotificationList({
               <Grid container direction="column" className="list-container">
                 <Grid item xs={12} sx={{ pb: 2 }}>
                   <Typography variant="subtitle2">{item.message}</Typography>
+                  <Typography variant="subtitle2">{moment(item.createdAt).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY h:mmA')}</Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <Grid container>

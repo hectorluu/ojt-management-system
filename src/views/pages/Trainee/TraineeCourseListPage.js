@@ -27,6 +27,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import SubCard from "views/components/cards/SubCard";
 import TraineeCourseCardDisplay from "views/modules/course/TraineeCourseCardDisplay";
+import { toast } from "react-toastify";
 
 const TraineeCourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -37,7 +38,7 @@ const TraineeCourseListPage = () => {
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [skill, setSkill] = useState("");
   const [skillList, setSkillList] = useState([]);
-  const [courseOption, setCourseOption] = useState(1);
+  const [courseOption, setCourseOption] = useState({ value: 2, label: "Bắt buộc" });
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
@@ -51,11 +52,15 @@ const TraineeCourseListPage = () => {
     signalRService.on(signalRMessage.COURSE.DELETED, (message) => {
       fetchCourses();
     });
+    signalRService.on(signalRMessage.COURSE.ASSIGNED, (message) => {
+      fetchCourses();
+    });
 
     return () => {
       signalRService.off(signalRMessage.COURSE.CREATED);
       signalRService.off(signalRMessage.COURSE.DELETED);
       signalRService.off(signalRMessage.COURSE.UPDATED);
+      signalRService.off(signalRMessage.COURSE.ASSIGNED);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -64,7 +69,7 @@ const TraineeCourseListPage = () => {
     try {
       setIsLoading(true); // Set loading to true before fetching data)
       let response = {};
-      if (courseOption === 3) {
+      if (courseOption.value === 3) {
         response = await axiosPrivate.get(
           coursePath.GET_TRAINEE_COURSE_LIST +
           "?PageIndex=" +
@@ -76,7 +81,7 @@ const TraineeCourseListPage = () => {
           "&filterSkill=" +
           `${skill === null ? "" : skill}`
         );
-      } else if (courseOption === 1) {
+      } else if (courseOption.value === 1) {
         response = await axiosPrivate.get(
           coursePath.GET_RECOMMENDED_LIST +
           "?PageIndex=" +
@@ -97,11 +102,10 @@ const TraineeCourseListPage = () => {
           rowsPerPage
         );
       }
-      console.log(response.data);
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
-      console.log("fetchCourses ~ error", error);
+      toast.error(error?.response?.data);
     } finally {
       setIsLoading(false); // Set loading to false after fetching data
     }
@@ -120,7 +124,7 @@ const TraineeCourseListPage = () => {
       );
       setSkillList(response.data.data);
     } catch (error) {
-      console.log("fetchSkills ~ error", error);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -146,7 +150,7 @@ const TraineeCourseListPage = () => {
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           {/*Custom search bar*/}
-          {courseOption !== 2 ?
+          {courseOption.value !== 2 ?
             <>
               <Card className="w-2/5">
                 <OutlinedInput
@@ -186,6 +190,7 @@ const TraineeCourseListPage = () => {
             : null}
           <div className="flex flex-wrap items-start max-w-[200px] w-full">
             <Autocomplete
+              value={courseOption}
               disablePortal={false}
               id="combo-box-demo"
               options={traineeCourseOptions}
@@ -193,9 +198,9 @@ const TraineeCourseListPage = () => {
               renderInput={(params) => <TextField {...params} label="Lựa chọn" />}
               onChange={(event, newValue) => {
                 if (newValue) {
-                  setCourseOption(newValue.value);
+                  setCourseOption(newValue);
                 } else {
-                  setCourseOption("");
+                  setCourseOption({ value: 2, label: "Bắt buộc" });
                 }
               }}
             />

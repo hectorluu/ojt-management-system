@@ -34,7 +34,7 @@ const SignInPage = () => {
         await axios.post(authPath.RESET_PASSWORD_CODE + email);
         toast.success(authNoti.SUCCESS.RESET_CODE);
       } catch (error) {
-        console.log(error);
+        toast.error(error?.response?.data);
         toast.error(authNoti.ERROR.RESET_CODE);
         setIsLoading(false);
       }
@@ -63,7 +63,6 @@ const SignInPage = () => {
     const valid = changePasswordWithCodeValid({ code, password });
     setSubmitError(valid);
     if (Object.keys(valid).length === 0) {
-      console.log("here");
       try {
         await axios.post(authPath.VERIFY_RESET_CODE, { resetCode: code });
         await axios.put(authPath.RESET_PASSWORD, {
@@ -72,7 +71,7 @@ const SignInPage = () => {
         });
         navigate("/login");
       } catch (error) {
-        console.log(error);
+        toast.error(error?.response?.data);
         toast.error(authNoti.ERROR.WRONG_CODE);
         setIsLoading(false);
       }

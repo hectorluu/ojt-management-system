@@ -64,7 +64,7 @@ export function templateHeaderValid(header) {
   if (header.isCriteria) {
     if (!header.name || !header.totalPoint) {
       if (!header.name) {
-        error["name"] = templateNoti.ERROR.BLANK_HEADER_NAME;
+        error["headerName"] = templateNoti.ERROR.BLANK_HEADER_NAME;
       }
       if (!header.totalPoint) {
         error["totalPoint"] = templateNoti.ERROR.BLANK_MAX_POINT;
@@ -77,7 +77,7 @@ export function templateHeaderValid(header) {
   } else {
     if (!header.name || !header.totalPoint) {
       if (!header.name) {
-        error["name"] = templateNoti.ERROR.BLANK_HEADER_NAME;
+        error["headerName"] = templateNoti.ERROR.BLANK_HEADER_NAME;
       }
     };
   }
@@ -157,7 +157,6 @@ export function accountValid(account) {
       };
     };
   };
-  console.log(error);
   return error;
 };
 

@@ -39,10 +39,9 @@ const AttendancePage = () => {
         attendancePath.GET_ATTENDANCE_BY_MONTH + (month + 1) + "/" + year
       );
       setAttendanceByMonth(response.data);
-      console.log("attendanceByMonth", attendanceByMonth);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
-      console.log("error", error);
+      toast.error(error?.response?.data);
       setIsLoading(false); // Set loading to false after fetching data
     }
   };
@@ -58,11 +57,10 @@ const AttendancePage = () => {
         attendancePath.GET_ATTENDANCE_BY_DATE +
         moment(selectedDate).format("YYYY-MM-DD")
       );
-      console.log("attendanceByDay", response.data);
       setAttendanceByDay(response.data.attendanceUsers);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
-      console.log("error", error);
+      toast.error(error?.response?.data);
       setIsLoading(false); // Set loading to false after fetching data
     }
   };
@@ -157,7 +155,6 @@ const AttendancePage = () => {
       setIsLoading(true);
       const formData = new FormData();
       formData.append("file", file);
-      console.log(formData);
       await axiosPrivate.post(attendancePath.GET_ATTENDANCE_FILE, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
@@ -167,7 +164,7 @@ const AttendancePage = () => {
       fetchAttendanceByMonth();
       setIsLoading(false);
     } catch (error) {
-      console.log("error", error);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -209,7 +206,7 @@ const AttendancePage = () => {
       </Backdrop>
       {/*Calendar*/}
       <div className="antialiased font-mono h-fit">
-        <div x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak>
+        <div x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak="true">
           <div className="container mx-auto px-4 py-2">
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="flex items-center justify-between py-4 px-6">
@@ -314,7 +311,6 @@ const AttendancePage = () => {
                         onClick={() => {
                           const selectedFullDate = new Date(year, month, date);
                           setSelectedDate(selectedFullDate);
-                          console.log("selectedDate laaa", selectedDate);
                           showEventModal(date);
                         }}
                         className={`inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100 ${isToday(date)
@@ -444,7 +440,7 @@ const AttendancePage = () => {
 
                 {attendanceByDay?.length > 0 ? (
                   attendanceByDay.map((item, index) => (
-                    <List className="text-gray-700" key={item.id}>
+                    <List className="text-gray-700" key={index}>
                       <ListItem className="flex space-between" sx={{ mt: -2 }}>
                         <div className="w-1/2 flex items-center">
                           <Typography className="font-bold w-24">

@@ -49,7 +49,8 @@ export const CourseCard = (props) => {
           align="left"
           gutterBottom
           variant="h5"
-          sx={{ mt: -2, display: "flex", alignItems: "center" }}
+          sx={{ mt: -2, display: "flex", alignItems: "center", overflow: "hidden" }}
+          className="truncate"
         >
           <FolderOpenIcon className="mr-2" />{" "}
           {course.courseSkills.map((skill, index) => (
@@ -59,13 +60,12 @@ export const CourseCard = (props) => {
             </span>
           ))}
         </Typography>
-        <Typography align="left" gutterBottom variant="h5">
+        <Typography align="left" gutterBottom variant="h5" className="line-clamp-2">
           <span className="font-bold text-xl">{course.name}</span>
         </Typography>
-        <Typography align="left" variant="body1" className="mb-2">
+        <Typography align="left" variant="body1" className="mb-2 overflow-ellipsis overflow-hidden line-clamp-5">
           {course.description}
         </Typography>
-
         <Box
           display="flex"
           justifyContent="space-between"
@@ -73,26 +73,28 @@ export const CourseCard = (props) => {
           className="mb-4"
         >
           {/* totalActiveEnrollment */}
-          <Typography align="left" variant="body1">
+          <div className="text-left">
             <span className="font-bold text-xl">
               {course.totalActiveEnrollment}
             </span>{" "}
             <br />
-            <Typography align="left" variant="body1">
+            <span className="text-left">
               Số học viên đang học
-            </Typography>
-          </Typography>
+            </span>
+          </div>
 
           {/* totalEnrollment */}
-          <Typography align="left" variant="body1">
-            <span className="font-bold text-xl">{course.totalEnrollment}</span>{" "}
+          <div className="text-left">
+            <span className="font-bold text-xl">
+              {course.totalEnrollment}
+            </span>{" "}
             <br />
-            <Typography align="left" variant="body1">
+            <span className="text-left">
               Tổng số lượt học
-            </Typography>
-          </Typography>
+            </span>
+          </div>
         </Box>
-        <Typography align="left" variant="body1">
+        <Typography align="left" variant="body1" className="line-clamp-1">
           Nền tảng:{" "}
           <span className="font-extrabold">{course.platformName}</span>
         </Typography>

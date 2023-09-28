@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ReactModal from "react-modal";
 import { Button } from "views/components/button";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { ojtBatchPath, templatePath } from "logic/api/apiUrl";
@@ -8,10 +7,12 @@ import FormGroup from "views/components/common/FormGroup";
 import { Label } from "views/components/label";
 import FormRow from "../common/FormRow";
 import { DatePicker } from "@mui/x-date-pickers";
-import { Box, Modal, Skeleton, TextField } from "@mui/material";
+import { Autocomplete, Box, Modal, Skeleton, TextField } from "@mui/material";
+import { toast } from "react-toastify";
+import { signalRMessage } from "logic/constants/global";
+import signalRService from "logic/utils/signalRService";
 
 const ModalEditOJTBatch = ({
-  isOpen,
   onRequestClose,
   idClicked,
   isSubmitLoading,
@@ -36,17 +37,38 @@ const ModalEditOJTBatch = ({
       const response = await axiosPrivate.get(
         ojtBatchPath.GET_BATCH_DETAIL + idClicked
       );
-      console.log(response.data);
       setName(response.data.name);
       setStartTime(response.data.startTime);
       setEndTime(response.data.endTime);
       setTemplateId(response.data.templateId);
-      setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (name && startTime && endTime && templateId && templateList) setIsLoading(false);
+  }, [name, startTime, endTime, templateId, templateList]);
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.TEMPLATE.CREATED, (message) => {
+      fetchTemplateList();
+    });
+    signalRService.on(signalRMessage.TEMPLATE.UPDATED, (message) => {
+      fetchTemplateList();
+    });
+    signalRService.on(signalRMessage.TEMPLATE.DELETED, (message) => {
+      fetchTemplateList();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.TEMPLATE.CREATED);
+      signalRService.off(signalRMessage.TEMPLATE.UPDATED);
+      signalRService.off(signalRMessage.TEMPLATE.DELETED);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchTemplateList = async () => {
     try {
@@ -55,12 +77,12 @@ const ModalEditOJTBatch = ({
       );
       setTemplateList(response.data);
     } catch (error) {
-      console.log("fetchTemplateList ~ error", error);
+      toast.error(error?.response?.data);
     }
   };
 
   useEffect(() => {
-    if (idClicked !== 0) {
+    if (idClicked) {
       fetchBatch();
       fetchTemplateList();
     }
@@ -80,7 +102,7 @@ const ModalEditOJTBatch = ({
   };
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",
@@ -141,14 +163,21 @@ const ModalEditOJTBatch = ({
                   {isLoading ? (
                     <Skeleton height={60} animation="wave" />
                   ) : (
-                    <TextField
-                      value={
-                        templateList.find(
-                          (template) => template.id === templateId
-                        )?.name
-                      }
-                      name="template"
-                      inputProps={{ readOnly: true }}
+                    <Autocomplete
+                      value={templateList.find((x) => x.id === templateId) || null}
+                      disablePortal={false}
+                      id="combo-box-demo"
+                      options={templateList}
+                      getOptionLabel={(option) => option.name}
+                      renderInput={(params) => <TextField {...params} placeholder="Chọn mẫu đánh giá" error={error?.templateId ? true : false} helperText={error?.templateId} />}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          setTemplateId(newValue.id);
+                        } else {
+                          setTemplateId("");
+                        }
+                      }}
+                      isOptionEqualToValue={(option, value) => option.id === value.id}
                     />
                   )}
                 </FormGroup>

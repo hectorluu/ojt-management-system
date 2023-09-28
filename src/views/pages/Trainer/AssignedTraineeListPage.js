@@ -2,11 +2,6 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { useEffect, useState } from "react";
 import {
   Button,
-  Skeleton,
-  // Card,
-  // InputAdornment,
-  // OutlinedInput,
-  // SvgIcon,
   Table,
   TableBody,
   TableCell,
@@ -16,15 +11,17 @@ import {
   useTheme,
 } from "@mui/material";
 
-import { defaultPageSize, defaultPageIndex } from "logic/constants/global";
+import { defaultPageSize, defaultPageIndex, defaultUserIcon, traineeWorkingStatus, signalRMessage } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import MainCard from "views/components/cards/MainCard";
 import SubCard from "views/components/cards/SubCard";
 import StyledTableCell from "views/modules/table/StyledTableCell";
-// import SearchIcon from "@mui/icons-material/Search";
-// import useOnChange from "logic/hooks/useOnChange";
 import { trainerPath } from "logic/api/apiUrl";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Chip from "views/components/chip/Chip";
+import TraineeListSkeleton from "views/modules/TraineeListSkeleton";
+import signalRService from "logic/utils/signalRService";
 
 const AssignedTraineeListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -32,47 +29,42 @@ const AssignedTraineeListPage = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(defaultPageSize);
   const axiosPrivate = useAxiosPrivate();
   const [users, setUsers] = useState([]);
-  const [totalUsers, setTotalUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
   useEffect(() => {
-    async function fetchUsers() {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.get(
-          trainerPath.GET_TRAINEE_LIST +
-            "?PageIndex=" +
-            page +
-            "&PageSize=" +
-            rowsPerPage
-        );
-
-        setUsers(response.data.data);
-        setTotalItem(response.data.totalItem);
-        setIsLoading(false); // Set loading to false after fetching data
-      } catch (error) {
-        console.log("fetchUsers ~ error", error);
-        setIsLoading(false); // Set loading to false after fetching data
-      }
-    }
-    fetchUsers();
-
-    async function fetchTotalUsers() {
-      try {
-        const response = await axiosPrivate.get(
-          trainerPath.GET_TRAINEE_LIST + "?PageSize=" + 1000000
-        );
-
-        setTotalUsers(response.data.data);
-        // setPage(response.data.pageIndex);
-        // console.log("fetchUsers ~ response", response);
-      } catch (error) {
-        console.log("Error", error);
-      }
-    }
-    fetchTotalUsers();
+    signalRService.on(signalRMessage.USER.ASSIGNED, (message) => {
+      fetchUsers();
+    });
+    return () => {
+      signalRService.off(signalRMessage.USER.ASSIGNED);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function fetchUsers() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        trainerPath.GET_TRAINEE_LIST +
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage
+      );
+
+      setUsers(response.data.data);
+      setTotalItem(response.data.totalItem);
+      setIsLoading(false); // Set loading to false after fetching data
+    } catch (error) {
+      toast.error(error?.response?.data);
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -80,7 +72,7 @@ const AssignedTraineeListPage = () => {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
 
   // const [isTraineeDetailModalOpen, setIsTraineeDetailModalOpen] =
@@ -91,13 +83,8 @@ const AssignedTraineeListPage = () => {
 
   return (
     <MainCard
-      title={`Thực tập sinh${!isLoading ? ` (${totalUsers.length})` : ""}`}
+      title={`Thực tập sinh`}
     >
-      {/* <ModalTraineeDetailManager
-        isOpen={isTraineeDetailModalOpen}
-        onRequestClose={() => setIsTraineeDetailModalOpen(false)}
-      ></ModalTraineeDetailManager> */}
-
       <SubCard>
         <TableContainer sx={{ width: 1, mb: -2, borderRadius: 4 }}>
           <Table>
@@ -105,109 +92,57 @@ const AssignedTraineeListPage = () => {
               <TableRow>
                 <StyledTableCell
                   align="center"
-                  width={"8%"}
+                  width={"10%"}
                   className="min-w-fit"
                 >
                   {" "}
                 </StyledTableCell>
-                <StyledTableCell align="left" width={"32%"}>
+                <StyledTableCell align="left" width={"25%"}>
                   Họ và tên
                 </StyledTableCell>
-                <StyledTableCell align="left" width="30%">
+                <StyledTableCell align="left" width="25%">
                   Email
                 </StyledTableCell>
                 <StyledTableCell align="center" width={"15%"}>
                   Vai trò
                 </StyledTableCell>
-                <StyledTableCell align="right" width={"15%"}></StyledTableCell>
+                <StyledTableCell align="center" width={"15%"}>
+                  Trạng thái
+                </StyledTableCell>
+                <StyledTableCell align="right" width={"10%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {isLoading ? (
-                <>
-                  <TableRow>
-                    <TableCell width={"6%"}>
-                      <Skeleton
-                        variant="circular"
-                        width={40}
-                        height={40}
-                        animation="wave"
-                      />
-                    </TableCell>
-                    <TableCell width={"39%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"25%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"15%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"15%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell width={"6%"}>
-                      <Skeleton
-                        variant="circular"
-                        width={40}
-                        height={40}
-                        animation="wave"
-                      />
-                    </TableCell>
-                    <TableCell width={"39%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"25%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"15%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"15%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell width={"6%"}>
-                      <Skeleton
-                        variant="circular"
-                        width={40}
-                        height={40}
-                        animation="wave"
-                      />
-                    </TableCell>
-                    <TableCell width={"39%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"25%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"15%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                    <TableCell width={"15%"} animation="wave">
-                      <Skeleton />
-                    </TableCell>
-                  </TableRow>
-                </>
+                <TraineeListSkeleton />
               ) : users.length !== 0 ? (
                 users.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell className="w-20">
+                    <TableCell width={"10%"}>
                       <img
                         className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
-                        src="logo.png"
+                        src={item.avatarURL || defaultUserIcon}
                         alt=""
+                        onError={(e) => {
+                          e.target.src = defaultUserIcon;
+                        }}
                       />
                     </TableCell>
-                    <TableCell align="left">
+                    <TableCell align="left" width={"25%"}>
                       {item.firstName + " " + item.lastName}
                     </TableCell>
-                    <TableCell align="left">{item.email}</TableCell>
-                    <TableCell align="center">{item.positionName}</TableCell>
-                    <TableCell align="right">
+                    <TableCell align="left" width={"25%"}>{item.email}</TableCell>
+                    <TableCell align="center" width={"15%"}>{item.positionName}</TableCell>
+                    <TableCell align="center" width={"15%"}>
+                      <Chip color={item.workStatus === 1 ? "warning" : "success"}>
+                        {
+                          traineeWorkingStatus.find(
+                            (label) => label.value === item.workStatus
+                          ).label
+                        }
+                      </Chip>
+                    </TableCell>
+                    <TableCell align="right" width={"10%"}>
                       <Button
                         variant="contained"
                         sx={{

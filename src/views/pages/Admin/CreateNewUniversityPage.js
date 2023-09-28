@@ -51,8 +51,7 @@ const CreateNewUniversityPage = () => {
       setIsLoading(false);
       navigate("/university-list");
     } catch (error) {
-      console.log("error", error);
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };

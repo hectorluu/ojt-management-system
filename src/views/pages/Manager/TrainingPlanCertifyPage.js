@@ -15,6 +15,7 @@ import {
   defaultPageSize,
   defaultPageIndex,
   trainingPlanStatus,
+  signalRMessage,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import { trainingPlanPath } from "logic/api/apiUrl";
@@ -24,6 +25,7 @@ import StyledTableCell from "views/modules/table/StyledTableCell";
 import ModalTrainingPlanCertifyManager from "views/components/modal/ModalTrainingPlanCertifyManager";
 import { fDate } from "logic/utils/formatTime";
 import { toast } from "react-toastify";
+import signalRService from "logic/utils/signalRService";
 
 const TrainingPlanCertifyPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -38,13 +40,36 @@ const TrainingPlanCertifyPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    signalRService.on(signalRMessage.TRAINING_PLAN.CREATE, (message) => {
+      fetchTrainingPlans();
+    });
+    signalRService.on(signalRMessage.TRAINING_PLAN.UPDATE, (message) => {
+      fetchTrainingPlans();
+    });
+    signalRService.on(signalRMessage.TRAINING_PLAN.DELETE, (message) => {
+      fetchTrainingPlans();
+    });
+    signalRService.on(signalRMessage.TRAINING_PLAN.PROCESS, (message) => {
+      fetchTrainingPlans();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.TRAINING_PLAN.CREATE);
+      signalRService.off(signalRMessage.TRAINING_PLAN.UPDATE);
+      signalRService.off(signalRMessage.TRAINING_PLAN.DELETE);
+      signalRService.off(signalRMessage.TRAINING_PLAN.PROCESS);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
 
   async function fetchTrainingPlans() {
@@ -63,7 +88,7 @@ const TrainingPlanCertifyPage = () => {
       setTotalItem(response.data.totalItem);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
-      console.log("fetchTrainingPlans ~ error", error);
+      toast.error(error?.response?.data);
       setIsLoading(false); // Set loading to false after fetching data
     }
   }
@@ -83,7 +108,7 @@ const TrainingPlanCertifyPage = () => {
       setIsTrainingPlanCertifyModalOpen(false);
       fetchTrainingPlans();
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -96,20 +121,20 @@ const TrainingPlanCertifyPage = () => {
       setIsTrainingPlanCertifyModalOpen(false);
       fetchTrainingPlans();
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
   return (
     <MainCard title="Phê duyệt kế hoạch đào tạo">
-      <ModalTrainingPlanCertifyManager
-        isOpen={isTraingingPlanCertifyModalOpen}
-        onRequestClose={() => setIsTrainingPlanCertifyModalOpen(false)}
-        selectedTrainingPlan={selectedItem}
-        handleApprove={handleApprovePlan}
-        handleDeny={handleRejectPlan}
-      ></ModalTrainingPlanCertifyManager>
-
+      {isTraingingPlanCertifyModalOpen ?
+        <ModalTrainingPlanCertifyManager
+          onRequestClose={() => setIsTrainingPlanCertifyModalOpen(false)}
+          selectedTrainingPlan={selectedItem}
+          handleApprove={handleApprovePlan}
+          handleDeny={handleRejectPlan}
+        ></ModalTrainingPlanCertifyManager>
+        : null}
       <SubCard>
         <TableContainer sx={{ width: 1, mb: -2, borderRadius: 4 }}>
           <Table stickyHeader>

@@ -100,7 +100,7 @@ const PositionListPage = () => {
       setIsLoading(false);
       // setPage(response.data.pageIndex);
     } catch (error) {
-      console.log("fetchPosition ~ error", error);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -182,7 +182,7 @@ const PositionListPage = () => {
       setIsModalDeleteOpen(false);
       toast.success(positionNoti.SUCCESS.DELETE);
     } catch (e) {
-      toast.error(e.response.data);
+      toast.error(e?.response?.data);
     }
   };
 
@@ -230,21 +230,24 @@ const PositionListPage = () => {
       }
     >
       {/* Modal and Popover */}
-      <ModalEditPositionAdmin
-        isOpen={isEditPositionModalOpen}
-        onRequestClose={() => setIsEditPositionModalOpen(false)}
-        positionIdClicked={positionModalId}
-        isSubmitLoading={isSubmitLoading}
-        handleUpdatePosition={handleUpdatePosition}
-        error={error}
-      ></ModalEditPositionAdmin>
-      <ModalAddPositionAdmin
-        isOpen={isAddPositionModalOpen}
-        onRequestClose={() => setIsAddPositionModalOpen(false)}
-        isSubmitLoading={isSubmitLoading}
-        handleAddNewPosition={handleAddNewPosition}
-        error={error}
-      ></ModalAddPositionAdmin>
+      {isEditPositionModalOpen ?
+        <ModalEditPositionAdmin
+          isOpen={isEditPositionModalOpen}
+          onRequestClose={() => setIsEditPositionModalOpen(false)}
+          positionIdClicked={positionModalId}
+          isSubmitLoading={isSubmitLoading}
+          handleUpdatePosition={handleUpdatePosition}
+          error={error}
+        ></ModalEditPositionAdmin>
+        : null}
+      {isAddPositionModalOpen ?
+        <ModalAddPositionAdmin
+          onRequestClose={() => setIsAddPositionModalOpen(false)}
+          isSubmitLoading={isSubmitLoading}
+          handleAddNewPosition={handleAddNewPosition}
+          error={error}
+        ></ModalAddPositionAdmin>
+        : null}
       <Modal open={isModalDeleteOpen} onClose={handleCloseDeleteModal}>
         <Box
           sx={{

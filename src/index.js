@@ -18,6 +18,10 @@ import LayoutTrainee from "views/layout/LayoutTrainee";
 import LayoutTrainer from "views/layout/LayoutTrainer";
 import { permissions } from "logic/constants/permissions";
 
+// Persist reducer
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
+
 const SignInPage = lazy(() => import("views/pages/SignInPage"));
 const UnauthorizePage = lazy(() => import("views/pages/UnauthorizePage"));
 const ResetPasswordPage = lazy(() => import("views/pages/ResetPasswordPage"));
@@ -69,17 +73,11 @@ const ManagerDashboardPage = lazy(() =>
 const ManagerReportListPage = lazy(() =>
   import("views/pages/Manager/ManagerReportListPage")
 );
-const ManagerRoleTraineeDetailPage = lazy(() =>
-  import("views/pages/Manager/TraineeDetailPage")
-);
 const TraineeListPage = lazy(() =>
   import("views/pages/Manager/TraineeListPage")
 );
 const TrainerAssignmentPage = lazy(() =>
   import("views/pages/Manager/TrainerAssignmentPage")
-);
-const TrainerDetailPage = lazy(() =>
-  import("views/pages/Manager/TrainerDetailPage")
 );
 const TrainerListPage = lazy(() =>
   import("views/pages/Manager/TrainerListPage")
@@ -125,9 +123,6 @@ const CreateNewTrainingPlanPage = lazy(() =>
 const OJTEvaluationPage = lazy(() =>
   import("views/pages/Trainer/OJTEvaluationPage")
 );
-const OJTStatisticsPage = lazy(() =>
-  import("views/pages/Trainer/OJTStatisticsPage")
-);
 const TrainerDashboardPage = lazy(() =>
   import("views/pages/Trainer/TrainerDashboardPage")
 );
@@ -165,9 +160,6 @@ const TraineeCourseListPage = lazy(() =>
 );
 const TraineeDashboardPage = lazy(() =>
   import("views/pages/Trainee/TraineeDashboardPage")
-);
-const TraineePersonalStatisticsPage = lazy(() =>
-  import("views/pages/Trainee/TraineePersonalStatisticsPage")
 );
 const TraineeProfilePage = lazy(() =>
   import("views/pages/Trainee/TraineeProfilePage")
@@ -290,22 +282,12 @@ const router = createBrowserRouter([
             element: <DefineNewReportPage></DefineNewReportPage>,
           },
           {
-            path: "/trainee-list/:traineeId",
-            element: (
-              <ManagerRoleTraineeDetailPage></ManagerRoleTraineeDetailPage>
-            ),
-          },
-          {
             path: "/trainee-list",
             element: <TraineeListPage></TraineeListPage>,
           },
           {
             path: "/trainer-assignment",
             element: <TrainerAssignmentPage></TrainerAssignmentPage>,
-          },
-          {
-            path: "/trainer-list/:trainerId",
-            element: <TrainerDetailPage></TrainerDetailPage>,
           },
           {
             path: "/trainer-list",
@@ -382,10 +364,6 @@ const router = createBrowserRouter([
             element: <OJTEvaluationPage></OJTEvaluationPage>,
           },
           {
-            path: "/ojt-statistics",
-            element: <OJTStatisticsPage></OJTStatisticsPage>,
-          },
-          {
             path: "/trainer-profile",
             element: <TrainerProfilePage></TrainerProfilePage>,
           },
@@ -442,12 +420,6 @@ const router = createBrowserRouter([
             element: <TraineeCourseListPage></TraineeCourseListPage>,
           },
           {
-            path: "/trainee-personal-statistics",
-            element: (
-              <TraineePersonalStatisticsPage></TraineePersonalStatisticsPage>
-            ),
-          },
-          {
             path: "/trainee-profile",
             element: <TraineeProfilePage></TraineeProfilePage>,
           },
@@ -471,7 +443,11 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <UnauthorizePage></UnauthorizePage>,
+    element: <SignInPage></SignInPage>,
+  },
+  {
+    path: "/",
+    element: <SignInPage></SignInPage>,
   },
   {
     path: "/unauthorize",
@@ -483,12 +459,16 @@ const router = createBrowserRouter([
   },
 ]);
 
+let persistor = persistStore(store);
+
 createRoot(container).render(
   <Provider store={store}>
     <Suspense fallback={<p></p>}>
-      <App>
-        <RouterProvider router={router}></RouterProvider>
-      </App>
+      <PersistGate persistor={persistor}>
+        <App>
+          <RouterProvider router={router}></RouterProvider>
+        </App>
+      </PersistGate>
     </Suspense>
     <ToastContainer bodyClassName="font-primary text-sm"></ToastContainer>
   </Provider>

@@ -8,9 +8,9 @@ import FormRow from "../common/FormRow";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { formulaPath } from "logic/api/apiUrl";
 import { isCriteriaOptions, notCriteriaOptions } from "logic/constants/global";
+import { toast } from "react-toastify";
 
 const ModalAddTemplateHeader = ({
-  isOpen,
   onRequestClose,
   handleAddNewTemplateHeader,
   isLoading,
@@ -47,7 +47,7 @@ const ModalAddTemplateHeader = ({
   }, [formula]);
 
   useEffect(() => {
-    const nothing = [{ value: "", label: "Không" }];
+    const nothing = [{ value: null, label: "Không" }];
     const notCriteria = notCriteriaOptions.slice();
     notCriteria.unshift(...nothing);
     setNotCriteriaList(notCriteria);
@@ -77,14 +77,13 @@ const ModalAddTemplateHeader = ({
         2
       );
       setFormulaList(response.data.data);
-      console.log("fetchFormula ~ success", response);
     } catch (error) {
-      console.log("fetchFormula ~ error", error);
+      toast.error(error?.response?.data);
     }
   };
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",
@@ -128,8 +127,8 @@ const ModalAddTemplateHeader = ({
                 <FormGroup>
                   <Label>Tên cột(*)</Label>
                   <TextField
-                    error={error?.name ? true : false}
-                    helperText={error?.name}
+                    error={error?.headerName ? true : false}
+                    helperText={error?.headerName}
                     name="name"
                     placeholder="Ex: MSSV"
                     onChange={(e) => setName(e.target.value)}

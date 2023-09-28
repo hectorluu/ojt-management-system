@@ -1,7 +1,7 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
 import { certificatePath } from "logic/api/apiUrl";
-import { defaultPageSize, defaultPageIndex } from "logic/constants/global";
+import { defaultPageSize, defaultPageIndex, signalRMessage } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import MainCard from "views/components/cards/MainCard";
 import { Box, Button, Modal } from "@mui/material";
@@ -12,6 +12,7 @@ import CertificateGrid from "views/modules/certificate/Certificategrid";
 import CertificateCardCertify from "views/modules/certificate/CertificateCardCertify";
 import CertificateSkeleton from "views/modules/certificate/CertificateCardSkeleton";
 import { certificateNoti } from "logic/constants/notification";
+import signalRService from "logic/utils/signalRService";
 
 const CertificateCertifyPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -20,7 +21,7 @@ const CertificateCertifyPage = () => {
   const axiosPrivate = useAxiosPrivate();
   const [isApprove, setIsApprove] = useState(false);
   const [selected, setSelected] = useState({}); // New selected state
-  const [taskList, setTaskList] = useState([]); // New task list state
+  const [certList, setCertList] = useState([]); // New task list state
 
   const [isLoading, setIsLoading] = useState(true); // New loading state
 
@@ -28,6 +29,25 @@ const CertificateCertifyPage = () => {
     fetchPendingCertificate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowsPerPage, page]);
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.CERTIFICATE.PROCESS_CERTIFICATE, (message) => {
+      fetchPendingCertificate();
+    });
+    signalRService.on(signalRMessage.CERTIFICATE.UPDATE_PROCESS, (message) => {
+      fetchPendingCertificate();
+    });
+    signalRService.on(signalRMessage.COURSE.ASSIGNED, (message) => {
+      fetchPendingCertificate();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.CERTIFICATE.PROCESS_CERTIFICATE);
+      signalRService.off(signalRMessage.CERTIFICATE.UPDATE_PROCESS);
+      signalRService.off(signalRMessage.COURSE.ASSIGNED);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -48,12 +68,11 @@ const CertificateCertifyPage = () => {
         "&PageSize=" +
         rowsPerPage
       );
-      setTaskList(response.data.data);
+      setCertList(response.data.data);
       setTotalItem(response.data.totalItem);
-      console.log(response.data);
       setIsLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -71,8 +90,6 @@ const CertificateCertifyPage = () => {
     setIsModalOpen(true);
   };
   const handleCertify = async (item) => {
-    console.log(item);
-    console.log(isApprove);
     try {
       if (isApprove) {
         await axiosPrivate.put(certificatePath.VALID_CERTIFICATE, {
@@ -90,7 +107,7 @@ const CertificateCertifyPage = () => {
       fetchPendingCertificate();
       setIsModalOpen(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
   const theme = useTheme();
@@ -198,8 +215,8 @@ const CertificateCertifyPage = () => {
               <CertificateSkeleton />
               <CertificateSkeleton />
             </>
-          ) : taskList.length !== 0 ? (
-            taskList.map((item, index) => (
+          ) : certList.length !== 0 ? (
+            certList.map((item, index) => (
               <CertificateCardCertify
                 certificate={item}
                 key={index}

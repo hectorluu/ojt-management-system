@@ -39,6 +39,7 @@ import {
   notiOptionsVaue,
   signalRMessage,
 } from "logic/constants/global";
+import { toast } from "react-toastify";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -137,14 +138,13 @@ export default function NotificationSection() {
     try {
       setIsLoading(true);
       const res = await axiosPrivate.get(
-        `${notificationPath.GET_NOTIFICATION_LIST}${
-          value !== notiOptionsVaue.ALL ? "?statusRead=" + value : ""
+        `${notificationPath.GET_NOTIFICATION_LIST}${value !== notiOptionsVaue.ALL ? "?statusRead=" + value : ""
         }`
       );
       setNotiList(res.data);
       setIsLoading(false);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -154,7 +154,7 @@ export default function NotificationSection() {
       await axiosPrivate.put(notificationPath.MARK_ALL_AS_READ);
       fetchNotifications();
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -165,7 +165,7 @@ export default function NotificationSection() {
         fetchNotifications();
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -182,14 +182,11 @@ export default function NotificationSection() {
       >
         <ButtonBase sx={{ borderRadius: "12px" }}>
           <StyledBadge
-            color={
-              notiList.filter((item) => !item.isRead).length > 0
-                ? "error"
-                : "success"
-            }
+            color="error"
             overlap="circular"
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
             variant="dot"
+            invisible={notiList.filter((item) => !item.isRead).length === 0}
           >
             <Avatar
               variant="rounded"

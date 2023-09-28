@@ -42,7 +42,7 @@ const iconsPages = {
   AnalyticsIcon,
   SendIcon,
   AssignmentTurnedInIcon,
-  DvrIcon
+  DvrIcon,
 };
 
 const pages = {
@@ -52,7 +52,7 @@ const pages = {
   children: [
     {
       id: "icons",
-      title: "Đào tạo viên",
+      title: "Thực tập sinh",
       type: "collapse",
       icon: iconsPages.FaceIcon,
       children: [
@@ -112,14 +112,6 @@ const pages = {
       type: "item",
       url: "/ojt-evaluation",
       icon: iconsPages.GradingIcon,
-      breadcrumbs: false,
-    },
-    {
-      id: "ojt-statistics",
-      title: "Thống kê",
-      type: "item",
-      url: "/ojt-statistics",
-      icon: iconsPages.AnalyticsIcon,
       breadcrumbs: false,
     },
   ],

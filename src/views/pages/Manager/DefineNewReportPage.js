@@ -7,13 +7,13 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { formulaPath, templatePath, universityPath } from "logic/api/apiUrl";
 import ExcelUpload from "views/modules/file/ExcelUpload";
 import { useForm } from "react-hook-form";
-import { isCriteriaOptions, notCriteriaOptions } from "logic/constants/global";
+import { isCriteriaOptions, notCriteriaOptions, signalRMessage } from "logic/constants/global";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "logic/config/firebase/firebase";
 import { toast } from "react-toastify";
 import { Button } from "views/components/button";
 import Gap from "views/components/common/Gap";
-import { templateNoti } from "logic/constants/notification";
+import { generalNoti, templateNoti } from "logic/constants/notification";
 import { useNavigate } from "react-router-dom";
 import Luckysheet from "views/components/Luckysheet/Luckysheet";
 import { reportValid } from "logic/utils/validateUtils";
@@ -21,8 +21,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { Autocomplete, Stack, TextField } from "@mui/material";
-
-
+import signalRService from "logic/utils/signalRService";
 
 function DefineNewReportPage() {
   const axiosPrivate = useAxiosPrivate();
@@ -55,11 +54,26 @@ function DefineNewReportPage() {
       );
     }
   };
+  useEffect(() => {
+    signalRService.on(signalRMessage.UNIVERSITY.CREATED, (message) => {
+      fetchUniversities();
+    });
+    signalRService.on(signalRMessage.UNIVERSITY.DELETED, (message) => {
+      fetchUniversities();
+    });
+    signalRService.on(signalRMessage.UNIVERSITY.UPDATED, (message) => {
+      fetchUniversities();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.UNIVERSITY.CREATED);
+      signalRService.off(signalRMessage.UNIVERSITY.DELETED);
+      signalRService.off(signalRMessage.UNIVERSITY.UPDATED);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    // const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2FFile%20danh%20gia%20danh%20sach%20sv%20BKU.xlsx?alt=media&token=d2a90118-f684-4f4b-ba12-ba79c9f11067";
-    // ExcelUtility.loadFromUrl(url).then((w) => {
-    // });
     fetchUniversities();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -72,13 +86,7 @@ function DefineNewReportPage() {
   }, [url]);
 
   useEffect(() => {
-
-    console.log(templateHeaders);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [templateHeaders]);
-
-  useEffect(() => {
-    const nothing = [{ value: "", label: "Không" }];
+    const nothing = [{ value: null, label: "Không" }];
     const notCriteria = notCriteriaOptions.slice();
     notCriteria.unshift(...nothing);
     setNotCriteriaList(notCriteria);
@@ -98,9 +106,8 @@ function DefineNewReportPage() {
         2
       );
       setFormulaList(response.data.data);
-      console.log("fetchFormula ~ success", response);
     } catch (error) {
-      console.log("fetchFormula ~ error", error);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -116,9 +123,8 @@ function DefineNewReportPage() {
         2
       );
       setUniversityList(response.data.data);
-      console.log("fetchUniversities ~ success", response);
     } catch (error) {
-      console.log("fetchUniversities ~ error", error);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -150,7 +156,7 @@ function DefineNewReportPage() {
       } catch (e) {
         setIsLoading(false);
         setUrl("");
-        toast.error(e);
+        toast.error(generalNoti.ERROR.UPLOAD_FAIL);
       }
     } else {
       setIsLoading(false);
@@ -175,7 +181,7 @@ function DefineNewReportPage() {
     } catch (error) {
       setIsLoading(false);
       setUrl("");
-      toast.error(error);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -187,6 +193,9 @@ function DefineNewReportPage() {
     }
     if (newArray[index].isCriteria === false) {
       newArray[index].formulaId = undefined;
+    }
+    if (newArray[index].isCriteria === true) {
+      newArray[index].matchedAttribute = "Point";
     }
     newArray[index].totalPoint = "";
     setTemplateHeaders(newArray);

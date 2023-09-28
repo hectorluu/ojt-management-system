@@ -40,6 +40,7 @@ export const ojtBatchPath = {
   GET_BATCH_EXPORT_STATUS: "/ojtbatch/export-status-batches",
   GET_BATCH_DETAIL: "/ojtbatch/",
   UPDATE_BATCH: "/ojtbatch/",
+  GET_ACTIVE_BATCH: "/ojtbatch/ongoing-batches",
 };
 
 export const universityPath = {
@@ -59,6 +60,7 @@ export const trainingPlanPath = {
   APPROVE_PLAN: "/training-plan/verification-accept/",
   DENY_PLAN: "/training-plan/verification-deny/",
   GET_PERSONAL_TRAINING_PLAN: "/training-plan/personal-trainee",
+  GET_UNASSIGNED_TRAINEE_LIST:"/training-plan/unassigned-trainee"
 };
 
 export const userPath = {
@@ -77,6 +79,8 @@ export const userPath = {
   GET_UNASSIGNED_TRAINEE: "/user/unassigned-trainee",
   ASSIGN_TRAINEES_TO_TRAINER: "/user/trainer/assign-trainees",
   GET_TRAINER_TRAINEE: "/user/trainer/trainee",
+  DISABLE_USER: "/user/disable-user/",
+  ACTIVE_USER: "/user/active-user/",
 };
 
 export const attendancePath = {
@@ -94,11 +98,8 @@ export const skillPath = {
   ACTIVE_SKILL: "/skill/active-skill/",
 };
 
-export const taskPath = {
-  GET_TASK_LIST: "trainee-tasks",
-};
-
 export const traineeTaskPath = {
+  GET__TRELLO_TASK_LIST: "/trainee-tasks",
   GET_TASK_LIST: "/task-process",
   GET_TASK: "/task-process/",
   GET_TASK_OF_TRAINEE: "/task-process/trainee/",
@@ -123,7 +124,9 @@ export const templatePath = {
   DELETE_TEMPLATE: "/template/disable-template/",
   ACTIVE_TEMPLATE: "/template/active-template/",
   ADD_TEMPLATE_HEADER: "/template/template-header/",
-  DELETE_TEMPLATE_HEADER: "/template/template-header/",
+  UPDATE_TEMPLATE_HEADER: "/template/template-header/",
+  DISABLE_HEADER: "/template/template-header/disable-template/",
+  ACTIVE_HEADER: "/template/template-header/active-template/",
 };
 
 export const formulaPath = {
@@ -178,6 +181,7 @@ export const trainerTaskPath = {
   APPROVE_TASK: "/task-process/task-accept/",
   REJECT_TASK: "/task-process/task-reject/",
   GET_TRAINEE_LIST_TASK: "/task-process/trainee/",
+  GET_ACCOMPLISHED_TASK_LIST:"/task-process",
 };
 
 export const chartPath = {
@@ -186,6 +190,7 @@ export const chartPath = {
   GET_TRAINEE_WITH_POSITION: "/chart/trainee-position",
   GET_TRAINEE_WITH_TOP_SKILL: "/chart/trainee-top-skill",
   GET_TRAINEE_WITH_TOP_TASKDONE: "/chart/trainee-top-done-task",
+  GET_TRAINEE_WITH_TOP_SKILL_TRAINEE_DETAIL: "/chart/trainee-top-skill/",
 };
 
 export const signalRURL = process.env.REACT_APP_SIGNALR_KEY;

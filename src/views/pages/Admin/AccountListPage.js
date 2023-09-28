@@ -47,6 +47,8 @@ import SubCard from "views/components/cards/SubCard";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AccountListSkeleton from "views/modules/account/AccountListSkeleton";
+import { toast } from "react-toastify";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 
 const AccountListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -77,7 +79,7 @@ const AccountListPage = () => {
       setTotalItem(response.data.totalItem);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
-      console.log("fetchUsers ~ error", error);
+      toast.error(error?.response?.data);
       setIsLoading(false); // Set loading to false after fetching data
     }
   };
@@ -144,6 +146,35 @@ const AccountListPage = () => {
 
   const theme = useTheme();
   const navigate = useNavigate();
+
+  const handleDeactiveUser = async () => {
+    setOpen(null);
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.put(userPath.DISABLE_USER + userSelected.id);
+      fetchUsers();
+      setIsModalDeleteOpen(false);
+      toast.success(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(error?.response?.data);
+      setIsLoading(false);
+    }
+  };
+
+  const handleActiveUser = async () => {
+    setOpen(null);
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.put(userPath.ACTIVE_USER + userSelected.id);
+      fetchUsers();
+      toast.success(response.data);
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(error?.response?.data);
+      setIsLoading(false);
+    }
+  };
 
   return (
     <MainCard
@@ -243,7 +274,7 @@ const AccountListPage = () => {
               component="label"
               className="flex items-center justify-center cursor-pointer w-1/2 h-11 text-text1 rounded-md"
               onClick={() => {
-                // Handle the second button click
+                handleDeactiveUser();
               }}
             >
               <span className="text-white">Xác nhận</span>
@@ -274,11 +305,17 @@ const AccountListPage = () => {
           <ModeEditOutlineIcon sx={{ mr: 2 }} />
           Sửa
         </MenuItem>
-
-        <MenuItem onClick={() => handleOpenDeleteModal(userSelected)}>
-          <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
-          <span style={{ color: theme.palette.error.main }}>Xóa</span>
-        </MenuItem>
+        {userSelected?.status === 2 ? (
+          <MenuItem onClick={() => handleOpenDeleteModal(userSelected)}>
+            <DeleteIcon sx={{ mr: 2, color: theme.palette.error.main }} />
+            <span style={{ color: theme.palette.error.main }}>Vô hiệu</span>
+          </MenuItem>
+        ) : (
+          <MenuItem onClick={() => handleActiveUser()}>
+            <ToggleOnIcon sx={{ mr: 2, color: theme.palette.success.main }} />
+            Kích hoạt
+          </MenuItem>
+        )}
       </Popover>
 
       <SubCard>
@@ -369,15 +406,15 @@ const AccountListPage = () => {
                     <TableCell align="center">
                       {
                         roleOptions.find((label) => label.value === item.role)
-                          .label
+                          ?.label
                       }
                     </TableCell>
                     <TableCell align="center">
-                      <Chip color={item.status === 1 ? "error" : "success"}>
+                      <Chip color={item.status === 3 ? "error" : "success"}>
                         {
                           accountStatus.find(
                             (label) => label.value === item.status
-                          ).label
+                          )?.label
                         }
                       </Chip>
                     </TableCell>

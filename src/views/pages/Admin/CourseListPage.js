@@ -29,6 +29,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import SubCard from "views/components/cards/SubCard";
+import { toast } from "react-toastify";
 
 const CourseListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -82,7 +83,7 @@ const CourseListPage = () => {
       setCourses(response.data.data);
       setTotalItem(response.data.totalItem);
     } catch (error) {
-      console.log("fetchCourses ~ error", error);
+      toast.error(error?.response?.data);
     } finally {
       setIsLoading(false); // Set loading to false after fetching data
     }
@@ -101,7 +102,7 @@ const CourseListPage = () => {
       );
       setSkillList(response.data.data);
     } catch (error) {
-      console.log("fetchSkills ~ error", error);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -118,7 +119,7 @@ const CourseListPage = () => {
       );
       setPositionList(response.data.data);
     } catch (error) {
-      console.log("fetchSkills ~ error", error);
+      toast.error(error?.response?.data);
     }
   };
 

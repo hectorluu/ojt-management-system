@@ -56,9 +56,9 @@ export const accountNoti = {
 
 export const courseNoti = {
   SUCCESS: {
-    CREATE: "Tạo khoá học thành công !!!",
-    UPDATE: "Cập nhật khoá học thành công !!!",
-    ASSIGN: "Giao khoá học thành công !!!",
+    CREATE: "Tạo khoá học thành công !",
+    UPDATE: "Cập nhật khoá học thành công !",
+    ASSIGN: "Giao khoá học thành công !",
   },
 
   ERROR: {
@@ -93,6 +93,7 @@ export const templateNoti = {
     CREATE: "Thành công tạo mẫu đánh giá !",
     DELETE: "Thành công vô hiệu mẫu đánh giá !",
     ACTIVE: "Thành công kích hoạt mẫu đánh giá !",
+    UPDATE: "Thành công cập nhật mẫu đánh giá !",
   },
 
   ERROR: {
@@ -275,6 +276,6 @@ export const taskNoti = {
 
 export const attendanceNoti = {
   SUCCESS: {
-    IMPORT: "Thành công nhập dữ liệu điểm danh !!!",
-  }
+    IMPORT: "Thành công nhập dữ liệu điểm danh !",
+  },
 };

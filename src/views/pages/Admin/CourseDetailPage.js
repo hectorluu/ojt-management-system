@@ -77,7 +77,7 @@ const CourseDetailPage = () => {
       setCourseSkills(response.data.courseSkills);
       setIsFetchingLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   };
@@ -160,7 +160,7 @@ const CourseDetailPage = () => {
       setIsSubmitLoading(false);
       navigate("/course-list");
     } catch (e) {
-      toast.error(e.response.data);
+      toast.error(e?.response?.data);
       setIsSubmitLoading(false);
     }
   };
@@ -186,7 +186,7 @@ const CourseDetailPage = () => {
       fetchCourseDetail();
       setIsFetchingLoading(false);
     } catch (e) {
-      toast.error(e.response.data);
+      toast.error(e?.response?.data);
       setIsFetchingLoading(false);
     }
   }
@@ -206,7 +206,7 @@ const CourseDetailPage = () => {
       fetchCourseDetail();
       setIsFetchingLoading(false);
     } catch (e) {
-      toast.error(e.response.data);
+      toast.error(e?.response?.data);
       setIsFetchingLoading(false);
     }
   };
@@ -227,7 +227,7 @@ const CourseDetailPage = () => {
         setIsSubmitLoading(false);
         setIsModalOpenPosition(false);
       } catch (e) {
-        toast.error(e.response.data);
+        toast.error(e?.response?.data);
         setIsSubmitLoading(false);
         setIsModalOpenPosition(false);
       }
@@ -252,7 +252,7 @@ const CourseDetailPage = () => {
         setIsSubmitLoading(false);
         setIsModalOpenSkill(false);
       } catch (e) {
-        toast.error(e.response.data);
+        toast.error(e?.response?.data);
         setIsSubmitLoading(false);
         setIsModalOpenSkill(false);
       }
@@ -264,20 +264,22 @@ const CourseDetailPage = () => {
     <MainCard
       title="Thông tin khoá học"
     >
-      <ModalAddCoursePosition
-        isOpen={isModalOpenPosition}
-        onRequestClose={() => setIsModalOpenPosition(false)}
-        handleAddNewCoursePosition={handleAddNewCoursePosition}
-        isSubmitLoading={isSubmitLoading}
-        error={error}
-      ></ModalAddCoursePosition>
-      <ModalAddCourseSkill
-        isOpen={isModalOpenSkill}
-        onRequestClose={() => setIsModalOpenSkill(false)}
-        handleAddNewCourseSkill={handleAddNewCourseSkill}
-        isSubmitLoading={isSubmitLoading}
-        error={error}
-      ></ModalAddCourseSkill>
+      {isModalOpenPosition ?
+        <ModalAddCoursePosition
+          onRequestClose={() => setIsModalOpenPosition(false)}
+          handleAddNewCoursePosition={handleAddNewCoursePosition}
+          isSubmitLoading={isSubmitLoading}
+          error={error}
+        ></ModalAddCoursePosition>
+        : null}
+      {isModalOpenSkill ?
+        <ModalAddCourseSkill
+          onRequestClose={() => setIsModalOpenSkill(false)}
+          handleAddNewCourseSkill={handleAddNewCourseSkill}
+          isSubmitLoading={isSubmitLoading}
+          error={error}
+        ></ModalAddCourseSkill>
+        : null}
       {isFetchingLoading ? (
         <ProfileSkeleton />
       ) : (

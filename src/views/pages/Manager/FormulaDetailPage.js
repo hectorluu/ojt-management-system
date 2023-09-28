@@ -10,12 +10,12 @@ import {
   TextField,
   Skeleton,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import FormGroup from "views/components/common/FormGroup";
-import { Label } from "views/components/label";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { formulaPath } from "logic/api/apiUrl";
 import { formulaNoti } from "logic/constants/notification";
@@ -137,7 +137,7 @@ const FormulaDetailPage = () => {
       );
       setKeyList(response.data);
     } catch (error) {
-      console.log("fetchKeys ~ error", error);
+      toast.error(error?.response?.data);
     } finally {
       setIsLoading(false); // Set loading to false after fetching data
     }
@@ -189,7 +189,7 @@ const FormulaDetailPage = () => {
         navigate("/list-formula");
       } catch (error) {
         setIsLoadingSubmit(false);
-        toast.error(error);
+        toast.error(error?.response?.data);
       }
     }
     setIsLoadingSubmit(false);
@@ -280,10 +280,17 @@ const FormulaDetailPage = () => {
               ) : keyList.length !== 0 ? (
                 keyList?.map((key) => (
                   <ListItem key={key.key}>
-                    <Chip
-                      label={key.name}
-                      onClick={() => handleChipClick(key)}
-                    />
+                    <Tooltip
+                      title={key.description}
+                      placement="top"
+                      className="w-fit"
+                      sx={{ mb: 0.5 }}
+                    >
+                      <Chip
+                        label={key.name}
+                        onClick={() => handleChipClick(key)}
+                      />
+                    </Tooltip>
                   </ListItem>
                 ))
               ) : (

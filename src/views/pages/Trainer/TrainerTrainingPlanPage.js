@@ -1,6 +1,7 @@
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import React, { useEffect, useState } from "react";
 import {
+  Autocomplete,
   Button,
   Card,
   InputAdornment,
@@ -13,6 +14,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   useTheme,
 } from "@mui/material";
 import {
@@ -20,6 +22,7 @@ import {
   defaultPageIndex,
   trainingPlanStatus,
   trainingPlanStatusOptions,
+  signalRMessage,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 
@@ -34,6 +37,8 @@ import { Link } from "react-router-dom";
 import ModalTrainingPlanDetailTrainer from "views/components/modal/ModalTrainingPlanDetailTrainer";
 import { fDate } from "logic/utils/formatTime";
 import Chip from "views/components/chip/Chip";
+import { toast } from "react-toastify";
+import signalRService from "logic/utils/signalRService";
 
 const TrainerTrainingPlanPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -43,32 +48,45 @@ const TrainerTrainingPlanPage = () => {
   const [trainingplans, setTrainingplans] = useState([]);
   const [searchTerm, setSearchTerm] = useOnChange(500);
   const [isLoading, setIsLoading] = useState(true); // New loading state
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
-    async function fetchTrainingPlans() {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.get(
-          trainingPlanPath.GET_TRAINING_PLAN_OF_TRAINER +
-            "?PageIndex=" +
-            page +
-            "&PageSize=" +
-            rowsPerPage +
-            "&nameSearch=" +
-            `${searchTerm === null ? "" : searchTerm}`
-        );
-        setTrainingplans(response.data.data);
-        setTotalItem(response.data.totalItem);
-        setIsLoading(false); // Set loading to false after fetching data
-      } catch (error) {
-        console.log("fetchTrainingPlans ~ error", error);
-        setIsLoading(false); // Set loading to false after fetching data
-      }
-    }
     fetchTrainingPlans();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, [searchTerm, page, rowsPerPage, status]);
+
+  async function fetchTrainingPlans() {
+    try {
+      setIsLoading(true);
+      const response = await axiosPrivate.get(
+        trainingPlanPath.GET_TRAINING_PLAN_OF_TRAINER +
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&nameSearch=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&status=" +
+        status
+      );
+      setTrainingplans(response.data.data);
+      setTotalItem(response.data.totalItem);
+      setIsLoading(false); // Set loading to false after fetching data
+    } catch (error) {
+      toast.error(error?.response?.data);
+      setIsLoading(false); // Set loading to false after fetching data
+    }
+  }
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.TRAINING_PLAN.PROCESS, (message) => {
+      fetchTrainingPlans();
+    });
+    return () => {
+      signalRService.off(signalRMessage.USER.PROCESS);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
@@ -76,7 +94,7 @@ const TrainerTrainingPlanPage = () => {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
 
   const [isTraingingPlanDetailModalOpen, setIsTrainingPlanDetailModalOpen] =
@@ -105,12 +123,12 @@ const TrainerTrainingPlanPage = () => {
         </Button>
       }
     >
-      <ModalTrainingPlanDetailTrainer
-        isOpen={isTraingingPlanDetailModalOpen}
-        onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
-        selectedTrainingPlan={selectedItem}
-      ></ModalTrainingPlanDetailTrainer>
-
+      {isTraingingPlanDetailModalOpen ?
+        <ModalTrainingPlanDetailTrainer
+          onRequestClose={() => setIsTrainingPlanDetailModalOpen(false)}
+          selectedTrainingPlan={selectedItem}
+        ></ModalTrainingPlanDetailTrainer>
+        : null}
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           {/*Custom search bar*/}
@@ -130,6 +148,23 @@ const TrainerTrainingPlanPage = () => {
               onChange={setSearchTerm}
             />
           </Card>
+          <div className="flex flex-wrap items-start max-w-[200px] w-full">
+            <Autocomplete
+              disablePortal={false}
+              options={trainingPlanStatusOptions}
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Trạng thái" />
+              )}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setStatus(newValue.value);
+                } else {
+                  setStatus("");
+                }
+              }}
+            />
+          </div>
         </div>
         <TableContainer sx={{ width: 1, mt: 2, mb: -2, borderRadius: 4 }}>
           <Table stickyHeader>
@@ -206,8 +241,8 @@ const TrainerTrainingPlanPage = () => {
                           item?.status === trainingPlanStatus.PENDING
                             ? "warning"
                             : item?.status === trainingPlanStatus.ACTIVE
-                            ? "success"
-                            : "error"
+                              ? "success"
+                              : "error"
                         }
                       >
                         {

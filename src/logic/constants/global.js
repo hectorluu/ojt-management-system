@@ -17,7 +17,7 @@ export const defaultPageIndex = 1;
 
 export const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
-export const phoneRegex = /^[0-9]{10}$/;
+export const phoneRegex = /^\d{8,15}$/;
 
 //eslint-disable-next-line
 export const passwordRegex =
@@ -84,7 +84,7 @@ export const skillLevel = [
 ];
 
 export const accountStatus = [
-  { value: 1, label: "Đã khóa" },
+  { value: 3, label: "Đã khóa" },
   { value: 2, label: "Đang hoạt động" },
 ];
 
@@ -111,10 +111,9 @@ export const templateStatusOptions = [
 ];
 
 export const trainingPlanStatusOptions = [
-  { value: 2, label: "Đang được duyệt" },
+  { value: 2, label: "Đang chờ" },
   { value: 3, label: "Đang sử dụng" },
   { value: 4, label: "Bị từ chối" },
-  { value: 5, label: "Đã đóng" },
 ];
 
 export const reportStatusOptions = [
@@ -139,11 +138,16 @@ export const statusColor = {
 };
 
 export const certificateStatusColor = [
-  { value: 1, label: "Đã xóa", color: "bg-gray-500" },
   { value: 2, label: "Đang chờ", color: "bg-yellow-500" },
   { value: 3, label: "Chưa nộp", color: "bg-sky-500" },
   { value: 4, label: "Đã chấp thuận", color: "bg-green-500" },
   { value: 5, label: "Không chấp thuận", color: "bg-red-500" },
+];
+
+export const trelloTaskStatus = [
+  { value: 1, label: "Hoàn Thành", color: "bg-green-500" },
+  { value: 2, label: "Quá Hạn", color: "bg-yellow-500" },
+  { value: 3, label: "Đang Làm", color: "bg-blue-500" },
 ];
 
 export const skillStatus = {
@@ -189,6 +193,7 @@ export const notCriteriaOptions = [
   { value: "STT", label: "Số thứ tự" },
   { value: "LastName", label: "Họ" },
   { value: "FirstName", label: "Tên" },
+  { value: "FullName", label: "Họ và tên" },
   { value: "Email", label: "Email" },
   { value: "RollNumber", label: "Mã số nhân viên" },
   { value: "Gender", label: "Giới tính" },
@@ -241,6 +246,8 @@ export const notiStyle = {
   CERTIFICATE_TYPE: 1,
   TRAINING_PLAN_TYPE: 2,
   BATCH_TYPE: 3,
+  COURSE_TYPE: 4,
+  TASK_TYPE: 5,
 };
 
 export const signalRMessage = {
@@ -248,6 +255,7 @@ export const signalRMessage = {
     CREATED: "New Course Created",
     UPDATED: "New Course Updated",
     DELETED: "New Course Deleted",
+    ASSIGNED: "Trainer assigned Course to Trainee. Load get notification for Trainee.",
   },
   SKILL: {
     CREATED: "New Skill Created",
@@ -257,6 +265,7 @@ export const signalRMessage = {
   USER: {
     CREATE: "New User Created",
     UPDATE: "User Profile Updated",
+    ASSIGNED: "Trainees have been assigned to a Trainer",
   },
   TRAINING_PLAN: {
     CREATE: "New Training Plan Created",
@@ -319,7 +328,12 @@ export const traineeCourseOptions = [
 ];
 
 export const accomplishedTaskStatusOptions = [
-  { value: 1, label: "Đang chờ" },
-  { value: 2, label: "Đạt" },
-  { value: 3, label: "Không đạt" },
+  { value: 1, label: "Đang chờ", color: "bg-yellow-500" },
+  { value: 2, label: "Đạt", color: "bg-green-500" },
+  { value: 3, label: "Không đạt", color: "bg-blue-500" },
+];
+
+export const traineeWorkingStatus = [
+  { value: 1, label: "Đang bận" },
+  { value: 2, label: "Đang rảnh" }
 ];

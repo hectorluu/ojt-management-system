@@ -6,6 +6,7 @@ import {
   defaultPageSize,
   defaultPageIndex,
   accomplishedTaskStatusOptions,
+  signalRMessage,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import MainCard from "views/components/cards/MainCard";
@@ -23,6 +24,7 @@ import TaskCardDisplay from "views/modules/task/TaskCardDisplay";
 import TaskGrid from "views/modules/task/TaskGrid";
 import TaskCardSkeleton from "views/modules/task/TaskCardSkeleton";
 import { useTheme } from "@emotion/react";
+import signalRService from "logic/utils/signalRService";
 
 const TrainerTaskCertifyPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -44,6 +46,23 @@ const TrainerTaskCertifyPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [boardId, status, rowsPerPage, page]);
 
+  useEffect(() => {
+    signalRService.on(signalRMessage.TASK.UPDATE_FINISH, (message) => {
+      fetchAccomplishedTask();
+      fetchBoardList();
+    });
+    signalRService.on(signalRMessage.TASK.UPDATE_PROCESS, (message) => {
+      fetchAccomplishedTask();
+      fetchBoardList();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.TASK.UPDATE_FINISH);
+      signalRService.off(signalRMessage.TASK.UPDATE_PROCESS);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage + 1);
   };
@@ -62,18 +81,18 @@ const TrainerTaskCertifyPage = () => {
           "{boardId}",
           boardId
         ) +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&status=" +
-          status
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&status=" +
+        status
       );
       setTaskList(response.data.data);
       setTotalItem(response.data.totalItem);
       setIsLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -85,7 +104,7 @@ const TrainerTaskCertifyPage = () => {
       );
       setBoardList(response.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -105,20 +124,18 @@ const TrainerTaskCertifyPage = () => {
   const handleCertify = async (item) => {
     try {
       if (isApprove) {
-        const response = await axiosPrivate.put(
+        await axiosPrivate.put(
           trainerTaskPath.APPROVE_TASK + item.id
         );
-        console.log(response);
       } else {
-        const response = await axiosPrivate.put(
+        await axiosPrivate.put(
           trainerTaskPath.REJECT_TASK + item.id
         );
-        console.log(response);
       }
       fetchAccomplishedTask();
       setIsModalOpen(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
   const theme = useTheme();

@@ -9,7 +9,6 @@ import { trainerPath } from "logic/api/apiUrl";
 import { toast } from "react-toastify";
 
 const ModalAssignCourse = ({
-  isOpen,
   onRequestClose,
   handleAssign,
   isLoading,
@@ -34,10 +33,9 @@ const ModalAssignCourse = ({
           "&PageSize=" +
           1000000
         );
-
         setTraineeList(response.data.data);
       } catch (error) {
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
       }
     }
     fetchTraineeList();
@@ -45,7 +43,7 @@ const ModalAssignCourse = ({
   }, []);
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",
@@ -90,7 +88,7 @@ const ModalAssignCourse = ({
                 <Autocomplete
                   disablePortal={false}
                   options={traineeList}
-                  getOptionLabel={(option) => option.lastName + " " + option.firstName + " " + option.email}
+                  getOptionLabel={(option) => option.lastName + " " + option.firstName + " " + option.email + " " + option.positionName}
                   renderInput={(params) => (
                     <TextField
                       {...params}

@@ -5,21 +5,9 @@ import {
   requestAuthFetchMe,
   requestAuthLogin,
   requestAuthRefreshToken,
-  requestAuthRegister,
 } from "./auth-requests";
 import { authUpdateUser } from "./auth-slice";
 
-export default function* handleAuthRegister(action) {
-  const { payload } = action;
-  try {
-    const response = yield call(requestAuthRegister, payload);
-    if (response.status === 201) {
-      toast.success("Created new account successfully");
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
 function* handleAuthLogin({ payload }) {
   try {
     const response = yield call(requestAuthLogin, payload);
@@ -29,9 +17,9 @@ function* handleAuthLogin({ payload }) {
       yield call(handleAuthFetchMe, { payload: response.data.token });
     }
   } catch (error) {
-    const response = error.response;
+    const response = error?.response;
     if (response.status === 400) {
-      toast.error(response.data);
+      toast.error(response?.data);
       return;
     }
   }
@@ -41,7 +29,6 @@ function* handleAuthFetchMe({ payload }) {
   try {
     const response = yield call(requestAuthFetchMe, payload);
     if (response.status === 200) {
-      console.log(response);
       yield put(
         authUpdateUser({
           user: response.data,

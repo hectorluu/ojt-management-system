@@ -14,7 +14,7 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { trainingPlanPath, userPath } from "logic/api/apiUrl";
+import { trainingPlanPath } from "logic/api/apiUrl";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import SubCard from "views/components/cards/SubCard";
 import { LoadingButton } from "@mui/lab";
@@ -22,6 +22,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { assignNoti, trainingPlanNoti } from "logic/constants/notification";
 import { trainingPlanAssignValid } from "logic/utils/validateUtils";
 import { fDate } from "logic/utils/formatTime";
+import signalRService from "logic/utils/signalRService";
+import { signalRMessage } from "logic/constants/global";
 
 const AssignTrainingPlanPage = () => {
   const handleTrainingPlanAssignment = async () => {
@@ -40,11 +42,12 @@ const AssignTrainingPlanPage = () => {
         setSelectedId("");
         setSelectedPlan({});
         setTrainees([]);
+        fetchassignedTrainee();
         setIsLoading(false);
         toast.success(trainingPlanNoti.SUCCESS.ASSIGN);
       } catch (error) {
         setIsLoading(false);
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
       }
     }
     // values
@@ -61,10 +64,25 @@ const AssignTrainingPlanPage = () => {
   const [selectedPlan, setSelectedPlan] = useState({});
   const [isFetchingLoading, setIsFetchingLoading] = useState(false);
 
+  useEffect(() => {
+    signalRService.on(signalRMessage.USER.ASSIGNED, (message) => {
+      fetchassignedTrainee();
+    });
+    signalRService.on(signalRMessage.TRAINING_PLAN.PROCESS, (message) => {
+      fetchTrainingPlans();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.USER.ASSIGNED);
+      signalRService.off(signalRMessage.TRAINING_PLAN.PROCESS);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // fetch trainers
   useEffect(() => {
     fetchTrainingPlans();
-    fetchUnassignedTrainee();
+    fetchassignedTrainee();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -84,7 +102,7 @@ const AssignTrainingPlanPage = () => {
       setSelectedPlan(response.data);
       setIsFetchingLoading(false);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   }
@@ -93,27 +111,27 @@ const AssignTrainingPlanPage = () => {
     try {
       const response = await axiosPrivate.get(
         trainingPlanPath.GET_TRAINING_PLAN_OF_TRAINER +
-          "?PageIndex=" +
-          1 +
-          "&PageSize=" +
-          100000 +
-          "&status=" +
-          3
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        100000 +
+        "&status=" +
+        3
       );
       setTrainingPlanList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   }
 
-  const fetchUnassignedTrainee = async () => {
+  const fetchassignedTrainee = async () => {
     try {
       const response = await axiosPrivate.get(
-        userPath.GET_TRAINER_TRAINEE + "?PageIndex=" + 1 + "&PageSize=" + 100000
+        trainingPlanPath.GET_UNASSIGNED_TRAINEE_LIST
       );
-      setAssignedTraineeList(response.data.data);
+      setAssignedTraineeList(response.data);
     } catch (e) {
-      toast.error(e.response.data);
+      toast.error(e?.response?.data);
     }
   };
 
@@ -239,6 +257,8 @@ const AssignTrainingPlanPage = () => {
                 disablePortal={false}
                 id="combo-box-demo"
                 options={assignedTraineeList}
+                blurOnSelect={true}
+                clearOnBlur={true}
                 getOptionLabel={(option) =>
                   option.firstName + " " + option.lastName + " " + option.email
                 }

@@ -12,6 +12,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Autocomplete, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { ojtBatchValid } from "logic/utils/validateUtils";
+import signalRService from "logic/utils/signalRService";
+import { signalRMessage } from "logic/constants/global";
 
 const CreateNewOJTBatch = () => {
   const { universityId } = useParams();
@@ -41,9 +43,28 @@ const CreateNewOJTBatch = () => {
       const response = await axiosPrivate.get(templatePath.GET_TEMPLATE_UNIVERSITY + universityId);
       setTemplateList(response.data);
     } catch (error) {
-      console.log("fetchTemplateList ~ error", error);
+      toast.error(error?.response?.data);
     };
   };
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.TEMPLATE.CREATED, (message) => {
+      fetchTemplateList();
+    });
+    signalRService.on(signalRMessage.TEMPLATE.UPDATED, (message) => {
+      fetchTemplateList();
+    });
+    signalRService.on(signalRMessage.TEMPLATE.DELETED, (message) => {
+      fetchTemplateList();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.TEMPLATE.CREATED);
+      signalRService.off(signalRMessage.TEMPLATE.UPDATED);
+      signalRService.off(signalRMessage.TEMPLATE.DELETED);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleAddNewOJTBatch = async (values) => {
     setIsLoading(true);
@@ -68,8 +89,7 @@ const CreateNewOJTBatch = () => {
         setIsLoading(false);
         navigate(`/university/${universityId}`);
       } catch (error) {
-        console.log("error", error);
-        toast.error(error);
+        toast.error(error?.response?.data);
         setIsLoading(false);
       }
     };

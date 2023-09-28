@@ -98,7 +98,7 @@ const ListFormulaPage = () => {
       setIsLoading(false);
       // setPage(response.data.pageIndex);
     } catch (error) {
-      console.log("fetchSkill ~ error", error);
+      toast.error(error?.response?.data);
     }
   }
 
@@ -118,7 +118,7 @@ const ListFormulaPage = () => {
       fetchFormulas();
       toast.success(formulaNoti.SUCCESS.DELETE);
     } catch (e) {
-      toast.error(e.response.data);
+      toast.error(e?.response?.data);
     }
   };
 
@@ -129,7 +129,7 @@ const ListFormulaPage = () => {
       fetchFormulas();
       toast.success(formulaNoti.SUCCESS.ACTIVE);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 

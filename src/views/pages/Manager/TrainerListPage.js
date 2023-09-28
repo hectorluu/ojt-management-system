@@ -23,6 +23,7 @@ import {
   defaultPageIndex,
   defaultUserIcon,
   positionStatus,
+  signalRMessage,
 } from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import ModalTrainerDetailManager from "views/components/modal/ModalTrainerDetailManager";
@@ -31,6 +32,8 @@ import SubCard from "views/components/cards/SubCard";
 import StyledTableCell from "views/modules/table/StyledTableCell";
 import SearchIcon from "@mui/icons-material/Search";
 import useOnChange from "logic/hooks/useOnChange";
+import { toast } from "react-toastify";
+import signalRService from "logic/utils/signalRService";
 
 const TrainerListPage = () => {
   const [page, setPage] = React.useState(defaultPageIndex);
@@ -44,20 +47,35 @@ const TrainerListPage = () => {
   const [position, setPosition] = useState("");
   const [positionList, setPositionList] = useState([]);
 
+  useEffect(() => {
+    signalRService.on(signalRMessage.USER.CREATE, (message) => {
+      fetchUsers();
+    });
+    signalRService.on(signalRMessage.USER.UPDATE, (message) => {
+      fetchUsers();
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.USER.CREATE);
+      signalRService.off(signalRMessage.USER.UPDATE);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const fetchPositions = async () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-          "?PageIndex=" +
-          1 +
-          "&PageSize=" +
-          100000 +
-          "&filterStatus=" +
-          positionStatus.ACTIVE
+        "?PageIndex=" +
+        1 +
+        "&PageSize=" +
+        100000 +
+        "&filterStatus=" +
+        positionStatus.ACTIVE
       );
       setPositionList(response.data.data);
     } catch (error) {
-      console.log("fetchSkills ~ error", error);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -69,20 +87,20 @@ const TrainerListPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         userPath.GET_TRAINER_LIST +
-          "?PageIndex=" +
-          page +
-          "&PageSize=" +
-          rowsPerPage +
-          "&keyword=" +
-          `${searchTerm === null ? "" : searchTerm}` +
-          "&position=" +
-          `${position === null ? "" : position}`
+        "?PageIndex=" +
+        page +
+        "&PageSize=" +
+        rowsPerPage +
+        "&keyword=" +
+        `${searchTerm === null ? "" : searchTerm}` +
+        "&position=" +
+        `${position === null ? "" : position}`
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
       setIsLoading(false); // Set loading to false after fetching data
     } catch (error) {
-      console.log("fetchUsers ~ error", error);
+      toast.error(error?.response?.data);
       setIsLoading(false); // Set loading to false after fetching data
     }
   };
@@ -99,7 +117,7 @@ const TrainerListPage = () => {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
 
   const [selectedItem, setSelectedItem] = useState(null);
@@ -108,12 +126,12 @@ const TrainerListPage = () => {
 
   return (
     <MainCard title={`Đào tạo viên`}>
-      <ModalTrainerDetailManager
-        isOpen={isTrainerDetailModalOpen}
-        onRequestClose={() => setIsTrainerDetailModalOpen(false)}
-        selectedTrainer={selectedItem}
-      ></ModalTrainerDetailManager>
-
+      {isTrainerDetailModalOpen ?
+        <ModalTrainerDetailManager
+          onRequestClose={() => setIsTrainerDetailModalOpen(false)}
+          selectedTrainer={selectedItem}
+        ></ModalTrainerDetailManager>
+        : null}
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           {/*Custom search bar*/}

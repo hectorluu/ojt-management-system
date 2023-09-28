@@ -100,7 +100,7 @@ const SkillListPage = () => {
       setIsLoading(false);
       // setPage(response.data.pageIndex);
     } catch (error) {
-      console.log("fetchSkill ~ error", error);
+      toast.error(error?.response?.data);
     }
   }
 
@@ -180,7 +180,7 @@ const SkillListPage = () => {
       fetchSkills();
       toast.success(skillNoti.SUCCESS.DELETE);
     } catch (e) {
-      toast.error(e.response.data);
+      toast.error(e?.response?.data);
     }
   };
 
@@ -229,21 +229,25 @@ const SkillListPage = () => {
       }
     >
       {/* Modal and Popover */}
-      <ModalSkillDetailAdmin
-        isOpen={isSkillDetailModalOpen}
-        onRequestClose={() => setIsSkillDetailModalOpen(false)}
-        skillIdClicked={selected.id}
-        handleUpdateSkill={handleUpdateSkill}
-        isSubmitLoading={isSubmitLoading}
-        error={error}
-      ></ModalSkillDetailAdmin>
-      <ModalAddSkillAdmin
-        isOpen={isAddSkillModalOpen}
-        onRequestClose={() => setIsAddSkillModalOpen(false)}
-        isLoading={isSubmitLoading}
-        handleAddNewSkill={handleAddNewSkill}
-        error={error}
-      ></ModalAddSkillAdmin>
+      {isSkillDetailModalOpen ?
+        <ModalSkillDetailAdmin
+          isOpen={isSkillDetailModalOpen}
+          onRequestClose={() => setIsSkillDetailModalOpen(false)}
+          skillIdClicked={selected.id}
+          handleUpdateSkill={handleUpdateSkill}
+          isSubmitLoading={isSubmitLoading}
+          error={error}
+        ></ModalSkillDetailAdmin>
+        : null}
+      {isAddSkillModalOpen ?
+        <ModalAddSkillAdmin
+          isOpen={isAddSkillModalOpen}
+          onRequestClose={() => setIsAddSkillModalOpen(false)}
+          isLoading={isSubmitLoading}
+          handleAddNewSkill={handleAddNewSkill}
+          error={error}
+        ></ModalAddSkillAdmin>
+        : null}
       <Modal open={isModalDeleteOpen} onClose={handleCloseDeleteModal}>
         <Box
           sx={{

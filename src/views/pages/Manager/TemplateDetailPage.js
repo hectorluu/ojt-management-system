@@ -7,12 +7,12 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { formulaPath, templatePath } from "logic/api/apiUrl";
 import ExcelUpload from "views/modules/file/ExcelUpload";
 import { useForm } from "react-hook-form";
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "logic/config/firebase/firebase";
 import { toast } from "react-toastify";
 import { Button } from "views/components/button";
 import Gap from "views/components/common/Gap";
-import { templateNoti } from "logic/constants/notification";
+import { generalNoti, templateNoti } from "logic/constants/notification";
 import { useNavigate, useParams } from "react-router-dom";
 import Luckysheet from "views/components/Luckysheet/Luckysheet";
 import { reportValid, templateHeaderValid } from "logic/utils/validateUtils";
@@ -23,6 +23,7 @@ import { Chip, Grid, Skeleton, Stack, TextField, Tooltip } from "@mui/material";
 import SubCard from "views/components/cards/SubCard";
 import ModalAddTemplateHeader from "views/components/modal/ModalAddTemplateHeader";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import ModalEditTemplateHeader from "views/components/modal/ModalEditTemplateHeader";
 
 function TemplateDetailPage() {
   const { templateId } = useParams();
@@ -43,6 +44,8 @@ function TemplateDetailPage() {
   const [newUrl, setNewUrl] = useState("");
   const [universityName, setUniversityName] = useState("");
   const [isAddTemplateHeaderModalOpen, setIsAddTemplateHeaderModalOpen] = useState(false);
+  const [selectedHeader, setSelectedHeader] = useState({});
+  const [isEditTemplateHeaderModalOpen, setIsEditTemplateHeaderModalOpen] = useState(false);
   const navigate = useNavigate();
 
 
@@ -61,17 +64,25 @@ function TemplateDetailPage() {
   };
 
   useEffect(() => {
-    const url = "https://firebasestorage.googleapis.com/v0/b/ojt-management-system-8f274.appspot.com/o/reports%2FFile%20danh%20gia%20danh%20sach%20sv%20BKU.xlsx?alt=media&token=c7f588f6-9ea3-421a-b649-64d794d944cf";
-    ExcelUtility.loadFromUrl(url).then((w) => {
-      setData(w.sheets);
-    },
-      (e) => {
-        console.error("Workbook Load Error");
-      }
-    );
-    console.log(templateId);
+    setIsFetchingLoading(true);
+    if (url) {
+      getDownloadURL(ref(storage, url))
+        .then(async (path) => {
+          ExcelUtility.loadFromUrl(path).then((w) => {
+            setData(w.sheets);
+          },
+            (e) => {
+              console.error("Workbook Load Error");
+            }
+          );
+        })
+        .catch((error) => {
+          toast.error(generalNoti.ERROR.SERVER_ERROR);
+        });
+    }
+    setIsFetchingLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [url]);
 
   useEffect(() => {
     if (newUrl) {
@@ -124,9 +135,7 @@ function TemplateDetailPage() {
       setTemplateHeaders(response.data.templateHeaders);
       setUniversityName(response.data.universityName);
       setIsFetchingLoading(false);
-      console.log("fetchFormula ~ success", response);
     } catch (error) {
-      console.log("fetchFormula ~ error", error);
       setIsFetchingLoading(false);
     }
   };
@@ -141,12 +150,11 @@ function TemplateDetailPage() {
       } catch (e) {
         setIsLoading(false);
         setNewUrl("");
-        toast.error(e);
+        toast.error(generalNoti.ERROR.UPLOAD_FAIL);
       }
     } else {
       setIsLoading(false);
-      setNewUrl("");
-      toast.error(templateNoti.ERROR.BLANK_FILE);
+      setNewUrl(url);
     }
   };
 
@@ -166,7 +174,7 @@ function TemplateDetailPage() {
     } catch (error) {
       setIsLoading(false);
       setUrl("");
-      toast.error(error);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -204,13 +212,63 @@ function TemplateDetailPage() {
         fetchTemplateDetail();
         setIsSubmitLoading(false);
         setIsAddTemplateHeaderModalOpen(false);
-        toast.success(templateNoti.SUCCESS.CREATE);
+        toast.success(templateNoti.SUCCESS.UPDATE);
       } catch (error) {
         setIsSubmitLoading(false);
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
       }
     }
     setIsSubmitLoading(false);
+  };
+
+  const handleUpdateTemplateHeader = async (values) => {
+    const valid = templateHeaderValid(values);
+    setError(valid);
+    if (Object.keys(valid).length === 0) {
+      try {
+        setIsSubmitLoading(true);
+        await axiosPrivate.put(templatePath.UPDATE_TEMPLATE_HEADER + selectedHeader.id, {
+          name: values.name,
+          totalPoint: values.totalPoint,
+          matchedAttribute: values.matchedAttribute,
+          isCriteria: values.isCriteria,
+          formulaId: values.formulaId,
+        });
+        fetchTemplateDetail();
+        setIsSubmitLoading(false);
+        setIsEditTemplateHeaderModalOpen(false);
+        toast.success(templateNoti.SUCCESS.UPDATE);
+      } catch (error) {
+        setIsSubmitLoading(false);
+        toast.error(error?.response?.data);
+      }
+    }
+    setIsSubmitLoading(false);
+  };
+
+  const handleDisableHeader = async (headerId) => {
+    try {
+      setIsFetchingLoading(true);
+      const response = await axiosPrivate.put(templatePath.DISABLE_HEADER + headerId);
+      toast.success(response.data);
+      fetchTemplateDetail();
+      setIsFetchingLoading(false);
+    } catch (error) {
+      toast.error(error?.response?.data);
+      setIsFetchingLoading(false);
+    };
+  };
+  const handleActiveHeader = async (headerId) => {
+    try {
+      setIsFetchingLoading(true);
+      const response = await axiosPrivate.put(templatePath.ACTIVE_HEADER + headerId);
+      toast.success(response.data);
+      fetchTemplateDetail();
+      setIsFetchingLoading(false);
+    } catch (error) {
+      toast.error(error?.response?.data);
+      setIsFetchingLoading(false);
+    };
   };
 
   return (
@@ -220,14 +278,23 @@ function TemplateDetailPage() {
           <h1 className="py-4 px-14 bg-text4 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
             Chỉnh sửa phiếu đánh giá
           </h1>
-          <ModalAddTemplateHeader
-            isOpen={isAddTemplateHeaderModalOpen}
-            onRequestClose={() => setIsAddTemplateHeaderModalOpen(false)}
-            isLoading={isSubmitLoading}
-            handleAddNewTemplateHeader={handleAddNewTemplateHeader}
-            error={error}
-          />
-
+          {isAddTemplateHeaderModalOpen ?
+            <ModalAddTemplateHeader
+              onRequestClose={() => setIsAddTemplateHeaderModalOpen(false)}
+              isLoading={isSubmitLoading}
+              handleAddNewTemplateHeader={handleAddNewTemplateHeader}
+              error={error}
+            />
+            : null}
+          {isEditTemplateHeaderModalOpen ?
+            <ModalEditTemplateHeader
+              header={selectedHeader}
+              onRequestClose={() => setIsEditTemplateHeaderModalOpen(false)}
+              isLoading={isSubmitLoading}
+              handleUpdateTemplateHeader={handleUpdateTemplateHeader}
+              error={error}
+            />
+            : null}
           <form onSubmit={handleSubmit(onClickSubmit)}>
             <FormGroup>
               <Label>Tên phiếu đánh giá (*)</Label>
@@ -299,16 +366,16 @@ function TemplateDetailPage() {
                           <IconButton
                             aria-label="delete"
                             size="small"
-                            onClick={() => console.log("click")}
+                            onClick={() => handleDisableHeader(header.id)}
                           >
-                            <DeleteIcon fontSize="inherit" color="error"/>
+                            <DeleteIcon fontSize="inherit" color="error" />
                           </IconButton> :
                           <IconButton
-                            aria-label="delete"
+                            aria-label="active"
                             size="small"
-                            onClick={() => console.log("click")}
+                            onClick={() => handleActiveHeader(header.id)}
                           >
-                            <ToggleOnIcon fontSize="inherit" color="success"/>
+                            <ToggleOnIcon fontSize="inherit" color="success" />
                           </IconButton>}
 
                         <Chip
@@ -316,6 +383,10 @@ function TemplateDetailPage() {
                           variant="contained"
                           sx={{ p: 1 }}
                           label={(index + 1) + ") " + header.name}
+                          onClick={() => {
+                            setSelectedHeader(header);
+                            setIsEditTemplateHeaderModalOpen(true);
+                          }}
                         ></Chip>
                       </Stack>
                     </Tooltip>

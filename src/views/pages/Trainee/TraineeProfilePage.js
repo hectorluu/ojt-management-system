@@ -13,6 +13,8 @@ import {
   Autocomplete,
   Stack,
   Rating,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
 import { Label } from "views/components/label";
@@ -21,7 +23,7 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { userPath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
-import { accountNoti } from "logic/constants/notification";
+import { accountNoti, generalNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
 import { changePasswordValid, profileValid } from "logic/utils/validateUtils";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -33,6 +35,7 @@ import ProfileSkeleton from "views/modules/account/ProfileSkeleton";
 import { logOut } from "logic/utils/auth";
 import { useDispatch } from "react-redux";
 import { authUpdateUser } from "logic/store/auth/auth-slice";
+import Gap from "views/components/common/Gap";
 
 const TraineeProfilePage = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -57,6 +60,7 @@ const TraineeProfilePage = () => {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [trainer, setTrainer] = useState({});
   const moment = require('moment');
   const dispatch = useDispatch();
 
@@ -82,8 +86,9 @@ const TraineeProfilePage = () => {
       setStudentCode(response.data.studentCode);
       setSkills(response.data.skills);
       setIsFetchingLoading(false);
+      setTrainer(response.data.trainerResponse);
     } catch (error) {
-      console.log("error", error);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   }
@@ -106,8 +111,7 @@ const TraineeProfilePage = () => {
       setIsLoading(false);
       navigate("/trainee-dashboard");
     } catch (error) {
-      console.log("error", error);
-      toast.error(error);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
@@ -142,10 +146,10 @@ const TraineeProfilePage = () => {
             });
           });
         } catch (e) {
-          toast.error("Upload img error");
+          toast.error(generalNoti.ERROR.UPLOAD_FAIL);
         }
       } else {
-        setAvatarURL(defaultUserIcon);
+        setAvatarURL(url);
       }
     }
     setIsLoading(false);
@@ -170,8 +174,7 @@ const TraineeProfilePage = () => {
         dispatch(authUpdateUser({}));
         setIsLoading(false);
       } catch (error) {
-        console.log("error", error);
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
         setIsLoading(false);
       }
     };
@@ -381,6 +384,24 @@ const TraineeProfilePage = () => {
                 </FormGroup>
               </FormRow>
             </CardContent>
+            <h4 className="text-xl text-gray-900 font-bold text-left ml-2 mt-5">
+              Quản lí bởi:
+              <ListItem className="flex border-y py-2 justify-between">
+                <img
+                  className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
+                  src={trainer.avatarURL || defaultUserIcon}
+                  alt=""
+                  onError={(e) => {
+                    e.target.src = defaultUserIcon;
+                  }} />
+                <ListItemText
+                  primary={trainer?.trainerName}
+                />
+                <ListItemText primary={"Email: " + trainer?.trainerEmail} />
+                <ListItemText primary={"SĐT: " + trainer?.trainerPhoneNumber} />
+              </ListItem>
+            </h4>
+            <Gap />
 
             <CardActions sx={{ justifyContent: "flex-end", mt: -4 }}>
               <LoadingButton

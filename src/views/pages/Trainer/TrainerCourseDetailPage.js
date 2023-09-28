@@ -51,7 +51,6 @@ const TrainerCourseDetailPage = () => {
     try {
       setIsFetchingLoading(true);
       const response = await axiosPrivate.get(coursePath.GET_COURSE + courseId);
-      console.log(response.data);
       setName(response.data.name);
       setPlatformName(response.data.platformName);
       setDescription(response.data.description);
@@ -61,7 +60,7 @@ const TrainerCourseDetailPage = () => {
       setCoursePositions(response.data.coursePositions);
       setCourseSkills(response.data.courseSkills);
     } catch (error) {
-      console.log(error);
+      toast.error(error?.response?.data);
       setIsFetchingLoading(false);
     }
   };
@@ -88,7 +87,7 @@ const TrainerCourseDetailPage = () => {
         toast.success("Giao khoá học thành công");
       } catch (error) {
         setIsLoading(false);
-        toast.error(error.response.data);
+        toast.error(error?.response?.data);
       }
     }
     setIsLoading(false);
@@ -118,12 +117,14 @@ const TrainerCourseDetailPage = () => {
         </Button>
       }
     >
-      <ModalAssignCourse
-        error={error}
-        handleAssign={handleAssign}
-        isLoading={isLoading}
-        isOpen={isModalOpen}
-        onRequestClose={onRequestClose} />
+      {isModalOpen ?
+        <ModalAssignCourse
+          error={error}
+          handleAssign={handleAssign}
+          isLoading={isLoading}
+          isOpen={isModalOpen}
+          onRequestClose={onRequestClose} />
+        : null}
       {isFetchingLoading ? (
         <ProfileSkeleton />
       ) : (

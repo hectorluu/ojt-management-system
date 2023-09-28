@@ -11,7 +11,6 @@ import { skillPath } from "logic/api/apiUrl";
 import { skillLevel } from "logic/constants/global";
 
 const ModalAddCourseSkill = ({
-  isOpen,
   onRequestClose,
   handleAddNewCourseSkill,
   isSubmitLoading,
@@ -36,7 +35,7 @@ const ModalAddCourseSkill = ({
       );
       setSkillList(response.data.data);
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error(error?.response?.data);
     }
   };
 
@@ -45,7 +44,7 @@ const ModalAddCourseSkill = ({
   };
 
   return (
-    <Modal open={isOpen} onClose={onRequestClose}>
+    <Modal open={true} onClose={onRequestClose}>
       <Box
         sx={{
           borderRadius: "0.5rem",

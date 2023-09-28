@@ -26,6 +26,7 @@ import AddIcon from "@mui/icons-material/Add";
 import SubCard from "views/components/cards/SubCard";
 import UniversityGrid from "views/modules/university/UniversityGrid";
 import { useTheme } from "@emotion/react";
+import { toast } from "react-toastify";
 
 const UniversityListPage = () => {
   const [page, setPage] = useState(defaultPageIndex);
@@ -55,7 +56,7 @@ const UniversityListPage = () => {
       setTotalItem(response.data.totalItem);
       setIsLoading(false);
     } catch (error) {
-      console.log("fetchUsers ~ error", error);
+      toast.error(error?.response?.data);
       setIsLoading(false);
     }
   };
