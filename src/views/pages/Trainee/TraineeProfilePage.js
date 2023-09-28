@@ -149,7 +149,7 @@ const TraineeProfilePage = () => {
           toast.error("Upload img error");
         }
       } else {
-        setAvatarURL(defaultUserIcon);
+        setAvatarURL(url);
       }
     }
     setIsLoading(false);

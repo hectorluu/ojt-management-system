@@ -138,7 +138,7 @@ const TrainerProfilePage = () => {
           toast.error("Upload img error");
         }
       } else {
-        setAvatarURL(defaultUserIcon);
+        setAvatarURL(url);
       }
     }
     setIsLoading(false);
