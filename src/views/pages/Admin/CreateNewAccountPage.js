@@ -182,7 +182,28 @@ const CreateNewAccountPage = () => {
     };
     const valid = accountValid(account);
     setError(valid);
-    if (Object.keys(valid).length === 0) {
+
+    let check = false;
+
+    for (const key in valid) {
+      if (key !== "createSkills" && valid[key] !== "") {
+        check = true;
+        break; // If any non-empty value is found, exit the loop
+      } else if (key === "createSkills" && Array.isArray(valid[key])) {
+        for (const item of valid[key]) {
+          for (const itemKey in item) {
+            if (item[itemKey] !== "") {
+              check = true;
+              break; // If any non-empty value is found, exit the loop
+            }
+          }
+          if (check) {
+            break; // If any non-empty value is found, exit the loop
+          }
+        }
+      }
+    }
+    if (!check) {
       if (avatar) {
         try {
           const imageRef = ref(storage, "images/users/" + avatar.name);

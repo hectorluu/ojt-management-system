@@ -114,6 +114,7 @@ export const trainingPlanNoti = {
     DELETE: "Thành công xóa kế hoạch đào tạo !",
     ACTIVE: "Thành công kích hoạt kế hoạch đào tạo !",
     ASSIGN: "Thành công phân công đào tạo viên !",
+    UPDATE: "Thành công cập nhật kế hoạch đào tạo !",
   },
 
   ERROR: {
@@ -126,6 +127,7 @@ export const trainingPlanNoti = {
     INVALID_ENDDAY: "Ngày kết thúc phải sau ngày bắt đầu !",
     BLANK_PLAN: "Vui lòng chọn kế hoạch đào tạo !",
     BLANK_TRAINEE: "Vui lòng chọn thực tập sinh !",
+    DETAILS_LIMITE: "Không thể xoá thêm chi tiết !",
   },
 };
 
