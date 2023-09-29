@@ -61,7 +61,27 @@ const CreateNewTrainingPlanPage = () => {
     }
     const valid = trainingPlanValid(plan);
     setError(valid);
-    if (Object.keys(valid).length === 0) {
+    let check = false;
+
+    for (const key in valid) {
+      if (key !== "details" && valid[key] !== "") {
+        check = true;
+        break; // If any non-empty value is found, exit the loop
+      } else if (key === "details" && Array.isArray(valid[key])) {
+        for (const item of valid[key]) {
+          for (const itemKey in item) {
+            if (item[itemKey] !== "") {
+              check = true;
+              break; // If any non-empty value is found, exit the loop
+            }
+          }
+          if (check) {
+            break; // If any non-empty value is found, exit the loop
+          }
+        }
+      }
+    }
+    if (!check) {
       try {
         await axiosPrivate.post(trainingPlanPath.CREATE_NEW_TRAINING_PLAN, plan);
         setIsLoading(false);

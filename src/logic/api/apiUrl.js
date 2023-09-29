@@ -17,7 +17,7 @@ export const coursePath = {
   GET_RECOMMENDED_LIST: "/course/recommendation-courses",
   GET_TRAINEE_COURSE_LIST: "course/list-course-trainee",
   GET_COMPULSORY_COURSE_LIST: "course/compulsory-courses",
-  ENROLL_COURSE: "/course/course-participation/",
+  ENROLL_COURSE: "/course/course-participation-trainee/",
   UPDATE_COURSE_SKILL: "/course/courseskill/",
   CREATE_COURSE_SKILL: "/course/courseskill/",
   UPDATE_COURSE_POSITION: "/course/courseposition/",

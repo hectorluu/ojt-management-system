@@ -149,6 +149,7 @@ const EvaluateExcelPage = () => {
       toast.success(criteraNoti.SUCCESS.CREATE);
     } catch (error) {
       toast.error(error?.response?.data);
+      setIsLoading(false);
     }
   };
 
