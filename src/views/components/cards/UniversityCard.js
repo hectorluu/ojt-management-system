@@ -50,8 +50,13 @@ export const UniversityCard = (props) => {
             className="w-fit h-[10rem] border-4 border-white"
           />
         </Box>
-        <Typography align="center" gutterBottom variant="h5" className="line-clamp-2">
-          {university.name}
+        <Typography
+          align="center"
+          gutterBottom
+          variant="h5"
+          className="line-clamp-2"
+        >
+          <span className="font-bold text-xl">{university.name}</span>
         </Typography>
         <Typography align="center" variant="body1" className="line-clamp-3">
           {university.address}

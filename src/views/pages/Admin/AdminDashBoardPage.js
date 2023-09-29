@@ -38,10 +38,10 @@ const AdminDashBoardPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         universityPath.GET_UNIVERSITY_LIST +
-        "?PageSize=" +
-        100000 +
-        "&PageIndex=" +
-        defaultPageIndex
+          "?PageSize=" +
+          100000 +
+          "&PageIndex=" +
+          defaultPageIndex
       );
       // Get 3 universities
       setUniversities(response.data.data.slice(0, 3));
@@ -58,12 +58,12 @@ const AdminDashBoardPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         coursePath.GET_COURSE_LIST +
-        "?PageSize=" +
-        100000 +
-        "&PageIndex=" +
-        defaultPageIndex +
-        "&filterStatus" +
-        courseStatus.ACTIVE
+          "?PageSize=" +
+          100000 +
+          "&PageIndex=" +
+          defaultPageIndex +
+          "&filterStatus" +
+          courseStatus.ACTIVE
       );
       // Get 5 courses
       setCourses(response.data.data.slice(0, 3));
@@ -198,9 +198,9 @@ const AdminDashBoardPage = () => {
             <Typography variant="h3" className="mb-5">
               Trường đại học liên kết
             </Typography>
-            {isLoading ?
+            {isLoading ? (
               <AdminDashBoardSkeleton />
-              :
+            ) : (
               <Grid container spacing={3}>
                 {universities.map((university) => (
                   <Grid xs={12} md={6} lg={4} key={university.id}>
@@ -208,7 +208,7 @@ const AdminDashBoardPage = () => {
                   </Grid>
                 ))}
               </Grid>
-            }
+            )}
             <CardActions
               sx={{ py: 1.25, pt: 2, mb: -2, justifyContent: "center" }}
             >
@@ -232,9 +232,9 @@ const AdminDashBoardPage = () => {
             <Typography variant="h3" className="mb-5">
               Khóa học hiện có
             </Typography>
-            {isLoading ?
+            {isLoading ? (
               <AdminDashBoardSkeleton />
-              :
+            ) : (
               <Grid container spacing={3}>
                 {courses.map((course) => (
                   <Grid xs={12} md={6} lg={4} key={course.id}>
@@ -242,7 +242,7 @@ const AdminDashBoardPage = () => {
                   </Grid>
                 ))}
               </Grid>
-            }
+            )}
             <CardActions
               sx={{ py: 1.25, pt: 2, mb: -2, justifyContent: "center" }}
             >
@@ -262,30 +262,44 @@ const AdminDashBoardPage = () => {
 
         {/* ... Chart Part */}
         <Grid xs={12} md={12}>
-          {isLoading ? <ChartSkeleton /> :
+          {isLoading ? (
+            <ChartSkeleton />
+          ) : (
             <ColumnAndLineChart
-              title="Tổng đợt OJT và thực tập sinh theo tháng"
+              title={
+                <span className="font-bold text-xl">
+                  Tổng đợt OJT và thực tập sinh theo tháng
+                </span>
+              }
               chartLabels={chartBatchAndTraineeLabels}
               chartData={batchAndTrainee}
             />
-          }
+          )}
         </Grid>
 
         {/* ... Line Chart Part */}
         <Grid xs={12} md={6} lg={8}>
-          {isLoading ? <ChartSkeleton /> :
+          {isLoading ? (
+            <ChartSkeleton />
+          ) : (
             <HorizontalLineChart
-              title="Đào tạo viên với số thực tập sinh nhiều nhất"
+              title={
+                <span className="font-bold text-xl">
+                  Đào tạo viên với số thực tập sinh nhiều nhất
+                </span>
+              }
               chartData={trainerAndTotalTrainees}
             />
-          }
+          )}
         </Grid>
 
         {/* ... Pie Chart Part */}
         <Grid xs={12} md={6} lg={4}>
-          {isLoading ? <ChartSkeleton /> :
+          {isLoading ? (
+            <ChartSkeleton />
+          ) : (
             <PieChart
-              title="Vị trí thực tập"
+              title={<span className="font-bold text-xl">Vị trí thực tập</span>}
               chartData={traineeWithPosition}
               chartColors={[
                 theme.palette.primary.main,
@@ -294,7 +308,7 @@ const AdminDashBoardPage = () => {
                 theme.palette.error.main,
               ]}
             />
-          }
+          )}
         </Grid>
       </Grid>
     </Fragment>
