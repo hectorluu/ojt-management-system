@@ -15,6 +15,7 @@ import { evaluationOptions } from 'logic/constants/global';
 const EvaluateExcelPage = () => {
   const { ojtBatchId } = useParams();
   const { action } = useParams();
+  const { templateId } = useParams();
   const [data, setData] = useState([]);
   const [headers, setHeaders] = useState([]);
   const axiosPrivate = useAxiosPrivate();
@@ -52,8 +53,7 @@ const EvaluateExcelPage = () => {
   const fetchHeaders = async () => {
     try {
       let response = await axiosPrivate.get(
-        templatePath.GET_TEMPLATE_HEADER +
-        "/1"
+        templatePath.GET_TEMPLATE_HEADER + templateId
       );
       let columns = [
         {
@@ -149,6 +149,7 @@ const EvaluateExcelPage = () => {
       toast.success(criteraNoti.SUCCESS.CREATE);
     } catch (error) {
       toast.error(error?.response?.data);
+      setIsLoading(false);
     }
   };
 

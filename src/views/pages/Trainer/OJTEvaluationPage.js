@@ -96,7 +96,11 @@ const OJTEvaluationPage = () => {
                 </div>
                 <p className="mb-2 text-sm text-text2">
                   <span className="text-base font-semibold">Trường: </span>
-                  {item.universityName}
+                  {item.universityName} - {item.universityCode}
+                </p>
+                <p className="mb-2 text-sm text-text2">
+                  <span className="text-base font-semibold">Số thực tập sinh: </span>
+                  {item.numberTrainee}
                 </p>
                 <p className="mb-2 text-sm text-text2">
                   <span className="text-base font-semibold">
@@ -120,7 +124,8 @@ const OJTEvaluationPage = () => {
                       item.status === evaluationStatus.NOTYET
                         ? evaluationOptions.CREATE
                         : evaluationOptions.EDIT
-                    }`
+                    }/` +
+                    item.templateId
                   }
                   variant="contained"
                   size="medium"
