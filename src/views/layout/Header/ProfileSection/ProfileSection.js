@@ -29,8 +29,10 @@ import Transitions from "views/components/extended/Transitions";
 // assets
 import { IconLogout, IconSettings, IconUser } from "@tabler/icons";
 
-import { defaultUserIcon, roleExchange } from "logic/constants/global";
-import { authLogOut } from "logic/store/auth/auth-slice";
+import { defaultUserIcon, roleExchange, signalRMessage } from "logic/constants/global";
+import { authLogOut, authRefreshToken } from "logic/store/auth/auth-slice";
+import signalRService from "logic/utils/signalRService";
+import { getToken } from "logic/utils/auth";
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -48,6 +50,17 @@ const ProfileSection = () => {
   const handleLogout = async () => {
     dispatch(authLogOut());
   };
+
+  useEffect(() => {
+    signalRService.on(signalRMessage.USER.UPDATE, (message) => {
+      dispatch(authRefreshToken(getToken()));
+    });
+
+    return () => {
+      signalRService.off(signalRMessage.USER.UPDATE);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {

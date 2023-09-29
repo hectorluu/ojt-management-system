@@ -100,7 +100,6 @@ const TrainerDashboardPage = () => {
         "&PageSize=" +
         6
       );
-      console.log(response.data.data);
       setTaskList(response.data.data);
       setIsLoading(false);
     } catch (error) {
@@ -214,7 +213,7 @@ const TrainerDashboardPage = () => {
                       {task.name}
                     </Typography>
                     <Typography variant="caption" className="text-xs text-gray-500">
-                      {task.traineeLastName + " " + task.traineeFirstName}
+                      {task.traineeLastName + " " + task.traineeFirstName + " "}
                     </Typography>
                     <Typography variant="caption" className="text-xs text-gray-500">
                       {moment(task.finishTime).tz('Asia/Ho_Chi_Minh').format('DD/MM/YYYY h:mmA')}

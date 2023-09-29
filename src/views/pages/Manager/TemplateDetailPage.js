@@ -92,12 +92,6 @@ function TemplateDetailPage() {
   }, [newUrl]);
 
   useEffect(() => {
-
-    console.log(templateHeaders);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [templateHeaders]);
-
-  useEffect(() => {
     fetchFormulars();
     fetchTemplateDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -115,9 +109,8 @@ function TemplateDetailPage() {
         2
       );
       setFormulaList(response.data.data);
-      console.log("fetchFormula ~ success", response);
     } catch (error) {
-      console.log("fetchFormula ~ error", error);
+      toast.error(generalNoti.ERROR.SERVER_ERROR);
     }
   };
 
@@ -127,7 +120,6 @@ function TemplateDetailPage() {
       const response = await axiosPrivate.get(
         templatePath.GET_TEMPLATE_DETAIL + templateId
       );
-      console.log(response.data);
       setName(response.data.name);
       setStartCell(response.data.startCell);
       setUniversityId(response.data.universityId);

@@ -170,7 +170,7 @@ const TrainingPlanListPage = () => {
                   Người tạo
                 </StyledTableCell>
                 <StyledTableCell align="center" width={"20%"}>
-                  Ngày sửa đổi
+                  Ngày tạo
                 </StyledTableCell>
                 <StyledTableCell align="center" width={"15%"}>
                   Trạng thái
@@ -241,7 +241,7 @@ const TrainingPlanListPage = () => {
                       {item.firstName + " " + item.lastName}
                     </TableCell>
                     <TableCell align="center">
-                      {fDate(item.updateDate)}
+                      {fDate(item.createDate)}
                     </TableCell>
                     <TableCell align="center">
                       <Chip

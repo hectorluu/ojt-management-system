@@ -88,7 +88,6 @@ const TraineeDashboardPage = () => {
   const fetchTrelloTask = async () => {
     try {
       const response = await axiosPrivate.get(traineeTaskPath.GET__TRELLO_TASK_LIST + "?PageIndex=" + 1 + "&PageSize=" + 6);
-      console.log(response.data.data);
       setTrelloTaskList(response.data.data);
     } catch (error) {
       toast.error(error?.response?.data);
@@ -176,7 +175,7 @@ const TraineeDashboardPage = () => {
             <div className="relative px-4">
               {trelloTaskList.length !== 0 ?
                 trelloTaskList.map((task, index) => (
-                  <div className="flex items-center w-full my-6 -ml-1.5">
+                  <div className="flex items-center w-full my-6 -ml-1.5" key={index}>
                     <div className="w-1/12 z-10">
                       <div className={classNames("w-3.5 h-3.5 rounded-full", trelloTaskStatus.find((item) => item.value === task.status).color)}></div>
                     </div>

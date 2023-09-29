@@ -186,7 +186,7 @@ const UniversityDetailPage = () => {
 
   const handleUpdateUniversity = async () => {
     try {
-      setIsSubmitLoading(true);
+      setIsLoading(true);
       const university = {
         name,
         address,
@@ -200,10 +200,11 @@ const UniversityDetailPage = () => {
         university
       );
       toast.success(universityNoti.SUCCESS.UPDATE);
-      setIsSubmitLoading(false);
+      navigate("/university-list");
+      setIsLoading(false);
     } catch (error) {
       toast.error(error?.response?.data);
-      setIsSubmitLoading(false);
+      setIsLoading(false);
     }
   };
   return (
@@ -226,7 +227,7 @@ const UniversityDetailPage = () => {
         </Button>
       }
     >
-      {isModalOpen?
+      {isModalOpen ?
         <ModalEditOJTBatch
           onRequestClose={() => setIsModalOpen(false)}
           idClicked={clickedId}
@@ -235,7 +236,7 @@ const UniversityDetailPage = () => {
           error={error}
           universityId={universityId}
         ></ModalEditOJTBatch>
-      :null}
+        : null}
       {isFetchingLoading ? (
         <ProfileSkeleton />
       ) : (

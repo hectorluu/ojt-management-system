@@ -110,7 +110,7 @@ const ModalTrainingPlanDetailTrainer = ({
                       <span className="text-xl font-bold text-text1">Chi tiết</span>
                     </div>
                     {trainingPlanDetails?.details?.length > 0 ? (
-                      trainingPlanDetails?.details?.filter(item => item.status !== 3).map((detail, index) => (
+                      trainingPlanDetails?.details?.filter(item => item.status !== 3)?.map((detail, index) => (
                         <div className="mb-6" key={index}>
                           <p className="mb-2 text-text2">
                             <strong className="text-text1">

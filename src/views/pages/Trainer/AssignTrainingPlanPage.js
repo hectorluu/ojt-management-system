@@ -208,7 +208,7 @@ const AssignTrainingPlanPage = () => {
                           <div className="absolute h-full border border-dashed border-opacity-60 border-secondary"></div>
 
                           {/* Timeline item */}
-                          {selectedPlan?.details?.map((task) => (
+                            {selectedPlan?.details?.filter(item => item.status !== 3)?.map((task) => (
                             <div
                               className="flex items-center w-full my-6 -ml-1.5"
                               key={task.id}
