@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Box, CircularProgress, List, ListItem, ListItemText, Modal, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, List, ListItem, ListItemText, Modal, Typography } from "@mui/material";
 import { fDate } from "logic/utils/formatTime";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { trainingPlanPath } from "logic/api/apiUrl";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { toast } from "react-toastify";
 import { defaultUserIcon } from "logic/constants/global";
+import { useTheme } from "@emotion/react";
+import { useNavigate } from "react-router-dom";
 
 const ModalTrainingPlanDetailTrainer = ({
   onRequestClose,
@@ -14,6 +16,7 @@ const ModalTrainingPlanDetailTrainer = ({
   const axiosPrivate = useAxiosPrivate();
   const [isLoading, setIsLoading] = useState(true); // New loading state
   const [trainingPlanDetails, setTrainingPlanDetails] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (selectedTrainingPlan) {
@@ -35,6 +38,9 @@ const ModalTrainingPlanDetailTrainer = ({
       setIsLoading(false); // Set loading to false after fetching data
     }
   }
+
+  const theme = useTheme();
+
   return (
     <Modal open={true} onClose={onRequestClose}>
       <Box
@@ -104,7 +110,7 @@ const ModalTrainingPlanDetailTrainer = ({
                       <span className="text-xl font-bold text-text1">Chi tiết</span>
                     </div>
                     {trainingPlanDetails?.details?.length > 0 ? (
-                      trainingPlanDetails?.details?.map((detail, index) => (
+                      trainingPlanDetails?.details?.filter(item => item.status !== 3).map((detail, index) => (
                         <div className="mb-6" key={index}>
                           <p className="mb-2 text-text2">
                             <strong className="text-text1">
@@ -126,6 +132,22 @@ const ModalTrainingPlanDetailTrainer = ({
                       <div>Chưa có chi tiết được tạo.</div>
                     )}
                   </div>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: theme.palette.primary.main,
+                      "&:hover": {
+                        backgroundColor: theme.palette.primary.dark, // Color on hover
+                      },
+                    }}
+                    component="label"
+                    className="flex items-center justify-center cursor-pointer w-3/4 h-8 text-text1 rounded-md"
+                    onClick={() => {
+                      navigate("/trainer-training-plan/" + trainingPlanDetails.id);
+                    }}
+                  >
+                    <span className="text-white">Chỉnh sửa</span>
+                  </Button>
                 </div>
 
                 <div className="bg-white shadow-1 rounded-xl">

@@ -60,7 +60,8 @@ export const trainingPlanPath = {
   APPROVE_PLAN: "/training-plan/verification-accept/",
   DENY_PLAN: "/training-plan/verification-deny/",
   GET_PERSONAL_TRAINING_PLAN: "/training-plan/personal-trainee",
-  GET_UNASSIGNED_TRAINEE_LIST:"/training-plan/unassigned-trainee"
+  GET_UNASSIGNED_TRAINEE_LIST:"/training-plan/unassigned-trainee",
+  UPDATE_TRAININGPLAN: "/training-plan/",
 };
 
 export const userPath = {

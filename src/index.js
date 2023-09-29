@@ -150,6 +150,9 @@ const TrainerCourseDetailPage = lazy(() =>
 const TrainerCourseListPage = lazy(() =>
   import("views/pages/Trainer/TrainerCourseListPage")
 );
+const UpdateTrainningPlanPage = lazy(() =>
+  import("views/pages/Trainer/UpdateTrainningPlanPage")
+);
 
 // Trainee Page
 const TraineeCourseDetailPage = lazy(() =>
@@ -386,6 +389,10 @@ const router = createBrowserRouter([
           {
             path: "/trainer-training-plan",
             element: <TrainerTrainingPlanPage></TrainerTrainingPlanPage>,
+          },
+          {
+            path: "/trainer-training-plan/:planId",
+            element: <UpdateTrainningPlanPage></UpdateTrainningPlanPage>,
           },
           {
             path: "/trainee/:traineeId",
