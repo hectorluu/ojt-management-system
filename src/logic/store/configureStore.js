@@ -1,11 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "@redux-saga/core";
-import logger from "redux-logger";
 import rootSaga from "./rootSaga";
 import { persistedReducer } from "./reducers";
 const sagaMiddleware = createSagaMiddleware();
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (gDM) => gDM().concat(logger, sagaMiddleware),
+  middleware: (gDM) => gDM().concat(sagaMiddleware),
 });
 sagaMiddleware.run(rootSaga);
