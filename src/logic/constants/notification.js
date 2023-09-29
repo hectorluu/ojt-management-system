@@ -28,6 +28,7 @@ export const accountNoti = {
     UPDATE: "Cập nhật tài khoản thành công !",
     UPDATE_PASSWORD: "Cập nhật mật khẩu thành công !",
     UPDATE_PROFILE: "Cập nhật thông tin thành công !",
+    UPDATE_USER: "Cập nhật tải khoản thành công !",
   },
 
   ERROR: {
