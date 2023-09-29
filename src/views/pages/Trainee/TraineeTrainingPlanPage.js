@@ -40,7 +40,7 @@ const TraineeTrainingPlanPage = () => {
 
       setTrainingPlan(response.data);
       setTrainingPlanDetails(response.data.details);
-    } catch (error) { }
+    } catch (error) {}
   }
 
   return (
