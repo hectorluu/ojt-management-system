@@ -175,7 +175,7 @@ const TraineeDashboardPage = () => {
             <div className="relative px-4">
               {trelloTaskList.length !== 0 ?
                 trelloTaskList.map((task, index) => (
-                  <div className="flex items-center w-full my-6 -ml-1.5">
+                  <div className="flex items-center w-full my-6 -ml-1.5" key={index}>
                     <div className="w-1/12 z-10">
                       <div className={classNames("w-3.5 h-3.5 rounded-full", trelloTaskStatus.find((item) => item.value === task.status).color)}></div>
                     </div>
