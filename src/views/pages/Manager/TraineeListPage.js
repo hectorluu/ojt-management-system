@@ -67,12 +67,12 @@ const TraineeListPage = () => {
     try {
       const response = await axiosPrivate.get(
         positionPath.GET_POSITION_LIST +
-        "?PageIndex=" +
-        1 +
-        "&PageSize=" +
-        100000 +
-        "&filterStatus=" +
-        positionStatus.ACTIVE
+          "?PageIndex=" +
+          1 +
+          "&PageSize=" +
+          100000 +
+          "&filterStatus=" +
+          positionStatus.ACTIVE
       );
       setPositionList(response.data.data);
     } catch (error) {
@@ -85,14 +85,14 @@ const TraineeListPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         userPath.GET_TRAINEE_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage +
-        "&keyword=" +
-        `${searchTerm === null ? "" : searchTerm}` +
-        "&position=" +
-        `${position === null ? "" : position}`
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&keyword=" +
+          `${searchTerm === null ? "" : searchTerm}` +
+          "&position=" +
+          `${position === null ? "" : position}`
       );
       setUsers(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -127,13 +127,13 @@ const TraineeListPage = () => {
 
   return (
     <MainCard title={`Thực tập sinh `}>
-      {isTraineeDetailModalOpen ?
+      {isTraineeDetailModalOpen ? (
         <ModalTraineeDetailManager
           isOpen={isTraineeDetailModalOpen}
           onRequestClose={() => setIsTraineeDetailModalOpen(false)}
           traineeSelected={selectedItem}
         ></ModalTraineeDetailManager>
-        : null}
+      ) : null}
       <SubCard>
         <div className="flex flex-wrap items-start gap-3">
           {/*Custom search bar*/}
@@ -187,7 +187,7 @@ const TraineeListPage = () => {
                 <StyledTableCell align="left" width={"25%"}>
                   Họ và tên
                 </StyledTableCell>
-                <StyledTableCell align="left" width="25%">
+                <StyledTableCell align="left" width="20%">
                   Email
                 </StyledTableCell>
                 <StyledTableCell align="center" width={"15%"}>
@@ -196,7 +196,7 @@ const TraineeListPage = () => {
                 <StyledTableCell align="center" width={"15%"}>
                   Trạng thái
                 </StyledTableCell>
-                <StyledTableCell align="right" width={"10%"}></StyledTableCell>
+                <StyledTableCell align="right" width={"15%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -215,10 +215,16 @@ const TraineeListPage = () => {
                     <TableCell align="left" width={"25%"}>
                       {item.firstName + " " + item.lastName}
                     </TableCell>
-                    <TableCell align="left" width={"25%"}>{item.email}</TableCell>
-                    <TableCell align="center" width={"15%"}>{item.positionName}</TableCell>
+                    <TableCell align="left" width={"20%"}>
+                      {item.email}
+                    </TableCell>
+                    <TableCell align="center" width={"15%"}>
+                      {item.positionName}
+                    </TableCell>
                     <StyledTableCell align="center" width={"15%"}>
-                      <Chip color={item.workStatus === 1 ? "warning" : "success"}>
+                      <Chip
+                        color={item.workStatus === 1 ? "warning" : "success"}
+                      >
                         {
                           traineeWorkingStatus.find(
                             (label) => label.value === item.workStatus
@@ -226,7 +232,7 @@ const TraineeListPage = () => {
                         }
                       </Chip>
                     </StyledTableCell>
-                    <TableCell align="right" width={"10%"}>
+                    <TableCell align="right" width={"15%"}>
                       <Button
                         variant="contained"
                         sx={{
@@ -234,6 +240,7 @@ const TraineeListPage = () => {
                           "&:hover": {
                             backgroundColor: theme.palette.primary.dark, // Color on hover
                           },
+                          px: -2,
                         }}
                         component="label"
                         className="flex items-center justify-center cursor-pointer w-full h-8 text-text1 rounded-md"
