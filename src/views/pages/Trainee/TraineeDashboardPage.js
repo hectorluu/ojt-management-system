@@ -88,7 +88,6 @@ const TraineeDashboardPage = () => {
   const fetchTrelloTask = async () => {
     try {
       const response = await axiosPrivate.get(traineeTaskPath.GET__TRELLO_TASK_LIST + "?PageIndex=" + 1 + "&PageSize=" + 6);
-      console.log(response.data.data);
       setTrelloTaskList(response.data.data);
     } catch (error) {
       toast.error(error?.response?.data);

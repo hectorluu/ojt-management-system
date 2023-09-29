@@ -100,7 +100,6 @@ const TrainerDashboardPage = () => {
         "&PageSize=" +
         6
       );
-      console.log(response.data.data);
       setTaskList(response.data.data);
       setIsLoading(false);
     } catch (error) {

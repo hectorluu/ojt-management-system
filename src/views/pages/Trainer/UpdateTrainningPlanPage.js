@@ -61,11 +61,6 @@ const UpdateTrainningPlanPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    console.log(createTrainingPlanDetails);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createTrainingPlanDetails]);
-
   const fetchTrainingPlanDetails = async () => {
     try {
       const response = await axiosPrivate.get(
