@@ -36,7 +36,6 @@ const ModalEditTemplateHeader = ({
 
   useEffect(() => {
     fetchFormulars();
-    console.log(isCriteria);
     if (isCriteria.value === false) {
       setFormula(undefined);
       setMatchedAttribute(notCriteriaOptions.find((item) => item.value === header.matchedAttribute) || { value: null, label: "Không" });
@@ -46,17 +45,6 @@ const ModalEditTemplateHeader = ({
     setTotalpoint("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCriteria]);
-
-  useEffect(() => {
-    console.log({
-      name: name,
-      totalPoint: totalPoint,
-      matchedAttribute: matchedAttribute,
-      isCriteria: isCriteria,
-      formulaId: formula?.id,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
 
   useEffect(() => {
     if (formulaList.length > 0) {
