@@ -164,7 +164,40 @@ const CreateNewCoursePage = () => {
     };
     const valid = courseValid(course);
     setError(valid);
-    if (Object.keys(valid).length === 0) {
+
+    let check = false;
+
+    for (const key in valid) {
+      if (key !== "courseSkills" && key !== "coursePosition" && valid[key] !== "") {
+        check = true;
+        break; // If any non-empty value is found, exit the loop
+      } else if (key === "coursePosition" && Array.isArray(valid[key])) {
+        for (const item of valid[key]) {
+          for (const itemKey in item) {
+            if (item[itemKey] !== "") {
+              check = true;
+              break; // If any non-empty value is found, exit the loop
+            }
+          }
+          if (check) {
+            break; // If any non-empty value is found, exit the loop
+          }
+        }
+      } else if (key === "courseSkills" && Array.isArray(valid[key])) {
+        for (const item of valid[key]) {
+          for (const itemKey in item) {
+            if (item[itemKey] !== "") {
+              check = true;
+              break; // If any non-empty value is found, exit the loop
+            }
+          }
+          if (check) {
+            break; // If any non-empty value is found, exit the loop
+          }
+        }
+      }
+    }
+    if (!check) {
       if (coursePic) {
         try {
           const imageRef = ref(storage, "images/courses/" + coursePic.name);

@@ -150,6 +150,9 @@ const TrainerCourseDetailPage = lazy(() =>
 const TrainerCourseListPage = lazy(() =>
   import("views/pages/Trainer/TrainerCourseListPage")
 );
+const UpdateTrainningPlanPage = lazy(() =>
+  import("views/pages/Trainer/UpdateTrainningPlanPage")
+);
 
 // Trainee Page
 const TraineeCourseDetailPage = lazy(() =>
@@ -180,6 +183,22 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <SignInPage></SignInPage>,
+  },
+  {
+    path: "*",
+    element: <UnauthorizePage></UnauthorizePage>,
+  },
+  {
+    path: "/",
+    element: <SignInPage></SignInPage>,
+  },
+  {
+    path: "/unauthorize",
+    element: <UnauthorizePage></UnauthorizePage>,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPasswordPage></ResetPasswordPage>,
   },
   {
     path: "/",
@@ -372,6 +391,10 @@ const router = createBrowserRouter([
             element: <TrainerTrainingPlanPage></TrainerTrainingPlanPage>,
           },
           {
+            path: "/trainer-training-plan/:planId",
+            element: <UpdateTrainningPlanPage></UpdateTrainningPlanPage>,
+          },
+          {
             path: "/trainee/:traineeId",
             element: (
               <TrainerRoleTraineeDetailPage></TrainerRoleTraineeDetailPage>
@@ -440,22 +463,6 @@ const router = createBrowserRouter([
         ],
       },
     ],
-  },
-  {
-    path: "*",
-    element: <SignInPage></SignInPage>,
-  },
-  {
-    path: "/",
-    element: <SignInPage></SignInPage>,
-  },
-  {
-    path: "/unauthorize",
-    element: <UnauthorizePage></UnauthorizePage>,
-  },
-  {
-    path: "/reset-password",
-    element: <ResetPasswordPage></ResetPasswordPage>,
   },
 ]);
 

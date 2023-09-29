@@ -204,8 +204,8 @@ const TrainerDashboardPage = () => {
           <div className="relative px-4">
 
             {taskList.length !== 0 ?
-              taskList.map((task) => (
-                <div className="flex items-center w-full my-6 -ml-1.5">
+              taskList.map((task, index) => (
+                <div className="flex items-center w-full my-6 -ml-1.5" key={index}>
                   <div className="w-1/12 z-10">
                     <div className={classNames("w-3.5 h-3.5 rounded-full", accomplishedTaskStatusOptions.find((item) => item.value === task.processStatus).color)}></div>
                   </div>

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import FormRow from "views/components/common/FormRow";
@@ -17,7 +17,7 @@ import {
 import { trainingPlanPath } from "logic/api/apiUrl";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { trainingPlanNoti } from "logic/constants/notification";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import TrainingPlanTimeline from "views/components/timeline/TrainingPlanTimeline";
@@ -26,15 +26,18 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import { trainingPlanValid } from "logic/utils/validateUtils";
 import { LoadingButton } from "@mui/lab";
 import Button from "views/components/button/Button";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 
-const CreateNewTrainingPlanPage = () => {
+const UpdateTrainningPlanPage = () => {
+  const { planId } = useParams();
   const { handleSubmit } = useForm();
 
   const [error, setError] = useState({});
   const [trainingPlanName, setTrainingPlanName] = useState("");
   const [createTrainingPlanDetails, setCreateTrainingPlanDetails] = useState([
-    { name: "", description: "", startTime: new Date(), endTime: new Date() },
+    { id: null, name: "", description: "", startTime: new Date(), endTime: new Date(), status: null },
   ]);
+  const [oldDetails, setOldDetails] = useState([]);
   const moment = require("moment");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -53,7 +56,30 @@ const CreateNewTrainingPlanPage = () => {
 
   const axiosPrivate = useAxiosPrivate();
 
-  const handleAddNewTrainingPlan = async (values) => {
+  useEffect(() => {
+    fetchTrainingPlanDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    console.log(createTrainingPlanDetails);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createTrainingPlanDetails]);
+
+  const fetchTrainingPlanDetails = async () => {
+    try {
+      const response = await axiosPrivate.get(
+        trainingPlanPath.GET_TRAINING_PLAN_DETAIL + planId
+      );
+      setTrainingPlanName(response.data.name);
+      setCreateTrainingPlanDetails(response.data.details);
+      setOldDetails(response.data.details);
+    } catch (error) {
+      toast.error(error?.response?.data);
+    }
+  };
+
+  const handleUpdateTrainingPlan = async (values) => {
     setIsLoading(true);
     const plan = {
       name: trainingPlanName,
@@ -61,12 +87,33 @@ const CreateNewTrainingPlanPage = () => {
     }
     const valid = trainingPlanValid(plan);
     setError(valid);
-    if (Object.keys(valid).length === 0) {
+
+    let check = false;
+
+    for (const key in valid) {
+      if (key !== "details" && valid[key] !== "") {
+        check = true;
+        break; // If any non-empty value is found, exit the loop
+      } else if (key === "details" && Array.isArray(valid[key])) {
+        for (const item of valid[key]) {
+          for (const itemKey in item) {
+            if (item[itemKey] !== "") {
+              check = true;
+              break; // If any non-empty value is found, exit the loop
+            }
+          }
+          if (check) {
+            break; // If any non-empty value is found, exit the loop
+          }
+        }
+      }
+    }
+    if (!check) {
       try {
-        await axiosPrivate.post(trainingPlanPath.CREATE_NEW_TRAINING_PLAN, plan);
+        await axiosPrivate.put(trainingPlanPath.UPDATE_TRAININGPLAN + planId, plan);
         setIsLoading(false);
         navigate("/trainer-training-plan");
-        toast.success(trainingPlanNoti.SUCCESS.CREATE);
+        toast.success(trainingPlanNoti.SUCCESS.UPDATE);
       } catch (error) {
         toast.error(error?.response?.data);
         setIsLoading(false);
@@ -77,15 +124,21 @@ const CreateNewTrainingPlanPage = () => {
 
   const handleAddField = () => {
     const newField = {
+      id: null,
       name: "",
       description: "",
       startTime: new Date(),
       endTime: new Date(),
+      status: null
     };
     setCreateTrainingPlanDetails([...createTrainingPlanDetails, newField]);
   };
 
   const handleRemoveField = (index) => {
+    if (createTrainingPlanDetails.length <= oldDetails.length) {
+      toast.error("Không thể xoá chi tiết");
+      return;
+    }
     let temp = createTrainingPlanDetails.slice();
     temp.pop();
     setCreateTrainingPlanDetails(temp);
@@ -104,10 +157,11 @@ const CreateNewTrainingPlanPage = () => {
           <h1 className="py-4 px-14 bg-slate-700 bg-opacity-5 rounded-xl font-bold text-[25px] inline-block mb-10">
             Tạo kế hoạch đào tạo mới
           </h1>
-          <form onSubmit={handleSubmit(handleAddNewTrainingPlan)}>
+          <form onSubmit={handleSubmit(handleUpdateTrainingPlan)}>
             <FormGroup>
               <Label>Tên kế hoạch đào tạo (*)</Label>
               <TextField
+                value={trainingPlanName || ""}
                 error={error?.name ? true : false}
                 helperText={error?.name}
                 name="trainingplanname"
@@ -161,12 +215,14 @@ const CreateNewTrainingPlanPage = () => {
                     title={
                       trainingPlanName || "Kế hoạch đào tạo chưa có tên"
                     }
-                    list={createTrainingPlanDetails.map((item, index) => ({
-                      title: item.name,
-                      description: item.description,
-                      startDay: new Date(item.startTime),
-                      endDay: new Date(item.endTime),
-                    }))}
+                    list={createTrainingPlanDetails
+                      .filter(item => item.status !== 3)
+                      .map(item => ({
+                        title: item.name,
+                        description: item.description,
+                        startDay: new Date(item.startTime),
+                        endDay: new Date(item.endTime),
+                      }))}
                   />
                 </PerfectScrollbar>
               </Box>
@@ -184,20 +240,40 @@ const CreateNewTrainingPlanPage = () => {
                 </Typography>
                 <FormGroup>
                   <Label>Nhiệm vụ (*)</Label>
-                  <TextField
-                    className="w-3/5"
-                    error={error?.details?.[index]?.name ? true : false}
-                    helperText={error?.details?.[index]?.name}
-                    name="trainingplandetailname"
-                    placeholder="Ex: Làm việc với đào tạo viên"
-                    onChange={(e) => onChangeDetails(index, "name", e.target.value)}
-                    onBlur={(e) => onChangeDetails(index, "name", e.target.value)}
-                    inputProps={{ maxLength: 100 }}
-                  />
+                  <Stack direction={"row"} spacing={10}>
+                    <TextField
+                      value={createTrainingPlanDetails?.[index]?.name || ""}
+                      className="w-3/5"
+                      error={error?.details?.[index]?.name ? true : false}
+                      helperText={error?.details?.[index]?.name}
+                      name="trainingplandetailname"
+                      placeholder="Ex: Làm việc với đào tạo viên"
+                      onChange={(e) => onChangeDetails(index, "name", e.target.value)}
+                      onBlur={(e) => onChangeDetails(index, "name", e.target.value)}
+                      inputProps={{ maxLength: 100 }}
+                    />
+                    {createTrainingPlanDetails?.[index]?.id ?
+                      createTrainingPlanDetails?.[index]?.status === 3 ?
+                        <IconButton
+                          color="success"
+                          onClick={() => onChangeDetails(index, "status", 2)}
+                        >
+                          <ToggleOnIcon />
+                        </IconButton>
+                        :
+                        <IconButton
+                          color="error"
+                          onClick={() => onChangeDetails(index, "status", 3)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      : null}
+                  </Stack>
                 </FormGroup>
                 <FormGroup>
                   <Label>Mô tả về nhiệm vụ (ngắn gọn) (*)</Label>
                   <TextField
+                    value={createTrainingPlanDetails?.[index]?.description || ""}
                     multiline
                     error={error?.details?.[index]?.description ? true : false}
                     helperText={error?.details?.[index]?.description}
@@ -275,7 +351,7 @@ const CreateNewTrainingPlanPage = () => {
                 className="px-10 mx-auto text-white bg-primary"
                 isLoading={isLoading}
               >
-                Thêm mới{" "}
+                Chỉnh sửa{" "}
               </Button>
             </div>
           </form>
@@ -285,4 +361,4 @@ const CreateNewTrainingPlanPage = () => {
   );
 };
 
-export default CreateNewTrainingPlanPage;
+export default UpdateTrainningPlanPage;

@@ -218,7 +218,28 @@ function DefineNewReportPage() {
     };
     const valid = reportValid(template);
     setError(valid);
-    if (Object.keys(valid).length === 0) {
+    let check = false;
+
+    for (const key in valid) {
+      if (key !== "templateHeaders" && valid[key] !== "") {
+        check = true;
+        break; // If any non-empty value is found, exit the loop
+      } else if (key === "templateHeaders" && Array.isArray(valid[key])) {
+        for (const item of valid[key]) {
+          for (const itemKey in item) {
+            if (item[itemKey] !== "") {
+              check = true;
+              break; // If any non-empty value is found, exit the loop
+            }
+          }
+          if (check) {
+            break; // If any non-empty value is found, exit the loop
+          }
+        }
+      }
+    }
+
+    if (!check) {
       uploadFile();
     }
     setIsLoading(false);
