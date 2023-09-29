@@ -125,7 +125,7 @@ const OJTEvaluationPage = () => {
                         ? evaluationOptions.CREATE
                         : evaluationOptions.EDIT
                     }/` +
-                    item.templateId
+                    item.templatedId
                   }
                   variant="contained"
                   size="medium"
