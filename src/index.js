@@ -359,7 +359,7 @@ const router = createBrowserRouter([
         element: <LayoutTrainer></LayoutTrainer>,
         children: [
           {
-            path: "/trainees-evaluate-excel/:ojtBatchId/:action",
+            path: "/trainees-evaluate-excel/:ojtBatchId/:action/:templateId",
             element: <EvaluateExcelPage></EvaluateExcelPage>,
           },
           {

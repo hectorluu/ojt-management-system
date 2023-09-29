@@ -20,7 +20,7 @@ import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { certificatePath, coursePath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";
 import FormGroup from "views/components/common/FormGroup";
-import { universityNoti } from "logic/constants/notification";
+import { courseNoti } from "logic/constants/notification";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
@@ -94,7 +94,7 @@ const TraineeCourseDetailPage = () => {
       await axiosPrivate.post(
         coursePath.ENROLL_COURSE + courseId
       );
-      toast.success(universityNoti.SUCCESS.UPDATE);
+      toast.success(courseNoti.SUCCESS.ENROLL);
       setIsLoading(false);
       navigate("/trainee-course-list");
     } catch (error) {
