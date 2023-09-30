@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, CircularProgress, List, ListItem, ListItemText, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemText,
+  Modal,
+  Typography,
+} from "@mui/material";
 import { fDate } from "logic/utils/formatTime";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { trainingPlanPath } from "logic/api/apiUrl";
@@ -87,8 +96,20 @@ const ModalTrainingPlanDetailTrainer = ({
             overflowX: "hidden",
           }}
         >
-          <div style={isLoading ? { display: 'flex', justifyContent: 'center', alignItems: 'center' } : {}}>
-            {isLoading ? <CircularProgress /> :
+          <div
+            style={
+              isLoading
+                ? {
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }
+                : {}
+            }
+          >
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white shadow-1 rounded-xl">
                   <div className="p-5">
@@ -97,37 +118,35 @@ const ModalTrainingPlanDetailTrainer = ({
                         {trainingPlanDetails?.name}
                       </span>
                     </div>
-                    <div className="mb-2">
-                      <strong className="font-semi">Ngày thay đổi: </strong>
-                      <span className="text-text2">
-                        {fDate(trainingPlanDetails?.createDate)}
-                      </span>
-                    </div>
                   </div>
 
                   <div className="p-5">
                     <div className="flex items-center mb-4 gap-x-3">
-                      <span className="text-xl font-bold text-text1">Chi tiết</span>
+                      <span className="text-xl font-bold text-text1">
+                        Chi tiết
+                      </span>
                     </div>
                     {trainingPlanDetails?.details?.length > 0 ? (
-                      trainingPlanDetails?.details?.filter(item => item.status !== 3)?.map((detail, index) => (
-                        <div className="mb-6" key={index}>
-                          <p className="mb-2 text-text2">
-                            <strong className="text-text1">
-                              {index + 1}
-                              {")"} {detail.name}
-                            </strong>
-                          </p>
-                          <p className="text-text2 pl-4 mb-2">
-                            {detail?.description}
-                          </p>
-                          <p className="text-text2 pl-4">
-                            {fDate(detail?.startTime) +
-                              " - " +
-                              fDate(detail?.endTime)}
-                          </p>
-                        </div>
-                      ))
+                      trainingPlanDetails?.details
+                        ?.filter((item) => item.status !== 3)
+                        ?.map((detail, index) => (
+                          <div className="mb-6" key={index}>
+                            <p className="mb-2 text-text2">
+                              <strong className="text-text1">
+                                {index + 1}
+                                {")"} {detail.name}
+                              </strong>
+                            </p>
+                            <p className="text-text2 pl-4 mb-2">
+                              {detail?.description}
+                            </p>
+                            <p className="text-text2 pl-4">
+                              {fDate(detail?.startTime) +
+                                " - " +
+                                fDate(detail?.endTime)}
+                            </p>
+                          </div>
+                        ))
                     ) : (
                       <div>Chưa có chi tiết được tạo.</div>
                     )}
@@ -143,7 +162,9 @@ const ModalTrainingPlanDetailTrainer = ({
                     component="label"
                     className="flex items-center justify-center cursor-pointer w-3/4 h-8 text-text1 rounded-md"
                     onClick={() => {
-                      navigate("/trainer-training-plan/" + trainingPlanDetails.id);
+                      navigate(
+                        "/trainer-training-plan/" + trainingPlanDetails.id
+                      );
                     }}
                   >
                     <span className="text-white">Chỉnh sửa</span>
@@ -157,18 +178,22 @@ const ModalTrainingPlanDetailTrainer = ({
                   <List className="mt-2 text-gray-700">
                     {trainingPlanDetails?.trainees?.length > 0 ? (
                       trainingPlanDetails?.trainees?.map((item, index) => (
-                        <ListItem className="flex border-y py-2 justify-between" key={index}>
+                        <ListItem
+                          className="flex border-y py-2 justify-between"
+                          key={index}
+                        >
                           <img
                             className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
                             src={item.avatarURL || defaultUserIcon}
                             alt=""
                             onError={(e) => {
                               e.target.src = defaultUserIcon;
-                            }} />
-                          <ListItemText
-                            primary={item?.traineeName}
+                            }}
                           />
-                          <ListItemText primary={"Email: " + item?.traineeEmail} />
+                          <ListItemText primary={item?.traineeName} />
+                          <ListItemText
+                            primary={"Email: " + item?.traineeEmail}
+                          />
                         </ListItem>
                       ))
                     ) : (
@@ -178,7 +203,8 @@ const ModalTrainingPlanDetailTrainer = ({
                     )}
                   </List>
                 </div>
-              </div>}
+              </div>
+            )}
           </div>
         </PerfectScrollbar>
       </Box>
