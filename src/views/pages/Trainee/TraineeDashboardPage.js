@@ -221,7 +221,7 @@ const TraineeDashboardPage = () => {
                   </div>
                 ))
               ) : (
-                <span className="mt-2 font-base text-base">
+                <span className="mt-2 font-semibold text-base">
                   Không có công việc nào
                 </span>
               )}
