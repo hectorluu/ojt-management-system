@@ -11,7 +11,13 @@ import {
   useTheme,
 } from "@mui/material";
 
-import { defaultPageSize, defaultPageIndex, defaultUserIcon, traineeWorkingStatus, signalRMessage } from "logic/constants/global";
+import {
+  defaultPageSize,
+  defaultPageIndex,
+  defaultUserIcon,
+  traineeWorkingStatus,
+  signalRMessage,
+} from "logic/constants/global";
 import TablePagination from "@mui/material/TablePagination";
 import MainCard from "views/components/cards/MainCard";
 import SubCard from "views/components/cards/SubCard";
@@ -51,10 +57,10 @@ const AssignedTraineeListPage = () => {
       setIsLoading(true);
       const response = await axiosPrivate.get(
         trainerPath.GET_TRAINEE_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage
       );
 
       setUsers(response.data.data);
@@ -82,9 +88,7 @@ const AssignedTraineeListPage = () => {
   const theme = useTheme();
 
   return (
-    <MainCard
-      title={`Thực tập sinh`}
-    >
+    <MainCard title={`Thực tập sinh`}>
       <SubCard>
         <TableContainer sx={{ width: 1, mb: -2, borderRadius: 4 }}>
           <Table>
@@ -100,7 +104,7 @@ const AssignedTraineeListPage = () => {
                 <StyledTableCell align="left" width={"25%"}>
                   Họ và tên
                 </StyledTableCell>
-                <StyledTableCell align="left" width="25%">
+                <StyledTableCell align="left" width="20%">
                   Email
                 </StyledTableCell>
                 <StyledTableCell align="center" width={"15%"}>
@@ -109,7 +113,7 @@ const AssignedTraineeListPage = () => {
                 <StyledTableCell align="center" width={"15%"}>
                   Trạng thái
                 </StyledTableCell>
-                <StyledTableCell align="right" width={"10%"}></StyledTableCell>
+                <StyledTableCell align="right" width={"15%"}></StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -131,10 +135,16 @@ const AssignedTraineeListPage = () => {
                     <TableCell align="left" width={"25%"}>
                       {item.firstName + " " + item.lastName}
                     </TableCell>
-                    <TableCell align="left" width={"25%"}>{item.email}</TableCell>
-                    <TableCell align="center" width={"15%"}>{item.positionName}</TableCell>
+                    <TableCell align="left" width={"20%"}>
+                      {item.email}
+                    </TableCell>
                     <TableCell align="center" width={"15%"}>
-                      <Chip color={item.workStatus === 1 ? "warning" : "success"}>
+                      {item.positionName}
+                    </TableCell>
+                    <TableCell align="center" width={"15%"}>
+                      <Chip
+                        color={item.workStatus === 1 ? "warning" : "success"}
+                      >
                         {
                           traineeWorkingStatus.find(
                             (label) => label.value === item.workStatus
@@ -142,7 +152,7 @@ const AssignedTraineeListPage = () => {
                         }
                       </Chip>
                     </TableCell>
-                    <TableCell align="right" width={"10%"}>
+                    <TableCell align="right" width={"15%"}>
                       <Button
                         variant="contained"
                         sx={{

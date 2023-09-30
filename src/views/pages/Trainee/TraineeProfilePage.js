@@ -18,7 +18,11 @@ import {
 } from "@mui/material";
 import MainCard from "views/components/cards/MainCard";
 import { Label } from "views/components/label";
-import { defaultUserIcon, genderOptions, roleExchange } from "logic/constants/global";
+import {
+  defaultUserIcon,
+  genderOptions,
+  roleExchange,
+} from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
 import { userPath } from "logic/api/apiUrl";
 import FormRow from "views/components/common/FormRow";
@@ -61,7 +65,7 @@ const TraineeProfilePage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [trainer, setTrainer] = useState({});
-  const moment = require('moment');
+  const moment = require("moment");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -96,7 +100,7 @@ const TraineeProfilePage = () => {
   const handleUpdateAccount = async () => {
     if (avatarURL === "" || avatarURL === null || avatarURL === undefined) {
       setAvatarURL(url);
-    };
+    }
     try {
       await axiosPrivate.put(userPath.UPDATE_PROFILE, {
         firstName,
@@ -177,7 +181,7 @@ const TraineeProfilePage = () => {
         toast.error(error?.response?.data);
         setIsLoading(false);
       }
-    };
+    }
     setIsLoading(false);
   };
 
@@ -227,7 +231,9 @@ const TraineeProfilePage = () => {
                 <Button
                   variant="outlined"
                   className="mt-1 p-2 rounded-lg bg-white"
-                  onClick={() => document.getElementById("image-updload").click()}
+                  onClick={() =>
+                    document.getElementById("image-updload").click()
+                  }
                 >
                   <span className="mx-auto">Chọn ảnh</span>
                 </Button>
@@ -311,7 +317,12 @@ const TraineeProfilePage = () => {
                     disablePortal={false}
                     id="combo-box-demo"
                     options={genderOptions}
-                    value={genderOptions.find((item) => item.value === gender) || { value: 0, label: "Chọn giới tính" }}
+                    value={
+                      genderOptions.find((item) => item.value === gender) || {
+                        value: 0,
+                        label: "Chọn giới tính",
+                      }
+                    }
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -423,14 +434,27 @@ const TraineeProfilePage = () => {
               <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] space-x-10">
                 {skills.length !== 0 ? (
                   skills.map((item, index) => (
-                    <Stack key={index}
-                      direction="row" spacing={2}
-                    >
-                      <Typography variant="h3" color="text.secondary" sx={{ mb: 2 }}>{item.name}</Typography>
-                      <Rating name="read-only" value={item.currentLevel} readOnly />
+                    <Stack key={index} direction="row" spacing={2}>
+                      <Typography
+                        variant="h3"
+                        color="text.secondary"
+                        sx={{ mb: 2 }}
+                      >
+                        {item.name}
+                      </Typography>
+                      <Rating
+                        name="read-only"
+                        value={item.currentLevel}
+                        readOnly
+                      />
                     </Stack>
-                  ))) : (
-                  <Typography variant="h3" color="text.secondary" sx={{ mb: 2 }}>
+                  ))
+                ) : (
+                  <Typography
+                    variant="h3"
+                    color="text.secondary"
+                    sx={{ mb: 2 }}
+                  >
                     Chưa có kỹ năng nào
                   </Typography>
                 )}
@@ -492,7 +516,8 @@ const TraineeProfilePage = () => {
                 variant="contained"
                 component={"label"}
                 loading={isLoading}
-                onClick={() => handleNewPasswordSubmit()}>
+                onClick={() => handleNewPasswordSubmit()}
+              >
                 Cập nhật
               </LoadingButton>
             </CardActions>

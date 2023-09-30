@@ -46,21 +46,23 @@ const TraineeTrainingPlanPage = () => {
   return (
     <MainCard title="Kế hoạch đào tạo">
       {/*Training plan timeline*/}
-      <SubCard>
-        <div className="p-5">
-          <Typography
-            variant="h4"
-            className="text-2xl text-gray-900 font-bold mt-2 mb-4"
-          >
-            {trainingPlan.name}
-          </Typography>
-          <div className="mb-2 text-base ">
-            <strong className="font-semi">Ngày thay đổi: </strong>
-            <span className="text-text2">
-              {fDate(trainingPlan?.updateDate)}
-            </span>
+      <SubCard sx={{ minHeight: "10rem" }}>
+        {trainingPlanDetails.length !== 0 && (
+          <div className="p-5">
+            <Typography
+              variant="h4"
+              className="text-2xl text-gray-900 font-bold mt-2 mb-4"
+            >
+              {trainingPlan.name}
+            </Typography>
+            <div className="mb-2 text-base ">
+              <strong className="font-semi">Ngày thay đổi: </strong>
+              <span className="text-text2">
+                {fDate(trainingPlan?.updateDate)}
+              </span>
+            </div>
           </div>
-        </div>
+        )}
         <div className="relative px-4">
           {trainingPlanDetails.length > 0 && (
             <div className="absolute h-full border border-dashed border-opacity-60 border-secondary"></div>
@@ -100,17 +102,13 @@ const TraineeTrainingPlanPage = () => {
               </div>
             ))
           ) : (
-            <>Chưa được giao kế hoạch đào tạo</>
-          )}
-          {/* End Timeline item  */}
-
-          {trainingPlanDetails.length === 0 && (
             <div className="flex items-center w-full my-6">
               <Typography variant="body1" className="text-base font-medium">
                 Thực tập sinh này chưa có kế hoạch thực tập.
               </Typography>
             </div>
           )}
+          {/* End Timeline item  */}
         </div>
       </SubCard>
     </MainCard>
