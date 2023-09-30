@@ -55,12 +55,6 @@ const TraineeTrainingPlanPage = () => {
             >
               {trainingPlan.name}
             </Typography>
-            <div className="mb-2 text-base ">
-              <strong className="font-semi">Ngày thay đổi: </strong>
-              <span className="text-text2">
-                {fDate(trainingPlan?.updateDate)}
-              </span>
-            </div>
           </div>
         )}
         <div className="relative px-4">

@@ -19,7 +19,7 @@ const ModalTrainingPlanCertifyManager = ({
   useEffect(() => {
     if (selectedTrainingPlan) {
       fetchDetails();
-    };
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTrainingPlan]);
 
@@ -85,19 +85,25 @@ const ModalTrainingPlanCertifyManager = ({
             overflowX: "hidden",
           }}
         >
-          <div style={isLoading ? { display: 'flex', justifyContent: 'center', alignItems: 'center' } : {}}>
-            {isLoading ? <CircularProgress /> :
+          <div
+            style={
+              isLoading
+                ? {
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }
+                : {}
+            }
+          >
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
               <div className="bg-white shadow-1 rounded-xl">
                 <div className="p-5">
                   <div className="flex items-center mb-3 gap-x-3">
                     <span className="text-xl font-bold text-text1">
                       {selectedTrainingPlan?.name}
-                    </span>
-                  </div>
-                  <div className="mb-2">
-                    <strong className="font-semi">Ngày chỉnh sửa: </strong>
-                    <span className="text-text2">
-                      {fDate(selectedTrainingPlan?.updateDate)}
                     </span>
                   </div>
                   <div className="mb-2">
@@ -112,7 +118,9 @@ const ModalTrainingPlanCertifyManager = ({
 
                 <div className="p-5">
                   <div className="flex items-center mb-4 gap-x-3">
-                    <span className="text-xl font-bold text-text1">Chi tiết</span>
+                    <span className="text-xl font-bold text-text1">
+                      Chi tiết
+                    </span>
                   </div>
                   {trainingPlanDetails.length > 0 ? (
                     trainingPlanDetails.map((detail, index) => (
@@ -137,7 +145,8 @@ const ModalTrainingPlanCertifyManager = ({
                     <div>Chưa có chi tiết được tạo.</div>
                   )}
                 </div>
-              </div>}
+              </div>
+            )}
           </div>
         </PerfectScrollbar>
         <Box
