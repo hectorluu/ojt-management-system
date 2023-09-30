@@ -33,9 +33,12 @@ const TraineeCertificateSubmitPage = () => {
   const [isSubmitLoading, setIsSubmitLoading] = useState(false); // New loading state
 
   useEffect(() => {
-    signalRService.on(signalRMessage.CERTIFICATE.PROCESS_CERTIFICATE, (message) => {
-      fetchCertificate();
-    });
+    signalRService.on(
+      signalRMessage.CERTIFICATE.PROCESS_CERTIFICATE,
+      (message) => {
+        fetchCertificate();
+      }
+    );
     signalRService.on(signalRMessage.CERTIFICATE.UPDATE_PROCESS, (message) => {
       fetchCertificate();
     });
@@ -56,12 +59,12 @@ const TraineeCertificateSubmitPage = () => {
       setIsLoading(true); // Set loading to true before fetching data
       let response = await axiosPrivate.get(
         certificatePath.GET_CERTIFICATE_LIST +
-        "?PageIndex=" +
-        page +
-        "&PageSize=" +
-        rowsPerPage +
-        "&status=" +
-        `${status === undefined ? "" : status}`
+          "?PageIndex=" +
+          page +
+          "&PageSize=" +
+          rowsPerPage +
+          "&status=" +
+          `${status === undefined ? "" : status}`
       );
       setCertificates(response.data.data);
       setTotalItem(response.data.totalItem);
@@ -94,21 +97,15 @@ const TraineeCertificateSubmitPage = () => {
     if (valid === "") {
       try {
         if (status === 3) {
-          await axiosPrivate.put(
-            certificatePath.SUBMIT_CERTIFICATE,
-            {
-              courseId: courseId,
-              link: link,
-            }
-          );
+          await axiosPrivate.put(certificatePath.SUBMIT_CERTIFICATE, {
+            courseId: courseId,
+            link: link,
+          });
         } else {
-          await axiosPrivate.put(
-            certificatePath.RE_SUBMIT_CERTIFICATE,
-            {
-              courseId: courseId,
-              link: link,
-            }
-          );
+          await axiosPrivate.put(certificatePath.RE_SUBMIT_CERTIFICATE, {
+            courseId: courseId,
+            link: link,
+          });
         }
         toast.success(certificateNoti.SUCCESS.SUBMIT);
         setIsSubmitLoading(false);
@@ -121,11 +118,8 @@ const TraineeCertificateSubmitPage = () => {
     setIsSubmitLoading(false);
   };
 
-
   return (
-    <MainCard
-      title={`Chứng chỉ`}
-    >
+    <MainCard title={`Chứng chỉ`}>
       <SubCard>
         <div className="flex flex-wrap items-start max-w-[200px] w-full">
           <Autocomplete
@@ -154,10 +148,19 @@ const TraineeCertificateSubmitPage = () => {
             </>
           ) : certificates.length !== 0 ? (
             certificates.map((item, index) => (
-              <CertificateCardDisplay certificate={item} key={index} onClickSubmit={onSubmitCertificate} isLoading={isSubmitLoading} error={error} selected={selected} />
+              <CertificateCardDisplay
+                certificate={item}
+                key={index}
+                onClickSubmit={onSubmitCertificate}
+                isLoading={isSubmitLoading}
+                error={error}
+                selected={selected}
+              />
             ))
           ) : (
-            <>Không có chứng chỉ nào được tìm thấy.</>
+            <span className="mt-3 font-semibold ">
+              Không có chứng chỉ nào được tìm thấy.
+            </span>
           )}
         </CertificateGrid>
         <TablePagination
