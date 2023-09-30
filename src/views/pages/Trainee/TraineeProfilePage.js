@@ -386,20 +386,22 @@ const TraineeProfilePage = () => {
             </CardContent>
             <h4 className="text-xl text-gray-900 font-bold text-left ml-2 mt-5">
               Quản lí bởi:
-              <ListItem className="flex border-y py-2 justify-between">
-                <img
-                  className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
-                  src={trainer.avatarURL || defaultUserIcon}
-                  alt=""
-                  onError={(e) => {
-                    e.target.src = defaultUserIcon;
-                  }} />
-                <ListItemText
-                  primary={trainer?.trainerName}
-                />
-                <ListItemText primary={"Email: " + trainer?.trainerEmail} />
-                <ListItemText primary={"SĐT: " + trainer?.trainerPhoneNumber} />
-              </ListItem>
+              {trainer ?
+                <ListItem className="flex border-y py-2 justify-between">
+                  <img
+                    className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
+                    src={trainer?.avatarURL || defaultUserIcon}
+                    alt=""
+                    onError={(e) => {
+                      e.target.src = defaultUserIcon;
+                    }} />
+                  <ListItemText
+                    primary={trainer?.trainerName}
+                  />
+                  <ListItemText primary={"Email: " + trainer?.trainerEmail} />
+                  <ListItemText primary={"SĐT: " + trainer?.trainerPhoneNumber} />
+                </ListItem> :
+                "Chưa có quản lí"}
             </h4>
             <Gap />
 
