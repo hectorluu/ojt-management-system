@@ -154,7 +154,7 @@ const CreateNewAccountPage = () => {
   const fetchUniversities = async () => {
     try {
       const response = await axiosPrivate.get(
-        universityPath.GET_UNIVERSITY_LIST + "?id=" + universityId
+        universityPath.GET_UNIVERSITY_LIST + "?id=" + universityId + "&PageSize=" + 100000 + "&PageIndex=" + 1
       );
       setUniversityList(response.data.data);
     } catch (error) {
