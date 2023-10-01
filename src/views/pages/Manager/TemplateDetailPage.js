@@ -154,7 +154,7 @@ function TemplateDetailPage() {
 
   const handleUpdateTemplate = async () => {
     try {
-      await axiosPrivate.post(templatePath.UPDATE_TEMPLATE + templateId, {
+      await axiosPrivate.put(templatePath.UPDATE_TEMPLATE + templateId, {
         name: name,
         url: newUrl,
         startCell: startCell,
