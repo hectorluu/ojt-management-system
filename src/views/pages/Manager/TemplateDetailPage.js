@@ -43,6 +43,7 @@ function TemplateDetailPage() {
   const [startCell, setStartCell] = useState("");
   const [newUrl, setNewUrl] = useState("");
   const [universityName, setUniversityName] = useState("");
+  const [status, setStatus] = useState(0);
   const [isAddTemplateHeaderModalOpen, setIsAddTemplateHeaderModalOpen] = useState(false);
   const [selectedHeader, setSelectedHeader] = useState({});
   const [isEditTemplateHeaderModalOpen, setIsEditTemplateHeaderModalOpen] = useState(false);
@@ -124,6 +125,7 @@ function TemplateDetailPage() {
       setStartCell(response.data.startCell);
       setUniversityId(response.data.universityId);
       setUrl(response.data.url);
+      setStatus(response?.data?.status);
       setTemplateHeaders(response.data.templateHeaders);
       setUniversityName(response.data.universityName);
       setIsFetchingLoading(false);
@@ -137,7 +139,7 @@ function TemplateDetailPage() {
       try {
         const reportRef = ref(storage, "reports/" + file.name);
         await uploadBytes(reportRef, file).then(async (snapshot) => {
-          setUrl(`reports/${file.name}`);
+          setNewUrl(`reports/${file.name}`);
         });
       } catch (e) {
         setIsLoading(false);
@@ -152,12 +154,12 @@ function TemplateDetailPage() {
 
   const handleUpdateTemplate = async () => {
     try {
-      await axiosPrivate.post(templatePath.CREATE_TEMPLATE, {
-        name,
-        url,
-        startCell,
-        universityId,
-        templateHeaders,
+      await axiosPrivate.post(templatePath.UPDATE_TEMPLATE + templateId, {
+        name: name,
+        url: newUrl,
+        startCell: startCell,
+        universityId: universityId,
+        status: status,
       });
       setIsLoading(false);
       setUrl("");

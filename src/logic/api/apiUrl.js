@@ -118,6 +118,7 @@ export const positionPath = {
 
 export const templatePath = {
   CREATE_TEMPLATE: "/template",
+  UPDATE_TEMPLATE: "/template/",
   GET_TEMPLATE_HEADER: "/template/template-header/criteriaheader/",
   GET_TEMPLATE_LIST: "/template",
   GET_TEMPLATE_DETAIL: "/template/",

@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import { trainingPlanPath } from "logic/api/apiUrl";
 import { signalRMessage } from "logic/constants/global";
 import useAxiosPrivate from "logic/hooks/useAxiosPrivate";
-import { fDate, fDateTime } from "logic/utils/formatTime";
+import { fDateTime } from "logic/utils/formatTime";
 import React, { useEffect, useState } from "react";
 import MainCard from "views/components/cards/MainCard";
 import SubCard from "views/components/cards/SubCard";
@@ -40,7 +40,7 @@ const TraineeTrainingPlanPage = () => {
 
       setTrainingPlan(response.data);
       setTrainingPlanDetails(response.data.details);
-    } catch (error) {}
+    } catch (error) { }
   }
 
   return (
