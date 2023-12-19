@@ -6,7 +6,7 @@ The OJT Management System was developed in response to the specific needs of a s
 ## Team members of front-end development
 - Lưu Đức Hùng
 - Đỗ Hoàng Lâm
-- 
+  
 ## Stack:
 
 - Next UI
