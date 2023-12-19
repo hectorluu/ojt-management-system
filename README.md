@@ -9,11 +9,13 @@ The OJT Management System was developed in response to the specific needs of a s
   
 ## Stack:
 
-- Next UI
-- Framer motion for animation
-- Three.js for illustration
-- Resend as EmailSender
-- Sonner for Toasts
+- ReactJS
+- Redux
+- Firebase
+- Alpinejs and Apex Charts
+- Framer motion
+- Luckyexcel & Luckysheet
+- react-toastify for message toast
 
 ## Project structure
 
